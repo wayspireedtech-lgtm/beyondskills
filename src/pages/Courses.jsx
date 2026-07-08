@@ -295,7 +295,7 @@ export default function Courses() {
           {/* Category Scroller */}
           <div className="flex flex-wrap gap-2.5 max-w-full">
             {categories.map((cat, idx) => (
-              <button key={idx} onClick={() => handleCategorySelect(cat)} className={`px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${selectedCat === cat ? 'bg-brand-purple text-black' : 'bg-white border border-white/10/80 shadow-sm border border-white/10 text-gray-300 hover:text-white'}`}>
+              <button key={idx} onClick={() => handleCategorySelect(cat)} className={`px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all ${selectedCat === cat ? 'bg-brand-purple text-black' : 'bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10'}`}>
                 {cat}
               </button>
             ))}
@@ -304,7 +304,7 @@ export default function Courses() {
           {/* Search Box */}
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-gray-400" />
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white focus:border-brand-purple outline-none focus:border-brand-purple outline-none" placeholder="Search courses..." />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-xs text-white focus:border-brand-purple outline-none" placeholder="Search courses..." />
           </div>
 
         </div>
