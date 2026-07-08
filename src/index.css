@@ -21,8 +21,8 @@
 
 @layer base {
   body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #F8FAFC;
+    color: #0F172A;
     font-family: 'Outfit', sans-serif;
   }
 }
@@ -34,13 +34,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f1f1f;
+  background: #CBD5E1;
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(15, 23, 42, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -98,7 +98,7 @@
 /* Grid background pattern with interactive purple/blue grid tracking */
 .bg-grid-pattern {
   position: relative;
-  background-color: #000000;
+  background-color: #F8FAFC;
 }
 
 .bg-grid-pattern::before {
@@ -107,11 +107,11 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  /* Dark gray grid always visible */
+  /* Soft dark grid lines always visible */
   background-size: 50px 50px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
 }
 
 .bg-grid-pattern::after {
@@ -120,11 +120,11 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  /* Purple-blue grid only visible near mouse */
+  /* Purple-blue grid visible near mouse */
   background-size: 50px 50px;
   background-image: 
-    linear-gradient(to right, rgba(139, 92, 246, 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.2) 1px, transparent 1px);
+    linear-gradient(to right, rgba(139, 92, 246, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
   /* Mask it with radial gradient at mouse coordinates */
   -webkit-mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
   mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
@@ -133,25 +133,25 @@
 
 /* Glassmorphism panel (for cards, headers, etc) */
 .glass-panel {
-  background: rgba(10, 10, 10, 0.75);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 /* Premium Glass Cards with purple & blue glows on hover */
 .glass-card {
-  background: rgba(15, 15, 15, 0.55);
+  background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.06);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
   border-color: rgba(139, 92, 246, 0.35);
-  background: rgba(20, 20, 20, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   box-shadow: 
-    0 20px 40px -15px rgba(0, 0, 0, 0.7),
-    0 0 50px -10px rgba(59, 130, 246, 0.15);
+    0 20px 40px -15px rgba(15, 23, 42, 0.08),
+    0 0 50px -10px rgba(139, 92, 246, 0.12);
   transform: translateY(-4px);
 }
 

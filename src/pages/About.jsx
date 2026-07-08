@@ -18,7 +18,7 @@ export default function About() {
   ];
 
   return (
-    <div className="text-white relative pt-12">
+    <div className="text-slate-900 relative pt-12">
       
       {/* Decorative Glow */}
       <div className="absolute top-20 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-[120px] animate-pulse-glow z-0"></div>
@@ -34,7 +34,7 @@ export default function About() {
             Agency & Academy
           </span>
         </h1>
-        <p className="mt-6 text-gray-400 max-w-3xl mx-auto text-sm sm:text-base leading-relaxed">
+        <p className="mt-6 text-slate-500 max-w-3xl mx-auto text-sm sm:text-base leading-relaxed">
           Founded in 2022, BeyondSkills operates as a combined technology services organization. 
           We solve digital problems for enterprises through our Agency, and train the next generation of technicians through our Academy.
         </p>
@@ -44,32 +44,32 @@ export default function About() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Our Story</h2>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed text-justify">
+            <h2 className="logo-font text-2xl sm:text-3xl font-bold text-slate-900">Our Story</h2>
+            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed text-justify">
               In 2022, we saw two prominent issues: growing startups struggling to find skilled teams to deploy high-quality software, and fresh graduates unable to crack technical interviews due to a lack of hands-on build experience.
             </p>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed text-justify">
+            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed text-justify">
               BeyondSkills was established to resolve both. By hiring active programmers and digital advertisers to build real client projects inside our Agency vertical, and setting them up to instruct college students and career transitioners in our Academy vertical, we created a self-reinforcing practical learning environment.
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6">
-            <div className="glass-panel p-6 rounded-xl border border-white/10">
+            <div className="glass-panel p-6 rounded-xl border border-slate-200">
               <div className="flex items-center space-x-3 text-brand-purple mb-3">
                 <Target className="w-6 h-6" />
-                <h4 className="font-bold text-white text-sm uppercase tracking-wide">Our Mission</h4>
+                <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide">Our Mission</h4>
               </div>
-              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
                 To empower individuals and organizations through high-quality digital services and practical education that bridges the gap between academic learning and industry requirements.
               </p>
             </div>
 
-            <div className="glass-panel p-6 rounded-xl border border-white/10">
+            <div className="glass-panel p-6 rounded-xl border border-slate-200">
               <div className="flex items-center space-x-3 text-brand-purple mb-3">
                 <Eye className="w-6 h-6" />
-                <h4 className="font-bold text-white text-sm uppercase tracking-wide">Our Vision</h4>
+                <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide">Our Vision</h4>
               </div>
-              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
                 To become one of India's most trusted digital transformation and professional upskilling platforms by delivering measurable value through technology, education, and innovation.
               </p>
             </div>
@@ -79,17 +79,17 @@ export default function About() {
 
       {/* Core Values */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 relative">
-        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-white mb-12">Core Values</h2>
+        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-slate-900 mb-12">Core Values</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {coreValues.map((v, i) => {
             const Icon = v.icon;
             return (
-              <div key={i} className="bg-white/5 border border-white/5 p-6 rounded-xl text-center">
+              <div key={i} className="bg-slate-100 border border-slate-200/60 p-6 rounded-xl text-center">
                 <div className="flex justify-center text-brand-purple mb-4">
                   <Icon className="w-8 h-8" />
                 </div>
-                <h4 className="font-bold text-white text-sm uppercase tracking-wider mb-2">{v.title}</h4>
-                <p className="text-xs text-gray-400 leading-relaxed">{v.desc}</p>
+                <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wider mb-2">{v.title}</h4>
+                <p className="text-xs text-slate-500 leading-relaxed">{v.desc}</p>
               </div>
             );
           })}
@@ -98,8 +98,8 @@ export default function About() {
 
       {/* Interactive Timeline */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto z-10 relative">
-        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-white mb-16">Company Timeline</h2>
-        <div className="relative border-l border-white/10 pl-6 space-y-12">
+        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-slate-900 mb-16">Company Timeline</h2>
+        <div className="relative border-l border-slate-200 pl-6 space-y-12">
           {timeline.map((item, idx) => (
             <div key={idx} className="relative">
               <div className="absolute -left-[31px] bg-brand-purple p-1 rounded-full text-black">
@@ -109,8 +109,8 @@ export default function About() {
                 <span className="font-mono text-xs font-bold text-brand-purple bg-brand-purple/10 px-2 py-0.5 rounded border border-brand-purple/30">
                   {item.year}
                 </span>
-                <h4 className="font-bold text-white text-sm sm:text-base mt-2">{item.title}</h4>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1 leading-relaxed">{item.desc}</p>
+                <h4 className="font-bold text-slate-900 text-sm sm:text-base mt-2">{item.title}</h4>
+                <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -118,16 +118,16 @@ export default function About() {
       </section>
 
       {/* Leadership Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 relative border-t border-white/10">
-        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-white mb-4">Our Leadership</h2>
-        <p className="text-center text-gray-400 text-xs sm:text-sm mb-12">Experienced industry directors steering the Agency and Academy projects.</p>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 relative border-t border-slate-200">
+        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-slate-900 mb-4">Our Leadership</h2>
+        <p className="text-center text-slate-500 text-xs sm:text-sm mb-12">Experienced industry directors steering the Agency and Academy projects.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {MENTORS.map((m, idx) => (
             <div key={idx} className="text-center">
-              <img src={m.image} alt={m.name} className="w-28 h-28 rounded-full object-cover mx-auto mb-4 border border-white/10" />
-              <h4 className="font-bold text-white text-sm">{m.name}</h4>
+              <img src={m.image} alt={m.name} className="w-28 h-28 rounded-full object-cover mx-auto mb-4 border border-slate-200" />
+              <h4 className="font-bold text-slate-900 text-sm">{m.name}</h4>
               <p className="text-xs text-brand-purple font-medium mt-0.5">{m.role}</p>
-              <p className="text-[10px] text-gray-500">{m.org} • {m.exp} Exp</p>
+              <p className="text-[10px] text-slate-500">{m.org} • {m.exp} Exp</p>
             </div>
           ))}
         </div>

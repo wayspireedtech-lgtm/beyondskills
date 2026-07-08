@@ -122,20 +122,20 @@ export default function Auth() {
   };
 
   return (
-    <div className="text-white min-h-[80vh] flex items-center justify-center p-6 relative">
+    <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 relative">
       {/* Back glow */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
 
-      <div className="glass-panel p-8 rounded-2xl border border-white/10 max-w-md w-full z-10">
+      <div className="glass-panel p-8 rounded-2xl border border-slate-200 max-w-md w-full z-10">
         
         {/* Tab Headers */}
         {mode !== 'otp' && (
-          <div className="flex border-b border-white/10 space-x-6 pb-2 mb-8">
-            <button onClick={() => { setMode('login'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'login' ? 'text-brand-purple' : 'text-gray-400 hover:text-white'}`}>
+          <div className="flex border-b border-slate-200 space-x-6 pb-2 mb-8">
+            <button onClick={() => { setMode('login'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'login' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-900'}`}>
               Login
               {mode === 'login' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
             </button>
-            <button onClick={() => { setMode('register'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'register' ? 'text-brand-purple' : 'text-gray-400 hover:text-white'}`}>
+            <button onClick={() => { setMode('register'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'register' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-900'}`}>
               Register
               {mode === 'register' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
             </button>
@@ -158,33 +158,33 @@ export default function Auth() {
           /* LOGIN FORM */
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email Address</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="email" required value={loginForm.email} onChange={(e) => setLoginForm({...loginForm, email: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="student@beyondskills.in" />
+                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="email" required value={loginForm.email} onChange={(e) => setLoginForm({...loginForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="student@beyondskills.in" />
               </div>
             </div>
             
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Password</label>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Password</label>
                 <button type="button" onClick={() => setMode('reset')} className="text-[10px] text-brand-purple hover:underline focus:outline-none uppercase font-semibold">Forgot Password?</button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="password" required value={loginForm.password} onChange={(e) => setLoginForm({...loginForm, password: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="password" />
+                <Lock className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="password" required value={loginForm.password} onChange={(e) => setLoginForm({...loginForm, password: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="password" />
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
+            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
               <span>Sign In</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
-            <div className="text-[10px] text-gray-500 text-center mt-6">
+            <div className="text-[10px] text-slate-500 text-center mt-6">
               Test accounts:<br />
-              Student: <span className="text-gray-300 font-mono">student@beyondskills.in / password</span><br />
-              Admin: <span className="text-gray-300 font-mono">admin@beyondskills.in / admin123</span>
+              Student: <span className="text-slate-700 font-mono">student@beyondskills.in / password</span><br />
+              Admin: <span className="text-slate-700 font-mono">admin@beyondskills.in / admin123</span>
             </div>
           </form>
         )}
@@ -193,38 +193,38 @@ export default function Auth() {
           /* REGISTRATION FORM */
           <form onSubmit={handleRegisterSubmit} className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Full Name</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="text" required value={registerForm.name} onChange={(e) => setRegisterForm({...registerForm, name: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="John Doe" />
+                <User className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="text" required value={registerForm.name} onChange={(e) => setRegisterForm({...registerForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="John Doe" />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email Address</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="email" required value={registerForm.email} onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="johndoe@gmail.com" />
+                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="email" required value={registerForm.email} onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="johndoe@gmail.com" />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mobile Number</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Mobile Number</label>
               <div className="relative">
-                <Phone className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="tel" required value={registerForm.phone} onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="9876543210" />
+                <Phone className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="tel" required value={registerForm.phone} onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="9876543210" />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Security Password</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Security Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="password" required value={registerForm.password} onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="Create Password" />
+                <Lock className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="password" required value={registerForm.password} onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="Create Password" />
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
+            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
               <span>Send OTP Verification</span>
               <Send className="w-3.5 h-3.5" />
             </button>
@@ -235,21 +235,21 @@ export default function Auth() {
           /* OTP VERIFICATION MODAL SIMULATION */
           <form onSubmit={handleVerifyOtp} className="space-y-6">
             <div className="text-center">
-              <h3 className="font-bold text-white text-base">OTP Code Verification</h3>
-              <p className="text-xs text-gray-400 mt-1">We have simulated sending an OTP SMS/Email to your device.</p>
+              <h3 className="font-bold text-slate-900 text-base">OTP Code Verification</h3>
+              <p className="text-xs text-slate-500 mt-1">We have simulated sending an OTP SMS/Email to your device.</p>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 text-center">Enter 4-Digit OTP Code</label>
-              <input type="text" maxLength={4} required value={otpVal} onChange={(e) => setOtpVal(e.target.value)} className="w-28 mx-auto block bg-black/40 border border-white/15 rounded-lg py-2.5 text-center font-mono font-bold text-lg text-white focus:border-brand-purple outline-none tracking-widest" placeholder="0000" />
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 text-center">Enter 4-Digit OTP Code</label>
+              <input type="text" maxLength={4} required value={otpVal} onChange={(e) => setOtpVal(e.target.value)} className="w-28 mx-auto block bg-white border border-slate-200/80 shadow-sm border border-white/15 rounded-lg py-2.5 text-center font-mono font-bold text-lg text-slate-900 focus:border-brand-purple outline-none tracking-widest" placeholder="0000" />
             </div>
 
-            <p className="text-[10px] text-gray-400 text-center leading-normal">
+            <p className="text-[10px] text-slate-500 text-center leading-normal">
               Enter <strong className="text-brand-purple">2026</strong> (mock code provided in the active toast banner in the bottom corner of your browser screen).
             </p>
 
             <div className="flex space-x-3">
-              <button type="button" onClick={() => setMode('register')} className="w-1/3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-2.5 rounded-lg text-xs uppercase">
+              <button type="button" onClick={() => setMode('register')} className="w-1/3 bg-slate-100 border border-slate-200 hover:bg-white/10 text-slate-900 font-bold py-2.5 rounded-lg text-xs uppercase">
                 Back
               </button>
               <button type="submit" className="w-2/3 bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-2.5 rounded-lg text-xs uppercase tracking-widest transition-all">
@@ -263,20 +263,20 @@ export default function Auth() {
           /* PASSWORD RESET FORM */
           <form onSubmit={handlePasswordReset} className="space-y-4">
             <div className="text-center mb-6">
-              <h3 className="font-bold text-white text-base">Recover Password</h3>
-              <p className="text-xs text-gray-400 mt-1">Enter your registered email address to receive a recovery reset key.</p>
+              <h3 className="font-bold text-slate-900 text-base">Recover Password</h3>
+              <p className="text-xs text-slate-500 mt-1">Enter your registered email address to receive a recovery reset key.</p>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Registered Email</label>
+              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Registered Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                <input type="email" required value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} className="w-full bg-black/40 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-xs text-white focus:border-brand-purple outline-none" placeholder="enteremail@gmail.com" />
+                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                <input type="email" required value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="enteremail@gmail.com" />
               </div>
             </div>
 
             <div className="flex space-x-3">
-              <button type="button" onClick={() => setMode('login')} className="w-1/3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-2.5 rounded-lg text-xs uppercase">
+              <button type="button" onClick={() => setMode('login')} className="w-1/3 bg-slate-100 border border-slate-200 hover:bg-white/10 text-slate-900 font-bold py-2.5 rounded-lg text-xs uppercase">
                 Cancel
               </button>
               <button type="submit" className="w-2/3 bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-2.5 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
