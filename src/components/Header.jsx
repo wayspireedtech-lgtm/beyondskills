@@ -42,33 +42,33 @@ export default function Header() {
   }, [location.pathname]);
 
   return (
-    <header className="sticky top-0 z-50 w-full glass-panel border-b border-white/10 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-200 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex flex-col items-start leading-none group">
               <div className="flex items-center">
-                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight text-white transition-colors duration-300 group-hover:text-gray-300">
+                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-700">
                   Beyond
                 </span>
-                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight bg-gradient-to-r from-brand-purple to-brand-blue bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
+                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
                   Skills
                 </span>
               </div>
-              <span className="text-[7px] font-bold text-gray-400 uppercase tracking-[0.16em] mt-1 select-none leading-none">
+              <span className="text-[7px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-1 select-none leading-none">
                 Digital Services • Upskilling • Future-Ready
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation Capsule Bar */}
-          <nav className="hidden lg:flex items-center bg-white/5 border border-white/10 rounded-full px-2 py-1.5 shadow-lg backdrop-blur-md hover:border-brand-purple/20 transition-all duration-300">
-            <Link to="/" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+          <nav className="hidden lg:flex items-center bg-white/70 border border-slate-200/80 rounded-full px-2 py-1.5 shadow-sm shadow-slate-100/50 backdrop-blur-md hover:border-brand-purple/30 transition-all duration-300">
+            <Link to="/" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Home
             </Link>
             
-            <Link to="/about" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/about' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+            <Link to="/about" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/about' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               About Us
             </Link>
 
@@ -76,25 +76,25 @@ export default function Header() {
             <div className="relative" 
                  onMouseEnter={() => setAgencyDropdown(true)}
                  onMouseLeave={() => setAgencyDropdown(false)}>
-              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/services') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/services') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
                 <span>Agency</span>
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
               
               {agencyDropdown && (
-                <div className="absolute left-0 w-64 mt-2 bg-brand-dark border border-white/10 rounded-xl shadow-2xl p-2 animate-fade-in backdrop-blur-xl">
-                  <Link to="/services/website-development" className="flex items-start space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                <div className="absolute left-0 w-64 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-2 animate-fade-in backdrop-blur-xl">
+                  <Link to="/services/website-development" className="flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
                     <Code className="w-5 h-5 text-brand-purple mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold text-white">Website Development</p>
-                      <p className="text-xs text-gray-400">Custom web apps & ecommerce</p>
+                      <p className="text-sm font-semibold text-slate-900">Website Development</p>
+                      <p className="text-xs text-slate-500">Custom web apps & ecommerce</p>
                     </div>
                   </Link>
-                  <Link to="/services/digital-marketing" className="flex items-start space-x-3 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                  <Link to="/services/digital-marketing" className="flex items-start space-x-3 p-3 rounded-lg hover:bg-slate-50 transition-colors">
                     <Megaphone className="w-5 h-5 text-brand-purple mt-0.5" />
                     <div>
-                      <p className="text-sm font-semibold text-white">Digital Marketing</p>
-                      <p className="text-xs text-gray-400">Google, Meta Ads & Strategy</p>
+                      <p className="text-sm font-semibold text-slate-900">Digital Marketing</p>
+                      <p className="text-xs text-slate-500">Google, Meta Ads & Strategy</p>
                     </div>
                   </Link>
                 </div>
@@ -105,44 +105,44 @@ export default function Header() {
             <div className="relative"
                  onMouseEnter={() => setCoursesDropdown(true)}
                  onMouseLeave={() => setCoursesDropdown(false)}>
-              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/courses') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/courses') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
                 <span>Academy</span>
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
               
               {coursesDropdown && (
-                <div className="absolute left-0 w-72 mt-2 bg-brand-dark border border-white/10 rounded-xl shadow-2xl p-2 animate-fade-in backdrop-blur-xl">
-                  <div className="px-3 py-1 text-[10px] font-bold text-brand-purple tracking-widest uppercase border-b border-white/5 mb-1 pb-1">
+                <div className="absolute left-0 w-72 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-2 animate-fade-in backdrop-blur-xl">
+                  <div className="px-3 py-1 text-[10px] font-bold text-brand-purple tracking-widest uppercase border-b border-slate-200/60 mb-1 pb-1">
                     Certification Programs
                   </div>
-                  <Link to="/courses" className="flex items-start space-x-3 p-2.5 rounded-lg hover:bg-white/5 transition-colors">
+                  <Link to="/courses" className="flex items-start space-x-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors">
                     <GraduationCap className="w-5 h-5 text-brand-purple mt-0.5" />
                     <div>
-                      <p className="text-xs font-semibold text-white">All Courses</p>
-                      <p className="text-[11px] text-gray-400">Browse academy programs</p>
+                      <p className="text-xs font-semibold text-slate-900">All Courses</p>
+                      <p className="text-[11px] text-slate-500">Browse academy programs</p>
                     </div>
                   </Link>
-                  <Link to="/courses?cat=AI/ML/DS/DA" className="block px-3 py-1.5 text-xs text-gray-300 hover:text-brand-purple rounded hover:bg-white/5">
+                  <Link to="/courses?cat=AI/ML/DS/DA" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                     Artificial Intelligence & Data Science
                   </Link>
-                  <Link to="/courses?cat=Full Stack Development" className="block px-3 py-1.5 text-xs text-gray-300 hover:text-brand-purple rounded hover:bg-white/5">
+                  <Link to="/courses?cat=Full Stack Development" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                     Full Stack Web Dev (MERN)
                   </Link>
-                  <Link to="/courses?cat=Digital Marketing" className="block px-3 py-1.5 text-xs text-gray-300 hover:text-brand-purple rounded hover:bg-white/5">
+                  <Link to="/courses?cat=Digital Marketing" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                     Performance Ads & SEO
                   </Link>
-                  <Link to="/courses?cat=HR" className="block px-3 py-1.5 text-xs text-gray-300 hover:text-brand-purple rounded hover:bg-white/5">
+                  <Link to="/courses?cat=HR" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                     HR Management
                   </Link>
                 </div>
               )}
             </div>
 
-            <Link to="/blog" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/blog' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+            <Link to="/blog" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/blog' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Blogs
             </Link>
 
-            <Link to="/contact" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/contact' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}>
+            <Link to="/contact" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/contact' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Contact
             </Link>
           </nav>
@@ -151,7 +151,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-4">
             {currentUser ? (
               <div className="flex items-center space-x-3">
-                <span className="text-xs text-gray-400 font-mono bg-white/5 px-2.5 py-1 rounded border border-white/5">
+                <span className="text-xs text-slate-500 font-mono bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
                   ID: {currentUser.studentId || 'Admin'}
                 </span>
                 
@@ -165,16 +165,16 @@ export default function Header() {
                   </Link>
                 )}
 
-                <button onClick={handleLogout} className="text-gray-400 hover:text-slate-800 p-2 focus:outline-none" title="Log Out">
+                <button onClick={handleLogout} className="text-slate-500 hover:text-slate-900 p-2 focus:outline-none" title="Log Out">
                   <LogOut className="w-5 h-5" />
                 </button>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link to="/verify" className="text-xs text-gray-400 hover:text-white px-3 py-2">
+                <Link to="/verify" className="text-xs text-slate-500 hover:text-slate-950 px-3 py-2">
                   Verify Certificate
                 </Link>
-                <Link to="/auth" className="bg-brand-purple text-white hover:brightness-115 shadow-sm shadow-brand-purple/25 px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 transform hover:scale-105">
+                <Link to="/auth" className="bg-brand-purple text-white hover:brightness-110 shadow-sm shadow-brand-purple/20 px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 transform hover:scale-105">
                   Student Login
                 </Link>
               </div>
@@ -183,7 +183,7 @@ export default function Header() {
 
           {/* Mobile hamburger menu button */}
           <div className="flex lg:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-400 hover:text-white focus:outline-none">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-500 hover:text-slate-900 focus:outline-none">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -192,48 +192,48 @@ export default function Header() {
 
       {/* Mobile Drawer menu */}
       {isOpen && (
-        <div className="lg:hidden border-t border-white/10 bg-brand-dark px-4 pt-2 pb-6 space-y-3">
-          <Link to="/" className="block px-3 py-2 text-base font-semibold text-white hover:text-brand-purple border-b border-white/5">
+        <div className="lg:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-6 space-y-3 shadow-lg">
+          <Link to="/" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             Home
           </Link>
-          <Link to="/about" className="block px-3 py-2 text-base font-semibold text-white hover:text-brand-purple border-b border-white/5">
+          <Link to="/about" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             About Us
           </Link>
           
           <div className="px-3 py-1 text-[11px] font-bold text-brand-purple tracking-widest uppercase">
             Agency Services
           </div>
-          <Link to="/services/website-development" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-gray-300">
+          <Link to="/services/website-development" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
             Website Development
           </Link>
-          <Link to="/services/digital-marketing" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-gray-300">
+          <Link to="/services/digital-marketing" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
             Digital Marketing
           </Link>
 
           <div className="px-3 py-1 text-[11px] font-bold text-brand-purple tracking-widest uppercase">
             Academy Programs
           </div>
-          <Link to="/courses" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-gray-300">
+          <Link to="/courses" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
             All Certification Courses
           </Link>
 
-          <Link to="/blog" className="block px-3 py-2 text-base font-semibold text-white hover:text-brand-purple border-b border-white/5">
+          <Link to="/blog" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             Blogs
           </Link>
-          <Link to="/contact" className="block px-3 py-2 text-base font-semibold text-white hover:text-brand-purple border-b border-white/5">
+          <Link to="/contact" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             Contact
           </Link>
-          <Link to="/verify" className="block px-3 py-2 text-base font-semibold text-white hover:text-brand-purple border-b border-white/5">
+          <Link to="/verify" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             Verify Certificate
           </Link>
 
           {currentUser ? (
             <div className="pt-4 px-3 flex flex-col space-y-3">
-              <span className="text-xs text-gray-400 font-mono">
+              <span className="text-xs text-slate-500 font-mono">
                 Student ID: {currentUser.studentId || 'Admin'}
               </span>
               {currentUser.email === 'admin@beyondskills.in' ? (
-                <Link to="/admin" className="text-center bg-brand-cyan/10 text-brand-cyan hover:bg-brand-cyan hover:text-white border border-brand-cyan/20 text-center font-bold py-2 rounded-lg">
+                <Link to="/admin" className="text-center bg-brand-cyan/20 text-brand-cyan hover:bg-brand-cyan hover:text-white border border-brand-cyan/20 text-center font-bold py-2 rounded-lg">
                   Admin Panel
                 </Link>
               ) : (
@@ -241,7 +241,7 @@ export default function Header() {
                   Student Dashboard
                 </Link>
               )}
-              <button onClick={handleLogout} className="flex items-center justify-center space-x-2 text-gray-400 py-2 border border-white/10 rounded-lg hover:bg-brand-dark hover:text-white">
+              <button onClick={handleLogout} className="flex items-center justify-center space-x-2 text-slate-500 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-slate-900">
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </button>

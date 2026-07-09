@@ -114,10 +114,10 @@ export default function Services() {
 
   if (!data) {
     return (
-      <div className="text-white min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
+      <div className="text-slate-900 min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
         <AlertCircle className="w-12 h-12 text-brand-blue mb-4" />
         <h2 className="text-2xl font-bold mb-2">Service Not Found</h2>
-        <p className="text-gray-400 mb-6">The agency service you are looking for does not exist.</p>
+        <p className="text-slate-500 mb-6">The agency service you are looking for does not exist.</p>
         <Link to="/" className="bg-brand-purple text-white font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
           Return Home
         </Link>
@@ -128,13 +128,13 @@ export default function Services() {
   const IconComp = data.icon;
 
   return (
-    <div className="text-white min-h-screen relative pt-12 pb-24">
+    <div className="text-slate-900 min-h-screen relative pt-12 pb-24">
       {/* Decorative Blur */}
       <div className="absolute top-20 right-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] animate-pulse-glow z-0"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
         {/* Back Link */}
-        <Link to="/" className="inline-flex items-center space-x-2 text-xs font-bold text-gray-400 hover:text-brand-purple uppercase tracking-wider mb-8">
+        <Link to="/" className="inline-flex items-center space-x-2 text-xs font-bold text-slate-500 hover:text-brand-purple uppercase tracking-wider mb-8">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
         </Link>
@@ -147,7 +147,7 @@ export default function Services() {
           <h1 className="logo-font text-3xl sm:text-5xl font-extrabold mt-4 mb-6 leading-tight">
             {data.title}
           </h1>
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+          <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
             {data.overview}
           </p>
         </div>
@@ -160,12 +160,12 @@ export default function Services() {
             
             {/* Tech Stack */}
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-brand-purple pl-3">
+              <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wider mb-4 border-l-2 border-brand-purple pl-3">
                 Technologies & Platforms
               </h3>
               <div className="flex flex-wrap gap-2.5">
                 {data.technologies.map((t, idx) => (
-                  <span key={idx} className="text-xs bg-brand-darker border border-white/10 px-3 py-1.5 rounded-lg text-gray-300 font-mono">
+                  <span key={idx} className="text-xs bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg text-slate-700 font-mono">
                     {t}
                   </span>
                 ))}
@@ -174,17 +174,17 @@ export default function Services() {
 
             {/* Process Timeline */}
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-8 border-l-2 border-brand-purple pl-3">
+              <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wider mb-8 border-l-2 border-brand-purple pl-3">
                 Our Work Process
               </h3>
-              <div className="relative border-l border-white/10 pl-6 space-y-8">
+              <div className="relative border-l border-slate-200 pl-6 space-y-8">
                 {data.process.map((p, idx) => (
                   <div key={idx} className="relative">
                     <span className="absolute -left-[37px] bg-brand-purple text-black font-extrabold text-[10px] w-6 h-6 rounded-full flex items-center justify-center border-2 border-black">
                       {p.step}
                     </span>
-                    <h4 className="font-bold text-white text-sm sm:text-base">{p.name}</h4>
-                    <p className="text-xs sm:text-sm text-gray-400 mt-1 leading-relaxed">{p.desc}</p>
+                    <h4 className="font-bold text-slate-900 text-sm sm:text-base">{p.name}</h4>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">{p.desc}</p>
                   </div>
                 ))}
               </div>
@@ -192,9 +192,9 @@ export default function Services() {
 
             {/* Benefits & Deliverables */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <div className="glass-panel p-6 rounded-xl border border-white/10/60">
+              <div className="glass-panel p-6 rounded-xl border border-slate-200/60">
                 <h4 className="font-bold text-sm text-brand-purple uppercase tracking-wider mb-4">Core Deliverables</h4>
-                <ul className="space-y-3 text-xs sm:text-sm text-gray-300">
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-700">
                   {data.deliverables.map((item, idx) => (
                     <li key={idx} className="flex items-start space-x-2">
                       <Terminal className="w-4 h-4 text-brand-purple mt-0.5 flex-shrink-0" />
@@ -204,9 +204,9 @@ export default function Services() {
                 </ul>
               </div>
 
-              <div className="glass-panel p-6 rounded-xl border border-white/10/60">
+              <div className="glass-panel p-6 rounded-xl border border-slate-200/60">
                 <h4 className="font-bold text-sm text-brand-purple uppercase tracking-wider mb-4">Core Benefits</h4>
-                <ul className="space-y-3 text-xs sm:text-sm text-gray-300">
+                <ul className="space-y-3 text-xs sm:text-sm text-slate-700">
                   {data.benefits.map((item, idx) => (
                     <li key={idx} className="flex items-start space-x-2">
                       <CheckCircle className="w-4 h-4 text-brand-purple mt-0.5 flex-shrink-0" />
@@ -219,14 +219,14 @@ export default function Services() {
 
             {/* FAQs */}
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-6 border-l-2 border-brand-purple pl-3">
+              <h3 className="text-lg font-bold text-slate-900 uppercase tracking-wider mb-6 border-l-2 border-brand-purple pl-3">
                 Service FAQs
               </h3>
               <div className="space-y-4">
                 {data.faqs.map((faq, idx) => (
-                  <div key={idx} className="border border-white/10/60 bg-brand-darker p-5 rounded-xl">
-                    <h4 className="font-bold text-white text-sm sm:text-base mb-2">{faq.q}</h4>
-                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{faq.a}</p>
+                  <div key={idx} className="border border-slate-200/60 bg-slate-100 p-5 rounded-xl">
+                    <h4 className="font-bold text-slate-900 text-sm sm:text-base mb-2">{faq.q}</h4>
+                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{faq.a}</p>
                   </div>
                 ))}
               </div>
@@ -235,46 +235,46 @@ export default function Services() {
           </div>
 
           {/* Inquiry Form Sticky Panel */}
-          <div className="glass-panel p-6 rounded-2xl border border-white/10 sticky top-24">
-            <h3 className="text-base font-bold text-white uppercase tracking-wider mb-2">Request Consultation</h3>
-            <p className="text-xs text-gray-400 mb-6">Get a proposal in 5 mins (Target SLA).</p>
+          <div className="glass-panel p-6 rounded-2xl border border-slate-200 sticky top-24">
+            <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-2">Request Consultation</h3>
+            <p className="text-xs text-slate-500 mb-6">Get a proposal in 5 mins (Target SLA).</p>
 
             {status === 'success' && (
-              <div className="bg-brand-purple/15 border border-brand-purple/30 text-white p-3.5 rounded-lg mb-6 text-xs leading-relaxed">
+              <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-3.5 rounded-lg mb-6 text-xs leading-relaxed">
                 🚀 Consultation logged! We have dispatched a simulated receipt to your email workspace.
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Name *</label>
-                <input type="text" required value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="Jane Doe" />
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Name *</label>
+                <input type="text" required value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="Jane Doe" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Company *</label>
-                <input type="text" required value={form.company} onChange={(e) => setForm({...form, company: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="Company Name" />
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Company *</label>
+                <input type="text" required value={form.company} onChange={(e) => setForm({...form, company: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="Company Name" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Email *</label>
-                <input type="email" required value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="jane@company.com" />
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email *</label>
+                <input type="email" required value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="jane@company.com" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Phone *</label>
-                <input type="tel" required value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="+91 98765 43210" />
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Phone *</label>
+                <input type="tel" required value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="+91 98765 43210" />
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Budget *</label>
-                <select value={form.budget} onChange={(e) => setForm({...form, budget: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none">
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Budget *</label>
+                <select value={form.budget} onChange={(e) => setForm({...form, budget: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none">
                   <option value="₹1,00,000 - ₹3,00,000">₹1,00,000 - ₹3,00,000</option>
                   <option value="₹3,00,000 - ₹5,00,000">₹3,00,000 - ₹5,00,000</option>
                   <option value="₹5,00,000+">₹5,00,000+</option>
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Brief Message</label>
-                <textarea rows={3} value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} className="w-full bg-white border border-white/10/80 shadow-sm border border-white/10 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="What are your goals?"></textarea>
+                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Brief Message</label>
+                <textarea rows={3} value={form.message} onChange={(e) => setForm({...form, message: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none" placeholder="What are your goals?"></textarea>
               </div>
-              <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
+              <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
                 <Send className="w-3.5 h-3.5" />
                 <span>Submit Inquiry</span>
               </button>

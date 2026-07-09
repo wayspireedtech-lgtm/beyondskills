@@ -4,19 +4,19 @@ import { Mail, Phone, MapPin, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-dark border-t border-white/10 text-gray-400">
+    <footer className="bg-slate-50 border-t border-slate-200 text-slate-650">
       
       {/* Placement Disclaimer Header / Banner */}
-      <div className="bg-brand-darker/60 border-b border-white/10 py-6 px-4">
+      <div className="bg-slate-100/60 border-b border-slate-200 py-6 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 md:space-x-6">
           <div className="flex items-center space-x-3 text-brand-purple">
             <ShieldAlert className="w-8 h-8 flex-shrink-0" />
             <div>
-              <h4 className="text-sm font-bold text-slate-200 uppercase tracking-wider">MANDATORY COMPLIANCE DISCLAIMER</h4>
-              <p className="text-xs text-gray-400">Please read our educational scope & placement conditions below.</p>
+              <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider">MANDATORY COMPLIANCE DISCLAIMER</h4>
+              <p className="text-xs text-slate-500">Please read our educational scope & placement conditions below.</p>
             </div>
           </div>
-          <div className="text-[11px] text-gray-400 max-w-4xl text-left leading-relaxed">
+          <div className="text-[11px] text-slate-500 max-w-4xl text-left leading-relaxed">
             <strong>NO JOB OR PLACEMENT GUARANTEE:</strong> BeyondSkills does not guarantee employment, internships, placements, salary packages, or job offers. Enrollment does not create entitlement to employment. Our academy provides education, industry mentorship, practical projects, and skills verification certificates. Learners remain fully responsible for their own career progression and job search outcomes.
           </div>
         </div>
@@ -28,18 +28,18 @@ export default function Footer() {
           <div>
             <Link to="/" className="flex flex-col items-start leading-none group mb-6">
               <div className="flex items-center">
-                <span className="logo-font text-2.5xl font-extrabold tracking-tight text-white transition-colors duration-300 group-hover:text-slate-750">
+                <span className="logo-font text-2.5xl font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-750">
                   Beyond
                 </span>
-                <span className="logo-font text-2.5xl font-extrabold tracking-tight bg-gradient-to-r from-brand-purple to-brand-blue bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
+                <span className="logo-font text-2.5xl font-extrabold tracking-tight bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
                   Skills
                 </span>
               </div>
-              <span className="text-[7px] font-bold text-gray-400 uppercase tracking-[0.16em] mt-1 select-none leading-none">
+              <span className="text-[7px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-1 select-none leading-none">
                 Digital Services • Upskilling • Future-Ready
               </span>
             </Link>
-            <p className="text-sm text-gray-400 mb-5 leading-relaxed">
+            <p className="text-sm text-slate-500 mb-5 leading-relaxed">
               Accelerating digital growth for brands through our cutting-edge Agency services while equipping developers, marketers, and leaders of tomorrow with industry-focused upskilling.
             </p>
             <p className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-5">
@@ -58,7 +58,7 @@ export default function Footer() {
 
           {/* Column 2: Agency & Services */}
           <div>
-            <h3 className="text-white font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
+            <h3 className="text-slate-900 font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
               Agency Services
             </h3>
             <ul className="space-y-4 text-sm">
@@ -87,7 +87,7 @@ export default function Footer() {
 
           {/* Column 3: Academy Courses */}
           <div>
-            <h3 className="text-white font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
+            <h3 className="text-slate-900 font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
               Upskilling Academy
             </h3>
             <ul className="space-y-4 text-sm">
@@ -116,10 +116,10 @@ export default function Footer() {
 
           {/* Column 4: Reach Us */}
           <div>
-            <h3 className="text-white font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
+            <h3 className="text-slate-900 font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
               Reach Us
             </h3>
-            <ul className="space-y-4 text-sm text-gray-400">
+            <ul className="space-y-4 text-sm text-slate-500">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-brand-purple flex-shrink-0 mt-0.5" />
                 <span>Sector 62, Electronic City, Noida, UP, India</span>
@@ -137,15 +137,15 @@ export default function Footer() {
         </div>
 
         {/* Detailed Compliance Disclaimers */}
-        <div className="mt-16 pt-8 border-t border-white/10 grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs text-gray-400 leading-relaxed text-justify">
+        <div className="mt-16 pt-8 border-t border-slate-200 grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs text-slate-500 leading-relaxed text-justify">
           <div>
-            <h5 className="font-bold text-gray-300 uppercase tracking-wider mb-2">EDUCATIONAL SCOPE & POLICIES</h5>
+            <h5 className="font-bold text-slate-700 uppercase tracking-wider mb-2">EDUCATIONAL SCOPE & POLICIES</h5>
             <p>
               All academic certifications and learning materials provided by BeyondSkills Academy are designed for Basic to Intermediate levels of industry education. The programs are structured to deliver project-based knowledge, code repositories development, and guided support. Completion of course requirements signifies participation, syllabus coverage, and passing standard test templates, and does not certify professional expertise or licensing.
             </p>
           </div>
           <div>
-            <h5 className="font-bold text-gray-300 uppercase tracking-wider mb-2">BUSINESS VERTICAL SEPARATION</h5>
+            <h5 className="font-bold text-slate-700 uppercase tracking-wider mb-2">BUSINESS VERTICAL SEPARATION</h5>
             <p>
               The Digital Marketing & Web Development Agency and the Upskilling Academy operate as distinct commercial business verticals. Agency services (custom programming, digital strategy campaigns, ads placement) are governed by specific corporate agreements and deliverables SLA. Educational classes, recorded video lessons, student login workspace access, and assessments are governed exclusively by candidate enrollment terms.
             </p>
@@ -153,7 +153,7 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom copyright */}
-        <div className="mt-12 pt-8 border-t border-white/10/60 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400">
+        <div className="mt-12 pt-8 border-t border-slate-200/60 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500">
           <p>© {new Date().getFullYear()} BeyondSkills. All rights reserved. Registered 2022.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="hover:text-brand-purple transition-colors">Terms of Service</a>

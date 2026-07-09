@@ -58,27 +58,27 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="text-white min-h-screen relative pt-12 pb-24">
+    <div className="text-slate-900 min-h-screen relative pt-12 pb-24">
       {/* Background glow */}
       <div className="absolute top-20 right-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-6 mb-10 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-6 mb-10 gap-4">
           <div>
             <span className="text-xs font-bold text-brand-cyan uppercase">BeyondSkills Admin Center</span>
-            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
               Analytics & CRM Console
             </h1>
           </div>
           
           {/* Action Tabs */}
           <div className="flex space-x-2">
-            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'analytics' ? 'bg-brand-cyan text-black' : 'bg-brand-darker border border-white/10 text-gray-300 hover:text-white'}`}>
+            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'analytics' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
               Analytics Report
             </button>
-            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'leads' ? 'bg-brand-cyan text-black' : 'bg-brand-darker border border-white/10 text-gray-300 hover:text-white'}`}>
+            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'leads' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
               Leads Inbox ({leads.length})
             </button>
           </div>
@@ -91,9 +91,9 @@ export default function AdminDashboard() {
             {/* Stat Row */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               
-              <div className="glass-panel p-6 rounded-2xl border border-white/10/60 flex items-center justify-between">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-gray-400 uppercase font-bold">Total Revenue</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">Total Revenue</span>
                   <p className="text-2xl font-extrabold font-mono mt-1">₹{totalRevenue.toLocaleString()}</p>
                 </div>
                 <div className="bg-[#4ADE80]/15 text-[#4ADE80] p-2.5 rounded-xl">
@@ -101,9 +101,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-white/10/60 flex items-center justify-between">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-gray-400 uppercase font-bold">Success Enrollments</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">Success Enrollments</span>
                   <p className="text-2xl font-extrabold font-mono mt-1">{totalEnrollments}</p>
                 </div>
                 <div className="bg-brand-purple/15 text-brand-purple p-2.5 rounded-xl">
@@ -111,9 +111,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-white/10/60 flex items-center justify-between">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-gray-400 uppercase font-bold">Payment Success Rate</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">Payment Success Rate</span>
                   <p className="text-2xl font-extrabold font-mono mt-1">{paymentSuccessRate}%</p>
                 </div>
                 <div className="bg-[#60A5FA]/15 text-[#60A5FA] p-2.5 rounded-xl">
@@ -121,9 +121,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-white/10/60 flex items-center justify-between">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-gray-400 uppercase font-bold">Academy Leads</span>
+                  <span className="text-[10px] text-slate-500 uppercase font-bold">Academy Leads</span>
                   <p className="text-2xl font-extrabold font-mono mt-1">{leads.length}</p>
                 </div>
                 <div className="bg-brand-cyan/15 text-brand-cyan p-2.5 rounded-xl">
@@ -137,8 +137,8 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
               {/* Conversion Funnel */}
-              <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
                   <LineChart className="w-4.5 h-4.5 text-brand-cyan" />
                   <span>Interactive Conversion Funnel</span>
                 </h3>
@@ -146,10 +146,10 @@ export default function AdminDashboard() {
                   {funnelSteps.map((step, idx) => (
                     <div key={idx} className="relative">
                       <div className="flex justify-between items-center text-xs mb-1.5">
-                        <span className="text-gray-300 font-medium">{step.name}</span>
-                        <span className="font-mono text-white font-bold">{step.value} ({step.pct})</span>
+                        <span className="text-slate-700 font-medium">{step.name}</span>
+                        <span className="font-mono text-slate-900 font-bold">{step.value} ({step.pct})</span>
                       </div>
-                      <div className="w-full bg-brand-darker h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                         <div className="bg-gradient-to-r from-brand-purple to-brand-cyan h-full" style={{ width: step.pct }}></div>
                       </div>
                     </div>
@@ -158,19 +158,19 @@ export default function AdminDashboard() {
               </div>
 
               {/* Lead Source Breakdown */}
-              <div className="glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
                   <PieChart className="w-4.5 h-4.5 text-brand-cyan" />
                   <span>Lead Attribution Sources</span>
                 </h3>
                 <div className="space-y-3.5 pt-4 text-xs">
                   {leadSources.map((src, idx) => (
-                    <div key={idx} className="flex items-center justify-between border-b border-white/10/60 pb-2">
-                      <span className="text-gray-400 flex items-center">
+                    <div key={idx} className="flex items-center justify-between border-b border-slate-200/60 pb-2">
+                      <span className="text-slate-500 flex items-center">
                         <Globe className="w-4 h-4 text-brand-purple mr-2" />
                         {src.name}
                       </span>
-                      <span className="font-bold text-white">{src.value}%</span>
+                      <span className="font-bold text-slate-900">{src.value}%</span>
                     </div>
                   ))}
                 </div>
@@ -182,11 +182,11 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               
               {/* Mentor Stats */}
-              <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-white/10 space-y-4">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Mentor Performance Ratings</h3>
+              <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2">Mentor Performance Ratings</h3>
                 <table className="w-full text-xs text-left">
                   <thead>
-                    <tr className="border-b border-white/10/60 text-gray-400 pb-2">
+                    <tr className="border-b border-slate-200/60 text-slate-500 pb-2">
                       <th className="py-2">Mentor Name</th>
                       <th className="py-2">Course Module</th>
                       <th className="py-2 text-center">Avg Rating</th>
@@ -195,14 +195,14 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody>
                     {mentorPerformance.map((m, idx) => (
-                      <tr key={idx} className="border-b border-white/10/60 last:border-b-0 text-gray-300">
-                        <td className="py-2.5 font-semibold text-white">{m.name}</td>
-                        <td className="py-2.5 text-gray-400">{m.course}</td>
+                      <tr key={idx} className="border-b border-slate-200/60 last:border-b-0 text-slate-700">
+                        <td className="py-2.5 font-semibold text-slate-900">{m.name}</td>
+                        <td className="py-2.5 text-slate-500">{m.course}</td>
                         <td className="py-2.5 text-center font-bold text-brand-cyan flex items-center justify-center">
                           <Star className="w-3.5 h-3.5 fill-current mr-1" />
                           <span>{m.rating}</span>
                         </td>
-                        <td className="py-2.5 text-right font-mono text-gray-400">{m.count}</td>
+                        <td className="py-2.5 text-right font-mono text-slate-500">{m.count}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -210,19 +210,19 @@ export default function AdminDashboard() {
               </div>
 
               {/* Engagement & Completion Rates */}
-              <div className="glass-panel p-6 rounded-2xl border border-white/10 flex flex-col justify-between space-y-6">
+              <div className="glass-panel p-6 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-6">
                 <div>
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Syllabus Progress Metrics</h3>
+                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Syllabus Progress Metrics</h3>
                   <div className="mt-6 text-center space-y-2">
-                    <span className="text-4xl font-extrabold font-mono text-white">{completionRate}%</span>
-                    <p className="text-xs text-gray-400">Course Completion Rate</p>
+                    <span className="text-4xl font-extrabold font-mono text-slate-900">{completionRate}%</span>
+                    <p className="text-xs text-slate-500">Course Completion Rate</p>
                   </div>
                   <div className="mt-6 text-center space-y-2">
-                    <span className="text-4xl font-extrabold font-mono text-white">{engagementRate}%</span>
-                    <p className="text-xs text-gray-400">Active Weekly Interaction Rate</p>
+                    <span className="text-4xl font-extrabold font-mono text-slate-900">{engagementRate}%</span>
+                    <p className="text-xs text-slate-500">Active Weekly Interaction Rate</p>
                   </div>
                 </div>
-                <div className="border-t border-white/10/60 pt-4 text-[10px] text-gray-400 leading-normal text-justify">
+                <div className="border-t border-slate-200/60 pt-4 text-[10px] text-slate-500 leading-normal text-justify">
                   Measurements reflect student ticks in recorded lecture modules and mock exam assessment logs.
                 </div>
               </div>
@@ -233,27 +233,27 @@ export default function AdminDashboard() {
         ) : (
           /* LEADS CRM INBOX VIEW */
           <div className="space-y-6 animate-fade-in">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Lead Submission Inbox</h3>
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Lead Submission Inbox</h3>
             
             {leads.length === 0 ? (
               <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
-                <Inbox className="w-10 h-10 text-gray-400 mx-auto" />
-                <h4 className="font-bold text-white text-sm">Leads Inbox is Empty</h4>
-                <p className="text-xs text-gray-400">No new client consultation or academy registration request found.</p>
+                <Inbox className="w-10 h-10 text-slate-500 mx-auto" />
+                <h4 className="font-bold text-slate-900 text-sm">Leads Inbox is Empty</h4>
+                <p className="text-xs text-slate-500">No new client consultation or academy registration request found.</p>
               </div>
             ) : (
               <div className="space-y-6">
                 {leads.map((lead, idx) => (
-                  <div key={idx} className="glass-panel p-6 rounded-xl border border-white/10 relative space-y-4">
+                  <div key={idx} className="glass-panel p-6 rounded-xl border border-slate-200 relative space-y-4">
                     
                     {/* Badge header */}
                     <div className="flex items-center justify-between">
                       <span className={`text-[9px] font-bold uppercase px-2.5 py-0.5 rounded tracking-widest ${lead.type === 'Agency' ? 'bg-[#3399FF]/10 border border-[#3399FF]/30 text-[#3399FF]' : 'bg-brand-purple/10 border border-brand-purple/30 text-brand-purple'}`}>
                         {lead.type} Request
                       </span>
-                      <div className="flex items-center space-x-2 text-[10px] text-gray-400 font-mono">
+                      <div className="flex items-center space-x-2 text-[10px] text-slate-500 font-mono">
                         <span>{new Date(lead.date).toLocaleDateString()} {new Date(lead.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        <button onClick={() => handleDeleteLead(idx)} className="text-gray-400 hover:text-brand-blue p-1 rounded focus:outline-none transition-colors" title="Delete Inquiry">
+                        <button onClick={() => handleDeleteLead(idx)} className="text-slate-500 hover:text-brand-blue p-1 rounded focus:outline-none transition-colors" title="Delete Inquiry">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -262,48 +262,48 @@ export default function AdminDashboard() {
                     {/* Metadata fields */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
                       <div>
-                        <span className="text-gray-400 block uppercase text-[9px] font-bold">Contact Name:</span>
-                        <span className="text-white font-medium">{lead.name}</span>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Contact Name:</span>
+                        <span className="text-slate-900 font-medium">{lead.name}</span>
                       </div>
                       <div>
-                        <span className="text-gray-400 block uppercase text-[9px] font-bold">Email Address:</span>
-                        <span className="text-white font-mono">{lead.email}</span>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Email Address:</span>
+                        <span className="text-slate-900 font-mono">{lead.email}</span>
                       </div>
                       <div>
-                        <span className="text-gray-400 block uppercase text-[9px] font-bold">Phone Number:</span>
-                        <span className="text-white font-mono">{lead.phone}</span>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Phone Number:</span>
+                        <span className="text-slate-900 font-mono">{lead.phone}</span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs border-t border-white/10/60 pt-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs border-t border-slate-200/60 pt-3">
                       {lead.type === 'Agency' ? (
                         <>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">Company Name:</span>
-                            <span className="text-white">{lead.company}</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Company Name:</span>
+                            <span className="text-slate-900">{lead.company}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">Service Category:</span>
-                            <span className="text-white">{lead.service}</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Service Category:</span>
+                            <span className="text-slate-900">{lead.service}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">Project Budget:</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Project Budget:</span>
                             <span className="text-brand-cyan font-bold font-mono">{lead.budget}</span>
                           </div>
                         </>
                       ) : (
                         <>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">College / Org:</span>
-                            <span className="text-white">{lead.college}</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">College / Org:</span>
+                            <span className="text-slate-900">{lead.college}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">Interest Program:</span>
-                            <span className="text-white uppercase font-mono">{lead.course}</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Interest Program:</span>
+                            <span className="text-slate-900 uppercase font-mono">{lead.course}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400 block uppercase text-[9px] font-bold">Current Status:</span>
-                            <span className="text-white">{lead.status}</span>
+                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Current Status:</span>
+                            <span className="text-slate-900">{lead.status}</span>
                           </div>
                         </>
                       )}
@@ -311,8 +311,8 @@ export default function AdminDashboard() {
 
                     {/* Messages briefs */}
                     {lead.message && (
-                      <div className="bg-brand-darker border border-white/10/60 p-3 rounded-lg text-xs text-gray-300">
-                        <strong className="text-[9px] text-gray-400 block uppercase mb-1">Message Content:</strong>
+                      <div className="bg-slate-100 border border-slate-200/60 p-3 rounded-lg text-xs text-slate-700">
+                        <strong className="text-[9px] text-slate-500 block uppercase mb-1">Message Content:</strong>
                         <p className="italic">"{lead.message}"</p>
                       </div>
                     )}
