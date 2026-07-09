@@ -304,7 +304,7 @@ export default function Courses() {
           {/* Search Box */}
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-slate-500" />
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-slate-100 border border-slate-250 rounded-xl pl-10 pr-4 py-3 text-xs text-slate-800 focus:border-brand-purple outline-none shadow-sm focus:border-brand-purple outline-none" placeholder="Search courses..." />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-xs text-slate-800 focus:border-brand-purple outline-none shadow-sm focus:border-brand-purple outline-none" placeholder="Search courses..." />
           </div>
 
         </div>

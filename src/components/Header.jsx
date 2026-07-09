@@ -64,11 +64,11 @@ export default function Header() {
 
           {/* Desktop Navigation Capsule Bar */}
           <nav className="hidden lg:flex items-center bg-white/70 border border-slate-200/80 rounded-full px-2 py-1.5 shadow-sm shadow-slate-100/50 backdrop-blur-md hover:border-brand-purple/30 transition-all duration-300">
-            <Link to="/" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+            <Link to="/" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Home
             </Link>
             
-            <Link to="/about" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/about' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+            <Link to="/about" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/about' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               About Us
             </Link>
 
@@ -76,7 +76,7 @@ export default function Header() {
             <div className="relative" 
                  onMouseEnter={() => setAgencyDropdown(true)}
                  onMouseLeave={() => setAgencyDropdown(false)}>
-              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/services') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/services') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
                 <span>Agency</span>
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
@@ -105,7 +105,7 @@ export default function Header() {
             <div className="relative"
                  onMouseEnter={() => setCoursesDropdown(true)}
                  onMouseLeave={() => setCoursesDropdown(false)}>
-              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/courses') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+              <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/courses') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
                 <span>Academy</span>
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
@@ -138,11 +138,11 @@ export default function Header() {
               )}
             </div>
 
-            <Link to="/blog" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/blog' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+            <Link to="/blog" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/blog' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Blogs
             </Link>
 
-            <Link to="/contact" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/contact' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-650 hover:text-slate-950 hover:bg-slate-100/60'}`}>
+            <Link to="/contact" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/contact' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
               Contact
             </Link>
           </nav>
@@ -203,17 +203,17 @@ export default function Header() {
           <div className="px-3 py-1 text-[11px] font-bold text-brand-purple tracking-widest uppercase">
             Agency Services
           </div>
-          <Link to="/services/website-development" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
+          <Link to="/services/website-development" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-600">
             Website Development
           </Link>
-          <Link to="/services/digital-marketing" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
+          <Link to="/services/digital-marketing" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-600">
             Digital Marketing
           </Link>
 
           <div className="px-3 py-1 text-[11px] font-bold text-brand-purple tracking-widest uppercase">
             Academy Programs
           </div>
-          <Link to="/courses" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-650">
+          <Link to="/courses" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-600">
             All Certification Courses
           </Link>
 

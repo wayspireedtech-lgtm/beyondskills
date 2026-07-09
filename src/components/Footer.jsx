@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-50 border-t border-slate-200 text-slate-650">
+    <footer className="bg-slate-50 border-t border-slate-200 text-slate-600">
       
       {/* Placement Disclaimer Header / Banner */}
       <div className="bg-slate-100/60 border-b border-slate-200 py-6 px-4">
@@ -28,7 +28,7 @@ export default function Footer() {
           <div>
             <Link to="/" className="flex flex-col items-start leading-none group mb-6">
               <div className="flex items-center">
-                <span className="logo-font text-2.5xl font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-750">
+                <span className="logo-font text-2.5xl font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-700">
                   Beyond
                 </span>
                 <span className="logo-font text-2.5xl font-extrabold tracking-tight bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">

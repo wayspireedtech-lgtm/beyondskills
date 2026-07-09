@@ -147,7 +147,7 @@ export default function Verification() {
         <form onSubmit={handleFormSubmit} className="flex space-x-3">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
-            <input type="text" required value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-250 rounded-xl pl-10 pr-4 py-3 text-xs text-slate-800 focus:border-brand-purple outline-none shadow-sm focus:border-brand-purple outline-none focus:border-brand-purple outline-none" placeholder="Enter Certificate Reference ID..." />
+            <input type="text" required value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-xs text-slate-800 focus:border-brand-purple outline-none shadow-sm focus:border-brand-purple outline-none focus:border-brand-purple outline-none" placeholder="Enter Certificate Reference ID..." />
           </div>
           <button type="submit" className="bg-brand-purple hover:bg-brand-purple/90 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-widest transition-colors">
             Verify

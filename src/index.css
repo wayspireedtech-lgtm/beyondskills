@@ -123,8 +123,8 @@
   /* Purple grid visible near mouse */
   background-size: 50px 50px;
   background-image: 
-    linear-gradient(to right, rgba(139, 92, 246, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
+    linear-gradient(to right, rgba(109, 40, 217, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(109, 40, 217, 0.5) 1px, transparent 1px);
   /* Mask it with radial gradient at mouse coordinates */
   -webkit-mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
   mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
@@ -158,7 +158,7 @@
 /* Accent border highlights for dashboards */
 .glow-border-purple {
   border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 0 20px -5px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 20px -5px rgba(109, 40, 217, 0.5);
 }
 
 .glow-border-blue {
@@ -169,7 +169,7 @@
 /* Legacy aliases for orange & yellow glows */
 .glow-border-orange {
   border: 1px solid rgba(139, 92, 246, 0.2);
-  box-shadow: 0 0 20px -5px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 20px -5px rgba(109, 40, 217, 0.5);
 }
 
 .glow-border-yellow {
