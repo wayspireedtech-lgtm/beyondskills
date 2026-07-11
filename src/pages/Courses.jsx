@@ -11,6 +11,7 @@ export default function Courses() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('All');
   const [activeCourseId, setActiveCourseId] = useState(null);
+  const [clickedCourseId, setClickedCourseId] = useState(null);
 
   // Read URL search params
   useEffect(() => {
@@ -311,8 +312,18 @@ export default function Courses() {
 
         {/* Course Catalog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCourses.map((c) => (
-            <div key={c.id} className="glass-card p-6 rounded-2xl flex flex-col justify-between border border-slate-200/60 hover:border-brand-purple/30 transition-all hover:scale-[1.01]">
+          {filteredCourses.map((c) => {
+            const isSelected = clickedCourseId === c.id;
+            return (
+              <div 
+                key={c.id} 
+                onClick={() => setClickedCourseId(c.id)}
+                className={`glass-card p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer ${
+                  isSelected 
+                    ? 'border-brand-purple ring-2 ring-brand-purple/20 shadow-[0_0_25px_rgba(139,92,246,0.45)] scale-[1.01]' 
+                    : 'border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]'
+                }`}
+              >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[9px] font-bold text-brand-purple uppercase border border-brand-purple/30 px-2 py-0.5 rounded bg-brand-purple/5">
@@ -362,7 +373,7 @@ export default function Courses() {
                 </div>
               </div>
             </div>
-          ))}
+          )})}
 
           {filteredCourses.length === 0 && (
             <div className="col-span-full py-16 text-center text-slate-500">

@@ -20,6 +20,8 @@ export default function Home() {
   const [agencyForm, setAgencyForm] = useState({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: '₹1,00,000 - ₹3,00,000', message: '' });
   const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml-ds', college: '', status: 'Undergraduate Student', message: '' });
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   const handleAgencySubmit = (e) => {
     e.preventDefault();
@@ -267,8 +269,18 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {services.map((svc) => (
-            <div key={svc.id} className="glass-card p-8 rounded-2xl flex flex-col justify-between relative group overflow-hidden">
+          {services.map((svc) => {
+            const isSelected = selectedServiceId === svc.id;
+            return (
+              <div 
+                key={svc.id} 
+                onClick={() => setSelectedServiceId(svc.id)}
+                className={`glass-card p-8 rounded-2xl flex flex-col justify-between relative group overflow-hidden cursor-pointer transition-all duration-300 ${
+                  isSelected 
+                    ? 'border-brand-purple ring-2 ring-brand-purple/20 shadow-[0_0_25px_rgba(139,92,246,0.45)] scale-[1.01]' 
+                    : 'hover:scale-[1.01]'
+                }`}
+              >
               <div className="absolute top-0 right-0 w-24 h-24 bg-brand-purple/5 rounded-full blur-2xl group-hover:bg-brand-purple/10 transition-colors"></div>
               
               <div>
@@ -293,7 +305,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </section>
 
@@ -312,8 +324,18 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredCourses.map((course) => (
-            <div key={course.id} className="bg-white border border-slate-200/80 shadow-sm border border-slate-200/60 hover:border-brand-purple/30 p-6 rounded-2xl flex flex-col justify-between transition-all hover:scale-[1.01] glass-card">
+          {featuredCourses.map((course) => {
+            const isSelected = selectedCourseId === course.id;
+            return (
+              <div 
+                key={course.id} 
+                onClick={() => setSelectedCourseId(course.id)}
+                className={`bg-white border shadow-sm p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer glass-card ${
+                  isSelected 
+                    ? 'border-brand-purple ring-2 ring-brand-purple/20 shadow-[0_0_25px_rgba(139,92,246,0.45)] scale-[1.01]' 
+                    : 'border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]'
+                }`}
+              >
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[9px] font-bold text-brand-purple uppercase border border-brand-purple/30 px-2.5 py-0.5 rounded bg-brand-purple/5">
@@ -358,7 +380,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
 
         <div className="text-center mt-12">

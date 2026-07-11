@@ -43,7 +43,7 @@ export default function Curved3DCarousel() {
     if (!isPaused) {
       autoPlayRef.current = setInterval(() => {
         handleNext();
-      }, 3000);
+      }, 1500);
     }
     return () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
@@ -101,7 +101,7 @@ export default function Curved3DCarousel() {
                 zIndex: 10 - absOffset,
                 opacity: absOffset > 3 ? 0 : absOffset === 3 ? 0.35 : 1,
                 pointerEvents: absOffset > 1 ? 'none' : 'auto',
-                transition: 'transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.75s ease, z-index 0.75s ease',
+                transition: 'transform 0.55s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.55s ease, z-index 0.55s ease',
               }}
             >
               <PartnerLogo name={partner.key} className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
