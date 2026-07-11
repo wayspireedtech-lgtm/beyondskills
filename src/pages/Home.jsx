@@ -5,6 +5,11 @@ import TechIcon from '../components/TechIcon';
 import { COURSES, MENTORS, STUDENT_TESTIMONIALS, CLIENT_TESTIMONIALS, getDbItem, setDbItem } from '../utils/mockDb';
 import PartnerLogo from '../components/PartnerLogo';
 
+import startupIndiaLogo from '../assets/startup_india.png';
+import isoCertifiedLogo from '../assets/iso_certified.png';
+import msmeRegisteredLogo from '../assets/msme_registered.png';
+
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState('agency');
   const [faqOpen, setFaqOpen] = useState({});
@@ -94,7 +99,7 @@ export default function Home() {
   const featuredCourses = COURSES.slice(0, 3);
 
   return (
-    <div className="relative bg-white text-slate-900 overflow-hidden  min-h-screen">
+    <div className="relative bg-transparent text-slate-900 overflow-hidden  min-h-screen">
       
       {/* Radiant Glow Blobs */}
       <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[120px] animate-pulse-glow z-0"></div>
@@ -146,21 +151,88 @@ export default function Home() {
       </section>
 
       {/* 2. Infinite Scrolling Logo Bar */}
-      <div className="w-full bg-slate-100 border-y border-slate-200 py-8 overflow-hidden relative z-10">
-        <div className="flex w-[200%] animate-infinite-scroll items-center justify-around space-x-12">
-          {['Google Cloud Partner', 'Meta Ads Agency Partner', 'AWS Cloud Architect', 'Microsoft Hub Member', 'Razorpay Integrated Gateway', 'HubSpot Partner', 'Vercel Partner System', 'Shopify Experts Team'].map((partner, idx) => (
-            <div key={idx} className="flex items-center space-x-2.5 text-slate-600 font-mono text-[10px] uppercase tracking-widest select-none">
-              <PartnerLogo name={partner} className="w-4 h-4 flex-shrink-0" />
-              <span className="font-bold">{partner}</span>
+      <div className="w-full bg-slate-100 border-y border-slate-200 py-6 overflow-hidden relative z-10">
+        <div 
+          className="flex w-[250%] sm:w-[200%] animate-infinite-scroll items-center justify-around gap-8"
+          style={{ animationDuration: '14s' }}
+        >
+          {[
+            { display: 'Google Cloud', key: 'Google Cloud Partner' },
+            { display: 'Meta Ads', key: 'Meta Ads Agency Partner' },
+            { display: 'AWS Cloud', key: 'AWS Cloud Architect' },
+            { display: 'Microsoft Hub', key: 'Microsoft Hub Member' },
+            { display: 'Razorpay', key: 'Razorpay Integrated Gateway' },
+            { display: 'HubSpot', key: 'HubSpot Partner' },
+            { display: 'Vercel', key: 'Vercel Partner System' },
+            { display: 'Shopify', key: 'Shopify Experts Team' }
+          ].map((partner, idx) => (
+            <div 
+              key={idx} 
+              className="w-28 h-28 rounded-full bg-white shadow-md border border-slate-200/60 flex flex-col items-center justify-center p-3 text-center space-y-1.5 transition-all duration-300 hover:scale-110 flex-shrink-0 select-none cursor-pointer hover:border-brand-purple/40 hover:shadow-brand-purple/5"
+            >
+              <PartnerLogo name={partner.key} className="w-7 h-7 flex-shrink-0" />
+              <span className="text-[9px] font-extrabold text-slate-800 uppercase tracking-tight leading-tight max-w-[85px] line-clamp-2">
+                {partner.display}
+              </span>
             </div>
           ))}
           {/* Duplicate for infinite loop */}
-          {['Google Cloud Partner', 'Meta Ads Agency Partner', 'AWS Cloud Architect', 'Microsoft Hub Member', 'Razorpay Integrated Gateway', 'HubSpot Partner', 'Vercel Partner System', 'Shopify Experts Team'].map((partner, idx) => (
-            <div key={`dup-${idx}`} className="flex items-center space-x-2.5 text-slate-600 font-mono text-[10px] uppercase tracking-widest select-none">
-              <PartnerLogo name={partner} className="w-4 h-4 flex-shrink-0" />
-              <span className="font-bold">{partner}</span>
+          {[
+            { display: 'Google Cloud', key: 'Google Cloud Partner' },
+            { display: 'Meta Ads', key: 'Meta Ads Agency Partner' },
+            { display: 'AWS Cloud', key: 'AWS Cloud Architect' },
+            { display: 'Microsoft Hub', key: 'Microsoft Hub Member' },
+            { display: 'Razorpay', key: 'Razorpay Integrated Gateway' },
+            { display: 'HubSpot', key: 'HubSpot Partner' },
+            { display: 'Vercel', key: 'Vercel Partner System' },
+            { display: 'Shopify', key: 'Shopify Experts Team' }
+          ].map((partner, idx) => (
+            <div 
+              key={`dup-${idx}`} 
+              className="w-28 h-28 rounded-full bg-white shadow-md border border-slate-200/60 flex flex-col items-center justify-center p-3 text-center space-y-1.5 transition-all duration-300 hover:scale-110 flex-shrink-0 select-none cursor-pointer hover:border-brand-purple/40 hover:shadow-brand-purple/5"
+            >
+              <PartnerLogo name={partner.key} className="w-7 h-7 flex-shrink-0" />
+              <span className="text-[9px] font-extrabold text-slate-800 uppercase tracking-tight leading-tight max-w-[85px] line-clamp-2">
+                {partner.display}
+              </span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* 2.5 Trust Badges & Accreditations Banner */}
+      <div className="w-full py-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="bg-gradient-to-r from-[#032FC7] via-[#0031EF] to-[#0131BC] rounded-2xl p-6 sm:p-8 shadow-xl border border-blue-500/30 flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4 hover:shadow-blue-500/10 transition-all duration-300">
+            
+            {/* Startup India */}
+            <div className="flex flex-col items-center justify-center group cursor-pointer">
+              <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
+                <img src={startupIndiaLogo} alt="Startup India Recognized" className="max-h-full object-contain rounded-lg" />
+              </div>
+            </div>
+            
+            {/* Divider line for MD and up */}
+            <div className="hidden md:block w-px h-16 bg-white/20"></div>
+
+            {/* ISO Certified */}
+            <div className="flex flex-col items-center justify-center group cursor-pointer">
+              <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
+                <img src={isoCertifiedLogo} alt="ISO 9001:2015 Certified" className="max-h-full object-contain rounded-lg" />
+              </div>
+            </div>
+
+            {/* Divider line for MD and up */}
+            <div className="hidden md:block w-px h-16 bg-white/20"></div>
+
+            {/* MSME Registered */}
+            <div className="flex flex-col items-center justify-center group cursor-pointer">
+              <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
+                <img src={msmeRegisteredLogo} alt="MSME Registered" className="max-h-full object-contain rounded-lg" />
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 

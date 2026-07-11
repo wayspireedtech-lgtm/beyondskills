@@ -100,7 +100,7 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 20;
+  z-index: 0;
 }
 
 .bg-grid-pattern::before {
@@ -109,10 +109,10 @@
   inset: 0;
   
   /* Soft purple grid lines always visible across the whole page */
-  background-size: 50px 50px;
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(139, 92, 246, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(139, 92, 246, 0.08) 1px, transparent 1px);
+    linear-gradient(to right, rgba(139, 92, 246, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 92, 246, 0.12) 1px, transparent 1px);
 }
 
 .bg-grid-pattern::after {
@@ -121,15 +121,25 @@
   inset: 0;
   
   /* Rich dark purple grid that pops near the cursor */
-  background-size: 50px 50px;
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(109, 40, 217, 0.65) 1.5px, transparent 1.5px),
-    linear-gradient(to bottom, rgba(109, 40, 217, 0.65) 1.5px, transparent 1.5px);
+    linear-gradient(to right, rgba(109, 40, 217, 0.7) 1.5px, transparent 1.5px),
+    linear-gradient(to bottom, rgba(109, 40, 217, 0.7) 1.5px, transparent 1.5px);
   /* Mask it with radial gradient at mouse coordinates */
-  -webkit-mask-image: radial-gradient(circle 200px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
-  mask-image: radial-gradient(circle 200px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 220px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
+  mask-image: radial-gradient(circle 220px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
   transition: opacity 0.3s ease;
 }
+
+/* Dynamic glow spotlight behind the grid */
+.bg-grid-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle 280px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.03), transparent 100%);
+}
+
 
 /* Glassmorphism panel (for cards, headers, etc) */
 .glass-panel {

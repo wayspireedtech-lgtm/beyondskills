@@ -49,14 +49,14 @@ export default function Header() {
           <div className="flex-shrink-0">
             <Link to="/" className="flex flex-col items-start leading-none group">
               <div className="flex items-center">
-                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-700">
+                <span className="logo-font text-3xl sm:text-[34px] font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-700">
                   Beyond
                 </span>
-                <span className="logo-font text-2xl sm:text-[26px] font-extrabold tracking-tight bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
+                <span className="logo-font text-3xl sm:text-[34px] font-extrabold tracking-tight bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] bg-clip-text text-transparent transition-all duration-300 group-hover:brightness-110">
                   Skills
                 </span>
               </div>
-              <span className="text-[7px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-1 select-none leading-none">
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-1.5 select-none leading-none">
                 Digital Services • Upskilling • Future-Ready
               </span>
             </Link>
