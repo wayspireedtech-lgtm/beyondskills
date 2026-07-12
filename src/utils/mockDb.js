@@ -2,9 +2,9 @@
 
 export const COURSES = [
   {
-    id: 'ai-ml-ds',
-    techStack: ['Python', 'SQL', 'Pandas', 'NumPy', 'Scikit-Learn', 'TensorFlow'],
-    title: 'Artificial Intelligence, Machine Learning & Data Science',
+    id: 'ai-ml',
+    techStack: ['Python', 'SQL', 'Pandas', 'NumPy', 'Scikit-Learn', 'TensorFlow', 'Keras'],
+    title: 'Artificial Intelligence & Machine Learning',
     category: 'AI/ML/DS/DA',
     level: 'Basic to Intermediate',
     duration: '3 Months',
@@ -12,13 +12,13 @@ export const COURSES = [
     delivery: 'Recorded + Live Mentor Sessions',
     certificate: 'Yes',
     rating: 4.8,
-    enrollments: '3,200+',
-    overview: 'Master the fundamentals of Python, mathematics for data science, data preprocessing, machine learning algorithms, deep learning models, and analytics workflows with hands-on projects.',
+    enrollments: '1,800+',
+    overview: 'Master the fundamentals of Python, machine learning algorithms, deep learning models, computer vision, and Large Language Models (LLMs) with hands-on projects.',
     curriculum: [
-      { week: 'Weeks 1-4', title: 'Python Programming & Data Analysis (Pandas, NumPy, Matplotlib)' },
-      { week: 'Weeks 5-8', title: 'Machine Learning Algorithms (Regression, Classification, Clustering, Scikit-Learn)' },
-      { week: 'Weeks 9-10', title: 'Introduction to Deep Learning & Neural Networks (TensorFlow/Keras)' },
-      { week: 'Weeks 11-12', title: 'Capstone Project, Data Storytelling & Industry Mentorship' }
+      { week: 'Weeks 1-4', title: 'Python Programming & Core Machine Learning (Scikit-Learn)' },
+      { week: 'Weeks 5-8', title: 'Deep Learning, Neural Networks & Computer Vision (TensorFlow/Keras)' },
+      { week: 'Weeks 9-10', title: 'Introduction to Natural Language Processing & Large Language Models (LLMs)' },
+      { week: 'Weeks 11-12', title: 'Generative AI Capstone Project & Industry Mentorship' }
     ],
     mentors: [
       { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
@@ -26,18 +26,55 @@ export const COURSES = [
     ],
     outcomes: [
       'Understand and apply supervised and unsupervised learning techniques.',
-      'Clean, analyze, and build interactive dashboards from unstructured data.',
-      'Deploy machine learning models as web endpoints.',
-      'Complete 4 industry-aligned projects to build a solid portfolio.'
+      'Build and train custom Deep Learning neural networks.',
+      'Fine-tune and deploy LLM applications.',
+      'Complete 4 industry-aligned AI/ML projects to build a solid portfolio.'
     ],
     faqs: [
-      { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into data science.' },
+      { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and ML engineering.' },
       { q: 'Will I get an internship certificate?', a: 'Yes, an internship completion certificate is issued upon successful completion of the course capstone project and curriculum assessments.' },
       { q: 'Is there a job guarantee?', a: 'No, we do not guarantee jobs or placements. Please refer to our placement disclaimer.' }
     ],
     reviews: [
-      { user: 'Amit Sharma', rating: 5, comment: 'The live sessions were excellent. Mentors resolve doubts instantly.', date: 'May 2026' },
-      { user: 'Priya Nair', rating: 4, comment: 'Practical projects helped me clear my basic concepts. Highly recommended!', date: 'June 2026' }
+      { user: 'Amit Sharma', rating: 5, comment: 'The AI/ML live sessions were excellent. Mentors resolve doubts instantly.', date: 'May 2026' },
+      { user: 'Priya Nair', rating: 4, comment: 'Hands-on neural network projects helped me clear my basic concepts. Highly recommended!', date: 'June 2026' }
+    ]
+  },
+  {
+    id: 'data-science-analytics',
+    techStack: ['Python', 'SQL', 'Excel', 'Pandas', 'NumPy', 'PowerBI', 'Tableau'],
+    title: 'Data Science & Analytics',
+    category: 'AI/ML/DS/DA',
+    level: 'Basic to Intermediate',
+    duration: '3 Months',
+    fee: 10000,
+    delivery: 'Recorded + Live Mentor Sessions',
+    certificate: 'Yes',
+    rating: 4.7,
+    enrollments: '1,400+',
+    overview: 'Master data cleaning, advanced SQL querying, relational databases, statistical modelling, and interactive dashboard creation in PowerBI and Tableau to extract insights and drive business decisions.',
+    curriculum: [
+      { week: 'Weeks 1-4', title: 'Advanced SQL, Relational Databases, Data Extraction & Cleaning (Pandas/NumPy)' },
+      { week: 'Weeks 5-8', title: 'Data Visualization & Reporting (Designing Dashboards in Tableau & PowerBI)' },
+      { week: 'Weeks 9-10', title: 'Statistical Methods, Exploratory Data Analysis & Predictive Analytics' },
+      { week: 'Weeks 11-12', title: 'Data Storytelling Capstone Project & Dashboard Deployment' }
+    ],
+    mentors: [
+      { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
+      { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
+    ],
+    outcomes: [
+      'Write optimized SQL queries for extracting large datasets.',
+      'Clean, preprocess, and analyze unstructured raw data.',
+      'Design and deploy production-grade corporate dashboards in PowerBI/Tableau.',
+      'Present findings through compelling data stories and predictive model insights.'
+    ],
+    faqs: [
+      { q: 'Do I need a mathematical background?', a: 'Basic math and logic are sufficient. We teach all statistical concepts step-by-step from scratch.' },
+      { q: 'Will I learn database management?', a: 'Yes, relational database querying via SQL is covered extensively.' }
+    ],
+    reviews: [
+      { user: 'Karthik S.', rating: 5, comment: 'Excellent dashboarding sessions. Learned Tableau from absolute scratch.', date: 'May 2026' }
     ]
   },
   {
@@ -345,7 +382,7 @@ if (!localStorage.getItem('beyondskills_users')) {
 if (!localStorage.getItem('beyondskills_leads')) {
   setDbItem('beyondskills_leads', [
     { type: 'Agency', name: 'Ramesh Patel', email: 'ramesh@startup.in', phone: '9988776655', company: 'Ramesh Tech', service: 'Website Development', budget: '₹1,00,000 - ₹3,00,000', message: 'Looking for a custom React/Node client onboarding platform.', date: new Date(Date.now() - 3600000).toISOString() },
-    { type: 'Academy', name: 'Nikhil Gowda', email: 'nikhil@college.edu', phone: '8877665544', course: 'ai-ml-ds', college: 'RV College of Eng', status: 'Final Year Student', message: 'Interested in AI course recorded lecture models.', date: new Date(Date.now() - 7200000).toISOString() }
+    { type: 'Academy', name: 'Nikhil Gowda', email: 'nikhil@college.edu', phone: '8877665544', course: 'ai-ml', college: 'RV College of Eng', status: 'Final Year Student', message: 'Interested in AI course recorded lecture models.', date: new Date(Date.now() - 7200000).toISOString() }
   ]);
 }
 

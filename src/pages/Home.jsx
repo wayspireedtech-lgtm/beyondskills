@@ -8,7 +8,8 @@ import Curved3DCarousel from '../components/Curved3DCarousel';
 import BrochureModal from '../components/BrochureModal';
 
 const COURSE_IMAGES = {
-  'ai-ml-ds': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
+  'ai-ml': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
+  'data-science-analytics': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80',
   'full-stack-web': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
   'digital-marketing-cert': 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
   'hr-mgmt': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&auto=format&fit=crop&q=80',
@@ -29,7 +30,7 @@ export default function Home() {
 
   // Form states
   const [agencyForm, setAgencyForm] = useState({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: '₹1,00,000 - ₹3,00,000', message: '' });
-  const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml-ds', college: '', status: 'Undergraduate Student', message: '' });
+  const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
   const [submitStatus, setSubmitStatus] = useState(null);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
@@ -72,7 +73,7 @@ export default function Home() {
     }));
 
     setSubmitStatus('academy_success');
-    setAcademyForm({ name: '', email: '', phone: '', course: 'ai-ml-ds', college: '', status: 'Undergraduate Student', message: '' });
+    setAcademyForm({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
     setTimeout(() => setSubmitStatus(null), 5000);
   };
 

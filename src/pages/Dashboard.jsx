@@ -5,11 +5,17 @@ import { BookOpen, Video, Calendar, Award, User, Clock, CheckCircle, ExternalLin
 import confetti from 'canvas-confetti';
 
 const SAMPLE_LECTURES = {
-  'ai-ml-ds': [
-    { id: 'ai-1', title: 'Lecture 1: Python Basics & Pandas Data Manipulation', duration: '45 mins', comp: true },
-    { id: 'ai-2', title: 'Lecture 2: Scikit-Learn: Regression Models', duration: '55 mins', comp: false },
-    { id: 'ai-3', title: 'Lecture 3: Neural Networks Fundamentals & Keras layers', duration: '60 mins', comp: false },
-    { id: 'ai-4', title: 'Lecture 4: Data Storytelling & Portfolio Dashboard Project', duration: '50 mins', comp: false }
+  'ai-ml': [
+    { id: 'ai-1', title: 'Lecture 1: Python Foundations & Data Preprocessing', duration: '45 mins', comp: true },
+    { id: 'ai-2', title: 'Lecture 2: Supervised Learning & Regression Models', duration: '55 mins', comp: false },
+    { id: 'ai-3', title: 'Lecture 3: Deep Neural Networks & TensorFlow/Keras', duration: '60 mins', comp: false },
+    { id: 'ai-4', title: 'Lecture 4: Large Language Models & GenAI Projects', duration: '50 mins', comp: false }
+  ],
+  'data-science-analytics': [
+    { id: 'ds-1', title: 'Lecture 1: Data Analytics Foundations & Advanced SQL', duration: '40 mins', comp: true },
+    { id: 'ds-2', title: 'Lecture 2: Statistical Modeling & Predictive Analytics', duration: '50 mins', comp: false },
+    { id: 'ds-3', title: 'Lecture 3: PowerBI & Tableau Interactive Dashboarding', duration: '55 mins', comp: false },
+    { id: 'ds-4', title: 'Lecture 4: Big Data Pipelines & Analytics Capstone Project', duration: '45 mins', comp: false }
   ],
   'full-stack-web': [
     { id: 'fs-1', title: 'Lecture 1: React Components & State Management Hooks', duration: '50 mins', comp: true },
@@ -103,9 +109,14 @@ export default function Dashboard() {
     }
 
     const courseTitleMap = {
-      'ai-ml-ds': 'Artificial Intelligence, Machine Learning & Data Science',
+      'ai-ml': 'Artificial Intelligence & Machine Learning',
+      'data-science-analytics': 'Data Science & Analytics',
       'full-stack-web': 'Full Stack Web Development (MERN)',
-      'digital-marketing-cert': 'Performance Digital Marketing & Ads'
+      'digital-marketing-cert': 'Performance Digital Marketing & Ads',
+      'hr-mgmt': 'Human Resource Management & Operations',
+      'stock-market': 'Stock Market & Financial Analysis',
+      'cyber-security': 'Introduction to Cyber Security & Ethical Hacking',
+      'cloud-computing': 'Cloud Computing Foundations (AWS & Azure)'
     };
 
     const newRecord = {

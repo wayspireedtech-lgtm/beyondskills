@@ -5,7 +5,7 @@ import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
   const [agencyForm, setAgencyForm] = useState({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: '₹1,00,000 - ₹3,00,000', message: '' });
-  const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml-ds', college: '', status: 'Undergraduate Student', message: '' });
+  const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
   const [status, setStatus] = useState(null);
 
   const handleAgencySubmit = (e) => {
@@ -42,7 +42,7 @@ export default function Contact() {
     }));
 
     setStatus('academy_success');
-    setAcademyForm({ name: '', email: '', phone: '', course: 'ai-ml-ds', college: '', status: 'Undergraduate Student', message: '' });
+    setAcademyForm({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
     setTimeout(() => setStatus(null), 5000);
   };
 
