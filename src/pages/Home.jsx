@@ -119,29 +119,29 @@ export default function Home() {
   const featuredCourses = COURSES.slice(0, 3);
 
   const partnersRow1 = [
-    { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
+    { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/00a3e0' },
     { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
-    { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft/F25022' },
+    { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft' },
     { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
-    { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/FF0000' },
+    { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/ff0000' },
     { name: 'IBM', url: 'https://cdn.simpleicons.org/ibm/052FAD' },
-    { name: 'PMI', type: 'text', render: <span className="font-serif font-black text-slate-800 text-sm uppercase tracking-tight">Project Management Institute</span> },
-    { name: 'Autodesk', url: 'https://cdn.simpleicons.org/autodesk/0696D7' },
-    { name: 'Apple', url: 'https://cdn.simpleicons.org/apple/000000' },
-    { name: 'Unity', url: 'https://cdn.simpleicons.org/unity/000000' }
+    { name: 'PMI', type: 'text', render: <span className="font-serif font-black text-white text-sm uppercase tracking-tight">Project Management Institute</span> },
+    { name: 'Autodesk', url: 'https://cdn.simpleicons.org/autodesk/ffffff' },
+    { name: 'Apple', url: 'https://cdn.simpleicons.org/apple/ffffff' },
+    { name: 'Unity', url: 'https://cdn.simpleicons.org/unity/ffffff' }
   ];
 
   const alumniRow2 = [
-    { name: 'Xiaomi', url: 'https://cdn.simpleicons.org/xiaomi/FF6700' },
-    { name: 'Nokia', url: 'https://cdn.simpleicons.org/nokia/181585' },
-    { name: 'EY', type: 'text', render: <div className="flex items-baseline font-bold text-slate-900 text-xl font-sans tracking-tight">EY <span className="text-[#FFE600] ml-0.5 text-2xl font-serif leading-none">▲</span></div> },
-    { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
-    { name: 'L&T', type: 'text', render: <span className="font-extrabold text-[#0B2545] tracking-wider text-xl font-sans">L&T</span> },
-    { name: 'Shemaroo', type: 'text', render: <span className="font-black text-orange-600 tracking-wide text-lg font-serif italic">shemaroo</span> },
-    { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
-    { name: 'PwC', url: 'https://cdn.simpleicons.org/pwc/D04A02' },
-    { name: 'Grant Thornton', type: 'text', render: <span className="font-extrabold text-[#4B2F7E] tracking-tight text-base font-serif">Grant Thornton</span> },
-    { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
+    { name: 'Xiaomi', url: 'https://cdn.simpleicons.org/xiaomi/ff6700' },
+    { name: 'Nokia', url: 'https://cdn.simpleicons.org/nokia/ffffff' },
+    { name: 'EY', type: 'text', render: <div className="flex items-baseline font-bold text-white text-xl font-sans tracking-tight">EY <span className="text-[#FFE600] ml-0.5 text-2xl font-serif leading-none">▲</span></div> },
+    { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/ffffff' },
+    { name: 'L&T', type: 'text', render: <span className="font-extrabold text-white tracking-wider text-xl font-sans">L&T</span> },
+    { name: 'Shemaroo', type: 'text', render: <span className="font-black text-orange-500 tracking-wide text-lg font-serif italic">shemaroo</span> },
+    { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/ffffff' },
+    { name: 'PwC', url: 'https://cdn.simpleicons.org/pwc/ffffff' },
+    { name: 'Grant Thornton', type: 'text', render: <span className="font-extrabold text-purple-300 tracking-tight text-base font-serif">Grant Thornton</span> },
+    { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/ffffff' }
   ];
 
   return (
@@ -197,7 +197,16 @@ export default function Home() {
       </section>
 
       {/* Double Logo Marquee Ticker */}
-      <section className="py-16 overflow-hidden relative z-10 bg-slate-50 border-t border-b border-slate-200/50">
+      <section className="py-16 overflow-hidden relative z-10 bg-slate-950 border-t border-b border-slate-900">
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" style={{
+          backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+          backgroundPosition: 'center'
+        }} />
+        {/* Radial glow for dark theme */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[150px] bg-brand-purple/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
+
         <style dangerouslySetInnerHTML={{__html: `
           @keyframes marquee-forward {
             0% { transform: translateX(0); }
@@ -217,14 +226,14 @@ export default function Home() {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 150px;
-            height: 48px;
-            padding: 0 25px;
+            min-width: 180px;
+            height: 60px;
+            padding: 0 30px;
           }
         `}} />
 
         {/* Row 1: UPSKILLING & TRAINING PARTNERS - Scrolling Left to Right (backward animation) */}
-        <div className="mb-10">
+        <div className="mb-10 relative z-10">
           <div className="text-center mb-6">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] font-mono">
               Upskilling & Training Partners
@@ -233,8 +242,8 @@ export default function Home() {
           
           <div className="w-full flex overflow-hidden select-none relative">
             {/* Fade overlays */}
-            <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
             
             <div className="flex whitespace-nowrap animate-marquee-backward items-center py-2">
               {[...partnersRow1, ...partnersRow1].map((logo, idx) => (
@@ -242,7 +251,7 @@ export default function Home() {
                   {logo.type === 'text' ? (
                     logo.render
                   ) : (
-                    <img src={logo.url} alt={logo.name} className="h-8 object-contain" />
+                    <img src={logo.url} alt={logo.name} className="h-11 object-contain" />
                   )}
                 </div>
               ))}
@@ -251,10 +260,10 @@ export default function Home() {
         </div>
 
         {/* Divider line */}
-        <div className="max-w-5xl mx-auto border-t border-slate-200/50 my-2" />
+        <div className="max-w-5xl mx-auto border-t border-slate-800 my-2 relative z-10" />
 
         {/* Row 2: OUR ALUMNI WORK AT - Scrolling Right to Left (forward animation) */}
-        <div className="mt-8">
+        <div className="mt-8 relative z-10">
           <div className="text-center mb-6">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] font-mono">
               Our Alumni Work At
@@ -263,8 +272,8 @@ export default function Home() {
 
           <div className="w-full flex overflow-hidden select-none relative">
             {/* Fade overlays */}
-            <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
             <div className="flex whitespace-nowrap animate-marquee-forward items-center py-2">
               {[...alumniRow2, ...alumniRow2].map((logo, idx) => (
@@ -272,7 +281,7 @@ export default function Home() {
                   {logo.type === 'text' ? (
                     logo.render
                   ) : (
-                    <img src={logo.url} alt={logo.name} className="h-6 object-contain" />
+                    <img src={logo.url} alt={logo.name} className="h-9 object-contain" />
                   )}
                 </div>
               ))}
