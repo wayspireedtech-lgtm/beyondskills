@@ -15,20 +15,48 @@ export const COURSES = [
     enrollments: '1,800+',
     overview: 'Master the fundamentals of Python, machine learning algorithms, deep learning models, computer vision, and Large Language Models (LLMs) with hands-on projects.',
     curriculum: [
-      { week: 'Weeks 1-3', title: 'Python Programming, Data Structures, & Exploratory Data Analysis (NumPy, Pandas, Matplotlib, Seaborn)' },
-      { week: 'Weeks 4-6', title: 'Statistical Foundations, IQR Outlier Detection, Data Preprocessing, & Standardization/Normalization' },
-      { week: 'Weeks 7-9', title: 'Supervised & Unsupervised Machine Learning (Linear/Logistic Regression, Decision Trees, Random Forests, Boosting)' },
-      { week: 'Weeks 10-12', title: 'Neural Networks, Natural Language Processing (NLTK, SpaCy), & Generative AI (LLMs, HuggingFace, ChatGPT)' }
+      { 
+        week: 'Weeks 1-3', 
+        title: 'Python Programming, Data Structures, & Exploratory Data Analysis',
+        topics: ['Python Syntax & Variables', 'Control Flow (Loops & Conditionals)', 'Functions & Modules', 'File I/O Operations', 'Data Structures (Lists, Dicts, Sets)', 'NumPy for Numerical Computing', 'Pandas for Data Manipulation', 'Data Cleaning & Exploratory Data Analysis (EDA)', 'Data Visualization (Matplotlib, Seaborn)']
+      },
+      { 
+        week: 'Weeks 4-6', 
+        title: 'Statistical Foundations & Data Preprocessing Techniques',
+        topics: ['Descriptive & Inferential Statistics', 'Probability Distributions', 'Central Limit Theorem & Hypothesis Testing', 'Handling Missing Values', 'Outlier Detection (IQR & Z-score)', 'Feature Scaling (Standardization & Normalization)', 'Encoding Categorical Variables (One-Hot, Label)', 'Feature Selection & Dimensionality Reduction']
+      },
+      { 
+        week: 'Weeks 7-9', 
+        title: 'Supervised & Unsupervised Machine Learning Algorithms',
+        topics: ['Linear Regression & Multiple Regression', 'Logistic Regression for Classification', 'Decision Trees & Information Gain', 'Ensemble Learning (Random Forests, AdaBoost, XGBoost)', 'Model Evaluation Metrics (Accuracy, Precision, Recall, F1)', 'Bias-Variance Trade-off & Regularization (L1/L2)', 'Clustering (K-Means, Hierarchical)', 'Principal Component Analysis (PCA) for Dimension Reduction']
+      },
+      { 
+        week: 'Weeks 10-12', 
+        title: 'Deep Learning, NLP, & Generative AI Foundations',
+        topics: ['Introduction to Neural Networks & Perceptrons', 'Activation Functions & Backpropagation', 'Convolutional Neural Networks (CNNs) for Image Classification', 'Natural Language Processing (NLP) Basics', 'Text Preprocessing & Word Embeddings (Word2Vec)', 'Recurrent Neural Networks (RNNs) & LSTMs', 'Transformers & Attention Mechanisms', 'Large Language Models (LLMs) & Prompt Engineering', 'OpenAI APIs, Hugging Face, & Custom Chatbot Deployment']
+      }
+    ],
+    projects: [
+      {
+        title: 'Smart Health Classification Engine',
+        description: 'A deep learning model using Convolutional Neural Networks (CNNs) to screen chest X-ray images and classify pneumonia instances with high precision.',
+        techUsed: ['TensorFlow', 'Keras', 'OpenCV', 'Python']
+      },
+      {
+        title: 'Predictive Lead Conversion & Churn Modeler',
+        description: 'An enterprise-grade analytics model using Random Forests and XGBoost to calculate probability scoring of customer churn from active services.',
+        techUsed: ['Scikit-Learn', 'Pandas', 'Seaborn', 'Python']
+      }
     ],
     mentors: [
       { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
       { name: 'Sanjay Mehta', role: 'AI Lead at Tech Solutions', experience: '6+ Years' }
     ],
     outcomes: [
-      'Understand and apply supervised and unsupervised learning techniques.',
-      'Build and train custom Deep Learning neural networks.',
-      'Fine-tune and deploy LLM applications.',
-      'Complete 4 industry-aligned AI/ML projects to build a solid portfolio.'
+      'Understand and apply supervised and unsupervised learning techniques to real-world datasets.',
+      'Build, train, and optimize custom Deep Learning neural networks using TensorFlow and Keras.',
+      'Fine-tune and deploy LLM applications with OpenAI API and Hugging Face.',
+      'Complete 2 major capstone AI/ML projects to build a solid professional portfolio.'
     ],
     faqs: [
       { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and ML engineering.' },
@@ -54,20 +82,48 @@ export const COURSES = [
     enrollments: '1,400+',
     overview: 'Master data cleaning, advanced SQL querying, relational databases, statistical modelling, and interactive dashboard creation in PowerBI and Tableau to extract insights and drive business decisions.',
     curriculum: [
-      { week: 'Weeks 1-4', title: 'Advanced SQL, Relational Databases, Data Extraction & Cleaning (Pandas/NumPy)' },
-      { week: 'Weeks 5-8', title: 'Data Visualization & Reporting (Designing Dashboards in Tableau & PowerBI)' },
-      { week: 'Weeks 9-10', title: 'Statistical Methods, Exploratory Data Analysis & Predictive Analytics' },
-      { week: 'Weeks 11-12', title: 'Data Storytelling Capstone Project & Dashboard Deployment' }
+      { 
+        week: 'Weeks 1-4', 
+        title: 'Relational Databases, SQL Querying, & Data Extraction',
+        topics: ['Database Fundamentals & ER Diagrams', 'SQL Basics: SELECT, WHERE, ORDER BY', 'Aggregations: GROUP BY, HAVING', 'JOINS (Inner, Left, Right, Full Outer)', 'Subqueries & Common Table Expressions (CTEs)', 'SQL Window Functions (ROW_NUMBER, RANK, LEAD, LAG)', 'Python for SQL Connections (sqlite3, SQLAlchemy)', 'Pandas for initial data loading & filtering']
+      },
+      { 
+        week: 'Weeks 5-8', 
+        title: 'Data Visualization & Dashboard Design (PowerBI & Tableau)',
+        topics: ['Introduction to Data Visualization Principles', 'PowerBI Desktop Interface & Workspace', 'Data Modelling in PowerBI (Star & Snowflake Schemas)', 'Writing DAX (Data Analysis Expressions) Measures', 'Designing Interactive Dashboards in PowerBI', 'Tableau Desktop: Connections, Worksheets, & Stories', 'Creating Calculated Fields & Parameters in Tableau', 'Dashboard Publishing & Security Best Practices']
+      },
+      { 
+        week: 'Weeks 9-10', 
+        title: 'Statistical Analysis & Exploratory Analytics',
+        topics: ['Descriptive Statistics: Mean, Median, Mode, Variance', 'Correlation & Covariance', 'Hypothesis Testing: T-tests, ANOVA, Chi-Square', 'Exploratory Data Analysis (EDA) Workflow', 'Data Storytelling: Structuring Reports for Business Stakeholders', 'Linear Regression for Trend Analysis & Forecasting']
+      },
+      { 
+        week: 'Weeks 11-12', 
+        title: 'Data Storytelling Capstone & Project Presentation',
+        topics: ['Formulating Business Questions from Raw Data', 'Building end-to-end analytical pipelines', 'Designing a Executive-Level Summary Dashboard', 'Creating a compelling presentation of insights', 'Final Project Review & Portfolio Setup']
+      }
+    ],
+    projects: [
+      {
+        title: 'E-commerce Sales Performance Dashboard',
+        description: 'An interactive multi-page dashboard built in PowerBI visualizing user retention, product category sales, monthly revenue trends, and geo-analytics.',
+        techUsed: ['PowerBI', 'SQL', 'Pandas', 'Python']
+      },
+      {
+        title: 'Global Cohort Retention & Churn Profiler',
+        description: 'An analytical pipeline extracting relational database tables via SQL, performing cohort analysis in Python, and modeling future client churn patterns.',
+        techUsed: ['SQL', 'Python', 'Pandas', 'Tableau']
+      }
     ],
     mentors: [
       { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
       { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
     ],
     outcomes: [
-      'Write optimized SQL queries for extracting large datasets.',
-      'Clean, preprocess, and analyze unstructured raw data.',
-      'Design and deploy production-grade corporate dashboards in PowerBI/Tableau.',
-      'Present findings through compelling data stories and predictive model insights.'
+      'Write optimized SQL queries for extracting and transforming large datasets.',
+      'Clean, preprocess, and analyze unstructured raw data using Python.',
+      'Design and deploy production-grade corporate dashboards in PowerBI and Tableau.',
+      'Present analytical findings through compelling data stories and dashboards.'
     ],
     faqs: [
       { q: 'Do I need a mathematical background?', a: 'Basic math and logic are sufficient. We teach all statistical concepts step-by-step from scratch.' },
@@ -91,20 +147,48 @@ export const COURSES = [
     enrollments: '4,500+',
     overview: 'Learn modern web development using HTML5, CSS3, JavaScript, React, Node.js, Express, and MongoDB. Build real-world web applications and deploy them to the cloud.',
     curriculum: [
-      { week: 'Weeks 1-4', title: 'Frontend Basics: HTML, CSS, JavaScript (ES6+), Tailwind CSS' },
-      { week: 'Weeks 5-8', title: 'React.js Development: Components, Hooks, Context API, SPA Routing' },
-      { week: 'Weeks 9-12', title: 'Backend Engineering: Node.js, Express.js, MongoDB database' },
-      { week: 'Weeks 13-16', title: 'Authentication, API Security, Cloud Deployment & Capstone Projects' }
+      { 
+        week: 'Weeks 1-4', 
+        title: 'Frontend Foundations: HTML5, CSS3, & Modern JavaScript',
+        topics: ['Semantic HTML5 Markup', 'CSS3 Layouts: Flexbox & CSS Grid', 'Responsive Web Design & Media Queries', 'Tailwind CSS utility framework integration', 'JavaScript ES6+ core: Variables, Scopes, Arrays, Objects', 'DOM Manipulation & Event Listeners', 'Asynchronous JS: Callbacks, Promises, Async/Await', 'Fetch API & consuming REST endpoints']
+      },
+      { 
+        week: 'Weeks 5-8', 
+        title: 'Component Architectures & React.js Development',
+        topics: ['Introduction to React & Single Page Apps (SPAs)', 'JSX Syntax & Virtual DOM', 'Functional Components, Props, & State', 'React Hooks: useState, useEffect, useRef', 'Custom Hooks & State Management (Context API)', 'React Router for client-side navigation', 'Form Handling, Validation (Formik/Yup), & Error Boundaries', 'Styling React apps with Tailwind & CSS Modules']
+      },
+      { 
+        week: 'Weeks 9-12', 
+        title: 'Backend Engineering: Node.js, Express.js, & MongoDB',
+        topics: ['Introduction to Server-side Runtime (Node.js)', 'npm (Node Package Manager) & module patterns', 'Express.js Framework: Server setup & Routing', 'Writing Custom Express Middleware', 'REST API Architecture Principles', 'NoSQL Database fundamentals & MongoDB Atlas', 'Mongoose ODM: Schemas, Models, & Validations', 'CRUD Operations & database relation concepts']
+      },
+      { 
+        week: 'Weeks 13-16', 
+        title: 'Advanced Operations, Authentication, & Cloud Deployment',
+        topics: ['JSON Web Tokens (JWT) for secure authentication', 'Password Hashing using bcrypt', 'Route Protection & Role-based Access Control', 'Integrating Frontend & Backend (CORS & Proxy)', 'WebSockets (Socket.io) for real-time channels', 'File Uploads with Multer & Cloudinary', 'Testing APIs with Postman', 'Production Build & Deployment (Vercel, Render, Heroku)']
+      }
+    ],
+    projects: [
+      {
+        title: 'SaaS Business Operations Dashboard',
+        description: 'A responsive dashboard application featuring secure JWT authentication, lead pipelines, client status toggles, dynamic chart reporting, and roles.',
+        techUsed: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS']
+      },
+      {
+        title: 'Real-time Cooperative Kanban Workspace',
+        description: 'A collaborative board app enabling users to organize task cards, live chat with team members, drag cards, and trace update history feeds.',
+        techUsed: ['React', 'Socket.io', 'Express', 'MongoDB', 'Tailwind CSS']
+      }
     ],
     mentors: [
       { name: 'Vikram Aditya', role: 'Staff Engineer at Swiggy', experience: '9+ Years' },
       { name: 'Neha Gupta', role: 'Senior React Developer', experience: '5+ Years' }
     ],
     outcomes: [
-      'Build responsive, highly interactive frontends in React.',
-      'Design RESTful APIs, manage databases (MongoDB), and secure application endpoints.',
-      'Deploy full-stack applications to platforms like Vercel and Render.',
-      'Implement real-time features like chat or notification feeds.'
+      'Build responsive, highly interactive web applications using React.',
+      'Design and secure robust RESTful APIs, routing mechanisms, and data schemas.',
+      'Manage NoSQL databases (MongoDB Atlas) and write complex queries with Mongoose.',
+      'Deploy full-stack applications to platforms like Vercel and Render with live logs.'
     ],
     faqs: [
       { q: 'Do I need prior coding experience?', a: 'No, we start from absolute basics, making it perfect for fresh graduates and career switchers.' },
@@ -129,20 +213,43 @@ export const COURSES = [
     enrollments: '1,800+',
     overview: 'Master SEO, Content Marketing, Google Ads, Meta Ads (Facebook & Instagram), Email Marketing, and Analytics (GA4) to drive high ROI lead-generation.',
     curriculum: [
-      { week: 'Weeks 1-2', title: 'Digital Marketing Fundamentals & SEO (On-page/Off-page)' },
-      { week: 'Weeks 3-5', title: 'Paid Campaigns: Google Search & Display Ads, Meta Campaigns' },
-      { week: 'Weeks 6-7', title: 'Content Strategy, Copywriting, Email Campaigns & Automation' },
-      { week: 'Weeks 8', title: 'Google Analytics (GA4), Campaign Auditing, & Capstone Assessment' }
+      { 
+        week: 'Weeks 1-2', 
+        title: 'Digital Marketing Fundamentals & Search Engine Optimization (SEO)',
+        topics: ['Digital Marketing Landscape & Customer Journey', 'Keyword Research: Volume, Intent, & Competitiveness', 'On-Page SEO: Title Tags, Meta Descriptions, Headers, URL Structures', 'Technical SEO: XML Sitemaps, Robots.txt, Page Speed, Core Web Vitals', 'Off-Page SEO: Backlink Building & Domain Authority', 'SEO Audit Tools (Ahrefs, SEMrush, Screaming Frog)']
+      },
+      { 
+        week: 'Weeks 3-5', 
+        title: 'Paid Advertising Campaigns (Google Ads & Meta Campaigns)',
+        topics: ['Google Ads Account Setup & Structure', 'Search Campaigns: Ad Groups, Bidding Strategies, Quality Score', 'Display & YouTube Video Ad Campaigns', 'Meta Ads Manager: Campaign Goals, Target Audiences, Ad Formats', 'Pixel Setup & Custom Conversion Events', 'A/B Testing Creatives & Copywriting for High Conversions']
+      },
+      { 
+        week: 'Weeks 6-7', 
+        title: 'Content Strategy, Email Marketing & Automations',
+        topics: ['Content Marketing: Creating Calendars & Lead Magnets', 'Copywriting Formulas (AIDA, PAS) for Social Media & Web', 'Email Marketing tools (Mailchimp, ActiveCampaign)', 'Building & Segmenting Email Lists', 'Setting up Email Automations & drip campaigns', 'Landing Page design principles & Conversion Rate Optimization (CRO)']
+      },
+      { 
+        week: 'Weeks 8', 
+        title: 'Google Analytics (GA4), Campaign Auditing, & Analysis',
+        topics: ['Google Analytics (GA4) setup & event tracking', 'Analyzing Traffic Channels & User Behavior logs', 'UTM Parameter tracking & Attribution models', 'Auditing active ad campaigns & budget optimization guides', 'Final Marketing Capstone Presentation']
+      }
+    ],
+    projects: [
+      {
+        title: 'High-Conversion Ad Campaign Blueprint',
+        description: 'Audit a business landing page, perform keyword research, build active search campaigns, design Meta ads creatives, and configure GA4 tracking goals.',
+        techUsed: ['Google Ads', 'Meta Ads', 'Google Analytics (GA4)', 'Mailchimp']
+      }
     ],
     mentors: [
       { name: 'Kunal Sen', role: 'Digital Lead at Ogilvy', experience: '7+ Years' },
       { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
     ],
     outcomes: [
-      'Create and optimize high-converting Google & Meta ad campaigns.',
-      'Analyze traffic and sales funnels using Google Analytics (GA4).',
-      'Conduct keyword research and implement SEO guidelines for websites.',
-      'Formulate organic content calendar strategies for brands.'
+      'Create and optimize high-converting Google & Meta ad campaigns from scratch.',
+      'Analyze traffic sources and sales funnels using Google Analytics (GA4).',
+      'Conduct keyword research and implement SEO guidelines for web pages.',
+      'Formulate organic content calendar strategies and automated email drips for brands.'
     ],
     faqs: [
       { q: 'Are ad budgets included in the fee?', a: 'No, the fee covers training and live sessions. We provide simulated environments and small budgets during live projects.' }
@@ -165,19 +272,42 @@ export const COURSES = [
     enrollments: '800+',
     overview: 'Learn modern HR practices, recruitment strategies, onboarding, HR analytics, payroll administration, and employee relations.',
     curriculum: [
-      { week: 'Weeks 1-2', title: 'Talent Acquisition, ATS Systems, & Candidate Sourcing' },
-      { week: 'Weeks 3-4', title: 'Employee Lifecycle, Onboarding, Engagement & Policy Design' },
-      { week: 'Weeks 5-6', title: 'Payroll Systems, Labor Laws, Compensation & Benefits' },
-      { week: 'Weeks 7-8', title: 'HR Analytics, Resume Evaluation Methods & Mock Interviews' }
+      { 
+        week: 'Weeks 1-2', 
+        title: 'Talent Acquisition, ATS Systems, & Sourcing Strategies',
+        topics: ['Manpower Planning & Job Description (JD) Writing', 'Sourcing Channels: LinkedIn Recruiting, Job Portals, & Referrals', 'Applicant Tracking Systems (ATS) configurations', 'Structuring Resumes & Screenings', 'Interviewing Models: Behavioral & Situational', 'Offer Management & Candidate Communication']
+      },
+      { 
+        week: 'Weeks 3-4', 
+        title: 'Employee Lifecycle, Onboarding, & Policy Design',
+        topics: ['Designing Employee Onboarding Journeys', 'Employee Engagement frameworks & surveys', 'Performance Management Systems (PMS): OKRs & KPIs', 'Designing HR Manuals & Code of Conduct guidelines', 'Offboarding processes & Exit Interviews']
+      },
+      { 
+        week: 'Weeks 5-6', 
+        title: 'Payroll Administration, Labor Laws, & Statutory Compliances',
+        topics: ['Compensation & Benefits structure (CTC breakup)', 'Payroll processing inputs (Attendance, LOP, Deductions)', 'Understanding PF, ESIC, Professional Tax, & Gratuity', 'Overview of key Labor Laws (Factories Act, Industrial Disputes)', 'Managing employee relations & conflict resolution']
+      },
+      { 
+        week: 'Weeks 7-8', 
+        title: 'HR Analytics, Resume Evaluation Methods & Mock Interviews',
+        topics: ['Key HR Metrics: Attrition Rate, Time-to-Hire, Cost-per-Hire', 'Designing HR Dashboards in Excel', 'Mock Resume evaluation labs aligning with recruitment standards', 'Conducting mock interviews & recruiter feedback sessions']
+      }
+    ],
+    projects: [
+      {
+        title: 'Enterprise Recruitment Operations Hub',
+        description: 'Draft job descriptions, design a recruitment funnel with ATS tracking stages, calculate CTC breaks, and build an attrition analytics dashboard in Excel.',
+        techUsed: ['Excel', 'ATS Tools', 'HR Analytics']
+      }
     ],
     mentors: [
       { name: 'Meenakshi Iyer', role: 'HR Director at GlobalCorp', experience: '12+ Years' }
     ],
     outcomes: [
-      'Conduct professional hiring campaigns and pre-screen applicants.',
-      'Draft HR manuals, offer letters, and policy documents.',
-      'Manage basic payroll calculations and understand compliance guidelines.',
-      'Optimize recruitment pipelines using modern ATS tools.'
+      'Conduct professional hiring campaigns and pre-screen applicants using ATS criteria.',
+      'Draft HR manuals, offer letters, CTC structures, and employee policy documents.',
+      'Manage payroll calculations and understand statutory compliance guidelines.',
+      'Optimize recruitment pipelines and metrics tracking using Excel dashboards.'
     ],
     faqs: [
       { q: 'Does this cover resume screening training?', a: 'Yes, we train on how HR teams evaluate resumes, aligning with our resume feedback service.' }
@@ -200,19 +330,42 @@ export const COURSES = [
     enrollments: '1,200+',
     overview: 'Understand financial markets, technical analysis, fundamental analysis, risk management, and trading strategies.',
     curriculum: [
-      { week: 'Weeks 1-2', title: 'Financial Markets Basics, Stock Exchanges, & Order Execution' },
-      { week: 'Weeks 3-5', title: 'Technical Analysis: Candlestick Patterns, Indicators, & Charts' },
-      { week: 'Weeks 6-7', title: 'Fundamental Analysis: Balance Sheets, Ratios & Valuation' },
-      { week: 'Weeks 8', title: 'Portfolio Management, Risk Mitigation, & Trading Psychology' }
+      { 
+        week: 'Weeks 1-2', 
+        title: 'Financial Markets Basics & Order Execution',
+        topics: ['Introduction to Primary & Secondary Markets', 'Role of SEBI, Stock Exchanges (NSE/BSE), & Depositories', 'Understanding Demat Accounts & Order Types (Market, Limit, SL)', 'Reading Market Depth & Bid-Ask spreads', 'Key Asset Classes: Equities, Mutual Funds, ETFs']
+      },
+      { 
+        week: 'Weeks 3-5', 
+        title: 'Technical Analysis (Candlesticks, Indicators, & Charts)',
+        topics: ['Dow Theory & Basic Trend Identification', 'Candlestick Patterns (Hammer, Engulfing, Doji, etc.)', 'Support & Resistance levels, Trendlines', 'Chart Patterns: Head & Shoulders, Double Top/Bottom, Triangles', 'Technical Indicators: Moving Averages, RSI, MACD, Bollinger Bands', 'Volume Analysis & breakout confirmations']
+      },
+      { 
+        week: 'Weeks 6-7', 
+        title: 'Fundamental Analysis (Reading Financials & Valuation)',
+        topics: ['Reading Annual Reports & Financial Statements', 'Analyzing Balance Sheet, Income Statement, & Cash Flow Statement', 'Financial Ratios: P/E, P/B, EV/EBITDA, ROE, ROCE, Debt-to-Equity', 'Analyzing Industry sectors & Moats', 'Qualitative Analysis: Corporate Governance & Management Quality']
+      },
+      { 
+        week: 'Weeks 8', 
+        title: 'Portfolio Management, Risk Mitigation, & Trading Psychology',
+        topics: ['Risk-Reward Ratio & Position Sizing formulas', 'Diversification & Portfolio Allocation rules', 'Stop-Loss management strategies', 'Understanding trading biases & psychology guidelines', 'Backtesting a trading system blueprint']
+      }
+    ],
+    projects: [
+      {
+        title: 'Trading System Backtesting & Equity Report',
+        description: 'Formulate a candlestick chart trading strategy, backtest it on 6 months of stock charts, apply sizing, and write a fundamental valuation audit on a stock.',
+        techUsed: ['Technical Analysis', 'Excel', 'Fundamental Valuation']
+      }
     ],
     mentors: [
       { name: 'Rajeev Singhal', role: 'Certified Financial Analyst', experience: '10+ Years' }
     ],
     outcomes: [
-      'Perform chart reading and pattern identification for technical trades.',
-      'Read and analyze corporate annual reports and key financial ratios.',
-      'Implement risk-reward principles to preserve capital.',
-      'Backtest simple trading systems using live data sheets.'
+      'Perform chart reading and pattern identification for technical short-term trades.',
+      'Read and analyze corporate annual reports and key financial valuation ratios.',
+      'Implement risk-reward principles and position sizing to preserve capital.',
+      'Backtest simple trading systems using historical data sheets.'
     ],
     faqs: [
       { q: 'Is this trading advice?', a: 'No, this is purely educational. We do not provide tips or advisory services.' }
@@ -235,19 +388,42 @@ export const COURSES = [
     enrollments: '950+',
     overview: 'Understand network security, cryptography, vulnerability assessment, web application security, and ethical hacking concepts.',
     curriculum: [
-      { week: 'Weeks 1-2', title: 'Networking Fundamentals & Cryptography' },
-      { week: 'Weeks 3-4', title: 'System Security, Kali Linux Basics, & Port Scanning' },
-      { week: 'Weeks 5-6', title: 'Web App Pentesting (OWASP Top 10 vulnerabilities)' },
-      { week: 'Weeks 7-8', title: 'Incidence Response, Secure Audits, & Ethical Reports' }
+      { 
+        week: 'Weeks 1-2', 
+        title: 'Computer Networking & Cryptography Fundamentals',
+        topics: ['OSI Model & TCP/IP Protocol Suite', 'Understanding IP Addressing, Subnetting, & Routing', 'DNS, DHCP, & HTTP/HTTPS operations', 'Symmetric vs. Asymmetric Encryption', 'Hashing algorithms (SHA, MD5) & Digital Signatures', 'VPNs, Firewalls, & Secure Network Topologies']
+      },
+      { 
+        week: 'Weeks 3-4', 
+        title: 'System Security, Kali Linux, & Port Scanning Labs',
+        topics: ['Introduction to Kali Linux Workspace', 'Command Line basics & Linux permissions', 'Information Gathering & Reconnaissance', 'Network scanning with Nmap: Options & Scans', 'Analyzing network packets using Wireshark', 'Vulnerability Assessment concepts']
+      },
+      { 
+        week: 'Weeks 5-6', 
+        title: 'Web Application Security & Pentesting Labs',
+        topics: ['Introduction to Web Application Architectures', 'OWASP Top 10 vulnerabilities overview', 'SQL Injection (SQLi) attacks & mitigations', 'Cross-Site Scripting (XSS) & CSRF mechanisms', 'Broken Authentication & Sensitive Data Exposure', 'Scanning web apps with Burp Suite']
+      },
+      { 
+        week: 'Weeks 7-8', 
+        title: 'Incidence Response, Secure Audits, & Compliance Reports',
+        topics: ['Social Engineering attacks (Phishing, Social profiling)', 'Password cracking concepts & dictionary attacks', 'Malware categories (Trojans, Ransomware)', 'Incident Response lifecycle stages', 'Writing vulnerability report sheets for stakeholders']
+      }
+    ],
+    projects: [
+      {
+        title: 'OWASP Security Audit & Vulnerability Assessment',
+        description: 'Configure virtual lab environments, perform port scans using Nmap, intercept HTTP requests in Burp Suite, identify XSS/SQLi holes, and write a fix report.',
+        techUsed: ['Nmap', 'Wireshark', 'Burp Suite', 'Kali Linux', 'OWASP Top 10']
+      }
     ],
     mentors: [
       { name: 'Aditya Sen', role: 'Certified CEH, Security Analyst', experience: '6+ Years' }
     ],
     outcomes: [
-      'Scan networks for active hosts and open ports securely.',
+      'Scan networks for active hosts and open ports securely using Nmap.',
       'Identify and document OWASP Top 10 vulnerabilities in web pages.',
       'Apply basic encryption models to protect digital data assets.',
-      'Draft remediation recommendations for compromised servers.'
+      'Draft remediation recommendations and security patch reports for servers.'
     ],
     faqs: [
       { q: 'Do we practice on live sites?', a: 'No, we use local labs and virtual machine templates to practice ethical tests.' }
@@ -270,19 +446,42 @@ export const COURSES = [
     enrollments: '1,400+',
     overview: 'Get introduced to cloud infrastructure. Learn about computing, storage, networking, database services, and deployment models on AWS.',
     curriculum: [
-      { week: 'Weeks 1-2', title: 'Introduction to Cloud, Virtualization, & Core Models (IaaS, PaaS)' },
-      { week: 'Weeks 3-4', title: 'AWS Essentials: EC2 instances, S3 storage, IAM security' },
-      { week: 'Weeks 5-6', title: 'Cloud Networking: VPC setup, Route 53, & Load Balancing' },
-      { week: 'Weeks 7-8', title: 'Auto Scaling, RDS database, Monitoring (CloudWatch), & Billing' }
+      { 
+        week: 'Weeks 1-2', 
+        title: 'Cloud Core Models & Virtualization',
+        topics: ['Introduction to Cloud Computing: Scalability & Elasticity', 'Cloud Deployment Models (Public, Private, Hybrid)', 'Service Models: IaaS (Infrastructure), PaaS (Platform), SaaS (Software)', 'Virtualization & Hypervisors overview', 'Cloud Economics: Pay-as-you-go & cost optimization']
+      },
+      { 
+        week: 'Weeks 3-4', 
+        title: 'AWS Compute, Storage, & Identity IAM Services',
+        topics: ['AWS Global Infrastructure (Regions & Availability Zones)', 'Amazon EC2 (Elastic Compute Cloud): Launching & managing instances', 'Security Groups & Key Pairs', 'Amazon S3 (Simple Storage Service): Buckets, Policies, & Classes', 'AWS IAM (Identity & Access Management): Users, Groups, Roles']
+      },
+      { 
+        week: 'Weeks 5-6', 
+        title: 'Cloud Networking & Route 53 Configurations',
+        topics: ['Amazon VPC (Virtual Private Cloud) fundamentals', 'Subnets (Public & Private), Internet Gateways, Route Tables', 'Network Access Control Lists (NACLs) vs. Security Groups', 'Elastic Load Balancing (ELB) types & setups', 'Amazon Route 53 DNS routing policies']
+      },
+      { 
+        week: 'Weeks 7-8', 
+        title: 'Auto Scaling, Cloud Databases, & Monitoring Services',
+        topics: ['Amazon EC2 Auto Scaling setup', 'Amazon RDS (Relational Database Service) configurations', 'AWS CloudWatch: Logs, Metrics, & Alarms setup', 'AWS Billing & Budgets management dashboards', 'AWS Well-Architected Framework principles']
+      }
+    ],
+    projects: [
+      {
+        title: 'Multi-Tier Secure Cloud Deployment Architecture',
+        description: 'Design and deploy a secure VPC on AWS containing public and private subnets, configure an Auto Scaling EC2 pool behind a Load Balancer, and connect RDS.',
+        techUsed: ['AWS VPC', 'AWS EC2', 'AWS S3', 'Elastic Load Balancer', 'AWS RDS']
+      }
     ],
     mentors: [
       { name: 'Mohit Rao', role: 'Lead Solutions Architect at AWS', experience: '8+ Years' }
     ],
     outcomes: [
-      'Provision and manage secure cloud servers and object storage pools.',
-      'Configure custom virtual private networks with public/private subnets.',
-      'Configure auto-scaling systems for web application high-availability.',
-      'Understand cloud security baseline configurations.'
+      'Provision and manage secure cloud servers and object storage pools on AWS.',
+      'Configure custom virtual private networks (VPCs) with public and private subnets.',
+      'Configure auto-scaling networks for web application high-availability.',
+      'Understand cloud security baseline configurations and monitor billing alerts.'
     ],
     faqs: [
       { q: 'Is there hands-on cloud credits?', a: 'We guide you on creating AWS Free Tier accounts for your learning projects.' }

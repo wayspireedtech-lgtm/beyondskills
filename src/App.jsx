@@ -14,6 +14,7 @@ import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Verification from './pages/Verification';
 import AdminDashboard from './pages/AdminDashboard';
+import CourseDetails from './pages/CourseDetails';
 import { Mail, Sparkles, X } from 'lucide-react';
 
 // Scroll to top on navigation change
@@ -149,6 +150,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services/:serviceId" element={<Services />} />
           <Route path="/courses" element={<Courses />} />
+          <Route path="/course/:courseId" element={<CourseDetails />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />

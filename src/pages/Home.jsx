@@ -358,17 +358,12 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {featuredCourses.map((course) => {
-            const isSelected = selectedCourseId === course.id;
             const bgImage = COURSE_IMAGES[course.id] || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600';
             return (
               <div 
                 key={course.id} 
-                onClick={() => setSelectedCourseId(course.id)}
-                className={`relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group ${
-                  isSelected 
-                    ? 'border-brand-purple ring-2 ring-brand-purple/20 shadow-[0_0_25px_rgba(139,92,246,0.45)] scale-[1.01]' 
-                    : 'border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]'
-                }`}
+                onClick={() => navigate(`/course/${course.id}`)}
+                className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
               >
                 {/* Background Image with Dark Overlay */}
                 <div 
