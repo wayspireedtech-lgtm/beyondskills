@@ -15,6 +15,7 @@ import Dashboard from './pages/Dashboard';
 import Verification from './pages/Verification';
 import AdminDashboard from './pages/AdminDashboard';
 import CourseDetails from './pages/CourseDetails';
+import CampusAmbassador from './pages/CampusAmbassador';
 import { Mail, Sparkles, X } from 'lucide-react';
 
 // Scroll to top on navigation change
@@ -151,6 +152,7 @@ export default function App() {
           <Route path="/services/:serviceId" element={<Services />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
+          <Route path="/ambassador" element={<CampusAmbassador />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />

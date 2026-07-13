@@ -162,7 +162,7 @@ export default function Onboarding() {
                 <div>
                   <h4 className="font-bold text-slate-500 uppercase mb-2">Billed From:</h4>
                   <p className="font-bold text-gray-800">BeyondSkills Tech Services Pvt Ltd</p>
-                  <p className="text-slate-500">Sector 62, Electronic City, Noida</p>
+                  <p className="text-slate-500">Udyog Vihar, Gurugram, Haryana</p>
                   <p className="text-slate-500">GSTIN: 09AAECD9832K1ZP</p>
                 </div>
                 <div>

@@ -4,7 +4,6 @@ import { ArrowRight, Code, Megaphone, CheckCircle, Star, Users, Briefcase, Award
 import TechIcon from '../components/TechIcon';
 import { COURSES, MENTORS, STUDENT_TESTIMONIALS, CLIENT_TESTIMONIALS, getDbItem, setDbItem } from '../utils/mockDb';
 import PartnerLogo from '../components/PartnerLogo';
-import Curved3DCarousel from '../components/Curved3DCarousel';
 import BrochureModal from '../components/BrochureModal';
 
 const COURSE_IMAGES = {
@@ -110,7 +109,11 @@ export default function Home() {
     { q: 'What is the background of BeyondSkills?', a: 'BeyondSkills was registered in 2022. We operate as a hybrid team, providing technical services to companies while training students through live mentorship.' },
     { q: 'Is there a placement guarantee?', a: 'No, we do not guarantee jobs, internships, salary packages, or interviews. Our programs focus entirely on practical coding skills, project reviews, and certifications.' },
     { q: 'Who teaches the certification programs?', a: 'Classes are guided by 50+ industry experts and mentors with 5+ years of active coding and marketing experience in top corporate brands.' },
-    { q: 'How does onboarding work after course purchase?', a: 'Onboarding is fully automated. Within 5 minutes of completing Razorpay checkout, you get a welcome email, unique student ID, and live calendar links.' }
+    { q: 'How does onboarding work after course purchase?', a: 'Onboarding is fully automated. Within 5 minutes of completing Razorpay checkout, you get a welcome email, unique student ID, and live calendar links.' },
+    { q: 'Where is your corporate office located?', a: 'Our office is located at Plot No. 747, Udyog Vihar, Phase 5, Gurugram, Haryana, India. Candidates are welcome to reach out to our team via email for office hours scheduling.' },
+    { q: 'What are the terms and conditions of enrollment?', a: 'By enrolling, students agree to use learning materials strictly for personal education. Sharing logins or commercial distribution of resources is prohibited and will result in termination of access.' },
+    { q: 'What is the return and refund policy?', a: 'We offer a 7-day return policy. If you request a cancellation within 7 days of payment and before attending any live mentor review session, you will receive a full refund. After 7 days, fees are non-refundable.' },
+    { q: 'What is the privacy policy of BeyondSkills?', a: 'We process personal details like names, emails, and payment references exclusively to deliver course credentials and handle Razorpay checkouts. Your data is protected under standard encryption and is never shared with third-party marketers.' }
   ];
 
   const featuredCourses = COURSES.slice(0, 3);
@@ -128,7 +131,7 @@ export default function Home() {
         {/* Animated Glow Pill */}
         <span className="inline-flex items-center space-x-2 bg-slate-100 border border-slate-200/80 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-brand-purple mb-8 shadow-md shadow-brand-purple/5">
           <Sparkles className="w-4 h-4 animate-spin-slow text-brand-purple" />
-          <span>Upskilling & Professional Certification Center</span>
+          <span>Digital Services & Professional Certification Center</span>
         </span>
         
         {/* Heading */}
@@ -154,10 +157,10 @@ export default function Home() {
         {/* CTAs */}
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto sm:max-w-none">
           <Link to="/courses" className="w-full sm:w-auto bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] hover:brightness-110 text-white font-bold px-8 py-4 rounded-xl shadow-xl shadow-brand-purple/20 hover:scale-[1.03] transition-all text-xs uppercase tracking-widest">
-            Browse Programs
+            Upskilling Programs
           </Link>
           <a href="#contact-forms" className="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 font-bold px-8 py-4 rounded-xl hover:scale-[1.03] transition-all text-xs uppercase tracking-widest">
-            Start Upskilling
+            Digital Services
           </a>
         </div>
 
@@ -166,9 +169,6 @@ export default function Home() {
           *<strong>Educational Notice:</strong> BeyondSkills does not guarantee jobs, placements, internships, salary packages, or corporate interviews. Learners are responsible for their own employment search.
         </p>
       </section>
-
-      {/* 2. 3D Curved Partner Logo Slider (Dribbble Style) */}
-      <Curved3DCarousel />
 
       {/* 2.5 Trust Badges & Accreditations Banner */}
       <div className="w-full py-8 relative z-10">
@@ -234,10 +234,10 @@ export default function Home() {
             Core Ecosystem
           </span>
           <h2 className="logo-font text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-4">
-            Unified Digital Services & Upskilling
+            Unified Digital Services & Programs
           </h2>
           <p className="text-slate-500 text-sm max-w-xl mx-auto">
-            Providing end-to-end digital solutions for businesses while running industry-focused practical upskilling programs.
+            Providing end-to-end digital solutions for businesses while running industry-focused practical professional programs.
           </p>
         </div>
 
@@ -246,7 +246,7 @@ export default function Home() {
             { title: 'AI-Powered Learning', desc: 'Next-gen cognitive training', icon: Sparkles, bg: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?w=400&auto=format&fit=crop&q=80' },
             { title: 'Web Development Solutions', desc: 'Custom enterprise software', icon: Code, bg: 'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=400&auto=format&fit=crop&q=80' },
             { title: 'Digital Marketing Services', desc: 'Performance ads & optimization', icon: Megaphone, bg: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&auto=format&fit=crop&q=80' },
-            { title: 'Industry Focused Upskilling', desc: 'Practical projects & mentorship', icon: Users, bg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop&q=80' },
+            { title: 'Professional Programs', desc: 'Practical projects & mentorship', icon: Users, bg: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop&q=80' },
             { title: 'Professional Certifications', desc: 'Verified secure credentials', icon: Award, bg: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&auto=format&fit=crop&q=80' },
             { title: 'Corporate Training & Transformation', desc: 'Team scaling & consulting', icon: Briefcase, bg: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&auto=format&fit=crop&q=80' }
           ].map((item, idx) => {
@@ -447,7 +447,7 @@ export default function Home() {
               Practical, Project-Driven Learning Systems
             </h2>
             <p className="text-slate-500 leading-relaxed mb-8">
-              We bridge the gap between academic theory and active corporate pipelines. Learn from active web programmers and marketers running live client systems in Noida.
+              We bridge the gap between academic theory and active corporate pipelines. Learn from active web programmers and marketers running live client systems in Udyog Vihar, Gurugram.
             </p>
 
             <div className="space-y-4">
@@ -473,7 +473,7 @@ export default function Home() {
             
             <h4 className="text-lg font-bold text-slate-900 mb-4">Resume Evaluations & ATS Screening</h4>
             <p className="text-xs text-slate-500 leading-relaxed mb-6">
-              Upskilling program students receive detailed resume reviews. Industry recruitment specialists analyze your code layout, project presentation, and align formatting with ATS algorithms.
+              Professional program students receive detailed resume reviews. Industry recruitment specialists analyze your code layout, project presentation, and align formatting with ATS algorithms.
             </p>
             
             <div className="bg-slate-100 border border-slate-200/60 rounded-xl p-4 flex items-center space-x-3">
@@ -498,7 +498,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h4 className="text-xs font-bold text-brand-purple tracking-widest uppercase mb-6 pl-2 border-l-2 border-brand-purple">
-              Upskilling Graduates
+              Academy Graduates
             </h4>
             <div className="space-y-6">
               {STUDENT_TESTIMONIALS.map((t, idx) => (
@@ -700,7 +700,7 @@ export default function Home() {
         
         <div className="text-center mb-16">
           <h2 className="logo-font text-3xl font-bold text-slate-900 mb-2">Frequently Asked Questions</h2>
-          <p className="text-xs text-slate-500 uppercase tracking-widest">Learn more about our verticals & upskilling guidelines.</p>
+          <p className="text-xs text-slate-500 uppercase tracking-widest">Learn more about our verticals & academy guidelines.</p>
         </div>
 
         <div className="space-y-4">

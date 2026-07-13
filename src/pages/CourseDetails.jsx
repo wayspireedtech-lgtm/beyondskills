@@ -221,9 +221,9 @@ export default function CourseDetails() {
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Certification & Onboarding Fee</span>
                     <div className="flex items-baseline space-x-2 mt-2">
                       <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">₹{course.fee.toLocaleString()}</span>
-                      <span className="text-xs text-slate-400 font-mono font-bold line-through">₹{(course.fee * 1.5).toLocaleString()}</span>
+                      <span className="text-xs text-slate-400 font-mono font-bold line-through">₹{(course.originalFee || course.fee * 1.5).toLocaleString()}</span>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-1 font-mono">⚡ Flat 33% Off (Early bird pricing applied)</p>
+                    <p className="text-[10px] text-slate-400 mt-1 font-mono">⚡ Flat {Math.round(((course.originalFee || course.fee * 1.5) - course.fee) / (course.originalFee || course.fee * 1.5) * 100)}% Off (Early bird pricing applied)</p>
                   </div>
 
                   <div className="space-y-3">
@@ -569,10 +569,10 @@ export default function CourseDetails() {
                 <h4 className="text-xs font-extrabold text-slate-900 truncate leading-tight font-mono uppercase tracking-wide">
                   {course.title}
                 </h4>
-                <div className="flex items-center space-x-1.5 mt-0.5">
-                  <span className="text-sm font-extrabold text-slate-900">₹{course.fee.toLocaleString()}</span>
-                  <span className="text-[10px] text-slate-400 line-through font-mono">₹{(course.fee * 1.5).toLocaleString()}</span>
-                </div>
+                  <div className="flex items-center space-x-1.5 mt-0.5">
+                    <span className="text-sm font-extrabold text-slate-900">₹{course.fee.toLocaleString()}</span>
+                    <span className="text-[10px] text-slate-400 line-through font-mono">₹{(course.originalFee || course.fee * 1.5).toLocaleString()}</span>
+                  </div>
               </div>
             </div>
 

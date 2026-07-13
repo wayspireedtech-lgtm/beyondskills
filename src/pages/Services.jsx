@@ -6,11 +6,11 @@ import { getDbItem, setDbItem } from '../utils/mockDb';
 const SERVICE_DATA = {
   'website-development': {
     title: 'Website & Custom Web Applications Development',
-    category: 'Agency Vertical',
+    category: 'Digital Services',
     icon: Code,
     overview: 'We build premium, enterprise-grade custom web portals, single page applications (SPAs), SaaS dashboards, and e-commerce systems tailored to scale with your business.',
     process: [
-      { step: '01', name: 'Discovery & Architecture', desc: 'Analyzing functional specifications, data models, user flows, and mapping software infrastructure.' },
+      { step: '01', name: 'Discovery & Architecture', desc: 'Analyzing functional specifications, data models, user flows, and software architecture.' },
       { step: '02', name: 'UI/UX Interactive Design', desc: 'Crafting modern interfaces using high-fidelity dark-mode themes, Outfit typography, and custom mockups.' },
       { step: '03', name: 'Agile Coding Iterations', desc: 'Developing logic using React, Next.js, Node.js, and integrating secure API layers.' },
       { step: '04', name: 'Quality Assurance & Tests', desc: 'Verifying load speeds, responsive views, compile constraints, and security audits.' },
@@ -35,7 +35,7 @@ const SERVICE_DATA = {
   },
   'digital-marketing': {
     title: 'Performance Digital Marketing & Brand Campaigns',
-    category: 'Agency Vertical',
+    category: 'Digital Services',
     icon: Megaphone,
     overview: 'Drive customer acquisition and high ROI revenue growth through targeted Meta Ads, Google performance campaigns, SEO indexing, and real-time database funnels.',
     process: [
@@ -43,67 +43,55 @@ const SERVICE_DATA = {
       { step: '02', name: 'Creative Development', desc: 'Designing high-impact graphic creatives, copywriting headlines, and building custom landing pages.' },
       { step: '03', name: 'Attribution & Tracking Setup', desc: 'Deploying Google Analytics (GA4), GTM containers, and Meta Conversions server-side API links.' },
       { step: '04', name: 'Campaign Launch & A/B Matrix', desc: 'Setting custom audiences, budgeting, and running multi-variant ad set tests.' },
-      { step: '05', name: 'Weekly Optimization & Scaling', desc: 'Monitoring click costs (CPC), acquisition fees (CAC), and scale budgets for highest-converting ad sets.' }
+      { step: '05', name: 'Optimization Scaling', desc: 'Analyzing cost per acquisition (CPA), cleaning ad sets, and scaling budgets toward positive pipelines.' }
     ],
     deliverables: [
-      'High-converting ad copies & custom graphical ad assets',
-      'Live Google Data Studio attribution reporting dashboard',
-      'First-party data tracking server connections',
-      'Weekly strategy audits with lead source analysis reports'
+      'Configured Google Tag Manager and Meta Conversions API links',
+      'High-fidelity custom ad creatives and landing pages layouts',
+      'Weekly performance analytics reporting & attribution audits',
+      'Fully optimized ads accounts structure with scaling plan'
     ],
-    technologies: ['Meta Ads Manager', 'Google Ads Keyword Planner', 'Google Analytics (GA4)', 'GTM', 'HubSpot Integration'],
+    technologies: ['Meta Ads Manager', 'Google Ads', 'Google Tag Manager', 'GA4 Analytics', 'Conversions API', 'SEO Tools'],
     benefits: [
-      'Attract high-intent, targeted users ready to purchase',
-      'Transparent tracking: see exact return on ad spend (ROAS)',
-      'Optimized landing page architectures for low bounce rates'
+      'Trackable conversion attribution (no lost sales parameters)',
+      'A/B tested copywriting converting traffic at high baseline margins',
+      'Budget allocation alignment preventing wasted ad spend'
     ],
     faqs: [
-      { q: 'What is your minimum monthly ad budget requirement?', a: 'We manage campaigns starting at a minimum ad spend of ₹50,000 per month, allowing sufficient data collection for pixel optimization.' },
+      { q: 'What is the minimum ad spend budget required?', a: 'We recommend starting with at least ₹50,000 monthly ad budget to allow ad networks algorithms to gather conversion events data.' },
       { q: 'Who pays for the ad spend budget?', a: 'Ad spend is billed directly to your corporate payment card. Our agency fees are structured as a percentage of ad spend or flat monthly retainers.' }
     ]
   }
 };
 
+const leadSchema = {
+  type: 'Digital Services',
+  name: '',
+  company: '',
+  email: '',
+  phone: '',
+  budget: '₹1,00,000 - ₹3,00,000',
+  message: ''
+};
+
 export default function Services() {
   const { serviceId } = useParams();
-  const [data, setData] = useState(null);
   const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', budget: '₹1,00,000 - ₹3,00,000', message: '' });
   const [status, setStatus] = useState(null);
 
-  useEffect(() => {
-    if (SERVICE_DATA[serviceId]) {
-      setData(SERVICE_DATA[serviceId]);
-    } else {
-      setData(null);
-    }
-    setStatus(null);
-  }, [serviceId]);
+  const data = SERVICE_DATA[serviceId];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!data) return;
-
-    // Save lead to local storage
     const leads = getDbItem('beyondskills_leads', []);
-    const newLead = {
-      type: 'Agency',
-      name: form.name,
-      company: form.company,
-      email: form.email,
-      phone: form.phone,
-      service: data.title,
-      budget: form.budget,
-      message: form.message,
-      date: new Date().toISOString()
-    };
+    const newLead = { type: 'Digital Services', ...form, service: data.title, date: new Date().toISOString() };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
 
-    // Trigger simulated SLA toast
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
-        subject: `Lead Logged: ${data.title}`,
-        body: `Hello ${form.name},\n\nWe have received your agency consultation inquiry regarding ${data.title}. One of our senior architects will reach out to schedule a technical discovery call shortly.\n\nThank you,\nBeyondSkills Consulting Team`
+        subject: `Inquiry Logged: ${data.title}`,
+        body: `Hello ${form.name},\n\nWe have received your digital services consultation inquiry regarding ${data.title}. One of our senior architects will reach out to schedule a technical discovery call shortly.\n\nThank you,\nBeyondSkills Consulting Team`
       }
     }));
 
@@ -117,7 +105,7 @@ export default function Services() {
       <div className="text-slate-900 min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
         <AlertCircle className="w-12 h-12 text-brand-blue mb-4" />
         <h2 className="text-2xl font-bold mb-2">Service Not Found</h2>
-        <p className="text-slate-500 mb-6">The agency service you are looking for does not exist.</p>
+        <p className="text-slate-500 mb-6">The digital service you are looking for does not exist.</p>
         <Link to="/" className="bg-brand-purple text-white font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider">
           Return Home
         </Link>

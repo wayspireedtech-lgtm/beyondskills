@@ -36,11 +36,11 @@ export default function Footer() {
                 </span>
               </div>
               <span className="text-[7px] font-bold text-slate-400 uppercase tracking-[0.16em] mt-1 select-none leading-none">
-                Digital Services • Upskilling • Future-Ready
+                Digital Services • Professional Programs • Future-Ready
               </span>
             </Link>
             <p className="text-sm text-slate-400 mb-5 leading-relaxed">
-              Accelerating digital growth for brands through our cutting-edge digital services while equipping developers, marketers, and leaders of tomorrow with industry-focused upskilling.
+              Accelerating digital growth for brands through our cutting-edge digital services while equipping developers, marketers, and leaders of tomorrow with industry-focused professional programs.
             </p>
             <p className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-5">
               We don't just follow the future. <br />
@@ -88,7 +88,7 @@ export default function Footer() {
           {/* Column 3: Academy Courses */}
           <div>
             <h3 className="text-slate-200 font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
-              Upskilling Academy
+              Digital Services Academy
             </h3>
             <ul className="space-y-4 text-sm text-slate-400">
               <li>
@@ -122,15 +122,11 @@ export default function Footer() {
             <ul className="space-y-4 text-sm text-slate-400">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-brand-purple flex-shrink-0 mt-0.5" />
-                <span>Sector 62, Electronic City, Noida, UP, India</span>
+                <span>Plot No. 747, Udyog Vihar, Phase 5, Gurugram, Haryana</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-brand-purple flex-shrink-0" />
                 <span>connect@beyondskills.in</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-brand-purple flex-shrink-0" />
-                <span>+91 98765 43210</span>
               </li>
             </ul>
           </div>
@@ -147,7 +143,7 @@ export default function Footer() {
           <div>
             <h5 className="font-bold text-slate-300 uppercase tracking-wider mb-2">BUSINESS VERTICAL SEPARATION</h5>
             <p>
-              The Digital Marketing & Web Development Services and the Upskilling Programs operate as distinct commercial business verticals. Services (custom programming, digital strategy campaigns, ads placement) are governed by specific corporate agreements and deliverables SLA. Educational classes, recorded video lessons, student login workspace access, and assessments are governed exclusively by candidate enrollment terms.
+              The Digital Marketing & Web Development Services and the Digital Services Programs operate as distinct commercial business verticals. Services (custom programming, digital strategy campaigns, ads placement) are governed by specific corporate agreements and deliverables SLA. Educational classes, recorded video lessons, student login workspace access, and assessments are governed exclusively by candidate enrollment terms.
             </p>
           </div>
         </div>

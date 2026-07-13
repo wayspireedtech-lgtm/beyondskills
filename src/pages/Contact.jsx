@@ -79,7 +79,7 @@ export default function Contact() {
                 <div>
                   <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Office Location</h4>
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Sector 62, Electronic City, Noida, Uttar Pradesh, Pin 201301, India
+                    Plot No. 747, Udyog Vihar, Phase 5, Gurugram, Haryana
                   </p>
                 </div>
               </div>
@@ -89,14 +89,6 @@ export default function Contact() {
                 <div>
                   <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Channels</h4>
                   <p className="text-xs text-slate-500 mt-1">connect@beyondskills.in</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <Phone className="w-5 h-5 text-brand-purple flex-shrink-0" />
-                <div>
-                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Phone Lines</h4>
-                  <p className="text-xs text-slate-500 mt-1">+91 98765 43210</p>
                 </div>
               </div>
             </div>
