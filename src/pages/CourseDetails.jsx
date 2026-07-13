@@ -123,13 +123,33 @@ export default function CourseDetails() {
   };
 
   return (
-    <div className="text-slate-900 min-h-screen relative bg-white">
+    <div className="text-slate-900 min-h-screen relative bg-transparent">
       {/* Background glow graphics */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
       <div className="absolute top-[800px] left-[-200px] w-[500px] h-[500px] bg-blue-500/[0.03] rounded-full blur-[120px] pointer-events-none z-0"></div>
 
+      {/* Floating tool watermarks in background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none opacity-[0.03] z-0">
+        {course && course.techStack && course.techStack.map((tech, idx) => {
+          const positions = [
+            { top: '8%', left: '4%' },
+            { top: '22%', right: '6%' },
+            { top: '38%', left: '10%' },
+            { top: '55%', right: '5%' },
+            { top: '70%', left: '6%' },
+            { top: '88%', right: '8%' },
+          ];
+          const pos = positions[idx % positions.length];
+          return (
+            <div key={idx} className="absolute transform scale-[4.2] rotate-[15deg] transition-transform duration-500" style={pos}>
+              <TechIcon name={tech} className="w-24 h-24" />
+            </div>
+          );
+        })}
+      </div>
+
       {/* Hero Section */}
-      <div ref={heroRef} className="relative z-10 pt-8 pb-16 border-b border-slate-100 bg-slate-50/50">
+      <div ref={heroRef} className="relative z-10 pt-8 pb-16 border-b border-slate-100 bg-slate-50/15">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Breadcrumb / Back */}

@@ -3,7 +3,7 @@
 export const COURSES = [
   {
     id: 'ai-ml',
-    techStack: ['Python', 'SQL', 'Pandas', 'NumPy', 'Scikit-Learn', 'TensorFlow', 'Keras'],
+    techStack: ['Python', 'NumPy', 'Pandas', 'Matplotlib', 'Seaborn', 'Scikit-Learn', 'TensorFlow', 'Hugging Face', 'NLP'],
     title: 'Artificial Intelligence & Machine Learning',
     category: 'AI/ML/DS/DA',
     level: 'Basic to Intermediate',
@@ -14,59 +14,104 @@ export const COURSES = [
     certificate: 'Yes',
     rating: 4.8,
     enrollments: '1,800+',
-    overview: 'Master the fundamentals of Python, machine learning algorithms, deep learning models, computer vision, and Large Language Models (LLMs) with hands-on projects.',
+    overview: 'Artificial Intelligence (AI) stands at the cutting edge of technological advancement, driving transformative changes across numerous industries. Learn to automate complex processes, enhance decision-making, and build innovative solutions using Python, machine learning, and deep learning.',
     curriculum: [
-      { 
-        week: 'Weeks 1-3', 
-        title: 'Python Programming, Data Structures, & Exploratory Data Analysis',
-        topics: ['Python Syntax & Variables', 'Control Flow (Loops & Conditionals)', 'Functions & Modules', 'File I/O Operations', 'Data Structures (Lists, Dicts, Sets)', 'NumPy for Numerical Computing', 'Pandas for Data Manipulation', 'Data Cleaning & Exploratory Data Analysis (EDA)', 'Data Visualization (Matplotlib, Seaborn)']
+      {
+        week: 'Weeks 1-2',
+        title: 'Python Architecture & File Operations',
+        topics: [
+          'Installation of Anaconda Prompt & Jupyter Notebook overview',
+          'Shortcut keys in Jupyter Notebook & Data Types in Python',
+          'Lists, Tuples, Sets, & Dictionaries',
+          'Introduction to files, directories, and terminal paths',
+          'Reading and writing text files using the with statement'
+        ]
       },
-      { 
-        week: 'Weeks 4-6', 
-        title: 'Statistical Foundations & Data Preprocessing Techniques',
-        topics: ['Descriptive & Inferential Statistics', 'Probability Distributions', 'Central Limit Theorem & Hypothesis Testing', 'Handling Missing Values', 'Outlier Detection (IQR & Z-score)', 'Feature Scaling (Standardization & Normalization)', 'Encoding Categorical Variables (One-Hot, Label)', 'Feature Selection & Dimensionality Reduction']
+      {
+        week: 'Weeks 3-4',
+        title: 'Data Analysis & Manipulation (NumPy & Pandas)',
+        topics: [
+          'Introduction to Machine Learning Libraries',
+          'Hands-on numerical computing with NumPy',
+          'Pandas Python package to manipulate and calculate data',
+          'Data cleaning, grouping, and hands-on analysis with Pandas'
+        ]
       },
-      { 
-        week: 'Weeks 7-9', 
-        title: 'Supervised & Unsupervised Machine Learning Algorithms',
-        topics: ['Linear Regression & Multiple Regression', 'Logistic Regression for Classification', 'Decision Trees & Information Gain', 'Ensemble Learning (Random Forests, AdaBoost, XGBoost)', 'Model Evaluation Metrics (Accuracy, Precision, Recall, F1)', 'Bias-Variance Trade-off & Regularization (L1/L2)', 'Clustering (K-Means, Hierarchical)', 'Principal Component Analysis (PCA) for Dimension Reduction']
+      {
+        week: 'Weeks 5-6',
+        title: 'Data Visualization & Statistical Thinking',
+        topics: [
+          'Exploratory data visualization: Matplotlib & Seaborn hands-on',
+          'Measures of Central Tendency & Measures of Dispersion',
+          'IQR Statistics & hands-on outlier detection in Python',
+          'Data storytelling and extracting insights from raw features'
+        ]
       },
-      { 
-        week: 'Weeks 10-12', 
-        title: 'Deep Learning, NLP, & Generative AI Foundations',
-        topics: ['Introduction to Neural Networks & Perceptrons', 'Activation Functions & Backpropagation', 'Convolutional Neural Networks (CNNs) for Image Classification', 'Natural Language Processing (NLP) Basics', 'Text Preprocessing & Word Embeddings (Word2Vec)', 'Recurrent Neural Networks (RNNs) & LSTMs', 'Transformers & Attention Mechanisms', 'Large Language Models (LLMs) & Prompt Engineering', 'OpenAI APIs, Hugging Face, & Custom Chatbot Deployment']
+      {
+        week: 'Weeks 7-8',
+        title: 'Supervised & Un-supervised Learning (Regression)',
+        topics: [
+          'Classification, Regression, & model fine-tuning concepts',
+          'Supervised vs Unsupervised Learning foundations',
+          'Linear Regression & Metrics for Linear Regression',
+          'Logistic Regression & Metrics in Logistic Regression'
+        ]
+      },
+      {
+        week: 'Weeks 9-10',
+        title: 'Data Preprocessing & Tree-Based Models',
+        topics: [
+          'Data preprocessing: Standardization & Normalization',
+          'Handling missing values, outliers, and feature scaling',
+          'Tree-Based Models: Decision Tree & Bagging',
+          'Boosting and Random Forest classification and regression'
+        ]
+      },
+      {
+        week: 'Weeks 11-12',
+        title: 'Neural Networks, NLP & Generative AI',
+        topics: [
+          'Fundamentals of Neural Networks & data science packages',
+          'Analysis, visualization, and building custom neural models',
+          'Basics of NLP: NLTK, SpaCy, Gensim, & FastText',
+          'Basics of Gen AI: Hugging Face & Generative AI models',
+          'DALL-E, ChatGPT, and generative AI corporate use cases'
+        ]
       }
     ],
     projects: [
       {
-        title: 'Smart Health Classification Engine',
-        description: 'A deep learning model using Convolutional Neural Networks (CNNs) to screen chest X-ray images and classify pneumonia instances with high precision.',
-        techUsed: ['TensorFlow', 'Keras', 'OpenCV', 'Python']
+        title: 'Predictive Customer Churn Model',
+        description: 'Implement a machine learning pipeline to preprocess customer data, handle missing values, scale features, and train Random Forest models to predict subscriber churn.',
+        techUsed: ['Python', 'Pandas', 'Scikit-Learn', 'Seaborn']
       },
       {
-        title: 'Predictive Lead Conversion & Churn Modeler',
-        description: 'An enterprise-grade analytics model using Random Forests and XGBoost to calculate probability scoring of customer churn from active services.',
-        techUsed: ['Scikit-Learn', 'Pandas', 'Seaborn', 'Python']
+        title: 'NLP Custom Text Classifier',
+        description: 'Build an intent-detection system using NLTK and Hugging Face Transformers to classify user queries and automate support workflow tags.',
+        techUsed: ['Python', 'Hugging Face', 'NLP', 'NLTK']
       }
     ],
     mentors: [
-      { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
-      { name: 'Sanjay Mehta', role: 'AI Lead at Tech Solutions', experience: '6+ Years' }
+      { name: 'Saurav Kumar Sinha', role: 'Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini', experience: '8+ Years' },
+      { name: 'Uttam Grade', role: 'EY | Ex-Accenture, McKinsey', experience: '6+ Years' },
+      { name: 'Vinod Kumar Eslavath', role: 'Assistant Manager - Data Scientist at Shemaroo', experience: '5+ Years' }
     ],
     outcomes: [
-      'Understand and apply supervised and unsupervised learning techniques to real-world datasets.',
-      'Build, train, and optimize custom Deep Learning neural networks using TensorFlow and Keras.',
-      'Fine-tune and deploy LLM applications with OpenAI API and Hugging Face.',
-      'Complete 2 major capstone AI/ML projects to build a solid professional portfolio.'
+      'Understand and apply supervised and unsupervised learning techniques to datasets.',
+      'Perform data preprocessing, standardization, and feature scaling.',
+      'Build classification, regression, and tree-based machine learning pipelines.',
+      'Work with neural networks, natural language processing tools, and generative AI frameworks.'
     ],
     faqs: [
       { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and ML engineering.' },
-      { q: 'Will I get an internship certificate?', a: 'Yes, an internship completion certificate is issued upon successful completion of the course capstone project and curriculum assessments.' },
+      { q: 'What certificates will I receive?', a: 'You will receive 2 certificates: a course completion certificate and a project completion certificate.' },
       { q: 'Is there a job guarantee?', a: 'No, we do not guarantee jobs or placements. Please refer to our placement disclaimer.' }
     ],
     reviews: [
-      { user: 'Amit Sharma', rating: 5, comment: 'The AI/ML live sessions were excellent. Mentors resolve doubts instantly.', date: 'May 2026' },
-      { user: 'Priya Nair', rating: 4, comment: 'Hands-on neural network projects helped me clear my basic concepts. Highly recommended!', date: 'June 2026' }
+      { user: 'Manshi Srivastav', rating: 5, comment: 'I’ve successfully finished my AI course. A big thank you to my mentors for their continuous support. This journey has enriched my skills and provided clarity on my career path.', date: 'May 2026' },
+      { user: 'Rakesh Rana', rating: 5, comment: 'Delighted to have achieved my certification in Artificial Intelligence! Grateful to BeyondSkills for their constant support and mentorship. Excited to explore innovative opportunities and apply these AI skills.', date: 'June 2026' },
+      { user: 'Pavan Barhate', rating: 5, comment: 'Thrilled to have earned the certification in Artificial Intelligence! A huge thanks to BeyondSkills for their guidance and support throughout this journey.', date: 'June 2026' },
+      { user: 'Pankaj Shekhawat', rating: 5, comment: 'Excited to have successfully completed my Artificial Intelligence internship at BeyondSkills. Grateful for the hands-on experience, new skills gained, and the incredible support.', date: 'July 2026' }
     ]
   },
   {
