@@ -5,7 +5,6 @@ import {
   TrendingUp, Briefcase, Award, Rocket, ArrowRight, BarChart3, 
   Users, BookOpen, Quote, ShieldCheck, Mail, Calendar, HelpCircle, FileText
 } from 'lucide-react';
-import PartnerLogo from '../components/PartnerLogo';
 
 const CURRICULUM_DATA = [
   {
@@ -214,6 +213,17 @@ const COMPANYS_TIEUPS = [
   "Google Cloud", "Microsoft", "AWS Cloud", "Razorpay", "HubSpot", "Meta Ads", "Vercel", "Shopify"
 ];
 
+const LOGO_IMAGES = {
+  "Google Cloud": "https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg",
+  "Microsoft": "https://www.vectorlogo.zone/logos/microsoft/microsoft-icon.svg",
+  "AWS Cloud": "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg",
+  "Razorpay": "https://cdn.worldvectorlogo.com/logos/razorpay.svg",
+  "HubSpot": "https://www.vectorlogo.zone/logos/hubspot/hubspot-icon.svg",
+  "Meta Ads": "https://www.vectorlogo.zone/logos/meta/meta-icon.svg",
+  "Vercel": "https://www.vectorlogo.zone/logos/vercel/vercel-icon.svg",
+  "Shopify": "https://www.vectorlogo.zone/logos/shopify/shopify-icon.svg"
+};
+
 const DATASETS = [
   {
     label: "Global AI Market Expansion",
@@ -282,13 +292,13 @@ export default function AiBrochure() {
   };
 
   return (
-    <div className="text-slate-900 min-h-screen relative overflow-x-hidden bg-white">
-      {/* Dynamic Background Glow Elements */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
-      <div className="absolute top-[1200px] left-[-300px] w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
+    <div className="text-slate-900 min-h-screen relative overflow-x-hidden bg-transparent">
+      {/* Background spotlights to layer with the global interactive grid */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[140px] pointer-events-none z-0"></div>
+      <div className="absolute top-[1200px] left-[-300px] w-[600px] h-[600px] bg-brand-cyan/8 rounded-full blur-[140px] pointer-events-none z-0"></div>
       
-      {/* 1. Hero Section (Futuristic Mixed Theme) */}
-      <section className="relative z-10 pt-16 pb-24 px-4 sm:px-6 lg:px-8 border-b border-slate-100 bg-[#0A0E35]/95 text-white overflow-hidden">
+      {/* 1. Hero Section (Futuristic Dark Theme) */}
+      <section className="relative z-10 pt-16 pb-24 px-4 sm:px-6 lg:px-8 border-b border-slate-900/60 bg-[#060A24] text-white overflow-hidden">
         {/* Neon Grid Lines overlay inside hero */}
         <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{
           backgroundImage: `
@@ -356,10 +366,10 @@ export default function AiBrochure() {
             <h2 className="logo-font text-3xl font-extrabold text-slate-900 leading-tight">
               Bridging Corporate Realities with Expert Pedagogy
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed text-justify">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
               At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
             </p>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed text-justify">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
               This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
             </p>
           </div>
@@ -372,12 +382,12 @@ export default function AiBrochure() {
             ].map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div key={idx} className="bg-slate-50 border border-slate-100 hover:border-brand-purple/20 p-5 rounded-2xl transition-all group">
-                  <div className="bg-[#2A4BFF]/10 p-2.5 rounded-xl text-[#2A4BFF] w-fit mb-3 group-hover:scale-105 transition-transform">
+                <div key={idx} className="bg-[#0A0E35]/90 border border-[#2A4BFF]/20 hover:border-brand-purple/40 p-5 rounded-2xl transition-all group text-white shadow-xl">
+                  <div className="bg-[#2A4BFF]/20 p-2.5 rounded-xl text-[#0EA5E9] w-fit mb-3 group-hover:scale-105 transition-transform">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h4 className="font-bold text-slate-900 text-xs sm:text-sm uppercase tracking-wide font-mono mb-1">{item.title}</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-500 leading-normal">{item.desc}</p>
+                  <h4 className="font-bold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-1">{item.title}</h4>
+                  <p className="text-[11px] sm:text-xs text-slate-300 leading-normal font-mono">{item.desc}</p>
                 </div>
               );
             })}
@@ -386,12 +396,12 @@ export default function AiBrochure() {
       </section>
 
       {/* 3. Why Learn AI Today Section & Dataset Dashboard */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-b border-slate-100 z-10 relative">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
-            <h2 className="logo-font text-3xl font-bold text-slate-900">Why You Must Learn AI Right Now</h2>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
+            <h2 className="logo-font text-3xl font-bold text-white">Why You Must Learn AI Right Now</h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
               We compile recent dataset reports demonstrating the massive demand trajectory for Python, Machine Learning, and GenAI skillsets across tech hubs.
             </p>
           </div>
@@ -405,20 +415,20 @@ export default function AiBrochure() {
                   onClick={() => setActiveDatasetIdx(idx)}
                   className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
                     activeDatasetIdx === idx 
-                      ? 'bg-white border-[#2A4BFF]/50 shadow-md ring-1 ring-[#2A4BFF]/20' 
-                      : 'bg-white/60 border-slate-200/60 hover:bg-white hover:border-slate-300'
+                      ? 'bg-[#0F174A]/90 border-[#2A4BFF] shadow-lg ring-1 ring-[#2A4BFF]/40 text-white' 
+                      : 'bg-[#0A0E35]/70 border-[#2A4BFF]/10 text-slate-300 hover:bg-[#0B1240]/80'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs uppercase tracking-wide text-slate-700 font-mono">{data.label}</span>
-                    <TrendingUp className={`w-4 h-4 ${activeDatasetIdx === idx ? 'text-[#2A4BFF]' : 'text-slate-400'}`} />
+                    <span className={`font-bold text-xs uppercase tracking-wide font-mono ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-300'}`}>{data.label}</span>
+                    <TrendingUp className={`w-4 h-4 ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-400'}`} />
                   </div>
                   <div className="flex justify-between items-baseline mt-3">
                     <span className="text-[10px] text-slate-400 font-mono">{data.current}</span>
-                    <span className="text-xs font-extrabold text-[#2A4BFF] font-mono">{data.projected}</span>
+                    <span className={`text-xs font-extrabold font-mono ${activeDatasetIdx === idx ? 'text-white' : 'text-[#2A4BFF]'}`}>{data.projected}</span>
                   </div>
                   {/* Dynamic Progress indicator bar */}
-                  <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2.5 overflow-hidden">
+                  <div className="w-full bg-slate-950 h-1.5 rounded-full mt-2.5 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-700"
                       style={{ width: activeDatasetIdx === idx ? `${data.growth}%` : '8%' }}
@@ -429,7 +439,7 @@ export default function AiBrochure() {
             </div>
 
             {/* Right Interactive Data Details Card */}
-            <div className="lg:col-span-7 bg-[#0A0E35] text-white p-8 rounded-3xl border border-white/10 relative overflow-hidden flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-[#05092A] text-white p-8 rounded-3xl border border-[#2A4BFF]/20 relative overflow-hidden flex flex-col justify-between shadow-2xl">
               {/* Graphic mesh watermark */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-cyan/15 rounded-full blur-2xl z-0"></div>
               
@@ -461,7 +471,7 @@ export default function AiBrochure() {
 
               <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 mt-8 flex items-center space-x-3 text-xs text-slate-300">
                 <Rocket className="w-5 h-5 text-[#2A4BFF] flex-shrink-0 animate-bounce" />
-                <p>Learn these exact packages to stay ahead of corporate automation shifts.</p>
+                <p className="font-mono">Learn these exact packages to stay ahead of corporate automation shifts.</p>
               </div>
             </div>
           </div>
@@ -470,47 +480,78 @@ export default function AiBrochure() {
 
       {/* 4. Zig-Zag Career Roadmap Section */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 relative">
-        <div className="text-center max-w-2xl mx-auto mb-20 space-y-4">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
           <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
             See the pathways open to you as you progress through our 18 modules. Hover over each step to see salary levels and required tools.
           </p>
         </div>
 
         {/* The Zig-Zag Roadmap Layout */}
-        <div className="relative">
-          {/* Vertical Center Connection Line (hidden on small viewports, visible on md+) */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#2A4BFF]/20 via-[#0EA5E9]/40 to-[#2A4BFF]/10 -translate-x-1/2 hidden md:block z-0"></div>
+        <div className="relative pt-6">
+          
+          {/* Weaving Glowing Neon Road (md+) */}
+          <svg 
+            className="absolute top-0 bottom-0 left-0 right-0 w-full h-full pointer-events-none hidden md:block z-0" 
+            viewBox="0 0 1000 960" 
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#2A4BFF" />
+                <stop offset="50%" stopColor="#0EA5E9" />
+                <stop offset="100%" stopColor="#2A4BFF" />
+              </linearGradient>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            {/* Elegant glowing snaking road path weaving back and forth between cards */}
+            <path 
+              d="M 500 0 C 320 120, 320 200, 500 300 C 680 400, 680 480, 500 580 C 320 680, 320 760, 500 860 C 600 910, 600 940, 500 960" 
+              fill="none" 
+              stroke="url(#road-grad)" 
+              strokeWidth="6" 
+              strokeLinecap="round" 
+              strokeDasharray="12 8" 
+              filter="url(#glow)"
+              className="opacity-70" 
+            />
+          </svg>
 
-          <div className="space-y-16 relative z-10">
+          <div className="space-y-8 relative z-10">
             {CAREER_ROADMAP.map((step, idx) => {
               const isEven = idx % 2 === 0;
               return (
                 <div key={idx} className={`flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 ${isEven ? '' : 'md:flex-row-reverse'}`}>
                   
-                  {/* Content card representing the role */}
+                  {/* Content card representing the role (Dark Glassmorphic) */}
                   <div className="w-full md:w-[45%]">
-                    <div className="bg-white border border-slate-200/80 p-6 rounded-2xl hover:border-[#2A4BFF]/40 hover:shadow-lg transition-all duration-300 group hover:-translate-y-1 relative">
+                    <div className="bg-[#0A0E35]/95 border border-[#2A4BFF]/25 p-5 rounded-2xl hover:border-[#2A4BFF]/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 relative text-white">
                       {/* Decorative subtle dot highlight on card border */}
-                      <div className="absolute top-0 right-0 w-8 h-8 bg-[#2A4BFF]/5 rounded-bl-3xl group-hover:bg-[#2A4BFF]/15 transition-colors z-0"></div>
+                      <div className="absolute top-0 right-0 w-8 h-8 bg-[#2A4BFF]/10 rounded-bl-3xl group-hover:bg-[#2A4BFF]/20 transition-colors z-0"></div>
                       
-                      <div className="relative z-10 space-y-3">
+                      <div className="relative z-10 space-y-2.5">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wide">Milestone {step.step}</span>
-                          <span className="text-xs font-extrabold text-[#2A4BFF] bg-[#2A4BFF]/5 px-2.5 py-0.5 rounded border border-[#2A4BFF]/20 font-mono">
+                          <span className="text-xs font-extrabold text-[#0EA5E9] bg-[#2A4BFF]/15 px-2.5 py-0.5 rounded border border-[#2A4BFF]/30 font-mono">
                             {step.salary}
                           </span>
                         </div>
                         
-                        <h4 className="text-base sm:text-lg font-bold text-slate-900 leading-snug group-hover:text-[#2A4BFF] transition-colors">{step.role}</h4>
+                        <h4 className="text-sm sm:text-base font-bold text-white leading-snug group-hover:text-[#0EA5E9] transition-colors">{step.role}</h4>
                         
-                        <p className="text-xs text-slate-500 leading-relaxed font-light">{step.description}</p>
+                        <p className="text-[11px] text-slate-300 leading-relaxed font-light font-mono">{step.description}</p>
                         
                         {/* Tools tags */}
-                        <div className="flex flex-wrap gap-1.5 pt-2">
+                        <div className="flex flex-wrap gap-1.5 pt-1">
                           {step.tech.map((tag, tIdx) => (
-                            <span key={tIdx} className="text-[9px] font-medium text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md font-mono">
+                            <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
                               {tag}
                             </span>
                           ))}
@@ -520,7 +561,7 @@ export default function AiBrochure() {
                   </div>
 
                   {/* Bullet center marker (md+) */}
-                  <div className="w-10 h-10 bg-[#0A0E35] border-2 border-[#2A4BFF] rounded-full flex items-center justify-center text-white text-xs font-mono font-bold z-10 shadow-lg relative hidden md:flex">
+                  <div className="w-10 h-10 bg-[#060A24] border-2 border-[#2A4BFF] rounded-full flex items-center justify-center text-white text-xs font-mono font-bold z-10 shadow-lg relative hidden md:flex">
                     {step.step}
                     {/* Pulsing indicator ring */}
                     <div className="absolute -inset-1.5 border border-[#2A4BFF]/40 rounded-full animate-ping opacity-60 pointer-events-none"></div>
@@ -537,21 +578,24 @@ export default function AiBrochure() {
       </section>
 
       {/* 5. Company Tie-ups & Hiring Partners */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-b border-slate-100 bg-slate-50/50 z-10 relative">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-b border-slate-900 bg-[#040824]/80 z-10 relative">
         <div className="max-w-6xl mx-auto text-center space-y-8">
           <div>
-            <span className="text-[#2A4BFF] text-[10px] font-bold font-mono uppercase tracking-widest bg-[#2A4BFF]/5 border border-[#2A4BFF]/10 px-3 py-1 rounded">Tie-ups & Placements</span>
-            <h3 className="logo-font text-xl sm:text-2xl font-bold text-slate-900 mt-3">Where Our Alumni Work & Get Hired</h3>
+            <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3 py-1 rounded">Tie-ups & Placements</span>
+            <h3 className="logo-font text-xl sm:text-2xl font-bold text-white mt-3">Where Our Alumni Work & Get Hired</h3>
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-center max-w-4xl mx-auto pt-4">
             {COMPANYS_TIEUPS.map((company, idx) => (
               <div 
                 key={idx} 
-                className="bg-white border border-slate-200/80 p-5 rounded-2xl hover:border-brand-purple/20 hover:shadow-sm transition-all flex flex-col items-center justify-center space-y-2 group"
+                className="flex flex-col items-center justify-center space-y-3 group"
               >
-                <PartnerLogo name={company} className="w-8 h-8 group-hover:scale-105 transition-transform" />
-                <span className="text-[10px] text-slate-500 font-mono font-bold uppercase tracking-wider">{company}</span>
+                {/* Clean white round casing for official brand logo to stand out */}
+                <div className="bg-white p-4.5 rounded-full shadow-lg border border-slate-100 flex items-center justify-center w-16 h-16 group-hover:scale-110 transition-transform duration-300">
+                  <img src={LOGO_IMAGES[company]} alt={company} className="w-9 h-9 object-contain" />
+                </div>
+                <span className="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">{company}</span>
               </div>
             ))}
           </div>
@@ -563,22 +607,22 @@ export default function AiBrochure() {
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
           <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown (18 Weeks)</h2>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
             Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
           </p>
         </div>
 
-        {/* Accordions */}
-        <div className="space-y-4">
+        {/* Accordions (Premium Dark Theme boxes) */}
+        <div className="space-y-3.5">
           {CURRICULUM_DATA.map((module, idx) => {
             const isExpanded = expandedModules[idx];
             return (
               <div 
                 key={idx} 
-                className={`border rounded-2xl overflow-hidden transition-all ${
+                className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
                   isExpanded 
-                    ? 'border-slate-300 shadow-md bg-white' 
-                    : 'border-slate-200/85 hover:border-slate-300 hover:shadow-sm bg-slate-50 hover:bg-slate-100/50'
+                    ? 'border-[#2A4BFF]/50 shadow-lg bg-[#0C153D]/95 text-white' 
+                    : 'border-[#2A4BFF]/15 hover:border-[#2A4BFF]/30 hover:shadow-md bg-[#0A0E35]/90 text-slate-200 hover:bg-[#0E174E]/90'
                 }`}
               >
                 {/* Header */}
@@ -587,26 +631,26 @@ export default function AiBrochure() {
                   className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer"
                 >
                   <div className="flex items-center space-x-4">
-                    <span className="bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 text-[#2A4BFF] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
+                    <span className="bg-[#2A4BFF]/25 border border-[#2A4BFF]/40 text-[#0EA5E9] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
                       Module {module.sNo}
                     </span>
-                    <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm uppercase tracking-wide font-mono">
+                    <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wide font-mono leading-relaxed">
                       {module.title}
                     </h4>
                   </div>
-                  <div className="text-slate-400 hover:text-slate-600 ml-2 flex-shrink-0">
-                    {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                  <div className="text-slate-400 hover:text-white ml-2 flex-shrink-0">
+                    {isExpanded ? <ChevronUp className="w-5 h-5 text-[#0EA5E9]" /> : <ChevronDown className="w-5 h-5" />}
                   </div>
                 </button>
 
                 {/* Subtopics List */}
                 {isExpanded && (
-                  <div className="p-5 border-t border-slate-150 bg-slate-50/20 space-y-3.5 animate-fade-in">
+                  <div className="p-5 border-t border-[#2A4BFF]/20 bg-slate-950/40 space-y-3.5 animate-fade-in text-slate-100">
                     <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider font-bold">Topics Covered</p>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {module.subtopics.map((topic, tIdx) => (
-                        <li key={tIdx} className="flex items-start space-x-2 text-xs text-slate-600 leading-relaxed font-light font-mono">
-                          <CheckCircle className="w-4 h-4 text-[#2A4BFF] flex-shrink-0 mt-0.5" />
+                        <li key={tIdx} className="flex items-start space-x-2 text-xs leading-relaxed font-light font-mono text-slate-300">
+                          <CheckCircle className="w-4 h-4 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
                           <span>{topic}</span>
                         </li>
                       ))}
@@ -620,12 +664,12 @@ export default function AiBrochure() {
       </section>
 
       {/* 7. Projects Showcase Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50 border-t border-b border-slate-100 z-10 relative">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
-            <h2 className="logo-font text-3xl font-bold text-slate-900">Hands-On Development Tasks</h2>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
+            <h2 className="logo-font text-3xl font-bold text-white">Hands-On Development Tasks</h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
               We believe in building. You will complete 3 real-world portfolio tasks plus 1 custom capstone deployment.
             </p>
           </div>
@@ -634,18 +678,18 @@ export default function AiBrochure() {
             {PROJECTS.map((proj) => (
               <div 
                 key={proj.id} 
-                className="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/30 hover:shadow-md transition-all group"
+                className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/45 hover:shadow-xl transition-all duration-300 group text-white"
               >
                 <div>
-                  <div className="bg-[#2A4BFF]/5 text-[#2A4BFF] border border-[#2A4BFF]/20 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
+                  <div className="bg-[#2A4BFF]/20 text-[#0EA5E9] border border-[#2A4BFF]/30 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
                     Project 0{proj.id}
                   </div>
-                  <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#2A4BFF] transition-colors">{proj.title}</h4>
-                  <p className="text-[11px] text-slate-500 leading-relaxed font-light mb-6 font-mono">{proj.desc}</p>
+                  <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
+                  <p className="text-[11px] text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.desc}</p>
                 </div>
-                <div className="flex flex-wrap gap-1 border-t border-slate-100 pt-4">
+                <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
                   {proj.tech.map((t, idx) => (
-                    <span key={idx} className="text-[8px] font-bold text-slate-500 bg-slate-100 border border-slate-200/60 px-2 py-0.5 rounded font-mono">
+                    <span key={idx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
                       {t}
                     </span>
                   ))}
@@ -666,7 +710,7 @@ export default function AiBrochure() {
             <h2 className="logo-font text-3xl font-bold text-slate-900 leading-tight">
               Upskilling & Career Acceleration Suite
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
               Acquiring hard programming competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
             </p>
           </div>
@@ -694,10 +738,10 @@ export default function AiBrochure() {
                 action: "Simulated Telemetry Rounds"
               }
             ].map((suite, idx) => (
-              <div key={idx} className="bg-white border border-slate-200/80 hover:border-[#2A4BFF]/20 hover:shadow-sm p-6 rounded-2xl transition-all">
-                <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
-                <p className="text-[11px] text-slate-500 leading-relaxed mb-4">{suite.desc}</p>
-                <span className="text-[9px] text-[#2A4BFF] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/20 bg-[#2A4BFF]/5 px-2 py-0.5 rounded">
+              <div key={idx} className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 hover:border-[#2A4BFF]/45 hover:shadow-lg p-6 rounded-2xl transition-all text-white">
+                <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
+                <p className="text-[11px] text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
+                <span className="text-[9px] text-[#0EA5E9] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/20 px-2 py-0.5 rounded">
                   {suite.action}
                 </span>
               </div>
@@ -707,7 +751,7 @@ export default function AiBrochure() {
       </section>
 
       {/* 9. End CTA Section & Founder's Quote */}
-      <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-100 bg-[#0A0E35] text-white text-center overflow-hidden">
+      <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#060A24] text-white text-center overflow-hidden">
         {/* Glow vector background */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
         
@@ -719,16 +763,16 @@ export default function AiBrochure() {
             <h2 className="logo-font text-3xl sm:text-4xl font-extrabold leading-tight">
               Get Industry Ready with Beyond Skills
             </h2>
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
+            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-mono">
               Skip traditional academic lags. Enroll today to secure direct support access and build working projects.
             </p>
           </div>
 
           {/* Founder Quote card */}
-          <div className="bg-white/5 border border-white/10 p-8 rounded-3xl text-left max-w-2xl mx-auto relative">
-            <Quote className="w-10 h-10 text-[#0EA5E9]/20 absolute top-4 left-4 pointer-events-none" />
+          <div className="bg-[#0A0E35]/90 border border-[#2A4BFF]/25 p-8 rounded-3xl text-left max-w-2xl mx-auto relative shadow-2xl">
+            <Quote className="w-10 h-10 text-[#0EA5E9]/15 absolute top-4 left-4 pointer-events-none" />
             <div className="relative z-10 pl-6 space-y-4">
-              <p className="text-slate-200 text-xs sm:text-sm italic leading-relaxed font-light">
+              <p className="text-slate-200 text-xs sm:text-sm italic leading-relaxed font-light font-mono">
                 "BeyondSkills was founded to resolve the extreme misalignment between college textbooks and corporate realities. We do not just teach syntax; we construct engineers who can build products and navigate technical issues autonomously."
               </p>
               <div className="flex items-center space-x-2">
