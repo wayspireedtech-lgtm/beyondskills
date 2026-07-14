@@ -10,7 +10,7 @@ export const COURSES = [
     duration: '3 Months',
     fee: 14000,
     originalFee: 16000,
-    selfPacedFee: 6000,
+    selfPacedFee: 1,
     selfPacedOriginalFee: 8000,
     mentorLedHours: '30+ Hours Live Training',
     mentorLedProjects: '3 Projects',
