@@ -27,6 +27,7 @@ export default function CourseDetails() {
   const [expandedFaqs, setExpandedFaqs] = useState({});
   const [activeTab, setActiveTab] = useState('overview');
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [learningMode, setLearningMode] = useState('mentor-led');
 
   // Refs for scroll spy and navigation
   const overviewRef = useRef(null);
@@ -119,7 +120,7 @@ export default function CourseDetails() {
   };
 
   const handleEnroll = () => {
-    navigate(`/checkout?courseId=${course.id}`);
+    navigate(`/checkout?courseId=${course.id}&mode=${learningMode}`);
   };
 
   return (
@@ -237,13 +238,48 @@ export default function CourseDetails() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-brand-purple/10 rounded-full blur-xl z-0"></div>
                 
                 <div className="relative z-10 space-y-6">
+                  {/* Learning Mode Selector */}
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono block mb-2">Choose Course Format</span>
+                    <div className="bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 flex space-x-1">
+                      <button
+                        onClick={() => setLearningMode('mentor-led')}
+                        className={`flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center justify-center cursor-pointer ${
+                          learningMode === 'mentor-led'
+                            ? 'bg-[#1B2A8A] text-white shadow-sm'
+                            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/40'
+                        }`}
+                      >
+                        <span className="text-[10px]">Mentor Led</span>
+                        <span className={`text-[8px] font-medium tracking-tight mt-0.5 ${learningMode === 'mentor-led' ? 'text-blue-200' : 'text-slate-400'}`}>Live + Support</span>
+                      </button>
+                      <button
+                        onClick={() => setLearningMode('self-paced')}
+                        className={`flex-1 py-2 px-3 rounded-lg font-bold text-xs uppercase tracking-wider transition-all flex flex-col items-center justify-center cursor-pointer ${
+                          learningMode === 'self-paced'
+                            ? 'bg-[#1B2A8A] text-white shadow-sm'
+                            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/40'
+                        }`}
+                      >
+                        <span className="text-[10px]">Self Paced</span>
+                        <span className={`text-[8px] font-medium tracking-tight mt-0.5 ${learningMode === 'self-paced' ? 'text-blue-200' : 'text-slate-400'}`}>Recorded Only</span>
+                      </button>
+                    </div>
+                  </div>
+
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Certification & Onboarding Fee</span>
                     <div className="flex items-baseline space-x-2 mt-2">
-                      <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">₹{course.fee.toLocaleString()}</span>
-                      <span className="text-xs text-slate-400 font-mono font-bold line-through">₹{(course.originalFee || course.fee * 1.5).toLocaleString()}</span>
+                      <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+                        ₹{(learningMode === 'self-paced' ? Math.round(course.fee * 0.5) : course.fee).toLocaleString()}
+                      </span>
+                      <span className="text-xs text-slate-400 font-mono font-bold line-through">
+                        ₹{(learningMode === 'self-paced' ? Math.round((course.originalFee || course.fee * 1.5) * 0.5) : (course.originalFee || course.fee * 1.5)).toLocaleString()}
+                      </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-1 font-mono">⚡ Flat {Math.round(((course.originalFee || course.fee * 1.5) - course.fee) / (course.originalFee || course.fee * 1.5) * 100)}% Off (Early bird pricing applied)</p>
+                    <p className="text-[10px] text-slate-400 mt-1 font-mono">
+                      ⚡ Flat {Math.round((((learningMode === 'self-paced' ? (course.originalFee || course.fee * 1.5) * 0.5 : (course.originalFee || course.fee * 1.5)) - (learningMode === 'self-paced' ? course.fee * 0.5 : course.fee)) / (learningMode === 'self-paced' ? (course.originalFee || course.fee * 1.5) * 0.5 : (course.originalFee || course.fee * 1.5))) * 100)}% Off (Early bird pricing applied)
+                    </p>
                   </div>
 
                   <div className="space-y-3">
@@ -269,8 +305,12 @@ export default function CourseDetails() {
                       <span>Immediate Access to Recorded Modules</span>
                     </li>
                     <li className="flex items-center space-x-2.5">
-                      <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />
-                      <span>Live Mentoring & Doubt Resolutions</span>
+                      {learningMode === 'self-paced' ? (
+                        <div className="w-4.5 h-4.5 flex items-center justify-center text-slate-400 font-bold bg-slate-100 rounded-full text-[9px] flex-shrink-0">✕</div>
+                      ) : (
+                        <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />
+                      )}
+                      <span className={learningMode === 'self-paced' ? 'text-slate-400 line-through' : ''}>Live Mentoring & Doubt Resolutions</span>
                     </li>
                     <li className="flex items-center space-x-2.5">
                       <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />

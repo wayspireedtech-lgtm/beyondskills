@@ -18,11 +18,14 @@ export default function Checkout() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const courseId = searchParams.get('courseId');
+  const learningMode = searchParams.get('mode') || 'mentor-led';
 
   const [course, setCourse] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [agreeDisclaimer, setAgreeDisclaimer] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+
+  const courseFee = course ? (learningMode === 'self-paced' ? Math.round(course.fee * 0.5) : course.fee) : 0;
 
   useEffect(() => {
     // If user is already logged in, pre-fill form
@@ -80,12 +83,13 @@ export default function Checkout() {
     const payments = getDbItem('beyondskills_payments', []);
     payments.push({
       paymentId: paymentId,
-      amount: course.fee,
+      amount: courseFee,
       studentId: targetUser.studentId || newStudentId,
       courseId: course.id,
       email: form.email,
       status: 'Success',
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      mode: learningMode
     });
     setDbItem('beyondskills_payments', payments);
 
@@ -102,7 +106,7 @@ export default function Checkout() {
       window.dispatchEvent(new CustomEvent('beyondskills_toast', {
         detail: {
           subject: `Admin Alert: New Enrollment`,
-          body: `Student ${form.name} (${form.email}) has purchased ${course.title} for ₹${course.fee.toLocaleString()}.\nAllocated Student ID: ${targetUser.studentId || newStudentId}. Onboarding SLA completed.`
+          body: `Student ${form.name} (${form.email}) has purchased ${course.title} (${learningMode === 'self-paced' ? 'Self Paced' : 'Mentor Led'}) for ₹${courseFee.toLocaleString()}.\nAllocated Student ID: ${targetUser.studentId || newStudentId}. Onboarding SLA completed.`
         }
       }));
     }, 3000);
@@ -132,10 +136,10 @@ export default function Checkout() {
 
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_defaultKey123',
-      amount: course.fee * 100, // amount in paise
+      amount: courseFee * 100, // amount in paise
       currency: 'INR',
       name: 'BeyondSkills - Upskilling Hub',
-      description: `Enrollment fee for ${course.title}`,
+      description: `Enrollment fee for ${course.title} (${learningMode === 'self-paced' ? 'Self Paced' : 'Mentor Led'})`,
       image: window.location.origin + '/logo.png',
       prefill: {
         name: form.name,
@@ -268,13 +272,21 @@ export default function Checkout() {
               </div>
 
               <div className="space-y-2 text-xs">
+                <div className="flex justify-between text-slate-500 font-semibold border-b border-slate-100 pb-2">
+                  <span>Selected Format</span>
+                  <span className="text-brand-purple uppercase text-[9px] bg-brand-purple/5 border border-brand-purple/20 px-2.5 py-0.5 rounded font-bold">
+                    {learningMode === 'self-paced' ? 'Self Paced' : 'Mentor Led'}
+                  </span>
+                </div>
                 <div className="flex justify-between text-slate-500">
                   <span>recorded lectures</span>
                   <span className="text-slate-900">Included</span>
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>Live Mentor schedules</span>
-                  <span className="text-slate-900">Included</span>
+                  <span className={learningMode === 'self-paced' ? 'text-slate-400 font-bold' : 'text-slate-900'}>
+                    {learningMode === 'self-paced' ? 'Excluded' : 'Included'}
+                  </span>
                 </div>
                 <div className="flex justify-between text-slate-500">
                   <span>Certification download</span>
@@ -284,7 +296,7 @@ export default function Checkout() {
 
               <div className="border-t border-slate-200/60 pt-4 flex items-center justify-between font-bold">
                 <span className="text-xs text-slate-700 uppercase">Total Cost</span>
-                <span className="text-lg text-slate-900">₹{course.fee.toLocaleString()}</span>
+                <span className="text-lg text-slate-900">₹{courseFee.toLocaleString()}</span>
               </div>
             </div>
 

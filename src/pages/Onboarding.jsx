@@ -14,11 +14,21 @@ export default function Onboarding() {
 
   const [course, setCourse] = useState(null);
   const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const [paidAmount, setPaidAmount] = useState(0);
 
   useEffect(() => {
     if (courseId) {
       const match = COURSES.find(c => c.id === courseId);
       setCourse(match);
+
+      // Load payment record to get the exact paid amount
+      const payments = getDbItem('beyondskills_payments', []);
+      const record = payments.find(p => p.paymentId === payId);
+      if (record) {
+        setPaidAmount(record.amount);
+      } else if (match) {
+        setPaidAmount(match.fee);
+      }
     }
 
     // Trigger confetti on successful payment load
@@ -27,7 +37,7 @@ export default function Onboarding() {
       spread: 80,
       origin: { y: 0.6 }
     });
-  }, [courseId]);
+  }, [courseId, payId]);
 
   const handleGoToDashboard = () => {
     navigate('/dashboard');
@@ -186,7 +196,7 @@ export default function Onboarding() {
                   <tr className="border-b border-gray-100 text-gray-700">
                     <td className="py-3 font-semibold text-gray-800">{course.title}</td>
                     <td className="py-3 text-center text-slate-500">{course.duration}</td>
-                    <td className="py-3 text-right font-mono">₹{course.fee.toLocaleString()}.00</td>
+                    <td className="py-3 text-right font-mono">₹{paidAmount.toLocaleString()}.00</td>
                   </tr>
                 </tbody>
               </table>
@@ -196,19 +206,19 @@ export default function Onboarding() {
                 <div className="w-64 text-xs space-y-2.5">
                   <div className="flex justify-between text-slate-500">
                     <span>Subtotal:</span>
-                    <span className="font-mono">₹{(course.fee * 0.82).toFixed(2)}</span>
+                    <span className="font-mono">₹{(paidAmount * 0.82).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-500">
                     <span>CGST (9%):</span>
-                    <span className="font-mono">₹{(course.fee * 0.09).toFixed(2)}</span>
+                    <span className="font-mono">₹{(paidAmount * 0.09).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-slate-500">
                     <span>SGST (9%):</span>
-                    <span className="font-mono">₹{(course.fee * 0.09).toFixed(2)}</span>
+                    <span className="font-mono">₹{(paidAmount * 0.09).toFixed(2)}</span>
                   </div>
                   <div className="border-t border-gray-200 pt-2 flex justify-between font-bold text-sm text-gray-800">
                     <span>Grand Total Paid:</span>
-                    <span className="font-mono text-brand-purple">₹{course.fee.toLocaleString()}.00</span>
+                    <span className="font-mono text-brand-purple">₹{paidAmount.toLocaleString()}.00</span>
                   </div>
                 </div>
               </div>
