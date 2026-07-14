@@ -8,12 +8,17 @@ export default function Auth() {
 
   // Navigation / Mode states
   const [authType, setAuthType] = useState('mobile'); // 'mobile' or 'google'
-  const [step, setStep] = useState('mobile-input'); // 'mobile-input', 'register-collect', 'otp-verify'
+  const [step, setStep] = useState('mobile-input'); // 'mobile-input', 'register-collect', 'otp-verify', 'admin-login', 'admin-forgot', 'admin-otp-verify', 'admin-new-password'
 
-  // Input states
+  // Input states (Students)
   const [phoneNumber, setPhoneNumber] = useState('');
   const [registerForm, setRegisterForm] = useState({ name: '', email: '' });
   const [enteredOtp, setEnteredOtp] = useState('');
+
+  // Input states (Admin)
+  const [adminLoginForm, setAdminLoginForm] = useState({ email: 'beyondskills.ai@gmail.com', password: '' });
+  const [adminForgotEmail, setAdminForgotEmail] = useState('');
+  const [adminNewPasswordForm, setAdminNewPasswordForm] = useState({ password: '', confirmPassword: '' });
 
   // Cache/Validation states
   const [generatedOtp, setGeneratedOtp] = useState('');
@@ -22,9 +27,8 @@ export default function Auth() {
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Google Client ID Configuration states
-  const [clientId, setClientId] = useState(localStorage.getItem('beyondskills_google_client_id') || '');
-  const [clientIdInput, setClientIdInput] = useState('');
+  // Google Client ID Configuration states (loaded from env with safe fallback)
+  const [clientId, setClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('beyondskills_google_client_id') || '102874635294-mockclientid.apps.googleusercontent.com');
 
   // Handle Google OAuth redirect callback on component mount
   useEffect(() => {
@@ -102,8 +106,8 @@ export default function Auth() {
     // Always trigger custom toast notification for dry-run testing / visibility
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
-        subject: `[BeyondSkills] Login Verification OTP`,
-        body: `Hi ${name},\n\nYour 4-Digit login verification code is: ${otp}.\n\nThis OTP has been triggered via EmailJS to your address: ${email}.`,
+        subject: `[BeyondSkills] Security OTP Dispatched`,
+        body: `Hi ${name},\n\nYour 4-Digit verification code is: ${otp}.\n\nThis code has been sent via EmailJS to: ${email}.`,
       }
     }));
 
@@ -262,10 +266,6 @@ export default function Auth() {
 
   // Real Google Login Redirect Flow
   const handleRealGoogleLogin = () => {
-    if (!clientId) {
-      setError('Please configure Google Client ID first.');
-      return;
-    }
     const redirectUri = encodeURIComponent(window.location.origin + '/auth');
     const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20profile`;
     window.location.href = oauthUrl;
@@ -311,6 +311,108 @@ export default function Auth() {
     }, 1000);
   };
 
+  // --- ADMIN LOGIN LOGIC ---
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    setError(null);
+    setInfo(null);
+
+    const targetEmail = 'beyondskills.ai@gmail.com';
+    const savedPassword = localStorage.getItem('beyondskills_admin_password') || '9953607074';
+
+    if (adminLoginForm.email.trim() !== targetEmail || adminLoginForm.password !== savedPassword) {
+      setError('Invalid administrator email or password.');
+      return;
+    }
+
+    setLoading(true);
+
+    setTimeout(() => {
+      const adminSession = {
+        email: targetEmail,
+        name: 'BeyondSkills Administrator',
+        studentId: 'DV-ADMIN'
+      };
+      setDbItem('beyondskills_current_user', adminSession);
+      window.dispatchEvent(new Event('auth_change'));
+      setLoading(false);
+      setInfo('Admin Authentication Successful! Redirecting to Console...');
+      setTimeout(() => {
+        navigate('/admin');
+      }, 1500);
+    }, 1000);
+  };
+
+  // --- ADMIN FORGOT PASSWORD LOGIC ---
+  const handleAdminForgotSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+    setInfo(null);
+
+    const targetEmail = 'beyondskills.ai@gmail.com';
+    if (adminForgotEmail.trim() !== targetEmail) {
+      setError('Only the registered admin email can receive verification keys.');
+      return;
+    }
+
+    setLoading(true);
+
+    setTimeout(() => {
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
+
+      // Trigger OTP dispatch to admin email
+      triggerOtpEmail(targetEmail, 'BeyondSkills Administrator', code);
+
+      setStep('admin-otp-verify');
+      setInfo('OTP code dispatched to beyondskills.ai@gmail.com.');
+      setLoading(false);
+    }, 800);
+  };
+
+  // --- ADMIN OTP VERIFY ---
+  const handleAdminVerifyOtpSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (enteredOtp !== generatedOtp) {
+      setError('Invalid OTP code. Please check the code sent or check the toast notification.');
+      return;
+    }
+
+    setStep('admin-new-password');
+    setEnteredOtp(''); // Reset OTP input state
+  };
+
+  // --- ADMIN RESET PASSWORD SAVE ---
+  const handleAdminNewPasswordSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (adminNewPasswordForm.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (adminNewPasswordForm.password !== adminNewPasswordForm.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setLoading(true);
+
+    setTimeout(() => {
+      localStorage.setItem('beyondskills_admin_password', adminNewPasswordForm.password);
+      setInfo('Admin password updated successfully! Please login with your new password.');
+      setStep('admin-login');
+      setAdminLoginForm({ email: 'beyondskills.ai@gmail.com', password: '' });
+      setAdminNewPasswordForm({ password: '', confirmPassword: '' });
+      setLoading(false);
+    }, 1000);
+  };
+
+  const isAdminStep = step.startsWith('admin-');
+
   return (
     <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 bg-[#F8FAFC] relative">
       {/* Background decoration */}
@@ -320,14 +422,18 @@ export default function Auth() {
         
         {/* Welcome Text */}
         <div className="text-center space-y-2">
-          <h2 className="font-extrabold text-2xl text-slate-900 tracking-tight">Welcome Back.</h2>
+          <h2 className="font-extrabold text-2xl text-slate-900 tracking-tight">
+            {isAdminStep ? 'Admin Portal.' : 'Welcome Back.'}
+          </h2>
           <p className="text-xs text-slate-550 leading-normal max-w-[280px] mx-auto">
-            Sign in to continue your learning journey with BeyondSkills.
+            {isAdminStep 
+              ? 'Administrator security panel login and credentials recovery.' 
+              : 'Sign in to continue your learning journey with BeyondSkills.'}
           </p>
         </div>
 
-        {/* Segmented Pill Selector (Mobile vs Google) */}
-        {step !== 'otp-verify' && step !== 'register-collect' && (
+        {/* Segmented Pill Selector (Mobile vs Google) - Student Only */}
+        {!isAdminStep && step !== 'otp-verify' && step !== 'register-collect' && (
           <div className="bg-slate-100 p-1 rounded-xl flex space-x-1 border border-slate-200/30">
             <button
               type="button"
@@ -370,156 +476,333 @@ export default function Auth() {
         {/* Conditional forms based on states */}
         {!loading && (
           <>
-            {authType === 'mobile' && step === 'mobile-input' && (
-              /* MOBILE NUMBER INPUT FORM */
-              <form onSubmit={handleMobileSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Mobile Number</label>
-                  <input
-                    type="tel"
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Enter your 10-digit number"
-                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
-                  />
-                </div>
+            {/* STUDENT FLOWS */}
+            {!isAdminStep && (
+              <>
+                {authType === 'mobile' && step === 'mobile-input' && (
+                  /* MOBILE NUMBER INPUT FORM */
+                  <form onSubmit={handleMobileSubmit} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Mobile Number</label>
+                      <input
+                        type="tel"
+                        required
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        placeholder="Enter your 10-digit number"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
-                >
-                  Next
-                </button>
-              </form>
+                    <button
+                      type="submit"
+                      className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                    >
+                      Next
+                    </button>
+                  </form>
+                )}
+
+                {authType === 'mobile' && step === 'register-collect' && (
+                  /* REGISTRATION INFO COLLECTION FORM */
+                  <form onSubmit={handleRegisterDetailsSubmit} className="space-y-4 animate-fade-in">
+                    <div className="bg-blue-50/50 border border-blue-100 p-3.5 rounded-xl">
+                      <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
+                        Account not found for <strong>{phoneNumber}</strong>. Fill in the details below to initialize profile registration.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={registerForm.name}
+                        onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                        placeholder="e.g. Jatin Kumar"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        value={registerForm.email}
+                        onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                        placeholder="e.g. jatin@gmail.com"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
+
+                    <div className="flex space-x-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setStep('mobile-input')}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {authType === 'mobile' && step === 'otp-verify' && (
+                  /* OTP CODE ENTRY FORM */
+                  <form onSubmit={handleVerifyOtpSubmit} className="space-y-5 animate-fade-in">
+                    <div className="text-center">
+                      <h3 className="font-bold text-slate-800 text-sm">Verify Verification Code</h3>
+                      <p className="text-[11px] text-slate-500 mt-1">We have sent a verification code to your email.</p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider text-center">4-Digit Security OTP</label>
+                      <input
+                        type="text"
+                        maxLength={4}
+                        required
+                        value={enteredOtp}
+                        onChange={(e) => setEnteredOtp(e.target.value)}
+                        placeholder="0000"
+                        className="w-32 mx-auto block bg-[#FAFAFA] border border-slate-200/80 rounded-xl py-3 text-center font-mono font-extrabold text-lg text-slate-900 focus:border-blue-600 outline-none tracking-widest shadow-sm"
+                      />
+                    </div>
+
+                    <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                      Enter the OTP code received in your email (or check the alert toast in the corner of your page).
+                    </p>
+
+                    <div className="flex space-x-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setStep(currentUserData?.activeCourses ? 'mobile-input' : 'register-collect')}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                      >
+                        Verify
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {authType === 'google' && (
+                  /* GOOGLE SIGN IN TAB CONTENT */
+                  <div className="space-y-4 py-2 text-center">
+                    <button
+                      type="button"
+                      onClick={handleRealGoogleLogin}
+                      className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                        <path
+                          fill="#EA4335"
+                          d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
+                        />
+                      </svg>
+                      <span>Continue with Google</span>
+                    </button>
+
+                    <div className="flex flex-col space-y-2 pt-2 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={handleMockGoogleLogin}
+                        className="text-[10px] text-slate-400 hover:text-slate-650 hover:underline uppercase tracking-wider font-semibold"
+                      >
+                        Demo Sign In (Simulated)
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
-            {authType === 'mobile' && step === 'register-collect' && (
-              /* REGISTRATION INFO COLLECTION FORM */
-              <form onSubmit={handleRegisterDetailsSubmit} className="space-y-4 animate-fade-in">
-                <div className="bg-blue-50/50 border border-blue-100 p-3.5 rounded-xl">
-                  <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
-                    Account not found for <strong>{phoneNumber}</strong>. Fill in the details below to initialize profile registration.
-                  </p>
-                </div>
+            {/* ADMIN FLOWS */}
+            {isAdminStep && (
+              <>
+                {step === 'admin-login' && (
+                  /* ADMIN EMAIL/PASSWORD LOGIN */
+                  <form onSubmit={handleAdminLogin} className="space-y-4 animate-fade-in">
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Admin Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={adminLoginForm.email}
+                        onChange={(e) => setAdminLoginForm({ ...adminLoginForm, email: e.target.value })}
+                        placeholder="beyondskills.ai@gmail.com"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={registerForm.name}
-                    onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
-                    placeholder="e.g. Jatin Kumar"
-                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
-                  />
-                </div>
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between items-center">
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Password</label>
+                        <button
+                          type="button"
+                          onClick={() => { setStep('admin-forgot'); setError(null); setInfo(null); }}
+                          className="text-[10px] text-blue-600 hover:underline uppercase font-bold"
+                        >
+                          Forgot?
+                        </button>
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={adminLoginForm.password}
+                        onChange={(e) => setAdminLoginForm({ ...adminLoginForm, password: e.target.value })}
+                        placeholder="••••••••"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    value={registerForm.email}
-                    onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
-                    placeholder="e.g. jatin@gmail.com"
-                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
-                  />
-                </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                    >
+                      Login to Console
+                    </button>
+                  </form>
+                )}
 
-                <div className="flex space-x-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setStep('mobile-input')}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
-                  >
-                    Send OTP
-                  </button>
-                </div>
-              </form>
-            )}
+                {step === 'admin-forgot' && (
+                  /* ADMIN FORGOT PASSWORD REQUEST */
+                  <form onSubmit={handleAdminForgotSubmit} className="space-y-4 animate-fade-in">
+                    <div className="text-center border-b border-slate-100 pb-3">
+                      <h3 className="font-bold text-slate-800 text-sm">Recover Admin Password</h3>
+                      <p className="text-[10px] text-slate-500 mt-1">Enter your registered admin email address below.</p>
+                    </div>
 
-            {authType === 'mobile' && step === 'otp-verify' && (
-              /* OTP CODE ENTRY FORM */
-              <form onSubmit={handleVerifyOtpSubmit} className="space-y-5 animate-fade-in">
-                <div className="text-center">
-                  <h3 className="font-bold text-slate-800 text-sm">Verify Verification Code</h3>
-                  <p className="text-[11px] text-slate-500 mt-1">We have sent a verification code to your email.</p>
-                </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Registered Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={adminForgotEmail}
+                        onChange={(e) => setAdminForgotEmail(e.target.value)}
+                        placeholder="beyondskills.ai@gmail.com"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider text-center">4-Digit Security OTP</label>
-                  <input
-                    type="text"
-                    maxLength={4}
-                    required
-                    value={enteredOtp}
-                    onChange={(e) => setEnteredOtp(e.target.value)}
-                    placeholder="0000"
-                    className="w-32 mx-auto block bg-[#FAFAFA] border border-slate-200/80 rounded-xl py-3 text-center font-mono font-extrabold text-lg text-slate-900 focus:border-blue-600 outline-none tracking-widest shadow-sm"
-                  />
-                </div>
+                    <div className="flex space-x-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => { setStep('admin-login'); setError(null); setInfo(null); }}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </form>
+                )}
 
-                <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                  Enter the OTP code received in your email (or check the alert toast in the corner of your page).
-                </p>
+                {step === 'admin-otp-verify' && (
+                  /* ADMIN OTP VERIFY */
+                  <form onSubmit={handleAdminVerifyOtpSubmit} className="space-y-5 animate-fade-in">
+                    <div className="text-center">
+                      <h3 className="font-bold text-slate-800 text-sm">Admin OTP Verification</h3>
+                      <p className="text-[11px] text-slate-500 mt-1">A verification code was dispatched to your email.</p>
+                    </div>
 
-                <div className="flex space-x-2 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setStep(currentUserData?.activeCourses ? 'mobile-input' : 'register-collect')}
-                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
-                  >
-                    Verify
-                  </button>
-                </div>
-              </form>
-            )}
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider text-center">4-Digit Security OTP</label>
+                      <input
+                        type="text"
+                        maxLength={4}
+                        required
+                        value={enteredOtp}
+                        onChange={(e) => setEnteredOtp(e.target.value)}
+                        placeholder="0000"
+                        className="w-32 mx-auto block bg-[#FAFAFA] border border-slate-200/80 rounded-xl py-3 text-center font-mono font-extrabold text-lg text-slate-900 focus:border-blue-600 outline-none tracking-widest shadow-sm"
+                      />
+                    </div>
 
-            {authType === 'google' && (
-              /* GOOGLE SIGN IN TAB CONTENT */
-              <div className="space-y-4 py-2 text-center">
-                <button
-                  type="button"
-                  onClick={handleRealGoogleLogin}
-                  className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24">
-                    <path
-                      fill="#EA4335"
-                      d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
-                    />
-                  </svg>
-                  <span>Continue with Google</span>
-                </button>
+                    <p className="text-[10px] text-slate-550 text-center leading-relaxed">
+                      Please enter the OTP. Use the code from the email (or inspect the notification toast in the corner).
+                    </p>
 
-                <div className="flex flex-col space-y-2 pt-2 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={handleMockGoogleLogin}
-                    className="text-[10px] text-slate-400 hover:text-slate-600 hover:underline uppercase tracking-wider font-semibold"
-                  >
-                    Demo Sign In (Simulated)
-                  </button>
-                </div>
-              </div>
+                    <div className="flex space-x-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => { setStep('admin-forgot'); setError(null); setInfo(null); }}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                      >
+                        Verify
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {step === 'admin-new-password' && (
+                  /* ADMIN NEW PASSWORD INPUT */
+                  <form onSubmit={handleAdminNewPasswordSubmit} className="space-y-4 animate-fade-in">
+                    <div className="text-center border-b border-slate-100 pb-3">
+                      <h3 className="font-bold text-slate-800 text-sm">Create New Admin Password</h3>
+                      <p className="text-[10px] text-slate-500 mt-1">Passwords must be at least 6 characters in length.</p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">New Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={adminNewPasswordForm.password}
+                        onChange={(e) => setAdminNewPasswordForm({ ...adminNewPasswordForm, password: e.target.value })}
+                        placeholder="At least 6 characters"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Confirm Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={adminNewPasswordForm.confirmPassword}
+                        onChange={(e) => setAdminNewPasswordForm({ ...adminNewPasswordForm, confirmPassword: e.target.value })}
+                        placeholder="Re-enter password"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                    >
+                      Save Password
+                    </button>
+                  </form>
+                )}
+              </>
             )}
           </>
         )}
 
-        {/* Footer Disclaimer */}
+        {/* Footer Disclaimer & Links */}
         <div className="space-y-3 pt-3 border-t border-slate-100 text-center">
           <p className="text-[10px] text-slate-400 leading-normal">
             By continuing, you agree to our Terms of Service and Privacy Policy.
@@ -527,14 +810,17 @@ export default function Auth() {
           <button
             type="button"
             onClick={() => {
-              const adminSession = { email: 'admin@beyondskills.in', name: 'BeyondSkills Administrator', studentId: 'DV-ADMIN' };
-              setDbItem('beyondskills_current_user', adminSession);
-              window.dispatchEvent(new Event('auth_change'));
-              navigate('/admin');
+              setError(null);
+              setInfo(null);
+              if (isAdminStep) {
+                setStep('mobile-input');
+              } else {
+                setStep('admin-login');
+              }
             }}
-            className="text-[9px] text-slate-400 hover:text-slate-650 transition-colors uppercase tracking-widest font-bold block mx-auto hover:underline"
+            className="text-[9px] text-[#0F5CFC] hover:text-blue-700 transition-colors uppercase tracking-widest font-bold block mx-auto hover:underline"
           >
-            Admin Panel Access
+            {isAdminStep ? 'Student Workspace Login' : 'Admin Panel Access'}
           </button>
         </div>
 
