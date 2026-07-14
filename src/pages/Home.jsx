@@ -120,7 +120,11 @@ export default function Home() {
     { q: 'What is the privacy policy of BeyondSkills?', a: 'We process personal details like names, emails, and payment references exclusively to deliver course credentials and handle Razorpay checkouts. Your data is protected under standard encryption and is never shared with third-party marketers.' }
   ];
 
-  const featuredCourses = COURSES.slice(0, 3);
+  const featuredCourses = [
+    'artificial-intelligence',
+    'machine-learning',
+    'digital-marketing-cert'
+  ].map(id => COURSES.find(c => c.id === id)).filter(Boolean);
 
   const partnersRow1 = [
     { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
