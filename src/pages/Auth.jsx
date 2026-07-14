@@ -520,9 +520,23 @@ export default function Auth() {
         )}
 
         {/* Footer Disclaimer */}
-        <p className="text-[10px] text-slate-400 text-center leading-normal">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-        </p>
+        <div className="space-y-3 pt-3 border-t border-slate-100 text-center">
+          <p className="text-[10px] text-slate-400 leading-normal">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const adminSession = { email: 'admin@beyondskills.in', name: 'BeyondSkills Administrator', studentId: 'DV-ADMIN' };
+              setDbItem('beyondskills_current_user', adminSession);
+              window.dispatchEvent(new Event('auth_change'));
+              navigate('/admin');
+            }}
+            className="text-[9px] text-slate-400 hover:text-slate-650 transition-colors uppercase tracking-widest font-bold block mx-auto hover:underline"
+          >
+            Admin Panel Access
+          </button>
+        </div>
 
       </div>
     </div>
