@@ -43,10 +43,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-200 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="lg:flex-1 lg:flex lg:justify-start flex-shrink-0">
             <Link to="/" className="flex flex-col items-start leading-none group">
               <div className="flex items-center">
                 <span className="logo-font text-3xl sm:text-[34px] font-extrabold tracking-tight text-slate-900 transition-colors duration-300 group-hover:text-slate-700">
@@ -61,8 +61,9 @@ export default function Header() {
               </span>
             </Link>
           </div>          {/* Desktop Navigation Capsule Bar */}
-          <nav className="hidden lg:flex items-center bg-white/70 border border-slate-200/80 rounded-full px-2 py-1.5 shadow-sm shadow-slate-100/50 backdrop-blur-md hover:border-brand-purple/30 transition-all duration-300">
-            {/* 1. Home */}
+          <div className="hidden lg:flex lg:flex-1 lg:justify-center">
+            <nav className="flex items-center bg-white/70 border border-slate-200/80 rounded-full px-2 py-1.5 shadow-sm shadow-slate-100/50 backdrop-blur-md hover:border-brand-purple/30 transition-all duration-300">
+              {/* 1. Home */}
             <Link to="/" className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 ${location.pathname === '/' ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-955 hover:bg-slate-100/60'}`}>
               Home
             </Link>
@@ -156,9 +157,10 @@ export default function Header() {
               Contact
             </Link>
           </nav>
+        </div>
 
           {/* Right Action buttons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:space-x-4">
             {currentUser ? (
               <div className="flex items-center space-x-3">
                 <span className="text-xs text-slate-500 font-mono bg-slate-100 px-2.5 py-1 rounded border border-slate-200">
