@@ -490,84 +490,30 @@ export default function Auth() {
 
             {authType === 'google' && (
               /* GOOGLE SIGN IN TAB CONTENT */
-              <div className="space-y-4 py-2">
-                {!clientId ? (
-                  /* Enter Client ID configuration block */
-                  <div className="space-y-4">
-                    <p className="text-[11px] text-slate-500 leading-relaxed">
-                      To configure real Google Authentication, please input your **Google Client ID** below. You can get one from the Google Cloud Credentials Console.
-                    </p>
-                    <div className="space-y-1.5">
-                      <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider">Google Client ID</label>
-                      <input
-                        type="text"
-                        value={clientIdInput}
-                        onChange={(e) => setClientIdInput(e.target.value)}
-                        placeholder="your-client-id.apps.googleusercontent.com"
-                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (clientIdInput.trim()) {
-                          localStorage.setItem('beyondskills_google_client_id', clientIdInput.trim());
-                          setClientId(clientIdInput.trim());
-                        }
-                      }}
-                      className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs uppercase transition-colors"
-                    >
-                      Save & Initialize
-                    </button>
-                    <div className="text-center pt-2">
-                      <button
-                        type="button"
-                        onClick={handleMockGoogleLogin}
-                        className="text-[10px] text-slate-500 hover:underline uppercase tracking-wider font-semibold"
-                      >
-                        Demo Sign In (Simulated)
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  /* Continue with Real Google authentication */
-                  <div className="space-y-4 text-center">
-                    <button
-                      type="button"
-                      onClick={handleRealGoogleLogin}
-                      className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
-                    >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                        <path
-                          fill="#EA4335"
-                          d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
-                        />
-                      </svg>
-                      <span>Continue with Google</span>
-                    </button>
+              <div className="space-y-4 py-2 text-center">
+                <button
+                  type="button"
+                  onClick={handleRealGoogleLogin}
+                  className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                    <path
+                      fill="#EA4335"
+                      d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
+                    />
+                  </svg>
+                  <span>Continue with Google</span>
+                </button>
 
-                    <div className="flex flex-col space-y-2 pt-2 border-t border-slate-100">
-                      <button
-                        type="button"
-                        onClick={handleMockGoogleLogin}
-                        className="text-[10px] text-slate-500 hover:underline uppercase tracking-wider font-semibold"
-                      >
-                        Demo Sign In (Simulated)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          localStorage.removeItem('beyondskills_google_client_id');
-                          setClientId('');
-                          setClientIdInput('');
-                        }}
-                        className="text-[10px] text-slate-400 hover:text-slate-650 underline uppercase tracking-wider font-semibold"
-                      >
-                        Change / Reset Client ID
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <div className="flex flex-col space-y-2 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={handleMockGoogleLogin}
+                    className="text-[10px] text-slate-400 hover:text-slate-600 hover:underline uppercase tracking-wider font-semibold"
+                  >
+                    Demo Sign In (Simulated)
+                  </button>
+                </div>
               </div>
             )}
           </>
