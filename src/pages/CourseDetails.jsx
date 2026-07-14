@@ -291,12 +291,20 @@ export default function CourseDetails() {
                   </div>
 
                   <div className="space-y-3">
-                    <button onClick={handleEnroll} className="w-full bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] hover:brightness-110 text-white font-bold py-4 rounded-2xl text-xs uppercase tracking-widest transition-all transform hover:scale-[1.01] shadow-lg shadow-blue-600/20 flex items-center justify-center space-x-2">
+                    <button onClick={handleEnroll} className="w-full bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] hover:brightness-110 text-white font-bold py-4 rounded-2xl text-xs uppercase tracking-widest transition-all transform hover:scale-[1.01] shadow-lg shadow-blue-600/20 flex items-center justify-center space-x-2 cursor-pointer">
                       <Sparkles className="w-4 h-4 animate-pulse" />
                       <span>Register & Enroll Now</span>
                     </button>
                     
-
+                    {course.id === 'artificial-intelligence' && (
+                      <Link 
+                        to="/course/artificial-intelligence/brochure"
+                        className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all border border-slate-700/50 flex items-center justify-center space-x-2 cursor-pointer text-center"
+                      >
+                        <FileText className="w-4 h-4 text-[#2A4BFF]" />
+                        <span>View Interactive Brochure</span>
+                      </Link>
+                    )}
                   </div>
 
                   <ul className="text-xs space-y-2.5 text-slate-600 border-t border-slate-100 pt-6">

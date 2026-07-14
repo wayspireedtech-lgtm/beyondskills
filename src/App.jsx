@@ -19,6 +19,7 @@ import CampusAmbassador from './pages/CampusAmbassador';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import ReturnRefundPolicy from './pages/ReturnRefundPolicy';
+import AiBrochure from './pages/AiBrochure';
 import { Mail, Sparkles, X } from 'lucide-react';
 
 // Scroll to top on navigation change
@@ -155,6 +156,7 @@ export default function App() {
           <Route path="/services/:serviceId" element={<Services />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
+          <Route path="/course/artificial-intelligence/brochure" element={<AiBrochure />} />
           <Route path="/ambassador" element={<CampusAmbassador />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
