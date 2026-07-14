@@ -624,19 +624,19 @@ export default function Home() {
             </h4>
             <div className="space-y-6">
               {STUDENT_TESTIMONIALS.map((t, idx) => (
-                <div key={idx} className="bg-slate-100 border border-slate-200/60 p-6 rounded-xl relative overflow-hidden">
+                <div key={idx} className="bg-slate-950 border border-slate-800 p-6 rounded-xl relative overflow-hidden hover:border-brand-purple/40 transition-colors duration-300">
                   <div className="absolute top-0 right-0 w-16 h-16 bg-brand-purple/5 rounded-full blur-xl"></div>
                   
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{t.name}</p>
-                      <p className="text-[10px] text-slate-500">{t.course} • Hired at {t.company}</p>
+                      <p className="text-sm font-bold text-white">{t.name}</p>
+                      <p className="text-[10px] text-slate-400">{t.course} • Hired at {t.company}</p>
                     </div>
                     <div className="flex text-brand-cyan">
                       {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-700 italic leading-relaxed">"{t.text}"</p>
+                  <p className="text-xs text-slate-300 italic leading-relaxed">"{t.text}"</p>
                 </div>
               ))}
             </div>
@@ -648,19 +648,19 @@ export default function Home() {
             </h4>
             <div className="space-y-6">
               {CLIENT_TESTIMONIALS.map((t, idx) => (
-                <div key={idx} className="bg-slate-100 border border-slate-200/60 p-6 rounded-xl relative overflow-hidden">
+                <div key={idx} className="bg-slate-950 border border-slate-800 p-6 rounded-xl relative overflow-hidden hover:border-brand-purple/40 transition-colors duration-300">
                   <div className="absolute top-0 right-0 w-16 h-16 bg-brand-purple/5 rounded-full blur-xl"></div>
                   
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{t.client}</p>
-                      <p className="text-[10px] text-slate-500">{t.company}</p>
+                      <p className="text-sm font-bold text-white">{t.client}</p>
+                      <p className="text-[10px] text-slate-400">{t.company}</p>
                     </div>
                     <div className="flex text-brand-cyan">
                       {[...Array(t.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-700 italic leading-relaxed">"{t.text}"</p>
+                  <p className="text-xs text-slate-300 italic leading-relaxed">"{t.text}"</p>
                 </div>
               ))}
             </div>
