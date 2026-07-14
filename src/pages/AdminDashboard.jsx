@@ -53,6 +53,20 @@ export default function AdminDashboard() {
     alert('Wayspire LMS credentials saved and allocated successfully!');
   };
 
+  const handleAllocateCourse = (idx, courseId) => {
+    if (!courseId) return;
+    const updatedStudents = [...students];
+    if (!updatedStudents[idx].activeCourses) {
+      updatedStudents[idx].activeCourses = [];
+    }
+    if (!updatedStudents[idx].activeCourses.includes(courseId)) {
+      updatedStudents[idx].activeCourses.push(courseId);
+    }
+    setStudents(updatedStudents);
+    setDbItem('beyondskills_users', updatedStudents);
+    alert(`Program ${courseId} manually allocated to student successfully!`);
+  };
+
   // Calculations for stats
   const totalRevenue = payments.reduce((acc, p) => acc + (p.status === 'Success' ? p.amount : 0), 0);
   const totalEnrollments = payments.filter(p => p.status === 'Success').length;
@@ -100,15 +114,18 @@ export default function AdminDashboard() {
           </div>
           
           {/* Action Tabs */}
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'analytics' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
-              Analytics Report
+              Analytics
             </button>
             <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'leads' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
               Leads Inbox ({leads.length})
             </button>
             <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'students' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
-              Students & LMS ({students.length})
+              Students ({students.length})
+            </button>
+            <button onClick={() => setActiveSubTab('enrollments')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'enrollments' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+              Enrollments ({payments.length})
             </button>
           </div>
         </div>
@@ -401,6 +418,36 @@ export default function AdminDashboard() {
                       </div>
                     </div>
 
+                    {/* Manual Course Allocation Option */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-slate-200/60 text-xs">
+                      <div>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Manual Course Management:</span>
+                        <p className="text-[11px] text-slate-500 mt-0.5">Assign a new course program to this student's profile directly.</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <select 
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              handleAllocateCourse(idx, e.target.value);
+                              e.target.value = ''; // Reset select
+                            }
+                          }}
+                          className="bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:border-brand-cyan"
+                        >
+                          <option value="">-- Choose Course to Allocate --</option>
+                          <option value="artificial-intelligence">Artificial Intelligence</option>
+                          <option value="machine-learning">Machine Learning</option>
+                          <option value="data-science-analytics">Data Science & Analytics</option>
+                          <option value="full-stack-web">Full Stack Web (MERN)</option>
+                          <option value="stock-market">Stock Market</option>
+                          <option value="digital-marketing-cert">Digital Marketing</option>
+                          <option value="hr-mgmt">HR Management</option>
+                          <option value="cyber-security">Cyber Security</option>
+                          <option value="cloud-computing">Cloud Computing</option>
+                        </select>
+                      </div>
+                    </div>
+
                     {/* LMS Credentials Setup Section */}
                     <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-4">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
@@ -478,6 +525,62 @@ export default function AdminDashboard() {
 
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeSubTab === 'enrollments' && (
+          <div className="space-y-6 animate-fade-in">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Successful Course Enrollments</h3>
+            
+            {payments.length === 0 ? (
+              <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
+                <Users className="w-10 h-10 text-slate-500 mx-auto" />
+                <h4 className="font-bold text-slate-900 text-sm">No Enrollments Found</h4>
+                <p className="text-xs text-slate-550">No students have purchased any certification program yet.</p>
+              </div>
+            ) : (
+              <div className="bg-[#0b0f19] border border-slate-800 rounded-2xl p-6 shadow-xl overflow-x-auto">
+                <table className="w-full text-left text-xs text-slate-350 min-w-[700px]">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-slate-500 pb-2 uppercase text-[9px] tracking-wider">
+                      <th className="py-3 px-4">Student ID</th>
+                      <th className="py-3 px-4">Name / Email</th>
+                      <th className="py-3 px-4">Course Enrolled</th>
+                      <th className="py-3 px-4">Format</th>
+                      <th className="py-3 px-4">Payment Ref</th>
+                      <th className="py-3 px-4 text-right">Amount</th>
+                      <th className="py-3 px-4 text-right">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {payments.map((p, idx) => {
+                      const users = getDbItem('beyondskills_users', []);
+                      const stu = users.find(u => u.studentId === p.studentId || u.email === p.email);
+                      return (
+                        <tr key={idx} className="border-b border-slate-800/60 hover:bg-slate-900/30 text-slate-300 transition-colors">
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-400">{p.studentId || 'N/A'}</td>
+                          <td className="py-3.5 px-4">
+                            <p className="font-semibold text-slate-100">{stu?.name || p.email.split('@')[0]}</p>
+                            <p className="text-[10px] text-slate-500 font-mono mt-0.5">{p.email}</p>
+                          </td>
+                          <td className="py-3.5 px-4 font-semibold text-slate-200 uppercase">{p.courseId?.replace(/-/g, ' ')}</td>
+                          <td className="py-3.5 px-4">
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${p.mode === 'self-paced' ? 'bg-amber-550/10 text-amber-500 border border-amber-550/20' : 'bg-brand-purple/10 text-brand-purple border border-brand-purple/20'}`}>
+                              {p.mode === 'self-paced' ? 'Self Paced' : 'Mentor Led'}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono text-slate-500">{p.paymentId || 'N/A'}</td>
+                          <td className="py-3.5 px-4 text-right font-mono font-bold text-brand-cyan">₹{p.amount?.toLocaleString()}</td>
+                          <td className="py-3.5 px-4 text-right text-slate-500 font-mono">
+                            {new Date(p.date).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
