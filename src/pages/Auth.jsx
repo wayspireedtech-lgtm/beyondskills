@@ -17,6 +17,25 @@ export default function Auth() {
   const [error, setError] = useState(null);
   const [info, setInfo] = useState(null);
   const [googleModalOpen, setGoogleModalOpen] = useState(false);
+  const [authType, setAuthType] = useState('mock'); // 'mock' or 'real'
+  const [clientId, setClientId] = useState(localStorage.getItem('beyondskills_google_client_id') || '');
+  const [clientIdInput, setClientIdInput] = useState('');
+
+  const decodeJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        window.atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  };
 
   const handleSelectGoogleAccount = (email, roleName) => {
     setError(null);
@@ -38,6 +57,65 @@ export default function Auth() {
       window.location.href = 'https://www.graduscrm.online';
     }, 2000);
   };
+
+  // Dynamically load Google Identity Services client script
+  React.useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  // Initialize and Render Real Google Button when modal is open and real auth is selected
+  React.useEffect(() => {
+    if (googleModalOpen && authType === 'real' && clientId && window.google) {
+      // Small timeout to allow container element to render in DOM
+      const timer = setTimeout(() => {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: (response) => {
+              const payload = decodeJwt(response.credential);
+              if (payload && payload.email) {
+                const isAuthorized = payload.email.endsWith('@beyondskills.in') || 
+                                     payload.email === 'admin@beyondskills.in' || 
+                                     payload.email.includes('sales') || 
+                                     payload.email.includes('admin');
+                
+                if (isAuthorized) {
+                  setGoogleModalOpen(false);
+                  setInfo(`Authentication Successful as ${payload.email}! Redirecting to CRM Portal (GradusCRM)...`);
+                  
+                  const crmSession = { email: payload.email, name: payload.name || 'Sales Agent', type: 'CRM_Agent' };
+                  setDbItem('beyondskills_current_user', crmSession);
+                  window.dispatchEvent(new Event('auth_change'));
+                  
+                  setTimeout(() => {
+                    window.location.href = 'https://www.graduscrm.online';
+                  }, 2000);
+                } else {
+                  setError(`Access Denied: ${payload.email} is not authorized for CRM access.`);
+                  setGoogleModalOpen(false);
+                }
+              }
+            }
+          });
+
+          window.google.accounts.id.renderButton(
+            document.getElementById('google-real-button-container'),
+            { theme: 'filled_blue', size: 'large', width: 280 }
+          );
+        } catch (err) {
+          console.error('Failed to initialize Google accounts ID:', err);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [googleModalOpen, authType, clientId]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -322,8 +400,8 @@ export default function Auth() {
         {googleModalOpen && (
           <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-[#0b0f19] border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-slate-200 shadow-2xl relative overflow-hidden">
-              <div className="flex items-center justify-center space-x-2 mb-6">
-                <svg className="w-6 h-6" viewBox="0 0 24 24">
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -332,47 +410,124 @@ export default function Auth() {
                 <span className="font-semibold text-sm text-slate-100">Sign in with Google</span>
               </div>
 
-              <div className="text-center mb-6">
-                <h4 className="text-sm font-bold text-slate-100">Choose an account</h4>
-                <p className="text-xs text-slate-400 mt-1">to continue to BeyondSkills / GradusCRM</p>
-              </div>
-
-              <div className="space-y-2">
+              {/* Toggle tabs for Mock vs Real Auth */}
+              <div className="flex border-b border-slate-800 space-x-4 mb-4 pb-1.5 justify-center">
                 <button 
-                  onClick={() => handleSelectGoogleAccount('sales@beyondskills.in', 'Sales Executive')}
-                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                  type="button"
+                  onClick={() => setAuthType('mock')}
+                  className={`text-xs font-bold uppercase pb-1 relative ${authType === 'mock' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-300'}`}
                 >
-                  <div>
-                    <p className="text-xs font-bold text-slate-200">sales@beyondskills.in</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Sales Team (Access Allowed)</p>
-                  </div>
-                  <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                  Mock Accounts
+                  {authType === 'mock' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
                 </button>
-
                 <button 
-                  onClick={() => handleSelectGoogleAccount('admin@beyondskills.in', 'System Admin')}
-                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                  type="button"
+                  onClick={() => setAuthType('real')}
+                  className={`text-xs font-bold uppercase pb-1 relative ${authType === 'real' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-300'}`}
                 >
-                  <div>
-                    <p className="text-xs font-bold text-slate-200">admin@beyondskills.in</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Admin & CRM Lead (Access Allowed)</p>
-                  </div>
-                  <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
-                </button>
-
-                <button 
-                  onClick={() => handleSelectGoogleAccount('guest@gmail.com', 'Standard Student')}
-                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-blue bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
-                >
-                  <div>
-                    <p className="text-xs font-bold text-slate-200">guest@gmail.com</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Normal Student (Access Denied for CRM)</p>
-                  </div>
-                  <div className="text-[10px] font-bold text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                  Real Google Login
+                  {authType === 'real' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
                 </button>
               </div>
+
+              {authType === 'mock' ? (
+                /* MOCK DEMO ACCOUNTS LIST */
+                <div className="space-y-2">
+                  <div className="text-center mb-3">
+                    <p className="text-[10px] text-slate-400">Click any mock account to simulate redirect to CRM</p>
+                  </div>
+                  
+                  <button 
+                    type="button"
+                    onClick={() => handleSelectGoogleAccount('sales@beyondskills.in', 'Sales Executive')}
+                    className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                  >
+                    <div>
+                      <p className="text-xs font-bold text-slate-200">sales@beyondskills.in</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">Role: Sales Team (Access Allowed)</p>
+                    </div>
+                    <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                  </button>
+
+                  <button 
+                    type="button"
+                    onClick={() => handleSelectGoogleAccount('admin@beyondskills.in', 'System Admin')}
+                    className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                  >
+                    <div>
+                      <p className="text-xs font-bold text-slate-200">admin@beyondskills.in</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">Role: Admin & CRM Lead (Access Allowed)</p>
+                    </div>
+                    <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                  </button>
+
+                  <button 
+                    type="button"
+                    onClick={() => handleSelectGoogleAccount('guest@gmail.com', 'Standard Student')}
+                    className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-blue bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                  >
+                    <div>
+                      <p className="text-xs font-bold text-slate-200">guest@gmail.com</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">Role: Normal Student (Access Denied for CRM)</p>
+                    </div>
+                    <div className="text-[10px] font-bold text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                  </button>
+                </div>
+              ) : (
+                /* REAL GOOGLE OAUTH FLOW */
+                <div className="space-y-4 py-2">
+                  {!clientId ? (
+                    <div className="space-y-4">
+                      <p className="text-xs text-slate-400 leading-normal">
+                        To enable actual Google authentication, enter your **Google Client ID** from the Google Cloud Credentials console.
+                      </p>
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Google Client ID</label>
+                        <input 
+                          type="text" 
+                          value={clientIdInput} 
+                          onChange={(e) => setClientIdInput(e.target.value)}
+                          placeholder="xxxxxxxxxx.apps.googleusercontent.com" 
+                          className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-brand-purple transition-all"
+                        />
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          if (clientIdInput.trim()) {
+                            localStorage.setItem('beyondskills_google_client_id', clientIdInput.trim());
+                            setClientId(clientIdInput.trim());
+                          }
+                        }}
+                        className="w-full bg-brand-purple hover:bg-brand-purple/95 text-white font-bold py-2.5 rounded-lg text-xs uppercase transition-colors"
+                      >
+                        Save & Initialize Button
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center space-y-4 py-2">
+                      <p className="text-[11px] text-slate-400 text-center leading-normal">
+                        Real Google authentication initialized. Click below to sign in:
+                      </p>
+                      <div id="google-real-button-container" className="flex justify-center w-full min-h-[40px] z-50 animate-pulse"></div>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          localStorage.removeItem('beyondskills_google_client_id');
+                          setClientId('');
+                          setClientIdInput('');
+                        }}
+                        className="text-[10px] text-slate-550 hover:text-slate-300 underline uppercase tracking-wider font-semibold mt-2"
+                      >
+                        Change / Reset Client ID
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <button 
+                type="button"
                 onClick={() => setGoogleModalOpen(false)}
                 className="mt-6 w-full text-center text-xs text-slate-400 hover:text-slate-200 uppercase tracking-wider font-semibold py-2"
               >
