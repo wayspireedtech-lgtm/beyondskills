@@ -52,6 +52,7 @@ export default function Checkout() {
     let targetUser = users.find(u => u.email === form.email);
     
     const newStudentId = `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const generatedPassword = `BS-${Math.floor(100000 + Math.random() * 900000)}`;
 
     if (!targetUser) {
       // Create new user record
@@ -59,7 +60,7 @@ export default function Checkout() {
         email: form.email,
         phone: form.phone,
         name: form.name,
-        password: 'password', // Default temporary password
+        password: generatedPassword,
         studentId: newStudentId,
         activeCourses: [course.id]
       };
@@ -69,6 +70,9 @@ export default function Checkout() {
       // Update user record: allocate course if not already owned
       if (!targetUser.activeCourses.includes(course.id)) {
         targetUser.activeCourses.push(course.id);
+      }
+      if (!targetUser.password || targetUser.password === 'password') {
+        targetUser.password = generatedPassword;
       }
       // Save back users
       const updatedUsers = users.map(u => u.email === form.email ? targetUser : u);
@@ -93,11 +97,11 @@ export default function Checkout() {
     });
     setDbItem('beyondskills_payments', payments);
 
-    // 4. Trigger simulated welcome email notifications toast
+    // 4. Trigger simulated welcome email notifications toast with login credentials
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
-        subject: `Enrollment Success & Onboarding Checklist`,
-        body: `Hi ${form.name},\n\nPayment successful (Ref ID: ${paymentId}). Your student ID is ${targetUser.studentId || newStudentId}.\n\nWelcome to your learning platform! Your official course access credentials (login ID & password) will be sent to your registered email address shortly.`,
+        subject: `Enrollment Success & Login Credentials`,
+        body: `Hi ${form.name},\n\nPayment successful (Ref ID: ${paymentId}).\n\nYour Login Credentials are:\nEmail: ${form.email}\nPassword: ${targetUser.password || generatedPassword}\nStudent ID: ${targetUser.studentId || newStudentId}`,
       }
     }));
 

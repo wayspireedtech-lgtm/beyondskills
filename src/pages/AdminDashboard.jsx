@@ -7,7 +7,11 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [leads, setLeads] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [students, setStudents] = useState([]);
   const [activeSubTab, setActiveSubTab] = useState('analytics');
+
+  const [editingStudentIdx, setEditingStudentIdx] = useState(null);
+  const [lmsForm, setLmsForm] = useState({ lmsUsername: '', lmsPassword: '' });
 
   useEffect(() => {
     // Check if logged in user is admin
@@ -19,12 +23,34 @@ export default function AdminDashboard() {
 
     setLeads(getDbItem('beyondskills_leads', []));
     setPayments(getDbItem('beyondskills_payments', []));
-  }, []);
+    setStudents(getDbItem('beyondskills_users', []));
+  }, [navigate]);
 
   const handleDeleteLead = (idxToDelete) => {
     const updatedLeads = leads.filter((_, idx) => idx !== idxToDelete);
     setLeads(updatedLeads);
     setDbItem('beyondskills_leads', updatedLeads);
+  };
+
+  const startEditingLms = (idx, student) => {
+    setEditingStudentIdx(idx);
+    setLmsForm({
+      lmsUsername: student.lmsUsername || student.email || '',
+      lmsPassword: student.lmsPassword || ''
+    });
+  };
+
+  const handleSaveLmsCredentials = (idx) => {
+    const updatedStudents = [...students];
+    updatedStudents[idx] = {
+      ...updatedStudents[idx],
+      lmsUsername: lmsForm.lmsUsername,
+      lmsPassword: lmsForm.lmsPassword
+    };
+    setStudents(updatedStudents);
+    setDbItem('beyondskills_users', updatedStudents);
+    setEditingStudentIdx(null);
+    alert('Wayspire LMS credentials saved and allocated successfully!');
   };
 
   // Calculations for stats
@@ -80,6 +106,9 @@ export default function AdminDashboard() {
             </button>
             <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'leads' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
               Leads Inbox ({leads.length})
+            </button>
+            <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'students' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+              Students & LMS ({students.length})
             </button>
           </div>
         </div>
@@ -316,6 +345,136 @@ export default function AdminDashboard() {
                         <p className="italic">"{lead.message}"</p>
                       </div>
                     )}
+
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeSubTab === 'students' && (
+          <div className="space-y-6 animate-fade-in">
+            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Registered Students & LMS Credentials</h3>
+            
+            {students.length === 0 ? (
+              <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
+                <Users className="w-10 h-10 text-slate-500 mx-auto" />
+                <h4 className="font-bold text-slate-900 text-sm">No Students Registered</h4>
+                <p className="text-xs text-slate-550">No student accounts have been created in the database yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {students.map((student, idx) => (
+                  <div key={idx} className="glass-panel p-6 rounded-xl border border-slate-200 space-y-4">
+                    
+                    {/* Header with Name & Student ID */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-3 gap-2">
+                      <div>
+                        <h4 className="text-sm font-extrabold text-slate-900">{student.name}</h4>
+                        <p className="text-[10px] text-slate-500 font-mono mt-0.5">ID: {student.studentId || 'N/A'}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-[9px] font-bold tracking-widest text-[#4ADE80] bg-[#4ADE80]/10 border border-[#4ADE80]/30 px-2.5 py-0.5 rounded uppercase">
+                          Active Student
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Contact & Allocated Courses info */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                      <div>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Email Address:</span>
+                        <span className="text-slate-900 font-mono font-medium">{student.email}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Phone Number:</span>
+                        <span className="text-slate-900 font-mono">{student.phone || 'N/A'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Enrolled Program(s):</span>
+                        <span className="text-slate-900 uppercase font-mono font-semibold">
+                          {student.activeCourses && student.activeCourses.length > 0 
+                            ? student.activeCourses.join(', ') 
+                            : 'None'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* LMS Credentials Setup Section */}
+                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-4">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Wayspire LMS Credentials</span>
+                        {student.lmsUsername && student.lmsPassword ? (
+                          <span className="text-[8px] font-bold text-[#4ADE80] uppercase bg-[#4ADE80]/15 px-2 py-0.5 rounded tracking-widest border border-[#4ADE80]/20">Active</span>
+                        ) : (
+                          <span className="text-[8px] font-bold text-amber-500 uppercase bg-amber-500/15 px-2 py-0.5 rounded tracking-widest border border-amber-500/20">Pending Upload</span>
+                        )}
+                      </div>
+
+                      {editingStudentIdx === idx ? (
+                        /* Editing LMS Form */
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                          <div>
+                            <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">LMS Username / Email</label>
+                            <input 
+                              type="text" 
+                              value={lmsForm.lmsUsername}
+                              onChange={(e) => setLmsForm({ ...lmsForm, lmsUsername: e.target.value })}
+                              placeholder="e.g. jatin@gmail.com"
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-brand-purple"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">LMS Password</label>
+                            <input 
+                              type="text" 
+                              value={lmsForm.lmsPassword}
+                              onChange={(e) => setLmsForm({ ...lmsForm, lmsPassword: e.target.value })}
+                              placeholder="e.g. Wayspire@2026"
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-brand-purple"
+                            />
+                          </div>
+                          <div className="flex space-x-2">
+                            <button 
+                              type="button"
+                              onClick={() => handleSaveLmsCredentials(idx)}
+                              className="flex-grow bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-black font-bold py-2 rounded-lg text-xs uppercase"
+                            >
+                              Save
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={() => setEditingStudentIdx(null)}
+                              className="px-3 bg-slate-800 hover:bg-slate-750 text-slate-400 font-bold py-2 rounded-lg text-xs uppercase"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        /* Read-only Credentials Display */
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-grow">
+                            <div>
+                              <span className="text-[8px] text-slate-500 uppercase tracking-wider block">Username</span>
+                              <span className="text-xs font-mono text-slate-300 font-semibold">{student.lmsUsername || 'Not Configured'}</span>
+                            </div>
+                            <div>
+                              <span className="text-[8px] text-slate-500 uppercase tracking-wider block">Password</span>
+                              <span className="text-xs font-mono text-slate-300 font-semibold">{student.lmsPassword || 'Not Configured'}</span>
+                            </div>
+                          </div>
+                          <button 
+                            type="button"
+                            onClick={() => startEditingLms(idx, student)}
+                            className="bg-brand-purple hover:bg-brand-purple/90 text-white text-[10px] font-bold px-4 py-2 rounded-lg uppercase tracking-wider self-start sm:self-center transition-colors"
+                          >
+                            Set Credentials
+                          </button>
+                        </div>
+                      )}
+                    </div>
 
                   </div>
                 ))}
