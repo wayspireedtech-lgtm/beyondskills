@@ -103,16 +103,19 @@ export default function Auth() {
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
-    // Always trigger custom toast notification for dry-run testing / visibility
+    // Trigger custom toast notification letting user know email was sent without exposing code
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
-        subject: `[BeyondSkills] Security OTP Dispatched`,
-        body: `Hi ${name},\n\nYour 4-Digit verification code is: ${otp}.\n\nThis code has been sent via EmailJS to: ${email}.`,
+        subject: `Verification Code Dispatched`,
+        body: `Hi ${name},\n\nWe sent a 4-digit verification code to your email address: ${email}.\nPlease check your inbox/spam folder.`,
       }
     }));
 
+    // Log to console for development debug purposes only
+    console.log(`[BeyondSkills Debug] Generated OTP: ${otp}`);
+
     if (!serviceId || !templateId || !publicKey) {
-      console.warn("EmailJS environment keys not defined in environment variables. Falling back to sandbox toast notification.");
+      console.warn("EmailJS environment keys not defined in environment variables. Logged OTP to console for debugging.");
       return false;
     }
 
@@ -576,7 +579,7 @@ export default function Auth() {
                     </div>
 
                     <p className="text-[10px] text-slate-500 text-center leading-relaxed">
-                      Enter the OTP code received in your email (or check the alert toast in the corner of your page).
+                      Enter the 4-digit code received in your registered email inbox.
                     </p>
 
                     <div className="flex space-x-2 pt-2">
@@ -736,7 +739,7 @@ export default function Auth() {
                     </div>
 
                     <p className="text-[10px] text-slate-550 text-center leading-relaxed">
-                      Please enter the OTP. Use the code from the email (or inspect the notification toast in the corner).
+                      Please enter the 4-digit code received in your admin email inbox.
                     </p>
 
                     <div className="flex space-x-2 pt-2">
