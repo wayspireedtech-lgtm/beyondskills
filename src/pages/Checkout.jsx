@@ -25,7 +25,7 @@ export default function Checkout() {
   const [agreeDisclaimer, setAgreeDisclaimer] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
 
-  const courseFee = course ? (learningMode === 'self-paced' ? Math.round(course.fee * 0.5) : course.fee) : 0;
+  const courseFee = course ? (learningMode === 'self-paced' ? (course.selfPacedFee || Math.round(course.fee * 0.5)) : course.fee) : 0;
 
   useEffect(() => {
     // If user is already logged in, pre-fill form

@@ -95,6 +95,10 @@ export default function CourseDetails() {
     );
   }
 
+  const currentFee = learningMode === 'self-paced' ? (course.selfPacedFee || Math.round(course.fee * 0.5)) : course.fee;
+  const currentOriginalFee = learningMode === 'self-paced' ? (course.selfPacedOriginalFee || Math.round((course.originalFee || course.fee * 1.5) * 0.5)) : (course.originalFee || course.fee * 1.5);
+  const discountPercent = currentOriginalFee > 0 ? Math.round(((currentOriginalFee - currentFee) / currentOriginalFee) * 100) : 0;
+
   const toggleWeek = (index) => {
     setExpandedWeeks(prev => ({
       ...prev,
@@ -271,14 +275,14 @@ export default function CourseDetails() {
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Certification & Onboarding Fee</span>
                     <div className="flex items-baseline space-x-2 mt-2">
                       <span className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-                        ₹{(learningMode === 'self-paced' ? Math.round(course.fee * 0.5) : course.fee).toLocaleString()}
+                        ₹{currentFee.toLocaleString()}
                       </span>
                       <span className="text-xs text-slate-400 font-mono font-bold line-through">
-                        ₹{(learningMode === 'self-paced' ? Math.round((course.originalFee || course.fee * 1.5) * 0.5) : (course.originalFee || course.fee * 1.5)).toLocaleString()}
+                        ₹{currentOriginalFee.toLocaleString()}
                       </span>
                     </div>
                     <p className="text-[10px] text-slate-400 mt-1 font-mono">
-                      ⚡ Flat {Math.round((((learningMode === 'self-paced' ? (course.originalFee || course.fee * 1.5) * 0.5 : (course.originalFee || course.fee * 1.5)) - (learningMode === 'self-paced' ? course.fee * 0.5 : course.fee)) / (learningMode === 'self-paced' ? (course.originalFee || course.fee * 1.5) * 0.5 : (course.originalFee || course.fee * 1.5))) * 100)}% Off (Early bird pricing applied)
+                      ⚡ Flat {discountPercent}% Off (Early bird pricing applied)
                     </p>
                   </div>
 
@@ -300,6 +304,18 @@ export default function CourseDetails() {
                   </div>
 
                   <ul className="text-xs space-y-2.5 text-slate-600 border-t border-slate-100 pt-6">
+                    {course.mentorLedHours && (
+                      <li className="flex items-center space-x-2.5">
+                        <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />
+                        <span>{learningMode === 'self-paced' ? course.selfPacedHours : course.mentorLedHours}</span>
+                      </li>
+                    )}
+                    {course.mentorLedProjects && (
+                      <li className="flex items-center space-x-2.5">
+                        <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />
+                        <span>{learningMode === 'self-paced' ? course.selfPacedProjects : course.mentorLedProjects}</span>
+                      </li>
+                    )}
                     <li className="flex items-center space-x-2.5">
                       <CheckCircle className="w-4.5 h-4.5 text-brand-purple flex-shrink-0" />
                       <span>Immediate Access to Recorded Modules</span>
@@ -634,8 +650,8 @@ export default function CourseDetails() {
                   {course.title}
                 </h4>
                   <div className="flex items-center space-x-1.5 mt-0.5">
-                    <span className="text-sm font-extrabold text-slate-900">₹{course.fee.toLocaleString()}</span>
-                    <span className="text-[10px] text-slate-400 line-through font-mono">₹{(course.originalFee || course.fee * 1.5).toLocaleString()}</span>
+                    <span className="text-sm font-extrabold text-slate-900">₹{currentFee.toLocaleString()}</span>
+                    <span className="text-[10px] text-slate-400 line-through font-mono">₹{currentOriginalFee.toLocaleString()}</span>
                   </div>
               </div>
             </div>
