@@ -364,15 +364,24 @@ export default function Home() {
                           </span>
                         </div>
                       </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/course/${course.id}`);
-                        }}
-                        className="bg-brand-purple hover:bg-brand-purple/90 text-black font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition-colors cursor-pointer"
-                      >
-                        Details
-                      </button>
+                      <div className="flex space-x-1.5">
+                        <Link 
+                          to={`/course/${course.id}/brochure`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer animate-fade-in"
+                        >
+                          Brochure
+                        </Link>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/checkout?courseId=${course.id}&mode=mentor-led`);
+                          }}
+                          className="bg-brand-purple hover:bg-brand-purple/90 text-black font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Enroll
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
