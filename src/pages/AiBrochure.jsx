@@ -1,213 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { 
   Brain, Code, CheckCircle, ChevronDown, ChevronUp, Sparkles, 
   TrendingUp, Briefcase, Award, Rocket, ArrowRight, BarChart3, 
   Users, BookOpen, Quote, ShieldCheck, Mail, Calendar, HelpCircle, FileText
 } from 'lucide-react';
-
-const CURRICULUM_DATA = [
-  {
-    sNo: 1,
-    title: "Python Fundamentals: Internals, Architecture, and Best Practices",
-    subtopics: [
-      "Installation and Setup of Anaconda Environment",
-      "Jupyter Notebook Overview with Modern Usage Practices",
-      "Essential Shortcut Keys and Productivity Tips in Jupyter Notebook",
-      "Understanding Python Data Types with Real-World Applications"
-    ]
-  },
-  {
-    sNo: 2,
-    title: "Python Data Structures & File Handling in Python",
-    subtopics: [
-      "Best Practices for Naming Variables in Python (PEP 8 Standards)",
-      "Python Data Structures: List, Tuple, Set, and Dictionary with Practical Use Cases",
-      "Introduction to Files and Directories in Modern Development Environments",
-      "Working with Command Line Interfaces (CLI) and Terminal Navigation",
-      "File Handling in Python: Reading Text Files and Using Context Managers (with Statement)"
-    ]
-  },
-  {
-    sNo: 3,
-    title: "Regular Doubt-Clearing & Interactive Discussion Sessions",
-    subtopics: [
-      "Dedicated sessions will be held to address course-related queries and foster interactive discussions."
-    ]
-  },
-  {
-    sNo: 4,
-    title: "Control Flow in Python: Loops and Conditional Statements",
-    subtopics: [
-      "Conditional Statements in Python: if, elif, and else",
-      "Looping Constructs: for loops and while loops"
-    ]
-  },
-  {
-    sNo: 5,
-    title: "Data Analysis & Manipulation using NumPy",
-    subtopics: [
-      "Introduction to Machine Learning Libraries",
-      "NumPy: Hands-on Implementation and Practical Applications"
-    ]
-  },
-  {
-    sNo: 6,
-    title: "Continuous Doubt Resolution & Concept Strengthening Sessions",
-    subtopics: [
-      "Regular sessions will be conducted to address course-related queries and promote interactive discussions."
-    ]
-  },
-  {
-    sNo: 7,
-    title: "Data Analysis with Pandas (Data Cleaning & Transformation)",
-    subtopics: [
-      "Pandas: Hands-on Data Analysis and Real-World Applications"
-    ]
-  },
-  {
-    sNo: 8,
-    title: "Exploratory Data Analysis (EDA) and Visualization using Matplotlib",
-    subtopics: [
-      "Learn to explore, visualize, and extract meaningful insights from data",
-      "Data Visualization Concepts and Techniques",
-      "Matplotlib: Hands-on Implementation",
-      "Seaborn: Hands-on Visualization for Advanced Insights"
-    ]
-  },
-  {
-    sNo: 9,
-    title: "Statistical Thinking in Python: Building Core Foundations",
-    subtopics: [
-      "Build Statistical Thinking and Learn to Understand Data Effectively",
-      "Measures of Central Tendency",
-      "Measures of Dispersion",
-      "IQR (Interquartile Range) Statistics – Hands-on Practice"
-    ]
-  },
-  {
-    sNo: 10,
-    title: "Introduction to Machine Learning: Supervised & Unsupervised Learning",
-    subtopics: [
-      "Introduction to Classification, Regression, and Model Fine-Tuning",
-      "Supervised Learning Concepts",
-      "Unsupervised Learning Concepts",
-      "Linear Regression: Theory and Practical Implementation",
-      "Evaluation Metrics in Linear Regression – Hands-on Practice"
-    ]
-  },
-  {
-    sNo: 11,
-    title: "Logistic Regression: Concepts and Practical Implementation",
-    subtopics: [
-      "Logistic Regression: Fundamentals and Practical Applications",
-      "Performance Evaluation Metrics for Logistic Regression",
-      "Hands-on Implementation of Logistic Regression"
-    ]
-  },
-  {
-    sNo: 12,
-    title: "Linear Regression: Model Building and Evaluation",
-    subtopics: [
-      "Linear Regression: Concepts and Practical Applications",
-      "Evaluation Metrics for Linear Regression"
-    ]
-  },
-  {
-    sNo: 13,
-    title: "Data Preprocessing Techniques for Machine Learning",
-    subtopics: [
-      "Introduction to Data Preprocessing Techniques",
-      "Data Standardization and Normalization",
-      "Exploratory Data Analysis (EDA)",
-      "Handling Missing Values",
-      "Outlier Detection and Treatment",
-      "Feature Scaling and Feature Selection Techniques"
-    ]
-  },
-  {
-    sNo: 14,
-    title: "Tree-Based Models: Classification and Regression Trees (CART)",
-    subtopics: [
-      "Decision Trees: Concepts and Practical Applications",
-      "Bagging Techniques for Model Improvement",
-      "Boosting and Random Forest Methods"
-    ]
-  },
-  {
-    sNo: 15,
-    title: "Fundamentals of Neural Networks and Deep Learning",
-    subtopics: [
-      "Neural Networks: Concepts and Practical Applications"
-    ]
-  },
-  {
-    sNo: 16,
-    title: "Capstone Project (Real-World Implementation)",
-    subtopics: [
-      "Utilize Data Science Libraries for Data Analysis, Visualization, Model Building, and Data Extraction"
-    ]
-  },
-  {
-    sNo: 17,
-    title: "Fundamentals of Natural Language Processing (NLP): Text Processing, Tokenization, and Language Models",
-    subtopics: [
-      "NLTK: Text Preprocessing, Tokenization, and Linguistic Analysis",
-      "spaCy: Advanced NLP, Named Entity Recognition (NER), and Industrial Applications",
-      "Gensim: Topic Modeling, Word Embeddings, and Semantic Analysis",
-      "FastText: Efficient Text Classification, Word Representations, and Deep Learning-based NLP"
-    ]
-  },
-  {
-    sNo: 18,
-    title: "Introduction to Generative AI (Gen AI): LLMs, Prompt Engineering, and Real-World Applications",
-    subtopics: [
-      "Hugging Face Ecosystem: Transformers, Model Hub, and Pre-trained Models",
-      "Working of Generative AI: Concepts, Architectures, and Model Training Process",
-      "Generative AI Models: GANs, VAEs, and Large Language Models (LLMs)",
-      "Overview of DALL·E, ChatGPT, and Bard: Capabilities and Applications",
-      "Real-World Use Cases of Generative AI: Content Creation, Automation, Personalization, and AI Assistants"
-    ]
-  }
-];
-
-const CAREER_ROADMAP = [
-  {
-    step: 1,
-    role: "Data Analyst & Python Developer",
-    salary: "₹6 - 8 LPA",
-    description: "Write custom scripts to automate pipeline checks, execute SQL commands, clean corporate datasets, and construct clean Matplotlib and Seaborn graphs.",
-    tech: ["Python", "Jupyter", "NumPy", "Pandas", "Matplotlib"]
-  },
-  {
-    step: 2,
-    role: "Data Scientist",
-    salary: "₹10 - 15 LPA",
-    description: "Construct advanced statistical predictions, design classification/regression matrix systems, and translate business requirements into feature engineering goals.",
-    tech: ["SciPy", "Statistical Modeling", "Feature Scaling", "Scikit-Learn"]
-  },
-  {
-    step: 3,
-    role: "Machine Learning Engineer",
-    salary: "₹12 - 18 LPA",
-    description: "Train complex tree-based CART algorithms, construct ensemble bagging and boosting structures, and deploy predictive metrics pipelines inside production apps.",
-    tech: ["Random Forests", "CART", "Ensemble Models", "XGBoost"]
-  },
-  {
-    step: 4,
-    role: "NLP Specialist",
-    salary: "₹15 - 22 LPA",
-    description: "Build custom text models, create tokenization and NER architectures, deploy word embedding structures, and manage semantic search models for document databases.",
-    tech: ["NLTK", "spaCy", "Gensim", "Word Embeddings"]
-  },
-  {
-    step: 5,
-    role: "Generative AI Developer",
-    salary: "₹18 - 30+ LPA",
-    description: "Integrate LLM APIs, fine-tune models, implement retrieval-augmented generation (RAG) structures, design custom agents with OpenAI APIs and deploy Hugging Face models.",
-    tech: ["Generative AI", "Hugging Face", "LLMs", "Prompt Engineering", "OpenAI APIs"]
-  }
-];
+import { COURSES } from '../utils/mockDb';
 
 const COMPANYS_TIEUPS = [
   "Google Cloud", "Microsoft", "AWS Cloud", "Razorpay", "HubSpot", "Meta Ads", "Vercel", "Shopify"
@@ -224,61 +22,392 @@ const LOGO_IMAGES = {
   "Shopify": "https://www.vectorlogo.zone/logos/shopify/shopify-icon.svg"
 };
 
-const DATASETS = [
-  {
-    label: "Global AI Market Expansion",
-    current: "2024: $184 Billion",
-    projected: "2032: $1.3 Trillion",
-    growth: 85,
-    details: "According to McKinsey analysis, the global market for Artificial Intelligence is growing at a CAGR of 37.3% as enterprises implement custom APIs."
+const COURSE_METADATA = {
+  'artificial-intelligence': {
+    datasets: [
+      {
+        label: "Global AI Market Expansion",
+        current: "2024: $184 Billion",
+        projected: "2032: $1.3 Trillion",
+        growth: 85,
+        details: "According to McKinsey analysis, the global market for Artificial Intelligence is growing at a CAGR of 37.3% as enterprises implement custom APIs."
+      },
+      {
+        label: "Increase in AI-Specific Job Openings",
+        current: "2022 Base Value",
+        projected: "2026: +250% Growth",
+        growth: 90,
+        details: "Active hiring reports indicate that roles requiring generative AI capabilities have doubled, while standard python developer salaries grew by 40%."
+      },
+      {
+        label: "Global Corporate Data Generation",
+        current: "2020: 64 Zettabytes",
+        projected: "2025: 175 Zettabytes",
+        growth: 78,
+        details: "The explosion of unstructured log files and enterprise documents necessitates localized NLP parsing architectures to index corporate data pools."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Data Analyst & Python Developer", salary: "₹6 - 8 LPA", description: "Write custom scripts to automate pipeline checks, execute SQL commands, clean corporate datasets, and construct clean Matplotlib and Seaborn graphs.", tech: ["Python", "Jupyter", "NumPy", "Pandas", "Matplotlib"] },
+      { step: 2, role: "Data Scientist", salary: "₹10 - 15 LPA", description: "Construct advanced statistical predictions, design classification/regression matrix systems, and translate business requirements into feature engineering goals.", tech: ["SciPy", "Statistical Modeling", "Feature Scaling", "Scikit-Learn"] },
+      { step: 3, role: "Machine Learning Engineer", salary: "₹12 - 18 LPA", description: "Train complex tree-based CART algorithms, construct ensemble bagging and boosting structures, and deploy predictive metrics pipelines inside production apps.", tech: ["Random Forests", "CART", "Ensemble Models", "XGBoost"] },
+      { step: 4, role: "NLP Specialist", salary: "₹15 - 22 LPA", description: "Build custom text models, create tokenization and NER architectures, deploy word embedding structures, and manage semantic search models for document databases.", tech: ["NLTK", "spaCy", "Gensim", "Word Embeddings"] },
+      { step: 5, role: "Generative AI Developer", salary: "₹18 - 30+ LPA", description: "Integrate LLM APIs, fine-tune models, implement retrieval-augmented generation (RAG) structures, design custom agents with OpenAI APIs and deploy Hugging Face models.", tech: ["Generative AI", "Hugging Face", "LLMs", "Prompt Engineering", "OpenAI APIs"] }
+    ]
   },
-  {
-    label: "Increase in AI-Specific Job Openings",
-    current: "2022 Base Value",
-    projected: "2026: +250% Growth",
-    growth: 90,
-    details: "Active hiring reports indicate that roles requiring generative AI capabilities have doubled, while standard python developer salaries grew by 40%."
+  'machine-learning': {
+    datasets: [
+      {
+        label: "ML Platform Market size",
+        current: "2024: $32 Billion",
+        projected: "2030: $225 Billion",
+        growth: 88,
+        details: "The market for automated Machine Learning training pipelines is expanding rapidly as corporate decision systems rely on dynamic neural predictions."
+      },
+      {
+        label: "Algorithm Hiring Demands",
+        current: "2023 Base Index",
+        projected: "2027: +180% Openings",
+        growth: 82,
+        details: "Top tech hubs report a surge in requirements for specialists who understand CART decision trees, random forests, and bagging/boosting algorithms."
+      },
+      {
+        label: "Enterprise ML Adaptations",
+        current: "2021: 15% adoption",
+        projected: "2025: 68% adoption",
+        growth: 75,
+        details: "Over two-thirds of digital platforms now run active ML pipelines to predict user behaviour, customer churn, and load balances."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Python Script Developer", salary: "₹5 - 7 LPA", description: "Construct utility scripts, clean CSV files, extract raw files, and manage dependencies inside virtual environments.", tech: ["Python", "Anaconda", "Terminal Commands"] },
+      { step: 2, role: "Data Preprocessing Specialist", salary: "₹8 - 12 LPA", description: "Analyze outlier arrays, resolve missing data fields, perform feature scaling, and construct normalized statistics indexes.", tech: ["NumPy", "Pandas", "Matplotlib", "Seaborn"] },
+      { step: 3, role: "ML Algorithm Modeler", salary: "₹11 - 16 LPA", description: "Train classification models, execute linear and logistic regressions, and evaluate performance logs with MSE metrics.", tech: ["Scikit-Learn", "Regression Analysis", "Evaluation Metrics"] },
+      { step: 4, role: "Ensemble Systems Architect", salary: "₹14 - 20 LPA", description: "Deploy CART systems, construct random forest models, implement bagging and boosting architectures, and tune hyperparameters.", tech: ["Random Forests", "CART Models", "XGBoost", "AdaBoost"] },
+      { step: 5, role: "MLOps Production Engineer", salary: "₹18 - 28+ LPA", description: "Integrate predictive frameworks into operational APIs, deploy continuous training triggers, and monitor log metrics.", tech: ["MLOps", "Model Deployment", "Flask", "Docker", "API Routing"] }
+    ]
   },
-  {
-    label: "Global Corporate Data Generation",
-    current: "2020: 64 Zettabytes",
-    projected: "2025: 175 Zettabytes",
-    growth: 78,
-    details: "The explosion of unstructured log files and enterprise documents necessitates localized NLP parsing architectures to index corporate data pools."
+  'data-science': {
+    datasets: [
+      {
+        label: "Data Science Platform Market",
+        current: "2024: $103 Billion",
+        projected: "2030: $322 Billion",
+        growth: 86,
+        details: "Enterprise investments in Data Science platforms are multiplying as companies transition from simple reporting to predictive modeling."
+      },
+      {
+        label: "BLS Job Forecasts",
+        current: "2022 Baseline",
+        projected: "2032: +35% Growth",
+        growth: 92,
+        details: "The US Bureau of Labor Statistics rates Data Science as one of the fastest-growing professional areas, out pacing average tech growth by 3x."
+      },
+      {
+        label: "Corporate Unstructured Logs",
+        current: "2020: 30% parsed",
+        projected: "2025: 85% parsed",
+        growth: 80,
+        details: "Organizations are deploying data pipelines to clean, index, and analyze unstructured raw business logs and file directories."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Relational Data Analyst", salary: "₹5 - 7 LPA", description: "Write structured SQL database queries, design tables, filter data points, and manage custom Excel sheets.", tech: ["SQL Queries", "Excel", "Data Filtering"] },
+      { step: 2, role: "Data Engineering Associate", salary: "₹8 - 11 LPA", description: "Clean datasets with Pandas, handle missing values, analyze arrays with NumPy, and script custom data extraction tools.", tech: ["Python", "Jupyter Notebook", "Pandas", "NumPy"] },
+      { step: 3, role: "Business Intelligence Modeler", salary: "₹11 - 15 LPA", description: "Build interactive corporate dashboards, manage data connections, implement DAX formulas, and compile visualization reports.", tech: ["Power BI", "Tableau", "DAX Formulas", "Dashboard Design"] },
+      { step: 4, role: "Predictive Analytics Modeler", salary: "₹14 - 18 LPA", description: "Train machine learning models, execute regressions, evaluate CART trees, and optimize model predictions.", tech: ["Scikit-Learn", "Machine Learning", "Regression", "Decision Trees"] },
+      { step: 5, role: "Lead Data Scientist", salary: "₹18 - 28+ LPA", description: "Formulate end-to-end data products, lead model deployment strategies, and present predictive business solutions to stakeholders.", tech: ["Model Deployment", "Neural Networks", "NLP Basics", "Advanced Analytics"] }
+    ]
+  },
+  'data-analytics': {
+    datasets: [
+      {
+        label: "Business Intelligence Market",
+        current: "2024: $28 Billion",
+        projected: "2030: $52 Billion",
+        growth: 72,
+        details: "The global BI market is scaling up as operations convert raw operational logs into real-time visual dashboard feeds."
+      },
+      {
+        label: "Analytics Listings Growth",
+        current: "2023 Base",
+        projected: "2027: +25% Listings",
+        growth: 78,
+        details: "Job listings requiring Power BI, SQL databases, and dashboard design have climbed to represent the largest chunk of corporate analyst requirements."
+      },
+      {
+        label: "Executive Dashboard Reliance",
+        current: "2021: 50% reliance",
+        projected: "2026: 92% reliance",
+        growth: 85,
+        details: "A massive majority of business managers now depend on automated charts rather than text reports to track corporate operations."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Junior Report Creator", salary: "₹4 - 6 LPA", description: "Manage basic spreadsheet records, configure filters, perform data lookups, and construct basic charts.", tech: ["Excel Basics", "Google Sheets", "VLOOKUP", "Charts"] },
+      { step: 2, role: "Database SQL Query Developer", salary: "₹6 - 9 LPA", description: "Write relational database queries, filter logs, join tables, and manage relational database schemas.", tech: ["SQL Joins", "DB Schema", "Data Extraction"] },
+      { step: 3, role: "BI Dashboard Specialist", salary: "₹8 - 12 LPA", description: "Design multi-page interactive dashboards, implement data gateways, and write DAX measures.", tech: ["Power BI", "Tableau", "DAX", "Data Modeling"] },
+      { step: 4, role: "Data Analytics Consultant", salary: "₹12 - 16 LPA", description: "Perform exploratory analytics, run statistical checks in Python, and convert telemetry metrics into business goals.", tech: ["Python", "Pandas", "EDA", "Statistical Foundations"] },
+      { step: 5, role: "Analytics Operations Lead", salary: "₹16 - 25+ LPA", description: "Direct corporate data reporting architecture, govern pipeline standards, and manage operational dashboard portals.", tech: ["BI Administration", "VPC Gateways", "Enterprise Reporting", "Project Strategy"] }
+    ]
+  },
+  'cyber-security': {
+    datasets: [
+      {
+        label: "Cybersecurity Market Size",
+        current: "2024: $190 Billion",
+        projected: "2030: $424 Billion",
+        growth: 84,
+        details: "Expenditure on corporate threat protection is rising exponentially as online infrastructure expands globally."
+      },
+      {
+        label: "Annual Cybercrime Cost",
+        current: "2020: $6 Trillion",
+        projected: "2025: $10.5 Trillion",
+        growth: 92,
+        details: "The soaring cost of ransomware attacks and data leaks has forced enterprise teams to heavily recruit penetration testers."
+      },
+      {
+        label: "Cyber Job Openings Gap",
+        current: "2022: 2.8 Million",
+        projected: "2026: 3.5 Million",
+        growth: 89,
+        details: "There remains a massive shortage of certified cybersecurity analysts, resulting in high premiums for skilled security professionals."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Linux System Administrator", salary: "₹5 - 7 LPA", description: "Manage user permissions, configure network interfaces, audit server logs, and script terminal operations.", tech: ["Linux Terminal", "Bash Scripting", "System Permissions"] },
+      { step: 2, role: "SOC Security Analyst", salary: "₹8 - 11 LPA", description: "Monitor SIEM consoles, analyze security incidents, audit alert logs, and respond to basic network telemetry threats.", tech: ["SIEM", "SOC Operations", "Wireshark", "Log Audits"] },
+      { step: 3, role: "Ethical Hacking Associate", salary: "₹10 - 14 LPA", description: "Execute vulnerability scans, perform reconnaissance, and exploit test environments inside simulated networks.", tech: ["Nmap", "Metasploit", "Kali Linux", "Reconnaissance"] },
+      { step: 4, role: "Penetration Tester", salary: "₹14 - 18 LPA", description: "Audit web application code, identify OWASP vulnerabilities, bypass authentications, and draft fix reports.", tech: ["Burp Suite", "OWASP Top 10", "SQLi", "XSS Mitigation"] },
+      { step: 5, role: "Cybersecurity Architect", salary: "₹18 - 28+ LPA", description: "Formulate layered threat defense architectures, design secure networks, and govern compliance practices.", tech: ["Security Governance", "Firewall Architecture", "Risk Management"] }
+    ]
+  },
+  'cloud-computing': {
+    datasets: [
+      {
+        label: "Global Cloud Market Size",
+        current: "2024: $680 Billion",
+        projected: "2030: $1.6 Trillion",
+        growth: 88,
+        details: "Enterprise cloud hosting allocations are accelerating as servers move from on-premises to AWS/Azure."
+      },
+      {
+        label: "Cloud Postings Growth",
+        current: "2022 Baseline",
+        projected: "2026: +160% Postings",
+        growth: 85,
+        details: "Requirements for certified AWS Solutions Architects and Azure Administrators have outpaced classic IT roles."
+      },
+      {
+        label: "Enterprise Migration Rates",
+        current: "2020: 72% migrated",
+        projected: "2025: 94% migrated",
+        growth: 82,
+        details: "Virtually all global digital apps now operate on cloud computing nodes using load balancers and auto-scaling."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Systems Support Engineer", salary: "₹4 - 6 LPA", description: "Configure local network subnets, audit server parameters, and maintain basic operating system resources.", tech: ["Linux", "Networking Basics", "Subnets"] },
+      { step: 2, role: "Junior Cloud Administrator", salary: "₹7 - 10 LPA", description: "Provision virtual machines, configure storage buckets, manage user permissions, and establish cost budget monitors.", tech: ["AWS Console", "EC2 Instances", "S3 Storage", "IAM"] },
+      { step: 3, role: "Cloud Solutions Architect", salary: "₹10 - 15 LPA", description: "Design multi-tier secure cloud networks, set up auto-scaling rules, and configure public/private subnets inside VPCs.", tech: ["AWS VPC", "Load Balancers", "VPC Routing", "RDS Databases"] },
+      { step: 4, role: "Cloud Security Specialist", salary: "₹14 - 20 LPA", description: "Implement data encryption at-rest and in-transit, manage key vaults, configure network security groups, and audit access protocols.", tech: ["Azure Security", "Key Vaults", "NSGs", "IAM Controls"] },
+      { step: 5, role: "Enterprise DevOps Engineer", salary: "₹18 - 28+ LPA", description: "Automate cloud resources using deployment templates, manage Kubernetes container orchestration, and establish monitoring pipelines.", tech: ["ARM Templates", "DevOps", "AKS / Kubernetes", "Azure Monitor"] }
+    ]
+  },
+  'hr-mgmt': {
+    datasets: [
+      {
+        label: "Global HR Tech Market",
+        current: "2024: $26 Billion",
+        projected: "2030: $48 Billion",
+        growth: 68,
+        details: "Investments in automated recruitment systems, payroll engines, and candidate screeners are rising fast."
+      },
+      {
+        label: "HR Analytics Adoption",
+        current: "2021 Baseline",
+        projected: "2026: +150% Adoption",
+        growth: 72,
+        details: "Organizations are seeking talent managers who can build data-driven retention models and calculate KPIs in Excel."
+      },
+      {
+        label: "ATS Filter Implementation",
+        current: "2020: 45% use",
+        projected: "2025: 78% use",
+        growth: 76,
+        details: "Over three-quarters of mid-sized companies now pre-screen resumes through ATS keyword filters before human reviews."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "HR Operations Associate", salary: "₹3 - 5 LPA", description: "Draft employee files, organize onboarding records, schedule interviews, and maintain database lists.", tech: ["Excel Basics", "HR Records", "Interview Scheduling"] },
+      { step: 2, role: "Talent Sourcing Specialist", salary: "₹5 - 8 LPA", description: "Post job ads, screen candidate profiles, search portals, and calculate initial applicant metrics.", tech: ["ATS Systems", "Job Sourcing", "Screening Criteria"] },
+      { step: 3, role: "HR Analyst & Recruiter", salary: "₹8 - 12 LPA", description: "Manage recruitment channels, configure automated screening rules, and analyze employee attrition patterns.", tech: ["HR Analytics", "Candidate Tracking", "Excel Dashboards"] },
+      { step: 4, role: "Compensation & Benefits Specialist", salary: "₹12 - 16 LPA", description: "Draft corporate CTC brackets, calculate payroll variables, execute statutory compliance logs, and audit wage systems.", tech: ["Payroll Administration", "Labour Laws", "Compensation Frameworks"] },
+      { step: 5, role: "HR Operations Director", salary: "₹16 - 25+ LPA", description: "Govern enterprise people strategy, align recruitment goals with business expansion plans, and lead digital HR transformations.", tech: ["Strategic HRM", "Change Management", "AI in HR Strategy"] }
+    ]
+  },
+  'stock-market': {
+    datasets: [
+      {
+        label: "Retail Demat Accounts",
+        current: "2020: 40 Million",
+        projected: "2026: 150 Million",
+        growth: 90,
+        details: "Retail investment participation is experiencing historic volumes, multiplying the demand for research tools."
+      },
+      {
+        label: "Algorithmic Trading Share",
+        current: "2019: 35% volume",
+        projected: "2025: 65% volume",
+        growth: 82,
+        details: "A massive share of exchange volumes is now processed programmatically, requiring analysts to understand trend lines."
+      },
+      {
+        label: "Financial Literacy Search Indices",
+        current: "2022 Base Value",
+        projected: "2026: +120% Interest",
+        growth: 78,
+        details: "Search trends show a sharp increase in public demand for fundamental analysis and structured trading systems."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Technical Chart Analyst", salary: "₹4 - 6 LPA", description: "Identify stock market trends, map support and resistance levels, and read basic candlestick chart patterns.", tech: ["Technical Analysis", "Trendlines", "Candlestick Charts"] },
+      { step: 2, role: "Research Associate", salary: "₹6 - 9 LPA", description: "Analyze corporate balance sheets, read annual reports, compute EV ratios, and write fundamental stock logs.", tech: ["Fundamental Analysis", "Annual Reports", "Financial Ratios"] },
+      { step: 3, role: "Structured System Trader", salary: "₹9 - 14 LPA", description: "Backtest historical trading indicators, calculate win ratios, manage stop-loss boundaries, and execute SL orders.", tech: ["Backtesting Systems", "Excel Sheets", "SL Management"] },
+      { step: 4, role: "Portfolio Risk Consultant", salary: "₹14 - 20 LPA", description: "Audit asset allocations, manage position-sizing ratios, hedge equities with options, and configure stop-losses.", tech: ["Risk Management", "Position Sizing", "Portfolio Diversification"] },
+      { step: 5, role: "Lead Investment Manager", salary: "₹20 - 30+ LPA", description: "Direct capital portfolios, lead institutional research teams, and formulate market strategy recommendations.", tech: ["Portfolio Management", "SEBI Compliance", "Investment Strategy"] }
+    ]
+  },
+  'full-stack-web': {
+    datasets: [
+      {
+        label: "Web App Market Value",
+        current: "2024: $140 Billion",
+        projected: "2030: $320 Billion",
+        growth: 82,
+        details: "The market for cooperative web applications is scaling up as companies transition to headless portals."
+      },
+      {
+        label: "Developer Openings Index",
+        current: "2023 Base",
+        projected: "2027: +28% Openings",
+        growth: 86,
+        details: "Active hiring registers consistently cite React, Node.js, and MongoDB as the most requested stack."
+      },
+      {
+        label: "Enterprise App Deployments",
+        current: "2021: 40% cloud-native",
+        projected: "2025: 80% cloud-native",
+        growth: 78,
+        details: "Four-fifths of new startup portals deploy directly to edge hosting environments (Vercel, Render) with REST API models."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "Frontend UI Developer", salary: "₹5 - 7 LPA", description: "Code responsive web structures, apply layouts with Tailwind CSS, and build responsive styling frames.", tech: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS"] },
+      { step: 2, role: "React Application Developer", salary: "₹8 - 12 LPA", description: "Build component SPA architectures, execute hooks, fetch REST endpoints, and implement client routes.", tech: ["React.js", "React Router", "JSX", "Context API"] },
+      { step: 3, role: "Backend REST API Developer", salary: "₹11 - 16 LPA", description: "Construct server systems, set up routes, build custom middleware parameters, and process database requests.", tech: ["Node.js", "Express.js", "MongoDB", "REST APIs"] },
+      { step: 4, role: "Security & Operations Architect", salary: "₹15 - 22 LPA", description: "Implement secure password hashing, configure JWT authentication tokens, protect routes, and connect WebSockets.", tech: ["JWT Security", "Bcrypt", "WebSockets", "Socket.io"] },
+      { step: 5, role: "Full Stack Lead Engineer", salary: "₹18 - 28+ LPA", description: "Design complete cloud deployments, handle production operations, configure CI/CD pipelines, and manage database servers.", tech: ["Vercel / Render", "MongoDB Atlas", "Server Operations", "Project Architectures"] }
+    ]
+  },
+  'digital-marketing-cert': {
+    datasets: [
+      {
+        label: "Digital Advertising Spend",
+        current: "2024: $420 Billion",
+        projected: "2030: $680 Billion",
+        growth: 78,
+        details: "Digital marketing budgets continue to expand as brands shift allocations from TV to Google/Meta search algorithms."
+      },
+      {
+        label: "ROI Tracker Placements",
+        current: "2022 Baseline",
+        projected: "2026: +140% Openings",
+        growth: 82,
+        details: "Hiring demands are focused on performance marketers who can set up GA4 pixels and audit lead funnels."
+      },
+      {
+        label: "Enterprise Lead Automation",
+        current: "2020: 30% automation",
+        projected: "2025: 75% automation",
+        growth: 80,
+        details: "Businesses are deploying email drips and segmenting CRM lists to automate their sales outreach."
+      }
+    ],
+    roadmap: [
+      { step: 1, role: "SEO & Content Analyst", salary: "₹3 - 5 LPA", description: "Execute search keyword research, audit pages, write meta descriptions, and check sitemaps.", tech: ["SEO Basics", "Google Analytics", "Keyword Tools"] },
+      { step: 2, role: "Google Search Ads Executive", salary: "₹5 - 8 LPA", description: "Configure search campaign parameters, map keyword target tiers, bid on groups, and write ad copies.", tech: ["Google Ads", "Search Campaigns", "Bidding Tiers"] },
+      { step: 3, role: "Performance Marketing Specialist", salary: "₹8 - 12 LPA", description: "Create target audience clusters, deploy Meta pixels, run A/B copy tests, and audit ad conversions.", tech: ["Meta Ads", "Meta Pixel", "Ad Manager", "A/B Testing"] },
+      { step: 4, role: "Growth Campaign Automator", salary: "₹12 - 17 LPA", description: "Design landing page funnels, setup email marketing automation triggers, and deploy lead magnets.", tech: ["Email Marketing", "Mailchimp", "CRO Basics", "Drip Automations"] },
+      { step: 5, role: "Digital Marketing Director", salary: "₹17 - 25+ LPA", description: "Govern overall customer acquisition strategy, audit ad spend metrics, and manage high-ROI growth plans.", tech: ["GA4 Analytics", "Marketing Analytics", "Attribution Systems"] }
+    ]
   }
-];
+};
 
-const PROJECTS = [
-  {
-    id: 1,
-    title: "Enterprise Predictive Churn Model",
-    desc: "Train supervised classification structures using Random Forests to forecast contract cancellations based on log telemetry and transaction trends.",
-    tech: ["Python", "Pandas", "Scikit-Learn", "Seaborn"]
-  },
-  {
-    id: 2,
-    title: "NLP Intent Classification Engine",
-    desc: "Build a text classification system utilizing spaCy, tokenization, and custom corpus vectors to direct customer queries to appropriate departments.",
-    tech: ["spaCy", "NLTK", "Gensim", "Word Embeddings"]
-  },
-  {
-    id: 3,
-    title: "Generative AI QA Assistant",
-    desc: "Construct an advanced chatbot running on Hugging Face transformers and custom prompt interfaces, enabling natural-language search over documents.",
-    tech: ["Generative AI", "Hugging Face", "LLM APIs", "Python"]
-  },
-  {
-    id: 4,
-    title: "End-to-End Capstone Deployment",
-    desc: "Extract data via web scraper pipelines, clean it with Pandas, train an ensemble CART regression model, and build a live Streamlit analytics dashboard.",
-    tech: ["Matplotlib", "CART Models", "Feature Selection", "Data Pipeline"]
-  }
-];
+const DEFAULT_METADATA = {
+  datasets: [
+    {
+      label: "Industry Market Growth",
+      current: "2024 Base",
+      projected: "2030: +150% Expansion",
+      growth: 70,
+      details: "Top research analysis reports indicating high CAGR expansions across technical corporate platforms."
+    },
+    {
+      label: "Professional Openings",
+      current: "2023 base index",
+      projected: "2027: +120% Postings",
+      growth: 75,
+      details: "Requirements for specialists with modern technical credentials have outpaced classic IT roles."
+    },
+    {
+      label: "Enterprise Integrations",
+      current: "2021: 40% adoption",
+      projected: "2025: 80% adoption",
+      growth: 78,
+      details: "Over two-thirds of operations use automated technical toolsets to streamline pipelines."
+    }
+  ],
+  roadmap: [
+    { step: 1, role: "Entry Level Developer", salary: "₹4 - 6 LPA", description: "Develop script logic, manage basic data tables, and run baseline diagnostic tools.", tech: ["Python", "Jupyter", "SQL Queries"] },
+    { step: 2, role: "Junior Specialist", salary: "₹6 - 9 LPA", description: "Perform data styling, resolve missing variables, and manage system operations.", tech: ["Pandas", "NumPy", "Data Preprocessing"] },
+    { step: 3, role: "Associate Architect", salary: "₹9 - 14 LPA", description: "Deploy automated modeling pipelines, analyze statistics logs, and design charts.", tech: ["Power BI", "Scikit-Learn", "Model Training"] },
+    { step: 4, role: "Senior Engineer", salary: "₹14 - 19 LPA", description: "Audit application parameters, implement secure APIs, and run advanced scripts.", tech: ["Model Deployment", "Advanced APIs", "Security Basics"] },
+    { step: 5, role: "Technical Lead", salary: "₹19 - 28+ LPA", description: "Govern project architectural standards, lead technical strategy, and compile dashboard results.", tech: ["System Architectures", "Strategic Governance", "Team Leadership"] }
+  ]
+};
 
 export default function AiBrochure() {
   const navigate = useNavigate();
+  const { courseId } = useParams();
   const [expandedModules, setExpandedModules] = useState({ 0: true });
   const [activeDatasetIdx, setActiveDatasetIdx] = useState(0);
+
+  // Retrieve course content dynamically from the COURSES mock database
+  const course = COURSES.find(c => c.id === courseId) || COURSES.find(c => c.id === 'artificial-intelligence');
+
+  // Auto-expand first accordion module when course changes
+  useEffect(() => {
+    setExpandedModules({ 0: true });
+    setActiveDatasetIdx(0);
+  }, [courseId]);
+
+  if (!course) {
+    return (
+      <div className="text-slate-900 min-h-[70vh] flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-3xl font-extrabold mb-2 logo-font">Brochure Not Found</h2>
+        <Link to="/courses" className="bg-brand-purple hover:brightness-110 text-white font-bold px-8 py-3 rounded-xl text-xs uppercase tracking-wider transition-all">
+          Explore All Courses
+        </Link>
+      </div>
+    );
+  }
+
+  // Load custom market datasets and career roadmaps
+  const meta = COURSE_METADATA[course.id] || DEFAULT_METADATA;
+  const datasetsList = meta.datasets;
+  const roadmapList = meta.roadmap;
 
   const toggleModule = (idx) => {
     setExpandedModules(prev => ({
@@ -288,7 +417,7 @@ export default function AiBrochure() {
   };
 
   const handleEnrollClick = () => {
-    navigate('/checkout?courseId=artificial-intelligence&mode=mentor-led');
+    navigate(`/checkout?courseId=${course.id}&mode=mentor-led`);
   };
 
   return (
@@ -316,11 +445,11 @@ export default function AiBrochure() {
             </span>
             
             <h1 className="logo-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-              Master <span className="bg-gradient-to-r from-[#0EA5E9] to-[#2A4BFF] bg-clip-text text-transparent">Artificial Intelligence</span>
+              Master <span className="bg-gradient-to-r from-[#0EA5E9] to-[#2A4BFF] bg-clip-text text-transparent">{course.title}</span>
             </h1>
             
             <p className="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto font-light leading-relaxed font-mono">
-              Accelerate your engineering credentials. A comprehensive 18-week roadmap bridging fundamental Python coding to deep neural models and advanced Generative AI architectures.
+              {course.overview}
             </p>
             
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -342,10 +471,10 @@ export default function AiBrochure() {
           {/* Key Program Pillars grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
             {[
-              { label: "Duration", value: "3 Months (18 Modules)" },
-              { label: "Delivery Mode", value: "Recorded + Live Mentoring" },
-              { label: "Hands-on projects", value: "3 Core + 1 Capstone" },
-              { label: "Outcome", value: "2 Industry Certificates" }
+              { label: "Duration", value: course.duration },
+              { label: "Delivery Mode", value: course.delivery },
+              { label: "Hands-on projects", value: course.mentorLedProjects },
+              { label: "Rating & Badges", value: `${course.rating} ★ (verifiable)` }
             ].map((pillar, idx) => (
               <div key={idx} className="bg-white/5 border border-white/10 p-5 rounded-2xl text-center backdrop-blur-md">
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{pillar.label}</span>
@@ -376,9 +505,9 @@ export default function AiBrochure() {
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               { title: "Active Tech Mentors", desc: "Classes are designed and run by managers from Tietoevry, EY, and Nokia with 5+ years of live experience.", icon: Users },
-              { title: "Production Workflows", desc: "Skip academic toy tasks. Clean actual raw datasets, handle real CSV files, and deploy transformer pipelines.", icon: Code },
+              { title: "Production Workflows", desc: "Skip academic toy tasks. Clean actual raw datasets, handle real CSV files, and deploy developer architectures.", icon: Code },
               { title: "Verifiable Badges", desc: "Recipients gain secure cryptographic badges linked to their projects, proving verification directly to HR teams.", icon: Award },
-              { title: "End-to-End Support", desc: "From Jupyter setup issues to resume construction reviews, our mentors resolve blocks within daily SLAs.", icon: ShieldCheck }
+              { title: "End-to-End Support", desc: "From technical setup issues to resume construction reviews, our mentors resolve blocks within daily SLAs.", icon: ShieldCheck }
             ].map((item, idx) => {
               const Icon = item.icon;
               return (
@@ -395,21 +524,21 @@ export default function AiBrochure() {
         </div>
       </section>
 
-      {/* 3. Why Learn AI Today Section & Dataset Dashboard */}
+      {/* 3. Why Learn Section & Dataset Dashboard */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
             <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
-            <h2 className="logo-font text-3xl font-bold text-white">Why You Must Learn AI Right Now</h2>
+            <h2 className="logo-font text-3xl font-bold text-white">Why You Must Master {course.title}</h2>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-              We compile recent dataset reports demonstrating the massive demand trajectory for Python, Machine Learning, and GenAI skillsets across tech hubs.
+              We compile recent dataset reports demonstrating the massive demand trajectory for {course.techStack ? course.techStack.slice(0, 3).join(', ') : 'modern'} skillsets.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Left Dataset Navigation Cards */}
             <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
-              {DATASETS.map((data, idx) => (
+              {datasetsList.map((data, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveDatasetIdx(idx)}
@@ -450,28 +579,28 @@ export default function AiBrochure() {
                 </div>
                 
                 <h3 className="text-xl sm:text-2xl font-bold logo-font">
-                  {DATASETS[activeDatasetIdx].label}
+                  {datasetsList[activeDatasetIdx].label}
                 </h3>
                 
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light font-mono">
-                  {DATASETS[activeDatasetIdx].details}
+                  {datasetsList[activeDatasetIdx].details}
                 </p>
                 
                 <div className="border-t border-white/10 pt-6 grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Current Index</span>
-                    <span className="text-sm font-bold text-slate-200">{DATASETS[activeDatasetIdx].current}</span>
+                    <span className="text-sm font-bold text-slate-200">{datasetsList[activeDatasetIdx].current}</span>
                   </div>
                   <div className="space-y-1">
                     <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Projected Capacity</span>
-                    <span className="text-sm font-bold text-[#0EA5E9]">{DATASETS[activeDatasetIdx].projected}</span>
+                    <span className="text-sm font-bold text-[#0EA5E9]">{datasetsList[activeDatasetIdx].projected}</span>
                   </div>
                 </div>
               </div>
 
               <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 mt-8 flex items-center space-x-3 text-xs text-slate-300">
                 <Rocket className="w-5 h-5 text-[#2A4BFF] flex-shrink-0 animate-bounce" />
-                <p className="font-mono">Learn these exact packages to stay ahead of corporate automation shifts.</p>
+                <p className="font-mono">Learn these exact tools to stay ahead of corporate workflow automation shifts.</p>
               </div>
             </div>
           </div>
@@ -484,7 +613,7 @@ export default function AiBrochure() {
           <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
           <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
-            See the pathways open to you as you progress through our 18 modules. Hover over each step to see salary levels and required tools.
+            See the pathways open to you as you progress through the modules. Hover over each step to see salary levels and required tools.
           </p>
         </div>
 
@@ -525,7 +654,7 @@ export default function AiBrochure() {
           </svg>
 
           <div className="space-y-8 relative z-10">
-            {CAREER_ROADMAP.map((step, idx) => {
+            {roadmapList.map((step, idx) => {
               const isEven = idx % 2 === 0;
               return (
                 <div key={idx} className={`flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 ${isEven ? '' : 'md:flex-row-reverse'}`}>
@@ -602,11 +731,11 @@ export default function AiBrochure() {
         </div>
       </section>
 
-      {/* 6. Detailed 18-Week Week-by-Week Curriculum */}
+      {/* 6. Detailed Week-by-Week Curriculum */}
       <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto z-10 relative scroll-mt-20">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
           <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
-          <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown (18 Weeks)</h2>
+          <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown ({course.curriculum.length} Modules)</h2>
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
             Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
           </p>
@@ -614,7 +743,7 @@ export default function AiBrochure() {
 
         {/* Accordions (Premium Dark Theme boxes) */}
         <div className="space-y-3.5">
-          {CURRICULUM_DATA.map((module, idx) => {
+          {course.curriculum.map((module, idx) => {
             const isExpanded = expandedModules[idx];
             return (
               <div 
@@ -632,7 +761,7 @@ export default function AiBrochure() {
                 >
                   <div className="flex items-center space-x-4">
                     <span className="bg-[#2A4BFF]/25 border border-[#2A4BFF]/40 text-[#0EA5E9] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
-                      Module {module.sNo}
+                      Module {idx + 1}
                     </span>
                     <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wide font-mono leading-relaxed">
                       {module.title}
@@ -648,7 +777,7 @@ export default function AiBrochure() {
                   <div className="p-5 border-t border-[#2A4BFF]/20 bg-slate-950/40 space-y-3.5 animate-fade-in text-slate-100">
                     <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider font-bold">Topics Covered</p>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {module.subtopics.map((topic, tIdx) => (
+                      {module.topics.map((topic, tIdx) => (
                         <li key={tIdx} className="flex items-start space-x-2 text-xs leading-relaxed font-light font-mono text-slate-300">
                           <CheckCircle className="w-4 h-4 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
                           <span>{topic}</span>
@@ -670,26 +799,26 @@ export default function AiBrochure() {
             <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
             <h2 className="logo-font text-3xl font-bold text-white">Hands-On Development Tasks</h2>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-              We believe in building. You will complete 3 real-world portfolio tasks plus 1 custom capstone deployment.
+              We believe in building. You will complete dynamic industry project builds during the program duration.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PROJECTS.map((proj) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {course.projects.map((proj, idx) => (
               <div 
-                key={proj.id} 
+                key={idx} 
                 className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/45 hover:shadow-xl transition-all duration-300 group text-white"
               >
                 <div>
                   <div className="bg-[#2A4BFF]/20 text-[#0EA5E9] border border-[#2A4BFF]/30 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
-                    Project 0{proj.id}
+                    Project 0{idx + 1}
                   </div>
                   <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
-                  <p className="text-[11px] text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.desc}</p>
+                  <p className="text-[11px] text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
-                  {proj.tech.map((t, idx) => (
-                    <span key={idx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
+                  {proj.techUsed && proj.techUsed.map((t, tIdx) => (
+                    <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
                       {t}
                     </span>
                   ))}
@@ -711,7 +840,7 @@ export default function AiBrochure() {
               Upskilling & Career Acceleration Suite
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
-              Acquiring hard programming competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
+              Acquiring hard technical competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
             </p>
           </div>
           

@@ -296,9 +296,9 @@ export default function CourseDetails() {
                       <span>Register & Enroll Now</span>
                     </button>
                     
-                    {course.id === 'artificial-intelligence' && (
+                    {course && (
                       <Link 
-                        to="/course/artificial-intelligence/brochure"
+                        to={`/course/${course.id}/brochure`}
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-2xl text-xs uppercase tracking-widest transition-all border border-slate-700/50 flex items-center justify-center space-x-2 cursor-pointer text-center"
                       >
                         <FileText className="w-4 h-4 text-[#2A4BFF]" />

@@ -178,26 +178,13 @@ export default function Courses() {
                         >
                           Details
                         </button>
-                        {c.id === 'artificial-intelligence' ? (
-                          <Link 
-                            to="/course/artificial-intelligence/brochure"
-                            onClick={(e) => e.stopPropagation()}
-                            className="bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer"
-                          >
-                            Brochure
-                          </Link>
-                        ) : (
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setBrochureCourse(c);
-                              setIsBrochureOpen(true);
-                            }}
-                            className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors cursor-pointer"
-                          >
-                            Brochure
-                          </button>
-                        )}
+                        <Link 
+                          to={`/course/${c.id}/brochure`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer"
+                        >
+                          Brochure
+                        </Link>
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();

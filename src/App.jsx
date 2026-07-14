@@ -156,7 +156,7 @@ export default function App() {
           <Route path="/services/:serviceId" element={<Services />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
-          <Route path="/course/artificial-intelligence/brochure" element={<AiBrochure />} />
+          <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
           <Route path="/ambassador" element={<CampusAmbassador />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
