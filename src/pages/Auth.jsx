@@ -1,292 +1,437 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getDbItem, setDbItem } from '../utils/mockDb';
-import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
-import { saveUserToSupabase } from '../utils/supabaseClient';
+import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 
 export default function Auth() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState('login'); // login, register, reset, otp
-  
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '', phone: '', password: '' });
-  const [resetEmail, setResetEmail] = useState('');
-  const [otpVal, setOtpVal] = useState('');
-  
-  const [tempRegisterData, setTempRegisterData] = useState(null);
+
+  // Navigation / Mode states
+  const [authType, setAuthType] = useState('mobile'); // 'mobile' or 'google'
+  const [step, setStep] = useState('mobile-input'); // 'mobile-input', 'register-collect', 'otp-verify'
+
+  // Input states
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '' });
+  const [enteredOtp, setEnteredOtp] = useState('');
+
+  // Cache/Validation states
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [currentUserData, setCurrentUserData] = useState(null); // cache details for login
   const [error, setError] = useState(null);
   const [info, setInfo] = useState(null);
-  const [googleModalOpen, setGoogleModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  // EmailJS Direct REST API Integration Helper
+  const triggerOtpEmail = async (email, name, otp) => {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+
+    // Always trigger custom toast notification for dry-run testing / visibility
+    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+      detail: {
+        subject: `[BeyondSkills] Login Verification OTP`,
+        body: `Hi ${name},\n\nYour 4-Digit login verification code is: ${otp}.\n\nThis OTP has been triggered via EmailJS to your address: ${email}.`,
+      }
+    }));
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.warn("EmailJS environment keys not defined in environment variables. Falling back to sandbox toast notification.");
+      return false;
+    }
+
+    try {
+      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          service_id: serviceId,
+          template_id: templateId,
+          user_id: publicKey,
+          template_params: {
+            to_name: name,
+            to_email: email,
+            otp_code: otp,
+            company: 'BeyondSkills'
+          }
+        })
+      });
+      return res.ok;
+    } catch (err) {
+      console.error("EmailJS REST post trigger failed:", err);
+      return false;
+    }
+  };
+
+  // Handle mobile form submission (Next)
+  const handleMobileSubmit = (e) => {
     e.preventDefault();
     setError(null);
-    
-    // Admin login shortcut
-    if (loginForm.email === 'admin@beyondskills.in' && loginForm.password === 'admin123') {
-      const adminSession = { email: 'admin@beyondskills.in', name: 'BeyondSkills Administrator', studentId: 'DV-ADMIN' };
-      setDbItem('beyondskills_current_user', adminSession);
-      window.dispatchEvent(new Event('auth_change'));
-      navigate('/admin');
+    setInfo(null);
+
+    // Validate 10-digit number
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    if (cleanPhone.length !== 10) {
+      setError('Please enter a valid 10-digit mobile number.');
       return;
     }
 
-    const users = getDbItem('beyondskills_users', []);
-    const match = users.find(u => u.email === loginForm.email && u.password === loginForm.password);
-    
-    if (match) {
-      setDbItem('beyondskills_current_user', match);
-      window.dispatchEvent(new Event('auth_change'));
-      
-      // If student has active courses, go to dashboard, else browse courses
-      if (match.activeCourses && match.activeCourses.length > 0) {
-        navigate('/dashboard');
+    setLoading(true);
+
+    setTimeout(() => {
+      const users = getDbItem('beyondskills_users', []);
+      const matchedUser = users.find(u => u.phone === cleanPhone);
+
+      // Generate random 4-digit OTP
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
+
+      if (matchedUser) {
+        // User exists -> trigger OTP directly
+        setCurrentUserData(matchedUser);
+        triggerOtpEmail(matchedUser.email, matchedUser.name, code);
+        setStep('otp-verify');
+        setInfo(`OTP verification code dispatched to ${matchedUser.email}.`);
       } else {
-        navigate('/courses');
+        // New User -> collect name and email first
+        setStep('register-collect');
       }
-    } else {
-      setError('Invalid email or password.');
-    }
+      setLoading(false);
+    }, 800);
   };
 
-  const handleRegisterSubmit = (e) => {
+  // Handle registration details submission
+  const handleRegisterDetailsSubmit = (e) => {
     e.preventDefault();
     setError(null);
-    
-    const users = getDbItem('beyondskills_users', []);
-    const exists = users.find(u => u.email === registerForm.email);
-    if (exists) {
-      setError('An account with this email already exists.');
+    setInfo(null);
+
+    if (!registerForm.name.trim() || !registerForm.email.trim()) {
+      setError('Please fill in all registration fields.');
       return;
     }
 
-    // Save temporary registration data, trigger OTP verification modal
-    setTempRegisterData(registerForm);
-    setMode('otp');
-    
-    // Dispatch simulated OTP toast within SLA
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `OTP Code Verification Dispatch`,
-        body: `Your mock security code is: 2026.\n\nPlease enter this on your registration verification page to complete onboarding.`,
-      }
-    }));
-  };
-
-  const handleVerifyOtp = (e) => {
-    e.preventDefault();
-    if (otpVal !== '2026') {
-      setError('Invalid OTP code. Please enter 2026 (provided in the toast notification).');
+    const users = getDbItem('beyondskills_users', []);
+    const emailExists = users.some(u => u.email === registerForm.email.trim());
+    if (emailExists) {
+      setError('An account with this email address already exists. Please use another.');
       return;
     }
 
-    if (!tempRegisterData) return;
+    setLoading(true);
 
-    const users = getDbItem('beyondskills_users', []);
-    const newStudentId = `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const newRecord = {
-      name: tempRegisterData.name,
-      email: tempRegisterData.email,
-      phone: tempRegisterData.phone,
-      password: tempRegisterData.password,
-      studentId: newStudentId,
-      activeCourses: [] // Empty courses initially, needs checkout
-    };
-
-    users.push(newRecord);
-    setDbItem('beyondskills_users', users);
-    
-    // Log user registration to Supabase
-    saveUserToSupabase(newRecord).catch(err => console.error('Failed to save registered user to Supabase:', err));
-    
-    // Automatically log in the user
-    setDbItem('beyondskills_current_user', newRecord);
-    window.dispatchEvent(new Event('auth_change'));
-    
-    setInfo('Registration successful! Redirecting to course catalog...');
     setTimeout(() => {
-      navigate('/courses');
-    }, 2000);
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
+
+      // Cache details for verification
+      const tempUser = {
+        name: registerForm.name,
+        email: registerForm.email,
+        phone: phoneNumber.replace(/\D/g, ''),
+        password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
+        studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        activeCourses: []
+      };
+
+      setCurrentUserData(tempUser);
+      triggerOtpEmail(tempUser.email, tempUser.name, code);
+      setStep('otp-verify');
+      setInfo(`OTP verification code dispatched to ${tempUser.email}.`);
+      setLoading(false);
+    }, 800);
   };
 
-  const handlePasswordReset = (e) => {
+  // Handle OTP verification
+  const handleVerifyOtpSubmit = (e) => {
     e.preventDefault();
-    setInfo(`A temporary reset token has been generated and mock emailed to ${resetEmail}. Check your mock alerts inbox.`);
-    
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Password Recovery Token`,
-        body: `Dear User,\n\nWe received a request to reset your password. Use the mock token below to log back in:\nToken: dv_pw_reset_8927\n\nContact support if you did not request this.`,
-      }
-    }));
+    setError(null);
+
+    if (enteredOtp !== generatedOtp) {
+      setError('Invalid OTP code. Please check the code sent or check the toast popup notification.');
+      return;
+    }
+
+    setLoading(true);
 
     setTimeout(() => {
-      setMode('login');
-      setInfo(null);
-    }, 4000);
+      const users = getDbItem('beyondskills_users', []);
+      const userExists = users.some(u => u.email === currentUserData.email);
+
+      let loggedInRecord = currentUserData;
+
+      if (!userExists) {
+        // Save new user registration
+        users.push(currentUserData);
+        setDbItem('beyondskills_users', users);
+        loggedInRecord = currentUserData;
+      } else {
+        // Retrieve matched database user record
+        const dbMatch = users.find(u => u.email === currentUserData.email);
+        if (dbMatch) loggedInRecord = dbMatch;
+      }
+
+      setDbItem('beyondskills_current_user', loggedInRecord);
+      window.dispatchEvent(new Event('auth_change'));
+
+      setInfo('Authentication Successful! Redirecting to workspace...');
+      
+      setTimeout(() => {
+        if (loggedInRecord.activeCourses && loggedInRecord.activeCourses.length > 0) {
+          navigate('/dashboard');
+        } else {
+          navigate('/courses');
+        }
+      }, 1500);
+    }, 1000);
+  };
+
+  // Google Login Flow
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    setError(null);
+    setInfo(null);
+
+    setTimeout(() => {
+      // Mock Google integration logging in as standard Google Student
+      const email = 'google.student@gmail.com';
+      const name = 'Google Student';
+      
+      const users = getDbItem('beyondskills_users', []);
+      let targetUser = users.find(u => u.email === email);
+
+      if (!targetUser) {
+        targetUser = {
+          name,
+          email,
+          phone: '9999999999',
+          password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
+          studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+          activeCourses: []
+        };
+        users.push(targetUser);
+        setDbItem('beyondskills_users', users);
+      }
+
+      setDbItem('beyondskills_current_user', targetUser);
+      window.dispatchEvent(new Event('auth_change'));
+
+      setInfo('Logged in via Google successfully! Redirecting...');
+      setTimeout(() => {
+        if (targetUser.activeCourses && targetUser.activeCourses.length > 0) {
+          navigate('/dashboard');
+        } else {
+          navigate('/courses');
+        }
+      }, 1500);
+    }, 1200);
   };
 
   return (
-    <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 relative">
-      {/* Back glow */}
+    <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 bg-[#F8FAFC] relative">
+      {/* Background decoration */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
 
-      <div className="glass-panel p-8 rounded-2xl border border-slate-200 max-w-md w-full z-10">
+      <div className="bg-white border border-slate-200/80 p-8 rounded-3xl max-w-sm w-full z-10 shadow-xl space-y-6">
         
-        {/* Tab Headers */}
-        {mode !== 'otp' && (
-          <div className="flex border-b border-slate-200 space-x-6 pb-2 mb-8">
-            <button onClick={() => { setMode('login'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'login' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-900'}`}>
-              Login
-              {mode === 'login' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
+        {/* Welcome Text */}
+        <div className="text-center space-y-2">
+          <h2 className="font-extrabold text-2xl text-slate-900 tracking-tight">Welcome Back.</h2>
+          <p className="text-xs text-slate-500 leading-normal max-w-[280px] mx-auto">
+            Sign in to continue your learning journey with BeyondSkills.
+          </p>
+        </div>
+
+        {/* Segmented Pill Selector (Mobile vs Google) */}
+        {step !== 'otp-verify' && step !== 'register-collect' && (
+          <div className="bg-slate-100 p-1 rounded-xl flex space-x-1 border border-slate-200/30">
+            <button
+              type="button"
+              onClick={() => setAuthType('mobile')}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center ${authType === 'mobile' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              Mobile
             </button>
-            <button onClick={() => { setMode('register'); setError(null); setInfo(null); }} className={`pb-3 font-bold text-xs uppercase tracking-wider relative transition-colors ${mode === 'register' ? 'text-brand-purple' : 'text-slate-500 hover:text-slate-900'}`}>
-              Register
-              {mode === 'register' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-purple"></div>}
+            <button
+              type="button"
+              onClick={() => setAuthType('google')}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center ${authType === 'google' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              Google
             </button>
           </div>
         )}
 
         {/* Error / Success Banners */}
         {error && (
-          <div className="bg-brand-blue/10 border border-brand-blue/20 text-brand-blue p-3 rounded-lg text-xs mb-6">
+          <div className="bg-rose-50 border border-rose-200 text-rose-600 p-3 rounded-xl text-xs font-medium animate-pulse">
             {error}
           </div>
         )}
         {info && (
-          <div className="bg-brand-purple/10 border border-brand-purple/20 text-brand-purple p-3 rounded-lg text-xs mb-6">
-            {info}
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-600 p-3 rounded-xl text-xs font-medium flex items-center space-x-1.5">
+            <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            <span>{info}</span>
           </div>
         )}
 
-        {mode === 'login' && (
-          /* LOGIN FORM */
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="email" required value={loginForm.email} onChange={(e) => setLoginForm({...loginForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="enteremail@gmail.com" />
-              </div>
-            </div>
-            
-            <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Password</label>
-                <button type="button" onClick={() => setMode('reset')} className="text-[10px] text-brand-purple hover:underline focus:outline-none uppercase font-semibold">Forgot Password?</button>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="password" required value={loginForm.password} onChange={(e) => setLoginForm({...loginForm, password: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="Password" />
-              </div>
-            </div>
-
-            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
-              <span>Sign In</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </form>
+        {/* Loading Spinner overlay */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-4 space-y-2">
+            <div className="animate-spin rounded-full h-6 w-6 border-2 border-blue-600 border-t-transparent"></div>
+            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Processing...</span>
+          </div>
         )}
 
-        {mode === 'register' && (
-          /* REGISTRATION FORM */
-          <form onSubmit={handleRegisterSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Full Name</label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="text" required value={registerForm.name} onChange={(e) => setRegisterForm({...registerForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="John Doe" />
-              </div>
-            </div>
+        {/* Conditional forms based on states */}
+        {!loading && (
+          <>
+            {authType === 'mobile' && step === 'mobile-input' && (
+              /* MOBILE NUMBER INPUT FORM */
+              <form onSubmit={handleMobileSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Mobile Number</label>
+                  <input
+                    type="tel"
+                    required
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="Enter your 10-digit number"
+                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                  />
+                </div>
 
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="email" required value={registerForm.email} onChange={(e) => setRegisterForm({...registerForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="johndoe@gmail.com" />
-              </div>
-            </div>
+                <button
+                  type="submit"
+                  className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                >
+                  Next
+                </button>
+              </form>
+            )}
 
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Mobile Number</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="tel" required value={registerForm.phone} onChange={(e) => setRegisterForm({...registerForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="9876543210" />
-              </div>
-            </div>
+            {authType === 'mobile' && step === 'register-collect' && (
+              /* REGISTRATION INFO COLLECTION FORM */
+              <form onSubmit={handleRegisterDetailsSubmit} className="space-y-4 animate-fade-in">
+                <div className="bg-blue-50/50 border border-blue-100 p-3.5 rounded-xl">
+                  <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
+                    Account not found for <strong>{phoneNumber}</strong>. Fill in the details below to initialize profile registration.
+                  </p>
+                </div>
 
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Security Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="password" required value={registerForm.password} onChange={(e) => setRegisterForm({...registerForm, password: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="Create Password" />
-              </div>
-            </div>
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={registerForm.name}
+                    onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
+                    placeholder="e.g. Jatin Kumar"
+                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                  />
+                </div>
 
-            <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
-              <span>Send OTP Verification</span>
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </form>
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    value={registerForm.email}
+                    onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
+                    placeholder="e.g. jatin@gmail.com"
+                    className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                  />
+                </div>
+
+                <div className="flex space-x-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep('mobile-input')}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                  >
+                    Send OTP
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {authType === 'mobile' && step === 'otp-verify' && (
+              /* OTP CODE ENTRY FORM */
+              <form onSubmit={handleVerifyOtpSubmit} className="space-y-5 animate-fade-in">
+                <div className="text-center">
+                  <h3 className="font-bold text-slate-800 text-sm">Verify Verification Code</h3>
+                  <p className="text-[11px] text-slate-500 mt-1">We have sent a verification code to your email.</p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider text-center">4-Digit Security OTP</label>
+                  <input
+                    type="text"
+                    maxLength={4}
+                    required
+                    value={enteredOtp}
+                    onChange={(e) => setEnteredOtp(e.target.value)}
+                    placeholder="0000"
+                    className="w-32 mx-auto block bg-[#FAFAFA] border border-slate-200/80 rounded-xl py-3 text-center font-mono font-extrabold text-lg text-slate-900 focus:border-blue-600 outline-none tracking-widest shadow-sm"
+                  />
+                </div>
+
+                <p className="text-[10px] text-slate-500 text-center leading-relaxed">
+                  Enter the OTP code received in your email (or check the alert toast in the corner of your page).
+                </p>
+
+                <div className="flex space-x-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setStep(currentUserData?.activeCourses ? 'mobile-input' : 'register-collect')}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-lg shadow-blue-500/10"
+                  >
+                    Verify
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {authType === 'google' && (
+              /* GOOGLE SIGN IN TAB CONTENT */
+              <div className="space-y-4 py-2">
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24">
+                    <path
+                      fill="#EA4335"
+                      d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
+                    />
+                  </svg>
+                  <span>Continue with Google</span>
+                </button>
+              </div>
+            )}
+          </>
         )}
 
-        {mode === 'otp' && (
-          /* OTP VERIFICATION MODAL SIMULATION */
-          <form onSubmit={handleVerifyOtp} className="space-y-6">
-            <div className="text-center">
-              <h3 className="font-bold text-slate-900 text-base">OTP Code Verification</h3>
-              <p className="text-xs text-slate-500 mt-1">We have simulated sending an OTP SMS/Email to your device.</p>
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 text-center">Enter 4-Digit OTP Code</label>
-              <input type="text" maxLength={4} required value={otpVal} onChange={(e) => setOtpVal(e.target.value)} className="w-28 mx-auto block bg-white border border-slate-200/80 shadow-sm border border-white/15 rounded-lg py-2.5 text-center font-mono font-bold text-lg text-slate-900 focus:border-brand-purple outline-none tracking-widest" placeholder="0000" />
-            </div>
-
-            <p className="text-[10px] text-slate-500 text-center leading-normal">
-              Enter <strong className="text-brand-purple">2026</strong> (mock code provided in the active toast banner in the bottom corner of your browser screen).
-            </p>
-
-            <div className="flex space-x-3">
-              <button type="button" onClick={() => setMode('register')} className="w-1/3 bg-slate-100 border border-slate-200 hover:bg-white/10 text-slate-900 font-bold py-2.5 rounded-lg text-xs uppercase">
-                Back
-              </button>
-              <button type="submit" className="w-2/3 bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-2.5 rounded-lg text-xs uppercase tracking-widest transition-all">
-                Verify & Register
-              </button>
-            </div>
-          </form>
-        )}
-
-        {mode === 'reset' && (
-          /* PASSWORD RESET FORM */
-          <form onSubmit={handlePasswordReset} className="space-y-4">
-            <div className="text-center mb-6">
-              <h3 className="font-bold text-slate-900 text-base">Recover Password</h3>
-              <p className="text-xs text-slate-500 mt-1">Enter your registered email address to receive a recovery reset key.</p>
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Registered Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
-                <input type="email" required value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg pl-10 pr-4 py-2.5 text-xs text-slate-900 focus:border-brand-purple outline-none" placeholder="enteremail@gmail.com" />
-              </div>
-            </div>
-
-            <div className="flex space-x-3">
-              <button type="button" onClick={() => setMode('login')} className="w-1/3 bg-slate-100 border border-slate-200 hover:bg-white/10 text-slate-900 font-bold py-2.5 rounded-lg text-xs uppercase">
-                Cancel
-              </button>
-              <button type="submit" className="w-2/3 bg-brand-purple hover:bg-brand-purple/90 text-black font-bold py-2.5 rounded-lg text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-1.5">
-                <Send className="w-3.5 h-3.5" />
-                <span>Recover Account</span>
-              </button>
-            </div>
-          </form>
-        )}
-
-        
+        {/* Footer Disclaimer */}
+        <p className="text-[10px] text-slate-400 text-center leading-normal">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
 
       </div>
     </div>
