@@ -16,6 +16,28 @@ export default function Auth() {
   const [tempRegisterData, setTempRegisterData] = useState(null);
   const [error, setError] = useState(null);
   const [info, setInfo] = useState(null);
+  const [googleModalOpen, setGoogleModalOpen] = useState(false);
+
+  const handleSelectGoogleAccount = (email, roleName) => {
+    setError(null);
+    setInfo(null);
+
+    if (email === 'guest@gmail.com') {
+      setError('Access Denied. Google Login is restricted to authorized Sales & CRM accounts only.');
+      setGoogleModalOpen(false);
+      return;
+    }
+
+    setGoogleModalOpen(false);
+    setInfo(`Authentication Successful as ${email}! Redirecting to CRM Portal (GradusCRM)...`);
+
+    setTimeout(() => {
+      const crmSession = { email, name: roleName, type: 'CRM_Agent' };
+      setDbItem('beyondskills_current_user', crmSession);
+      window.dispatchEvent(new Event('auth_change'));
+      window.location.href = 'https://www.graduscrm.online';
+    }, 2000);
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -184,6 +206,18 @@ export default function Auth() {
               <span>Sign In</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
+
+            <div className="relative flex items-center justify-center my-6">
+              <div className="border-t border-slate-800 w-full"></div>
+              <span className="absolute bg-[#0b0f19] px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">or</span>
+            </div>
+
+            <button type="button" onClick={() => setGoogleModalOpen(true)} className="w-full bg-slate-900/65 hover:bg-slate-900 border border-slate-800 text-slate-200 font-bold py-3 rounded-lg text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2.5 shadow-sm">
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"/>
+              </svg>
+              <span>Continue with Google</span>
+            </button>
           </form>
         )}
 
@@ -283,6 +317,69 @@ export default function Auth() {
               </button>
             </div>
           </form>
+        )}
+
+        {googleModalOpen && (
+          <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#0b0f19] border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-slate-200 shadow-2xl relative overflow-hidden">
+              <div className="flex items-center justify-center space-x-2 mb-6">
+                <svg className="w-6 h-6" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span className="font-semibold text-sm text-slate-100">Sign in with Google</span>
+              </div>
+
+              <div className="text-center mb-6">
+                <h4 className="text-sm font-bold text-slate-100">Choose an account</h4>
+                <p className="text-xs text-slate-400 mt-1">to continue to BeyondSkills / GradusCRM</p>
+              </div>
+
+              <div className="space-y-2">
+                <button 
+                  onClick={() => handleSelectGoogleAccount('sales@beyondskills.in', 'Sales Executive')}
+                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-slate-200">sales@beyondskills.in</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Sales Team (Access Allowed)</p>
+                  </div>
+                  <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                </button>
+
+                <button 
+                  onClick={() => handleSelectGoogleAccount('admin@beyondskills.in', 'System Admin')}
+                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-purple bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-slate-200">admin@beyondskills.in</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Admin & CRM Lead (Access Allowed)</p>
+                  </div>
+                  <div className="text-[10px] font-bold text-brand-purple opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                </button>
+
+                <button 
+                  onClick={() => handleSelectGoogleAccount('guest@gmail.com', 'Standard Student')}
+                  className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-800 hover:border-brand-blue bg-slate-900/40 hover:bg-slate-900/80 transition-all text-left group"
+                >
+                  <div>
+                    <p className="text-xs font-bold text-slate-200">guest@gmail.com</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">Role: Normal Student (Access Denied for CRM)</p>
+                  </div>
+                  <div className="text-[10px] font-bold text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity">Select &rarr;</div>
+                </button>
+              </div>
+
+              <button 
+                onClick={() => setGoogleModalOpen(false)}
+                className="mt-6 w-full text-center text-xs text-slate-400 hover:text-slate-200 uppercase tracking-wider font-semibold py-2"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         )}
 
       </div>
