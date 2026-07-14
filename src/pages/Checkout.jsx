@@ -135,7 +135,7 @@ export default function Checkout() {
     }
 
     const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_defaultKey123',
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TCue3MeTa0JPao',
       amount: courseFee * 100, // amount in paise
       currency: 'INR',
       name: 'BeyondSkills - Upskilling Hub',
