@@ -22,6 +22,77 @@ export default function Auth() {
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Google Client ID Configuration states
+  const [clientId, setClientId] = useState(localStorage.getItem('beyondskills_google_client_id') || '');
+  const [clientIdInput, setClientIdInput] = useState('');
+
+  // Handle Google OAuth redirect callback on component mount
+  useEffect(() => {
+    const handleCallback = async () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes('access_token=')) {
+        setLoading(true);
+        setError(null);
+        setInfo(null);
+        
+        try {
+          const params = new URLSearchParams(hash.replace('#', '?'));
+          const token = params.get('access_token');
+          
+          if (token) {
+            // Fetch profile data from Google UserInfo endpoint
+            const res = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`);
+            if (res.ok) {
+              const googleUser = await res.json();
+              if (googleUser && googleUser.email) {
+                const users = getDbItem('beyondskills_users', []);
+                let targetUser = users.find(u => u.email === googleUser.email);
+                
+                if (!targetUser) {
+                  // Register new user from Google profile
+                  targetUser = {
+                    name: googleUser.name || 'Google Student',
+                    email: googleUser.email,
+                    phone: '',
+                    password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
+                    studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+                    activeCourses: []
+                  };
+                  users.push(targetUser);
+                  setDbItem('beyondskills_users', users);
+                }
+                
+                setDbItem('beyondskills_current_user', targetUser);
+                window.dispatchEvent(new Event('auth_change'));
+                
+                // Clear URL hash securely
+                window.history.replaceState(null, null, window.location.pathname);
+                
+                setInfo(`Authenticated via Google as ${googleUser.email}! Redirecting...`);
+                setTimeout(() => {
+                  if (targetUser.activeCourses && targetUser.activeCourses.length > 0) {
+                    navigate('/dashboard');
+                  } else {
+                    navigate('/courses');
+                  }
+                }, 1500);
+              }
+            } else {
+              setError('Failed to fetch user profile details from Google accounts endpoint.');
+            }
+          }
+        } catch (err) {
+          console.error("Error processing Google Auth Callback:", err);
+          setError('Google Login callback encountered an error.');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    
+    handleCallback();
+  }, [navigate]);
+
   // EmailJS Direct REST API Integration Helper
   const triggerOtpEmail = async (email, name, otp) => {
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
@@ -189,14 +260,24 @@ export default function Auth() {
     }, 1000);
   };
 
-  // Google Login Flow
-  const handleGoogleLogin = () => {
+  // Real Google Login Redirect Flow
+  const handleRealGoogleLogin = () => {
+    if (!clientId) {
+      setError('Please configure Google Client ID first.');
+      return;
+    }
+    const redirectUri = encodeURIComponent(window.location.origin + '/auth');
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20profile`;
+    window.location.href = oauthUrl;
+  };
+
+  // Mock Google Login Fallback
+  const handleMockGoogleLogin = () => {
     setLoading(true);
     setError(null);
     setInfo(null);
 
     setTimeout(() => {
-      // Mock Google integration logging in as standard Google Student
       const email = 'google.student@gmail.com';
       const name = 'Google Student';
       
@@ -219,7 +300,7 @@ export default function Auth() {
       setDbItem('beyondskills_current_user', targetUser);
       window.dispatchEvent(new Event('auth_change'));
 
-      setInfo('Logged in via Google successfully! Redirecting...');
+      setInfo('Logged in via Mock Google Student successfully! Redirecting...');
       setTimeout(() => {
         if (targetUser.activeCourses && targetUser.activeCourses.length > 0) {
           navigate('/dashboard');
@@ -227,7 +308,7 @@ export default function Auth() {
           navigate('/courses');
         }
       }, 1500);
-    }, 1200);
+    }, 1000);
   };
 
   return (
@@ -235,12 +316,12 @@ export default function Auth() {
       {/* Background decoration */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
 
-      <div className="bg-white border border-slate-200/80 p-8 rounded-3xl max-w-sm w-full z-10 shadow-xl space-y-6">
+      <div className="bg-white border border-slate-200/80 p-8 rounded-3xl max-w-sm w-full z-10 shadow-xl space-y-6 animate-fade-in">
         
         {/* Welcome Text */}
         <div className="text-center space-y-2">
           <h2 className="font-extrabold text-2xl text-slate-900 tracking-tight">Welcome Back.</h2>
-          <p className="text-xs text-slate-500 leading-normal max-w-[280px] mx-auto">
+          <p className="text-xs text-slate-550 leading-normal max-w-[280px] mx-auto">
             Sign in to continue your learning journey with BeyondSkills.
           </p>
         </div>
@@ -410,19 +491,83 @@ export default function Auth() {
             {authType === 'google' && (
               /* GOOGLE SIGN IN TAB CONTENT */
               <div className="space-y-4 py-2">
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24">
-                    <path
-                      fill="#EA4335"
-                      d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
-                    />
-                  </svg>
-                  <span>Continue with Google</span>
-                </button>
+                {!clientId ? (
+                  /* Enter Client ID configuration block */
+                  <div className="space-y-4">
+                    <p className="text-[11px] text-slate-500 leading-relaxed">
+                      To configure real Google Authentication, please input your **Google Client ID** below. You can get one from the Google Cloud Credentials Console.
+                    </p>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-slate-700 uppercase tracking-wider">Google Client ID</label>
+                      <input
+                        type="text"
+                        value={clientIdInput}
+                        onChange={(e) => setClientIdInput(e.target.value)}
+                        placeholder="your-client-id.apps.googleusercontent.com"
+                        className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (clientIdInput.trim()) {
+                          localStorage.setItem('beyondskills_google_client_id', clientIdInput.trim());
+                          setClientId(clientIdInput.trim());
+                        }
+                      }}
+                      className="w-full bg-[#0F5CFC] hover:bg-blue-700 text-white font-bold py-3 rounded-xl text-xs uppercase transition-colors"
+                    >
+                      Save & Initialize
+                    </button>
+                    <div className="text-center pt-2">
+                      <button
+                        type="button"
+                        onClick={handleMockGoogleLogin}
+                        className="text-[10px] text-slate-500 hover:underline uppercase tracking-wider font-semibold"
+                      >
+                        Demo Sign In (Simulated)
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  /* Continue with Real Google authentication */
+                  <div className="space-y-4 text-center">
+                    <button
+                      type="button"
+                      onClick={handleRealGoogleLogin}
+                      className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                        <path
+                          fill="#EA4335"
+                          d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.2-5.136 4.2A5.64 5.64 0 0 1 8.3 12.98a5.64 5.64 0 0 1 5.69-5.62c1.47 0 2.82.52 3.88 1.48L21 5.09C19.11 3.32 16.63 2.24 13.99 2.24A9.76 9.76 0 0 0 4.2 12a9.76 9.76 0 0 0 9.79 9.76c5.29 0 9.53-3.79 9.53-9.53 0-.61-.06-1.2-.17-1.76H12.24z"
+                        />
+                      </svg>
+                      <span>Continue with Google</span>
+                    </button>
+
+                    <div className="flex flex-col space-y-2 pt-2 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={handleMockGoogleLogin}
+                        className="text-[10px] text-slate-500 hover:underline uppercase tracking-wider font-semibold"
+                      >
+                        Demo Sign In (Simulated)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          localStorage.removeItem('beyondskills_google_client_id');
+                          setClientId('');
+                          setClientIdInput('');
+                        }}
+                        className="text-[10px] text-slate-400 hover:text-slate-650 underline uppercase tracking-wider font-semibold"
+                      >
+                        Change / Reset Client ID
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
