@@ -289,10 +289,109 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 5. Academy Verticals / Courses Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 bg-slate-50 rounded-3xl border border-slate-200/60 shadow-sm">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-brand-purple text-xs font-bold tracking-widest uppercase bg-brand-purple/10 px-3 py-1 rounded-full">
+            Upskilling Programs
+          </span>
+          <h2 className="logo-font text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-4">
+            Professional Certification Catalog
+          </h2>
+          <p className="text-slate-500 text-sm">
+            Basic to Intermediate certification courses combining recorded lectures with weekly live mentor reviews.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featuredCourses.map((course) => {
+            const bgImage = COURSE_IMAGES[course.id] || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600';
+            return (
+              <div 
+                key={course.id} 
+                onClick={() => navigate(`/course/${course.id}`)}
+                className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
+              >
+                {/* Background Image with Dark Overlay */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center z-0 transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: `url('${bgImage}')` }}
+                />
+                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[0.5px] z-0" />
+
+                {/* Content Container */}
+                <div className="relative z-10 flex flex-col justify-between h-full text-white w-full">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[9px] font-bold text-brand-purple uppercase border border-brand-purple/40 px-2.5 py-0.5 rounded bg-brand-purple/10">
+                        {course.category}
+                      </span>
+                      <span className="text-xs text-slate-300 font-mono">
+                        {course.duration}
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 line-clamp-2 h-12 leading-tight">{course.title}</h3>
+                    <p className="text-xs text-slate-300 mb-6 line-clamp-3 leading-relaxed">{course.overview}</p>
+                    
+                    {/* Tech Stack Badges */}
+                    {course.techStack && (
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {course.techStack.map((tech, tIdx) => (
+                          <span key={tIdx} className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-white/10 border border-white/10 text-[10px] text-slate-200 font-medium hover:bg-white/20 transition-all">
+                            <TechIcon name={tech} className="w-3.5 h-3.5" />
+                            <span>{tech}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center space-x-1 mb-4 text-brand-cyan">
+                      <Star className="w-3.5 h-3.5 fill-current" />
+                      <span className="text-xs font-bold text-white">{course.rating}</span>
+                      <span className="text-[10px] text-slate-300">({course.enrollments} learners)</span>
+                    </div>
+                    
+                    <div className="border-t border-white/10 pt-4 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] text-slate-400 block">Syllabus Fee</span>
+                        <div className="flex items-center space-x-2 mt-0.5">
+                          <span className="text-base font-bold text-white">₹{course.fee.toLocaleString()}</span>
+                          <span className="text-[11px] text-slate-400 line-through">₹{course.originalFee.toLocaleString()}</span>
+                          <span className="text-[9px] text-emerald-400 font-extrabold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
+                            {Math.round(((course.originalFee - course.fee) / course.originalFee) * 100)}% OFF
+                          </span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/course/${course.id}`);
+                        }}
+                        className="bg-brand-purple hover:bg-brand-purple/90 text-black font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition-colors cursor-pointer"
+                      >
+                        Details
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )})}
+        </div>
+
+        <div className="text-center mt-12">
+          <Link to="/courses" className="inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-brand-purple hover:text-slate-900 transition-colors">
+            <span>Browse All 7 Academic Programs</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
       {/* 2.5 Trust Badges & Accreditations Banner */}
-      <div className="w-full py-8 relative z-10">
+      <div className="w-full py-8 relative z-10 bg-transparent">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="bg-gradient-to-r from-[#032FC7] via-[#0031EF] to-[#0131BC] rounded-2xl p-6 sm:p-8 shadow-xl border border-blue-500/30 flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4 hover:shadow-blue-500/10 transition-all duration-300">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-8 md:gap-4 py-6 transition-all duration-300">
             
             {/* Startup India */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
@@ -302,7 +401,7 @@ export default function Home() {
             </div>
             
             {/* Divider line for MD and up */}
-            <div className="hidden md:block w-px h-16 bg-white/20"></div>
+            <div className="hidden md:block w-px h-16 bg-slate-200/60"></div>
 
             {/* ISO Certified */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
@@ -312,7 +411,7 @@ export default function Home() {
             </div>
 
             {/* Divider line for MD and up */}
-            <div className="hidden md:block w-px h-16 bg-white/20"></div>
+            <div className="hidden md:block w-px h-16 bg-slate-200/60"></div>
 
             {/* MSME Registered */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
@@ -461,104 +560,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Academy Verticals / Courses Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10 bg-slate-50 rounded-3xl border border-slate-200/60 shadow-sm">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-brand-purple text-xs font-bold tracking-widest uppercase bg-brand-purple/10 px-3 py-1 rounded-full">
-            Upskilling Programs
-          </span>
-          <h2 className="logo-font text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-4">
-            Professional Certification Catalog
-          </h2>
-          <p className="text-slate-500 text-sm">
-            Basic to Intermediate certification courses combining recorded lectures with weekly live mentor reviews.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredCourses.map((course) => {
-            const bgImage = COURSE_IMAGES[course.id] || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600';
-            return (
-              <div 
-                key={course.id} 
-                onClick={() => navigate(`/course/${course.id}`)}
-                className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
-              >
-                {/* Background Image with Dark Overlay */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center z-0 transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url('${bgImage}')` }}
-                />
-                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-[0.5px] z-0" />
-
-                {/* Content Container */}
-                <div className="relative z-10 flex flex-col justify-between h-full text-white w-full">
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-[9px] font-bold text-brand-purple uppercase border border-brand-purple/40 px-2.5 py-0.5 rounded bg-brand-purple/10">
-                        {course.category}
-                      </span>
-                      <span className="text-xs text-slate-300 font-mono">
-                        {course.duration}
-                      </span>
-                    </div>
-                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 line-clamp-2 h-12 leading-tight">{course.title}</h3>
-                    <p className="text-xs text-slate-300 mb-6 line-clamp-3 leading-relaxed">{course.overview}</p>
-                    
-                    {/* Tech Stack Badges */}
-                    {course.techStack && (
-                      <div className="flex flex-wrap gap-1.5 mb-6">
-                        {course.techStack.map((tech, tIdx) => (
-                          <span key={tIdx} className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-white/10 border border-white/10 text-[10px] text-slate-200 font-medium hover:bg-white/20 transition-all">
-                            <TechIcon name={tech} className="w-3.5 h-3.5" />
-                            <span>{tech}</span>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <div className="flex items-center space-x-1 mb-4 text-brand-cyan">
-                      <Star className="w-3.5 h-3.5 fill-current" />
-                      <span className="text-xs font-bold text-white">{course.rating}</span>
-                      <span className="text-[10px] text-slate-300">({course.enrollments} learners)</span>
-                    </div>
-                    
-                    <div className="border-t border-white/10 pt-4 flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] text-slate-400 block">Syllabus Fee</span>
-                        <div className="flex items-center space-x-2 mt-0.5">
-                          <span className="text-base font-bold text-white">₹{course.fee.toLocaleString()}</span>
-                          <span className="text-[11px] text-slate-400 line-through">₹{course.originalFee.toLocaleString()}</span>
-                          <span className="text-[9px] text-emerald-400 font-extrabold bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
-                            {Math.round(((course.originalFee - course.fee) / course.originalFee) * 100)}% OFF
-                          </span>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/course/${course.id}`);
-                        }}
-                        className="bg-brand-purple hover:bg-brand-purple/90 text-black font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition-colors cursor-pointer"
-                      >
-                        Details
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )})}
-        </div>
-
-        <div className="text-center mt-12">
-          <Link to="/courses" className="inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-brand-purple hover:text-slate-900 transition-colors">
-            <span>Browse All 7 Academic Programs</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
 
       {/* 6. Key Value Propositions (Why Choose Us) */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
