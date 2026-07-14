@@ -539,12 +539,11 @@ export default function Home() {
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          setBrochureCourse(course);
-                          setIsBrochureOpen(true);
+                          navigate(`/course/${course.id}`);
                         }}
                         className="bg-brand-purple hover:bg-brand-purple/90 text-black font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition-colors cursor-pointer"
                       >
-                        Brochure
+                        Details
                       </button>
                     </div>
                   </div>

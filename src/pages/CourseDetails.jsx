@@ -296,15 +296,7 @@ export default function CourseDetails() {
                       <span>Register & Enroll Now</span>
                     </button>
                     
-                    <a 
-                      href={`/brochures/${course.id}.pdf`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="w-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-4 rounded-2xl text-xs uppercase tracking-widest transition-all flex items-center justify-center space-x-2"
-                    >
-                      <FileText className="w-4.5 h-4.5 text-slate-400" />
-                      <span>Download Syllabus Brochure</span>
-                    </a>
+
                   </div>
 
                   <ul className="text-xs space-y-2.5 text-slate-600 border-t border-slate-100 pt-6">
@@ -428,15 +420,7 @@ export default function CourseDetails() {
                 <h2 className="text-xl sm:text-2xl font-bold text-slate-900 uppercase tracking-wide border-l-3 border-brand-purple pl-3 logo-font">
                   Detailed Syllabus & Learning Plan
                 </h2>
-                <a 
-                  href={`/brochures/${course.id}.pdf`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-1.5 text-xs text-brand-purple hover:underline font-bold font-mono self-start sm:self-center"
-                >
-                  <FileText className="w-4 h-4" />
-                  <span>Download Full PDF Brochure</span>
-                </a>
+
               </div>
 
               {/* Accordion Layout */}
@@ -662,15 +646,7 @@ export default function CourseDetails() {
 
             {/* Right Action buttons */}
             <div className="flex items-center space-x-3 flex-shrink-0">
-              <a 
-                href={`/brochures/${course.id}.pdf`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-colors hidden md:inline-flex items-center space-x-1.5"
-              >
-                <FileText className="w-4 h-4" />
-                <span>Brochure</span>
-              </a>
+
               <button 
                 onClick={handleEnroll} 
                 className="bg-gradient-to-r from-[#1B2A8A] to-[#2563EB] hover:brightness-110 text-white font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all transform hover:scale-[1.01] shadow-lg shadow-blue-600/10"
