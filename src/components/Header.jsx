@@ -167,7 +167,7 @@ export default function Header() {
                   ID: {currentUser.studentId || 'Admin'}
                 </span>
                 
-                {currentUser.email === 'admin@beyondskills.in' ? (
+                {currentUser.email === 'beyondskills.ai@gmail.com' ? (
                   <Link to="/admin" className="text-xs font-semibold uppercase tracking-wider text-brand-cyan hover:bg-brand-cyan hover:text-white bg-brand-cyan/5 border border-brand-cyan/20 px-4 py-2 rounded-full transition-all">
                     Admin Portal
                   </Link>
@@ -246,7 +246,7 @@ export default function Header() {
               <span className="text-xs text-slate-500 font-mono">
                 Student ID: {currentUser.studentId || 'Admin'}
               </span>
-              {currentUser.email === 'admin@beyondskills.in' ? (
+              {currentUser.email === 'beyondskills.ai@gmail.com' ? (
                 <Link to="/admin" className="text-center bg-brand-cyan/20 text-brand-cyan hover:bg-brand-cyan hover:text-slate-900 border border-brand-cyan/20 text-center font-bold py-2 rounded-lg">
                   Admin Panel
                 </Link>

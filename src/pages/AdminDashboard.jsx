@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     // Check if logged in user is admin
     const loggedInUser = getDbItem('beyondskills_current_user', null);
-    if (!loggedInUser || loggedInUser.email !== 'admin@beyondskills.in') {
+    if (!loggedInUser || loggedInUser.email !== 'beyondskills.ai@gmail.com') {
       navigate('/auth');
       return;
     }
