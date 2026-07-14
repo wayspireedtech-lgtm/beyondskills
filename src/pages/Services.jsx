@@ -70,13 +70,13 @@ const leadSchema = {
   company: '',
   email: '',
   phone: '',
-  budget: '₹1,00,000 - ₹3,00,000',
+  budget: 'Less than 1 LPA',
   message: ''
 };
 
 export default function Services() {
   const { serviceId } = useParams();
-  const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', budget: '₹1,00,000 - ₹3,00,000', message: '' });
+  const [form, setForm] = useState({ name: '', company: '', email: '', phone: '', budget: 'Less than 1 LPA', message: '' });
   const [status, setStatus] = useState(null);
 
   const data = SERVICE_DATA[serviceId];
@@ -96,7 +96,7 @@ export default function Services() {
     }));
 
     setStatus('success');
-    setForm({ name: '', company: '', email: '', phone: '', budget: '₹1,00,000 - ₹3,00,000', message: '' });
+    setForm({ name: '', company: '', email: '', phone: '', budget: 'Less than 1 LPA', message: '' });
     setTimeout(() => setStatus(null), 5000);
   };
 
@@ -253,6 +253,7 @@ export default function Services() {
               <div>
                 <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Budget *</label>
                 <select value={form.budget} onChange={(e) => setForm({...form, budget: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none shadow-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none">
+                  <option value="Less than 1 LPA">Less than 1 LPA</option>
                   <option value="₹1,00,000 - ₹3,00,000">₹1,00,000 - ₹3,00,000</option>
                   <option value="₹3,00,000 - ₹5,00,000">₹3,00,000 - ₹5,00,000</option>
                   <option value="₹5,00,000+">₹5,00,000+</option>
