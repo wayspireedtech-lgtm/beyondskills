@@ -2,9 +2,9 @@
 
 export const COURSES = [
   {
-    id: 'ai-ml',
-    techStack: ['Python', 'NumPy', 'Pandas', 'Matplotlib', 'Seaborn', 'Scikit-Learn', 'TensorFlow', 'Hugging Face', 'NLP'],
-    title: 'Artificial Intelligence & Machine Learning',
+    id: 'artificial-intelligence',
+    techStack: ['Python', 'Neural Networks', 'NLP', 'Generative AI', 'TensorFlow', 'Hugging Face'],
+    title: 'Artificial Intelligence',
     category: 'AI/ML/DS/DA',
     level: 'Basic to Intermediate',
     duration: '3 Months',
@@ -19,105 +19,150 @@ export const COURSES = [
     delivery: 'Recorded + Live Mentor Sessions',
     certificate: 'Yes',
     rating: 4.8,
-    enrollments: '1,800+',
-    overview: 'Artificial Intelligence (AI) stands at the cutting edge of technological advancement, driving transformative changes across numerous industries. Learn to automate complex processes, enhance decision-making, and build innovative solutions using Python, machine learning, and deep learning.',
+    enrollments: '1,250+',
+    overview: 'Understand neural networks, natural language processing (NLP), computer vision, and generative AI frameworks using Python and modern library architectures.',
     curriculum: [
       {
-        week: 'Weeks 1-2',
-        title: 'Python Architecture & File Operations',
+        week: 'Weeks 1-4',
+        title: 'Neural Networks & Deep Learning Foundations',
         topics: [
           'Installation of Anaconda Prompt & Jupyter Notebook overview',
-          'Shortcut keys in Jupyter Notebook & Data Types in Python',
-          'Lists, Tuples, Sets, & Dictionaries',
-          'Introduction to files, directories, and terminal paths',
-          'Reading and writing text files using the with statement'
+          'Introduction to Neural Networks and activation functions',
+          'Building simple neural network architectures with TensorFlow',
+          'Hyperparameter tuning, optimizer selection, and learning rates'
         ]
       },
       {
-        week: 'Weeks 3-4',
-        title: 'Data Analysis & Manipulation (NumPy & Pandas)',
+        week: 'Weeks 5-8',
+        title: 'Natural Language Processing (NLP)',
         topics: [
-          'Introduction to Machine Learning Libraries',
-          'Hands-on numerical computing with NumPy',
-          'Pandas Python package to manipulate and calculate data',
-          'Data cleaning, grouping, and hands-on analysis with Pandas'
+          'Basics of NLP: Tokenization, Stemming, and Lemmatization',
+          'Working with NLTK, SpaCy, and TF-IDF representations',
+          'Word embeddings: Word2Vec, GloVe, and FastText',
+          'Introduction to transformers and pre-trained language models'
         ]
       },
       {
-        week: 'Weeks 5-6',
-        title: 'Data Visualization & Statistical Thinking',
+        week: 'Weeks 9-12',
+        title: 'Generative AI & LLM APIs',
         topics: [
-          'Exploratory data visualization: Matplotlib & Seaborn hands-on',
-          'Measures of Central Tendency & Measures of Dispersion',
-          'IQR Statistics & hands-on outlier detection in Python',
-          'Data storytelling and extracting insights from raw features'
+          'Hugging Face pipelines for text classification and translation',
+          'Generative AI fundamentals: OpenAI APIs and prompt engineering',
+          'Designing custom AI chat agents and deploying pipelines',
+          'DALL-E, ChatGPT, and corporate use cases for generative AI'
+        ]
+      }
+    ],
+    projects: [
+      {
+        title: 'NLP Custom Text Classifier',
+        description: 'Build an intent-detection system using NLTK and Hugging Face Transformers to classify user queries and automate support workflow tags.',
+        techUsed: ['Python', 'Hugging Face', 'NLP', 'NLTK']
+      },
+      {
+        title: 'Custom Chat Agent with OpenAI API',
+        description: 'Design and deploy an intelligent assistant that parses business document sheets to resolve client technical support queries.',
+        techUsed: ['Python', 'Generative AI', 'API Integration']
+      }
+    ],
+    mentors: [
+      { name: 'Saurav Kumar Sinha', role: 'Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini', experience: '8+ Years' },
+      { name: 'Vinod Kumar Eslavath', role: 'Assistant Manager - Data Scientist at Shemaroo', experience: '5+ Years' }
+    ],
+    outcomes: [
+      'Understand and apply neural networks and deep learning architectures.',
+      'Process textual data and construct NLP preprocessing pipelines.',
+      'Leverage pre-trained transformers and large language model APIs.',
+      'Deploy generative AI models to build custom corporate applications.'
+    ],
+    faqs: [
+      { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and NLP engineering.' },
+      { q: 'What certificates will I receive?', a: 'You will receive 2 certificates: a course completion certificate and a project completion certificate.' }
+    ],
+    reviews: [
+      { user: 'Manshi Srivastav', rating: 5, comment: 'I’ve successfully finished my AI course. A big thank you to my mentors for their continuous support. This journey has enriched my skills and provided clarity on my career path.', date: 'May 2026' }
+    ]
+  },
+  {
+    id: 'machine-learning',
+    techStack: ['Python', 'NumPy', 'Pandas', 'Matplotlib', 'Seaborn', 'Scikit-Learn'],
+    title: 'Machine Learning',
+    category: 'AI/ML/DS/DA',
+    level: 'Basic to Intermediate',
+    duration: '3 Months',
+    fee: 14000,
+    originalFee: 16000,
+    selfPacedFee: 6000,
+    selfPacedOriginalFee: 8000,
+    mentorLedHours: '30+ Hours Live Training',
+    mentorLedProjects: '3 Projects',
+    selfPacedHours: '25–30 Hours Recorded Content',
+    selfPacedProjects: '2 Projects',
+    delivery: 'Recorded + Live Mentor Sessions',
+    certificate: 'Yes',
+    rating: 4.8,
+    enrollments: '1,450+',
+    overview: 'Master supervised and unsupervised machine learning algorithms, model evaluation metrics, and feature engineering techniques using Python and Scikit-Learn.',
+    curriculum: [
+      {
+        week: 'Weeks 1-4',
+        title: 'Data Preprocessing & Python Libraries',
+        topics: [
+          'Python programming basics: Loops, lists, and directories',
+          'Data manipulation with NumPy array calculations',
+          'Pandas library for filtering, cleaning, and grouping datasets',
+          'Data visualization with Matplotlib and Seaborn charts'
         ]
       },
       {
-        week: 'Weeks 7-8',
-        title: 'Supervised & Un-supervised Learning (Regression)',
+        week: 'Weeks 5-8',
+        title: 'Supervised Learning Algorithms',
         topics: [
-          'Classification, Regression, & model fine-tuning concepts',
-          'Supervised vs Unsupervised Learning foundations',
-          'Linear Regression & Metrics for Linear Regression',
-          'Logistic Regression & Metrics in Logistic Regression'
+          'Linear Regression and Logistic Regression mathematics',
+          'Model evaluation metrics: MSE, R2, Accuracy, Precision, Recall',
+          'Tree-based algorithms: Decision Trees, Bagging, and Random Forests',
+          'Boosting models (XGBoost, AdaBoost) for structured data prediction'
         ]
       },
       {
-        week: 'Weeks 9-10',
-        title: 'Data Preprocessing & Tree-Based Models',
+        week: 'Weeks 9-12',
+        title: 'Unsupervised Learning & Model Selection',
         topics: [
-          'Data preprocessing: Standardization & Normalization',
-          'Handling missing values, outliers, and feature scaling',
-          'Tree-Based Models: Decision Tree & Bagging',
-          'Boosting and Random Forest classification and regression'
-        ]
-      },
-      {
-        week: 'Weeks 11-12',
-        title: 'Neural Networks, NLP & Generative AI',
-        topics: [
-          'Fundamentals of Neural Networks & data science packages',
-          'Analysis, visualization, and building custom neural models',
-          'Basics of NLP: NLTK, SpaCy, Gensim, & FastText',
-          'Basics of Gen AI: Hugging Face & Generative AI models',
-          'DALL-E, ChatGPT, and generative AI corporate use cases'
+          'Clustering models: K-Means and Hierarchical clustering',
+          'Dimensionality reduction using Principal Component Analysis (PCA)',
+          'Hyperparameter tuning and cross-validation techniques',
+          'Building and deploying end-to-end machine learning pipelines'
         ]
       }
     ],
     projects: [
       {
         title: 'Predictive Customer Churn Model',
-        description: 'Implement a machine learning pipeline to preprocess customer data, handle missing values, scale features, and train Random Forest models to predict subscriber churn.',
+        description: 'Implement a machine learning pipeline to preprocess customer data, scale features, and train Random Forest models to predict subscriber churn.',
         techUsed: ['Python', 'Pandas', 'Scikit-Learn', 'Seaborn']
       },
       {
-        title: 'NLP Custom Text Classifier',
-        description: 'Build an intent-detection system using NLTK and Hugging Face Transformers to classify user queries and automate support workflow tags.',
-        techUsed: ['Python', 'Hugging Face', 'NLP', 'NLTK']
+        title: 'House Price Forecasting Pipeline',
+        description: 'Train a regression pipeline using boosting models to forecast real estate prices based on geographical and structural features.',
+        techUsed: ['Python', 'Scikit-Learn', 'XGBoost']
       }
     ],
     mentors: [
-      { name: 'Saurav Kumar Sinha', role: 'Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini', experience: '8+ Years' },
       { name: 'Uttam Grade', role: 'EY | Ex-Accenture, McKinsey', experience: '6+ Years' },
       { name: 'Vinod Kumar Eslavath', role: 'Assistant Manager - Data Scientist at Shemaroo', experience: '5+ Years' }
     ],
     outcomes: [
-      'Understand and apply supervised and unsupervised learning techniques to datasets.',
-      'Perform data preprocessing, standardization, and feature scaling.',
-      'Build classification, regression, and tree-based machine learning pipelines.',
-      'Work with neural networks, natural language processing tools, and generative AI frameworks.'
+      'Clean, pre-process, and visualize complex datasets in Python.',
+      'Train, evaluate, and tune supervised classification and regression models.',
+      'Apply unsupervised clustering algorithms to segments and group data points.',
+      'Deploy robust machine learning prediction pipelines.'
     ],
     faqs: [
-      { q: 'Who is this course for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and ML engineering.' },
-      { q: 'What certificates will I receive?', a: 'You will receive 2 certificates: a course completion certificate and a project completion certificate.' },
-      { q: 'Is there a job guarantee?', a: 'No, we do not guarantee jobs or placements. Please refer to our placement disclaimer.' }
+      { q: 'Is this course suitable for beginners?', a: 'Yes! We start from basic Python syntax, so no prior programming background is required.' },
+      { q: 'Will I build projects?', a: 'Yes, you will complete hands-on machine learning projects utilizing real-world datasets.' }
     ],
     reviews: [
-      { user: 'Manshi Srivastav', rating: 5, comment: 'I’ve successfully finished my AI course. A big thank you to my mentors for their continuous support. This journey has enriched my skills and provided clarity on my career path.', date: 'May 2026' },
-      { user: 'Rakesh Rana', rating: 5, comment: 'Delighted to have achieved my certification in Artificial Intelligence! Grateful to BeyondSkills for their constant support and mentorship. Excited to explore innovative opportunities and apply these AI skills.', date: 'June 2026' },
-      { user: 'Pavan Barhate', rating: 5, comment: 'Thrilled to have earned the certification in Artificial Intelligence! A huge thanks to BeyondSkills for their guidance and support throughout this journey.', date: 'June 2026' },
-      { user: 'Pankaj Shekhawat', rating: 5, comment: 'Excited to have successfully completed my Artificial Intelligence internship at BeyondSkills. Grateful for the hands-on experience, new skills gained, and the incredible support.', date: 'July 2026' }
+      { user: 'Rakesh Rana', rating: 5, comment: 'Delighted to have achieved my certification in Machine Learning! Grateful to BeyondSkills for their constant support and mentorship.', date: 'June 2026' }
     ]
   },
   {
@@ -260,9 +305,9 @@ export const COURSES = [
     ]
   },
   {
-    id: 'data-science-analytics',
-    techStack: ['Python', 'SQL', 'Excel', 'Pandas', 'NumPy', 'PowerBI', 'Tableau'],
-    title: 'Data Science & Analytics',
+    id: 'data-science',
+    techStack: ['Python', 'SQL', 'Pandas', 'NumPy', 'Statistics'],
+    title: 'Data Science',
     category: 'AI/ML/DS/DA',
     level: 'Basic to Intermediate',
     duration: '3 Months',
@@ -277,40 +322,30 @@ export const COURSES = [
     delivery: 'Recorded + Live Mentor Sessions',
     certificate: 'Yes',
     rating: 4.7,
-    enrollments: '1,400+',
-    overview: 'Master data cleaning, advanced SQL querying, relational databases, statistical modelling, and interactive dashboard creation in PowerBI and Tableau to extract insights and drive business decisions.',
+    enrollments: '1,100+',
+    overview: 'Learn statistics, data preprocessing, SQL database querying, exploratory analysis in Pandas, and predictive models in Python.',
     curriculum: [
       { 
         week: 'Weeks 1-4', 
-        title: 'Relational Databases, SQL Querying, & Data Extraction',
-        topics: ['Database Fundamentals & ER Diagrams', 'SQL Basics: SELECT, WHERE, ORDER BY', 'Aggregations: GROUP BY, HAVING', 'JOINS (Inner, Left, Right, Full Outer)', 'Subqueries & Common Table Expressions (CTEs)', 'SQL Window Functions (ROW_NUMBER, RANK, LEAD, LAG)', 'Python for SQL Connections (sqlite3, SQLAlchemy)', 'Pandas for initial data loading & filtering']
+        title: 'Relational Databases & SQL Querying',
+        topics: ['Database Fundamentals & ER Diagrams', 'SQL Basics: SELECT, WHERE, ORDER BY', 'Aggregations: GROUP BY, HAVING', 'JOINS (Inner, Left, Right, Full Outer)', 'Subqueries & Common Table Expressions (CTEs)']
       },
       { 
         week: 'Weeks 5-8', 
-        title: 'Data Visualization & Dashboard Design (PowerBI & Tableau)',
-        topics: ['Introduction to Data Visualization Principles', 'PowerBI Desktop Interface & Workspace', 'Data Modelling in PowerBI (Star & Snowflake Schemas)', 'Writing DAX (Data Analysis Expressions) Measures', 'Designing Interactive Dashboards in PowerBI', 'Tableau Desktop: Connections, Worksheets, & Stories', 'Creating Calculated Fields & Parameters in Tableau', 'Dashboard Publishing & Security Best Practices']
+        title: 'Python for Data Science & Pandas',
+        topics: ['Python data structures: Lists, Tuples, Dictionaries', 'Data loading & filtering in Pandas', 'NumPy for numerical calculations', 'Data cleaning and handling missing values']
       },
       { 
-        week: 'Weeks 9-10', 
-        title: 'Statistical Analysis & Exploratory Analytics',
-        topics: ['Descriptive Statistics: Mean, Variance, Mode, Median', 'Correlation & Covariance', 'Hypothesis Testing: T-tests, ANOVA, Chi-Square', 'Exploratory Data Analysis (EDA) Workflow', 'Data Storytelling: Structuring Reports for Business Stakeholders', 'Linear Regression for Trend Analysis & Forecasting']
-      },
-      { 
-        week: 'Weeks 11-12', 
-        title: 'Data Storytelling Capstone & Project Presentation',
-        topics: ['Formulating Business Questions from Raw Data', 'Building end-to-end analytical pipelines', 'Designing a Executive-Level Summary Dashboard', 'Creating a compelling presentation of insights', 'Final Project Review & Portfolio Setup']
+        week: 'Weeks 9-12', 
+        title: 'Statistical Analysis & Predictive Modeling',
+        topics: ['Descriptive Statistics: Mean, Median, Mode, Variance', 'Correlation and Hypothesis Testing', 'Linear and Logistic Regression forecasting models', 'Data Storytelling & Capstone project review']
       }
     ],
     projects: [
       {
-        title: 'E-commerce Sales Performance Dashboard',
-        description: 'An interactive multi-page dashboard built in PowerBI visualizing user retention, product category sales, monthly revenue trends, and geo-analytics.',
-        techUsed: ['PowerBI', 'SQL', 'Pandas', 'Python']
-      },
-      {
         title: 'Global Cohort Retention & Churn Profiler',
         description: 'An analytical pipeline extracting relational database tables via SQL, performing cohort analysis in Python, and modeling future client churn patterns.',
-        techUsed: ['SQL', 'Python', 'Pandas', 'Tableau']
+        techUsed: ['SQL', 'Python', 'Pandas']
       }
     ],
     mentors: [
@@ -318,13 +353,73 @@ export const COURSES = [
       { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
     ],
     outcomes: [
-      'Write optimized SQL queries for extracting and transforming large datasets.',
-      'Clean, preprocess, and analyze unstructured raw data using Python.',
-      'Design and deploy production-grade corporate dashboards in PowerBI and Tableau.',
-      'Present analytical findings through compelling data stories and dashboards.'
+      'Write optimized SQL queries for extracting datasets.',
+      'Clean, pre-process, and analyze raw unstructured data in Python.',
+      'Apply descriptive and inferential statistics to extract metrics.',
+      'Build basic predictive modeling pipelines.'
     ],
     faqs: [
-      { q: 'Do I need a mathematical background?', a: 'Basic math and logic are sufficient. We teach all statistical concepts step-by-step from scratch.' },
+      { q: 'Do I need a mathematical background?', a: 'Basic math and logic are sufficient. We teach all statistical concepts step-by-step from scratch.' }
+    ],
+    reviews: [
+      { user: 'Karthik S.', rating: 5, comment: 'Excellent data science sessions. Kept stats clear and practical.', date: 'May 2026' }
+    ]
+  },
+  {
+    id: 'data-analytics',
+    techStack: ['Excel', 'SQL', 'PowerBI', 'Tableau', 'Dashboard Design'],
+    title: 'Data Analytics',
+    category: 'AI/ML/DS/DA',
+    level: 'Basic to Intermediate',
+    duration: '3 Months',
+    fee: 14000,
+    originalFee: 16000,
+    selfPacedFee: 6000,
+    selfPacedOriginalFee: 8000,
+    mentorLedHours: '30+ Hours Live Training',
+    mentorLedProjects: '3 Projects',
+    selfPacedHours: '25–30 Hours Recorded Content',
+    selfPacedProjects: '2 Projects',
+    delivery: 'Recorded + Live Mentor Sessions',
+    certificate: 'Yes',
+    rating: 4.7,
+    enrollments: '1,200+',
+    overview: 'Master data visualization and business intelligence by querying databases with SQL, organizing data in Excel, and building interactive dashboards in PowerBI and Tableau.',
+    curriculum: [
+      { 
+        week: 'Weeks 1-4', 
+        title: 'Advanced Excel & SQL Data Wrangling',
+        topics: ['Excel functions: VLOOKUP, INDEX-MATCH, Pivot Tables', 'SQL database querying and joins', 'Aggregations and CTEs for data extraction', 'SQL Window Functions (ROW_NUMBER, RANK, LEAD, LAG)']
+      },
+      { 
+        week: 'Weeks 5-8', 
+        title: 'PowerBI Dashboard Design & Modeling',
+        topics: ['PowerBI Desktop Interface & Workspace layout', 'Data modelling: Star & Snowflake schemas', 'Writing DAX (Data Analysis Expressions) Measures', 'Designing interactive multi-page dashboards']
+      },
+      { 
+        week: 'Weeks 9-12', 
+        title: 'Tableau Visualization & Business Reports',
+        topics: ['Tableau Desktop: Connections, Worksheets, & Stories', 'Creating Calculated Fields & Parameters in Tableau', 'Dashboard Publishing and Security Best Practices', 'Structuring analytical reports for business stakeholders']
+      }
+    ],
+    projects: [
+      {
+        title: 'E-commerce Sales Performance Dashboard',
+        description: 'An interactive multi-page dashboard built in PowerBI visualizing user retention, product category sales, monthly revenue trends, and geo-analytics.',
+        techUsed: ['PowerBI', 'SQL', 'Excel']
+      }
+    ],
+    mentors: [
+      { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
+      { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
+    ],
+    outcomes: [
+      'Extract datasets from relational databases using SQL.',
+      'Organize and analyze datasets using advanced Excel formulas.',
+      'Design corporate dashboards in PowerBI and Tableau.',
+      'Present findings through compelling data visualization stories.'
+    ],
+    faqs: [
       { q: 'Will I learn database management?', a: 'Yes, relational database querying via SQL is covered extensively.' }
     ],
     reviews: [

@@ -109,6 +109,10 @@ export default function Dashboard() {
     }
 
     const courseTitleMap = {
+      'artificial-intelligence': 'Artificial Intelligence',
+      'machine-learning': 'Machine Learning',
+      'data-science': 'Data Science',
+      'data-analytics': 'Data Analytics',
       'ai-ml': 'Artificial Intelligence & Machine Learning',
       'data-science-analytics': 'Data Science & Analytics',
       'full-stack-web': 'Full Stack Web Development (MERN)',

@@ -7,6 +7,10 @@ import PartnerLogo from '../components/PartnerLogo';
 import BrochureModal from '../components/BrochureModal';
 
 const COURSE_IMAGES = {
+  'artificial-intelligence': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
+  'machine-learning': 'https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=600&auto=format&fit=crop&q=80',
+  'data-science': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80',
+  'data-analytics': 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80',
   'ai-ml': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
   'data-science-analytics': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80',
   'full-stack-web': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
@@ -571,9 +575,7 @@ export default function Home() {
               {[
                 'Dual Model: High-quality Recorded + Weekly Live Mentor Sessions',
                 'Instructed by 50+ Mentors with 5+ Years Industry Experience',
-                'Internship Completion Certificate upon passing project metrics',
-                'Weekly Live Mock Interview Prep & Coding Labs',
-                'Instant Student ID and automated workspace provisioning'
+                'Weekly Live Mock Interview Prep & Coding Labs'
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-brand-purple flex-shrink-0 mt-0.5" />
@@ -588,9 +590,9 @@ export default function Home() {
               Mentorship Support
             </div>
             
-            <h4 className="text-lg font-bold text-slate-900 mb-4">Live Mentorship & SLA Support</h4>
+            <h4 className="text-lg font-bold text-slate-900 mb-4">Live Mentorship & Doubt Support</h4>
             <p className="text-xs text-slate-500 leading-relaxed mb-6">
-              Connect with active software engineering and performance marketing leads. Ask technical queries, review code repositories, and receive structured feedback within our simulated SLA frameworks.
+              Connect with active software engineering and performance marketing leads. Ask technical queries, review code repositories, and receive structured feedback on your learning progress.
             </p>
             
             <div className="bg-slate-100 border border-slate-200/60 rounded-xl p-4 flex items-center space-x-3">
