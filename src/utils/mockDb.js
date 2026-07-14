@@ -325,20 +325,176 @@ export const COURSES = [
     enrollments: '1,100+',
     overview: 'Learn statistics, data preprocessing, SQL database querying, exploratory analysis in Pandas, and predictive models in Python.',
     curriculum: [
-      { 
-        week: 'Weeks 1-4', 
-        title: 'Relational Databases & SQL Querying',
-        topics: ['Database Fundamentals & ER Diagrams', 'SQL Basics: SELECT, WHERE, ORDER BY', 'Aggregations: GROUP BY, HAVING', 'JOINS (Inner, Left, Right, Full Outer)', 'Subqueries & Common Table Expressions (CTEs)']
+      {
+        week: 'Module 1',
+        title: 'Python Fundamentals: Internals, Architecture, and Best Practices',
+        topics: [
+          'Installation and Setup of Anaconda Environment',
+          'Jupyter Notebook Overview with Modern Usage Practices',
+          'Essential Shortcut Keys and Productivity Tips in Jupyter Notebook',
+          'Understanding Python Data Types with Real-World Applications'
+        ]
       },
-      { 
-        week: 'Weeks 5-8', 
-        title: 'Python for Data Science & Pandas',
-        topics: ['Python data structures: Lists, Tuples, Dictionaries', 'Data loading & filtering in Pandas', 'NumPy for numerical calculations', 'Data cleaning and handling missing values']
+      {
+        week: 'Module 2',
+        title: 'Python Data Structures & File Handling',
+        topics: [
+          'Best Practices for Naming Variables in Python (PEP 8 Standards)',
+          'Python Data Structures: List, Tuple, Set, and Dictionary with Practical Use Cases',
+          'Introduction to Files and Directories in Modern Development Environments',
+          'Working with Command Line Interfaces (CLI) and Terminal Navigation',
+          'File Handling in Python: Reading Text Files and Using Context Managers (with Statement)'
+        ]
       },
-      { 
-        week: 'Weeks 9-12', 
-        title: 'Statistical Analysis & Predictive Modeling',
-        topics: ['Descriptive Statistics: Mean, Median, Mode, Variance', 'Correlation and Hypothesis Testing', 'Linear and Logistic Regression forecasting models', 'Data Storytelling & Capstone project review']
+      {
+        week: 'Module 3',
+        title: 'Regular Doubt-Clearing & Interactive Discussion Sessions',
+        topics: [
+          'Dedicated sessions will be held to address course-related queries and foster interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 4',
+        title: 'Control Flow in Python: Loops and Conditional Statements',
+        topics: [
+          'Conditional Statements in Python: if, elif, and else',
+          'Looping Constructs: for loops and while loops'
+        ]
+      },
+      {
+        week: 'Module 5',
+        title: 'Data Analysis & Manipulation using NumPy',
+        topics: [
+          'Introduction to Machine Learning Libraries',
+          'NumPy: Hands-on Implementation and Practical Applications'
+        ]
+      },
+      {
+        week: 'Module 6',
+        title: 'Continuous Doubt Resolution & Concept Strengthening',
+        topics: [
+          'Regular sessions will be conducted to address course-related queries and promote interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 7',
+        title: 'Data Analysis with Pandas (Data Cleaning & Transformation)',
+        topics: [
+          'Pandas: Hands-on Data Analysis and Real-World Applications'
+        ]
+      },
+      {
+        week: 'Module 8',
+        title: 'Exploratory Data Analysis (EDA) & Visualization',
+        topics: [
+          'Learn to explore, visualize, and extract meaningful insights from data',
+          'Data Visualization Concepts and Techniques',
+          'Matplotlib: Hands-on Implementation',
+          'Seaborn: Hands-on Visualization for Advanced Insights'
+        ]
+      },
+      {
+        week: 'Module 9',
+        title: 'Statistical Thinking in Python: Core Foundations',
+        topics: [
+          'Build Statistical Thinking and Learn to Understand Data Effectively',
+          'Measures of Central Tendency',
+          'Measures of Dispersion',
+          'IQR (Interquartile Range) Statistics – Hands-on Practice'
+        ]
+      },
+      {
+        week: 'Module 10',
+        title: 'Introduction to Machine Learning: Supervised & Unsupervised',
+        topics: [
+          'Introduction to Classification, Regression, and Model Fine-Tuning',
+          'Supervised Learning Concepts',
+          'Unsupervised Learning Concepts',
+          'Linear Regression: Theory and Practical Implementation',
+          'Evaluation Metrics in Linear Regression – Hands-on Practice'
+        ]
+      },
+      {
+        week: 'Module 11',
+        title: 'Logistic Regression: Concepts & Practical Implementation',
+        topics: [
+          'Logistic Regression: Fundamentals and Practical Applications',
+          'Performance Evaluation Metrics for Logistic Regression',
+          'Hands-on Implementation of Logistic Regression'
+        ]
+      },
+      {
+        week: 'Module 12',
+        title: 'Linear Regression: Model Building and Evaluation',
+        topics: [
+          'Linear Regression: Concepts and Practical Applications',
+          'Evaluation Metrics for Linear Regression'
+        ]
+      },
+      {
+        week: 'Module 13',
+        title: 'Data Preprocessing Techniques for Machine Learning',
+        topics: [
+          'Introduction to Data Preprocessing Techniques',
+          'Data Standardization and Normalization',
+          'Exploratory Data Analysis (EDA)',
+          'Handling Missing Values',
+          'Outlier Detection and Treatment',
+          'Feature Scaling and Feature Selection Techniques'
+        ]
+      },
+      {
+        week: 'Module 14',
+        title: 'Tree-Based Models: Classification & Regression Trees (CART)',
+        topics: [
+          'Decision Trees: Concepts and Practical Applications',
+          'Bagging Techniques for Model Improvement',
+          'Boosting and Random Forest Methods'
+        ]
+      },
+      {
+        week: 'Module 15',
+        title: 'Fundamentals of Neural Networks and Deep Learning',
+        topics: [
+          'Neural Networks: Concepts and Practical Applications'
+        ]
+      },
+      {
+        week: 'Module 16',
+        title: 'Capstone Project (Real-World Implementation)',
+        topics: [
+          'Utilize Data Science Libraries for Data Analysis, Visualization, Model Building, and Data Extraction'
+        ]
+      },
+      {
+        week: 'Module 17',
+        title: 'Advanced Excel for Data Analysis',
+        topics: [
+          'Advanced Excel Functions for Data Analysis',
+          'Conditional Formatting for Data Insights',
+          'Pivot Tables for Data Summarization',
+          'Interactive Dashboards for Reporting and Visualization'
+        ]
+      },
+      {
+        week: 'Module 18',
+        title: 'SQL for Data Extraction and Management',
+        topics: [
+          'Fundamentals of Database Schema Design',
+          'Importance of SQL Clauses in Data Querying',
+          'SQL Joins for Data Integration and Analysis'
+        ]
+      },
+      {
+        week: 'Module 19',
+        title: 'Power BI for Data Visualization and Reporting',
+        topics: [
+          'Introduction to Power BI Desktop and Its Interface',
+          'ETL Pipeline Implementation in Power BI (Data Extraction, Transformation, and Loading)',
+          'Creating Calculated Fields using DAX',
+          'Data Visualization and Report Building in Power BI',
+          'AI-Powered Features and Advanced Analytics in Power BI'
+        ]
       }
     ],
     projects: [
@@ -386,20 +542,176 @@ export const COURSES = [
     enrollments: '1,200+',
     overview: 'Master data visualization and business intelligence by querying databases with SQL, organizing data in Excel, and building interactive dashboards in PowerBI and Tableau.',
     curriculum: [
-      { 
-        week: 'Weeks 1-4', 
-        title: 'Advanced Excel & SQL Data Wrangling',
-        topics: ['Excel functions: VLOOKUP, INDEX-MATCH, Pivot Tables', 'SQL database querying and joins', 'Aggregations and CTEs for data extraction', 'SQL Window Functions (ROW_NUMBER, RANK, LEAD, LAG)']
+      {
+        week: 'Module 1',
+        title: 'Python Fundamentals: Internals, Architecture, and Best Practices',
+        topics: [
+          'Installation and Setup of Anaconda Environment',
+          'Jupyter Notebook Overview with Modern Usage Practices',
+          'Essential Shortcut Keys and Productivity Tips in Jupyter Notebook',
+          'Understanding Python Data Types with Real-World Applications'
+        ]
       },
-      { 
-        week: 'Weeks 5-8', 
-        title: 'PowerBI Dashboard Design & Modeling',
-        topics: ['PowerBI Desktop Interface & Workspace layout', 'Data modelling: Star & Snowflake schemas', 'Writing DAX (Data Analysis Expressions) Measures', 'Designing interactive multi-page dashboards']
+      {
+        week: 'Module 2',
+        title: 'Python Data Structures & File Handling',
+        topics: [
+          'Best Practices for Naming Variables in Python (PEP 8 Standards)',
+          'Python Data Structures: List, Tuple, Set, and Dictionary with Practical Use Cases',
+          'Introduction to Files and Directories in Modern Development Environments',
+          'Working with Command Line Interfaces (CLI) and Terminal Navigation',
+          'File Handling in Python: Reading Text Files and Using Context Managers (with Statement)'
+        ]
       },
-      { 
-        week: 'Weeks 9-12', 
-        title: 'Tableau Visualization & Business Reports',
-        topics: ['Tableau Desktop: Connections, Worksheets, & Stories', 'Creating Calculated Fields & Parameters in Tableau', 'Dashboard Publishing and Security Best Practices', 'Structuring analytical reports for business stakeholders']
+      {
+        week: 'Module 3',
+        title: 'Regular Doubt-Clearing & Interactive Discussion Sessions',
+        topics: [
+          'Dedicated sessions will be held to address course-related queries and foster interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 4',
+        title: 'Control Flow in Python: Loops and Conditional Statements',
+        topics: [
+          'Conditional Statements in Python: if, elif, and else',
+          'Looping Constructs: for loops and while loops'
+        ]
+      },
+      {
+        week: 'Module 5',
+        title: 'Data Analysis & Manipulation using NumPy',
+        topics: [
+          'Introduction to Machine Learning Libraries',
+          'NumPy: Hands-on Implementation and Practical Applications'
+        ]
+      },
+      {
+        week: 'Module 6',
+        title: 'Continuous Doubt Resolution & Concept Strengthening',
+        topics: [
+          'Regular sessions will be conducted to address course-related queries and promote interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 7',
+        title: 'Data Analysis with Pandas (Data Cleaning & Transformation)',
+        topics: [
+          'Pandas: Hands-on Data Analysis and Real-World Applications'
+        ]
+      },
+      {
+        week: 'Module 8',
+        title: 'Exploratory Data Analysis (EDA) & Visualization',
+        topics: [
+          'Learn to explore, visualize, and extract meaningful insights from data',
+          'Data Visualization Concepts and Techniques',
+          'Matplotlib: Hands-on Implementation',
+          'Seaborn: Hands-on Visualization for Advanced Insights'
+        ]
+      },
+      {
+        week: 'Module 9',
+        title: 'Statistical Thinking in Python: Core Foundations',
+        topics: [
+          'Build Statistical Thinking and Learn to Understand Data Effectively',
+          'Measures of Central Tendency',
+          'Measures of Dispersion',
+          'IQR (Interquartile Range) Statistics – Hands-on Practice'
+        ]
+      },
+      {
+        week: 'Module 10',
+        title: 'Introduction to Machine Learning: Supervised & Unsupervised',
+        topics: [
+          'Introduction to Classification, Regression, and Model Fine-Tuning',
+          'Supervised Learning Concepts',
+          'Unsupervised Learning Concepts',
+          'Linear Regression: Theory and Practical Implementation',
+          'Evaluation Metrics in Linear Regression – Hands-on Practice'
+        ]
+      },
+      {
+        week: 'Module 11',
+        title: 'Logistic Regression: Concepts & Practical Implementation',
+        topics: [
+          'Logistic Regression: Fundamentals and Practical Applications',
+          'Performance Evaluation Metrics for Logistic Regression',
+          'Hands-on Implementation of Logistic Regression'
+        ]
+      },
+      {
+        week: 'Module 12',
+        title: 'Linear Regression: Model Building and Evaluation',
+        topics: [
+          'Linear Regression: Concepts and Practical Applications',
+          'Evaluation Metrics for Linear Regression'
+        ]
+      },
+      {
+        week: 'Module 13',
+        title: 'Data Preprocessing Techniques for Machine Learning',
+        topics: [
+          'Introduction to Data Preprocessing Techniques',
+          'Data Standardization and Normalization',
+          'Exploratory Data Analysis (EDA)',
+          'Handling Missing Values',
+          'Outlier Detection and Treatment',
+          'Feature Scaling and Feature Selection Techniques'
+        ]
+      },
+      {
+        week: 'Module 14',
+        title: 'Tree-Based Models: Classification & Regression Trees (CART)',
+        topics: [
+          'Decision Trees: Concepts and Practical Applications',
+          'Bagging Techniques for Model Improvement',
+          'Boosting and Random Forest Methods'
+        ]
+      },
+      {
+        week: 'Module 15',
+        title: 'Fundamentals of Neural Networks and Deep Learning',
+        topics: [
+          'Neural Networks: Concepts and Practical Applications'
+        ]
+      },
+      {
+        week: 'Module 16',
+        title: 'Capstone Project (Real-World Implementation)',
+        topics: [
+          'Utilize Data Science Libraries for Data Analysis, Visualization, Model Building, and Data Extraction'
+        ]
+      },
+      {
+        week: 'Module 17',
+        title: 'Advanced Excel for Data Analysis',
+        topics: [
+          'Advanced Excel Functions for Data Analysis',
+          'Conditional Formatting for Data Insights',
+          'Pivot Tables for Data Summarization',
+          'Interactive Dashboards for Reporting and Visualization'
+        ]
+      },
+      {
+        week: 'Module 18',
+        title: 'SQL for Data Extraction and Management',
+        topics: [
+          'Fundamentals of Database Schema Design',
+          'Importance of SQL Clauses in Data Querying',
+          'SQL Joins for Data Integration and Analysis'
+        ]
+      },
+      {
+        week: 'Module 19',
+        title: 'Power BI for Data Visualization and Reporting',
+        topics: [
+          'Introduction to Power BI Desktop and Its Interface',
+          'ETL Pipeline Implementation in Power BI (Data Extraction, Transformation, and Loading)',
+          'Creating Calculated Fields using DAX',
+          'Data Visualization and Report Building in Power BI',
+          'AI-Powered Features and Advanced Analytics in Power BI'
+        ]
       }
     ],
     projects: [
@@ -447,25 +759,169 @@ export const COURSES = [
     enrollments: '800+',
     overview: 'Learn modern HR practices, recruitment strategies, onboarding, HR analytics, payroll administration, and employee relations.',
     curriculum: [
-      { 
-        week: 'Weeks 1-2', 
-        title: 'Talent Acquisition, ATS Systems, & Sourcing Strategies',
-        topics: ['Manpower Planning & Job Description (JD) Writing', 'Sourcing Channels: LinkedIn Recruiting, Job Portals, & Referrals', 'Applicant Tracking Systems (ATS) configurations', 'Structuring Resumes & Screenings', 'Interviewing Models: Behavioral & Situational', 'Offer Management & Candidate Communication']
+      {
+        week: 'Module 1',
+        title: 'Introduction to Strategic HRM: Aligning HR Strategies',
+        topics: [
+          'Linking HRM with Organizational Strategy: Aligning Human Resource Practices with Business Goals and Performance',
+          'Introduction to Strategic HRM: Driving Organizational Growth through People-Centric and Data-Driven HR Strategies'
+        ]
       },
-      { 
-        week: 'Weeks 3-4', 
-        title: 'Employee Lifecycle, Onboarding, & Policy Design',
-        topics: ['Designing Employee Onboarding Journeys', 'Employee Engagement frameworks & surveys', 'Performance Management Systems (PMS): OKRs & KPIs', 'Designing HR Manuals & Code of Conduct guidelines', 'Offboarding processes & Exit Interviews']
+      {
+        week: 'Module 2',
+        title: 'Deriving HR Strategy from Organizational Goals',
+        topics: [
+          'Digital Transformation in HR: Emerging Technologies, HR Automation, and Key Challenges in Implementation'
+        ]
       },
-      { 
-        week: 'Weeks 5-6', 
-        title: 'Payroll Administration, Labor Laws, & Statutory Compliances',
-        topics: ['Compensation & Benefits structure (CTC breakup)', 'Payroll processing inputs (Attendance, LOP, Deductions)', 'Understanding PF, ESIC, Professional Tax, & Gratuity', 'Overview of key Labor Laws (Factories Act, Industrial Disputes)', 'Managing employee relations & conflict resolution']
+      {
+        week: 'Module 3',
+        title: 'Interactive Doubt-Clearing & Discussion Sessions',
+        topics: [
+          'Dedicated sessions will be conducted to address course-related doubts and encourage discussions'
+        ]
       },
-      { 
-        week: 'Weeks 7-8', 
-        title: 'HR Analytics, Resume Evaluation Methods & Mock Interviews',
-        topics: ['Key HR Metrics: Attrition Rate, Time-to-Hire, Cost-per-Hire', 'Designing HR Dashboards in Excel', 'Mock Resume evaluation labs aligning with recruitment standards', 'Conducting mock interviews & recruiter feedback sessions']
+      {
+        week: 'Module 4',
+        title: 'Workforce Planning & Job Design: Job Analysis',
+        topics: [
+          'Manpower Demand & Supply Analysis: Forecasting Workforce Needs and Talent Availability',
+          'HR Planning (HRP) Process: Strategic Workforce Planning, Gap Analysis, and Resource Allocation'
+        ]
+      },
+      {
+        week: 'Module 5',
+        title: 'Job Description (JD) & Specifications',
+        topics: [
+          'Job Specification (JS): Outlining Required Skills, Qualifications, and Competencies'
+        ]
+      },
+      {
+        week: 'Module 6',
+        title: 'Job Design Techniques & Job Evaluation',
+        topics: [
+          'Methods of Job Evaluation (JE): Systematic Approaches to Assess Job Value and Compensation Structure'
+        ]
+      },
+      {
+        week: 'Module 7',
+        title: 'Course Doubt-Clearing & Discussion Sessions',
+        topics: [
+          'Regular sessions will be held to resolve course-related doubts and facilitate interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 8',
+        title: 'Workforce Planning & Job Design (Advanced)',
+        topics: [
+          'Manpower Demand & Supply Analysis: Forecasting Workforce Requirements and Talent Availability using Data-Driven Approaches',
+          'HR Planning (HRP) Process: Strategic Workforce Planning, Gap Analysis, and Resource Optimization',
+          'Job Description & Job Specification: Defining Roles, Responsibilities, Skills, and Competency Requirements',
+          'Job Design Strategies: Creating Efficient, Engaging, and Future Ready Roles',
+          'Methods of Job Evaluation (JE): Modern Techniques for Role Assessment, Pay Structuring, and Internal Equity'
+        ]
+      },
+      {
+        week: 'Module 9',
+        title: 'Talent Acquisition Strategies & Sourcing',
+        topics: [
+          'Recruitment & Selection Strategies: Modern Hiring Techniques, Employer Branding, and Candidate Experience',
+          'Understanding Individual Differences: Personality, Attitudes, Motivation, and Behavioral Assessment in Hiring',
+          'AI & ML in Recruitment: Automation, Resume Screening, Predictive Hiring, and Bias Reduction Techniques',
+          'HR Metrics in Talent Acquisition: Tracking KPIs like Time-to-Hire, Cost-per-Hire, Quality of Hire, and Conversion Rates'
+        ]
+      },
+      {
+        week: 'Module 10',
+        title: 'Career Planning, Talent Development & Employee Growth',
+        topics: [
+          'Training & Development: Upskilling, Reskilling, and Continuous Learning Strategies for Workforce Growth',
+          'Career Management: Aligning Individual Career Goals with Organizational Development Plans',
+          'Employee Engagement & Modern Workplace Trends: Enhancing Engagement through Culture, Well-being, Diversity & Inclusion, and Remote Work Practices'
+        ]
+      },
+      {
+        week: 'Module 11',
+        title: 'Performance Management Systems (PMS)',
+        topics: [
+          'Performance Appraisal Systems: Evaluating Employee Performance using Modern and Continuous Feedback Methods',
+          'Potential Appraisal: Identifying Future Leaders and High-Potential Talent for Succession Planning',
+          'Performance Management: Goal Setting (OKRs/KPIs), Continuous Monitoring, and Development-Focused Reviews',
+          'Methods of Performance Appraisal: 360-Degree Feedback, Self Appraisal, Rating Scales, and Data-Driven Evaluation Techniques'
+        ]
+      },
+      {
+        week: 'Module 12',
+        title: 'People Management & Employee Engagement',
+        topics: [
+          'Managing Individuals and Teams in Uncertain Environments: Agile Leadership, Crisis Management, and Resilience Building',
+          'Managing Millennials & Gen Z Workforce: Engagement Strategies, Expectations, and Workplace Dynamics',
+          'Building a Creative & Flexible Workplace: Innovation Culture, Collaboration, and Hybrid Work Models',
+          'Remote Work Management: Opportunities, Challenges, and Best Practices for Distributed Teams'
+        ]
+      },
+      {
+        week: 'Module 13',
+        title: 'Compensation & Benefits Management',
+        topics: [
+          'Compensation Management: Designing Competitive, Fair, and Performance-Driven Pay Structures',
+          'Principles of Wage Policy: Equity, Transparency, Compliance, and Market Alignment',
+          'Components of Compensation: Fixed Pay, Variable Pay, Incentives, Benefits, and Total Rewards Strategy',
+          'Compensation Challenges: Pay Equity, Retention, Cost Optimization, and Adapting to Market Trends'
+        ]
+      },
+      {
+        week: 'Module 14',
+        title: 'Labour Laws & Social Security',
+        topics: [
+          'Introduction to Labour Law: Fundamentals of Employment Regulations, Worker Rights, and Compliance Frameworks',
+          'Introduction to Industrial Law: Understanding Employer-Employee Relations, Dispute Resolution, and Workplace Regulations',
+          'Introduction to Social Security Law: Employee Benefits, Welfare Schemes, and Statutory Compliance'
+        ]
+      },
+      {
+        week: 'Module 15',
+        title: 'Change Management & Digital Adoption',
+        topics: [
+          'Importance of Change in Organizations: Driving Innovation, Growth, and Competitive Advantage',
+          'Managing Change Effectively: Strategies, Frameworks (e.g., Agile, Kotter’s Model), and Implementation',
+          'Employee Responses to Change: Behavioral, Emotional, and Cultural Adaptation',
+          'Resistance to Change: Identifying Barriers and Strategies to Overcome Resistance'
+        ]
+      },
+      {
+        week: 'Module 16',
+        title: 'Change Management & Pay Optimization Frameworks',
+        topics: [
+          'Compensation Management: Designing Strategic, Performance Driven, and Competitive Pay Structures',
+          'Principles of Wage Policy: Ensuring Equity, Transparency, Legal Compliance, and Market Competitiveness',
+          'Components of Compensation: Fixed Salary, Variable Pay, Incentives, Benefits, and Total Rewards Framework',
+          'Compensation Challenges: Pay Equity, Talent Retention, Cost Management, and Evolving Market Dynamics'
+        ]
+      },
+      {
+        week: 'Module 17',
+        title: 'AI in HR: Automation & Analytics',
+        topics: [
+          'Preparing for AI Adoption in HR: Integrating AI Tools for Smarter Decision-Making and Workforce Optimization',
+          'Applicant Tracking Systems (ATS): Streamlining Recruitment, Resume Screening, and Candidate Management',
+          'Task Automation in HR: Automating Repetitive Processes for Efficiency and Productivity',
+          'Collaborative Scheduling & Workforce Management: Smart Tools for Interview Scheduling, Team Coordination, and Resource Planning'
+        ]
+      },
+      {
+        week: 'Module 18',
+        title: 'Project Discussion, Doubt Resolution & Career Path',
+        topics: [
+          'Project Overview & Requirement Analysis: Defining Objectives, Scope, and Implementation Strategy',
+          'Project Review & Feedback Sessions: Continuous Evaluation and Iterative Improvement',
+          'Ongoing Doubt Resolution & Mentorship Support: Ensuring Clear Understanding and Guidance',
+          'Concept Revision & Interactive Q&A: Strengthening Core Knowledge and Practical Application',
+          'Industry Use Cases & Real-World Applications: Bridging Theory with Practical Insights',
+          'Career Opportunities & Emerging Roles in Data Science',
+          'Job Roles, Career Pathways & Industry Trends',
+          'Key Skills, Tools & Competencies for Industry Readiness'
+        ]
       }
     ],
     projects: [
@@ -577,25 +1033,146 @@ export const COURSES = [
     enrollments: '950+',
     overview: 'Understand network security, cryptography, vulnerability assessment, web application security, and ethical hacking concepts.',
     curriculum: [
-      { 
-        week: 'Weeks 1-2', 
-        title: 'Computer Networking & Cryptography Fundamentals',
-        topics: ['OSI Model & TCP/IP Protocol Suite', 'Understanding IP Addressing, Subnetting, & Routing', 'DNS, DHCP, & HTTP/HTTPS operations', 'Symmetric vs. Asymmetric Encryption', 'Hashing algorithms (SHA, MD5) & Digital Signatures', 'VPNs, Firewalls, & Secure Network Topologies']
+      {
+        week: 'Module 1',
+        title: 'Introduction to Cybersecurity: Fundamentals, Threat Landscape, & Security Principles',
+        topics: [
+          'Cybersecurity Fundamentals: Definition, Importance, Scope, and Modern Threat Landscape',
+          'Types of Cyber Threats: Malware, Phishing, Ransomware, Social Engineering, and Advanced Persistent Threats (APTs)',
+          'Core Security Principles: CIA Triad (Confidentiality, Integrity, Availability) with Real-World Applications',
+          'Cybersecurity Ethics, Governance, and Industry Best Practices (Compliance, Risk Management, and Data Protection)'
+        ]
       },
-      { 
-        week: 'Weeks 3-4', 
-        title: 'System Security, Kali Linux, & Port Scanning Labs',
-        topics: ['Introduction to Kali Linux Workspace', 'Command Line basics & Linux permissions', 'Information Gathering & Reconnaissance', 'Network scanning with Nmap: Options & Scans', 'Analyzing network packets using Wireshark', 'Vulnerability Assessment concepts']
+      {
+        week: 'Module 2',
+        title: 'Introduction to Linux: Commands, File System, & System Administration Basics',
+        topics: [
+          'Linux Command-Line Fundamentals: Essential Commands and Productivity Tips',
+          'Networking Commands for Troubleshooting and Connectivity Analysis',
+          'Service Management and Log Monitoring in Linux Systems',
+          'System Administration Commands for User, Process, and Resource Management',
+          'Linux File System Architecture and Directory Structure (FHS Standards)'
+        ]
       },
-      { 
-        week: 'Weeks 5-6', 
-        title: 'Web Application Security & Pentesting Labs',
-        topics: ['Introduction to Web Application Architectures', 'OWASP Top 10 vulnerabilities overview', 'SQL Injection (SQLi) attacks & mitigations', 'Cross-Site Scripting (XSS) & CSRF mechanisms', 'Broken Authentication & Sensitive Data Exposure', 'Scanning web apps with Burp Suite']
+      {
+        week: 'Module 3',
+        title: 'Dedicated Doubt-Clearing Sessions and Interactive Discussions',
+        topics: [
+          'Dedicated Interactive Sessions for Real-Time Doubt Resolution and Collaborative Learning Discussions'
+        ]
       },
-      { 
-        week: 'Weeks 7-8', 
-        title: 'Incidence Response, Secure Audits, & Compliance Reports',
-        topics: ['Social Engineering attacks (Phishing, Social profiling)', 'Password cracking concepts & dictionary attacks', 'Malware categories (Trojans, Ransomware)', 'Incident Response lifecycle stages', 'Writing vulnerability report sheets for stakeholders']
+      {
+        week: 'Module 4',
+        title: 'Introduction to Windows: System Configuration & Security Basics',
+        topics: [
+          'Access Control Models, User Permissions, and User Account Control (UAC)',
+          'Windows Security Tools: Firewall Configuration and Microsoft Defender',
+          'Remote Administration: Windows Remote Management (WinRM) and Remote Desktop Protocol (RDP)',
+          'Command Prompt (CMD): Essential Commands and Basic Batch Scripting',
+          'Introduction to PowerShell for Automation and System Management',
+          'Using CMD and PowerShell for System Administration and Security Operations'
+        ]
+      },
+      {
+        week: 'Module 5',
+        title: 'Regular Course Doubt-Clearing and Support Sessions',
+        topics: [
+          'Regular Interactive Sessions for Continuous Doubt Resolution and Collaborative Learning Discussions'
+        ]
+      },
+      {
+        week: 'Module 6',
+        title: 'Networking Fundamentals: Protocols, Models (OSI/TCP-IP), & Network Security Basics',
+        topics: [
+          'Types of Networks: LAN, WAN, MAN, and Modern Network Architectures',
+          'Network Topologies: Design, Structure, and Real-World Implementations',
+          'Network Protocols and Ports: TCP/IP, HTTP/HTTPS, FTP, DNS, and Communication Standards',
+          'IP Addressing and Subnetting: IPv4/IPv6 Concepts and Network Segmentation',
+          'Firewall Concepts and Configuration for Network Security'
+        ]
+      },
+      {
+        week: 'Module 7',
+        title: 'Ethical Hacking: Concepts, Tools, and Methodologies',
+        topics: [
+          'Footprinting, Reconnaissance, and Enumeration Techniques in Ethical Hacking',
+          'Vulnerability Assessment and Professional Security Reporting',
+          'Windows and Linux System Hacking: Techniques and Methodologies',
+          'Password Cracking, Hashing Algorithms, and Security Mechanisms',
+          'Network Analysis and Testing using Wireshark',
+          'Wireless Network Security and Ethical Hacking Techniques',
+          'Digital Forensics: Investigation and Evidence Analysis',
+          'Privacy and Anonymity Tools: Tor Network and Proxy Services'
+        ]
+      },
+      {
+        week: 'Module 8',
+        title: 'Web Application Security: Vulnerability Assessment, Hacking Techniques, & Penetration Testing',
+        topics: [
+          'Introduction to Web Application Security and Ethical Hacking',
+          'Burp Suite: Setup, Features, and Hands-on Usage',
+          'Fuzzing Techniques and Directory Enumeration',
+          'Subdomain Enumeration and Asset Discovery',
+          'Authentication Bypass Techniques and Session Exploitation',
+          'File Inclusion Vulnerabilities (LFI/RFI)',
+          'File Upload Vulnerabilities and Exploitation Techniques',
+          'Cross-Site Scripting (XSS) Attacks and Prevention',
+          'Command Injection Vulnerabilities',
+          'SQL Injection (SQLi): Concepts and Exploitation',
+          'OWASP Top 10 (2021): Critical Web Security Risks and Mitigation'
+        ]
+      },
+      {
+        week: 'Module 9',
+        title: 'SOC (Security Operations Center) and SIEM: Monitoring, Detection, & Incident Response',
+        topics: [
+          'Security Operations Center (SOC): Roles, Responsibilities, and Workflows',
+          'Security Information and Event Management (SIEM): Concepts and Implementation',
+          'Security Tools: Installation, Configuration, and Integration',
+          'Building and Configuring IDS, Firewalls, and Honeypots',
+          'Deployment, Continuous Monitoring, and Threat Detection',
+          'Documentation, Incident Reporting, and Compliance Practices'
+        ]
+      },
+      {
+        week: 'Module 10',
+        title: 'Red Team, Blue Team, and Purple Team: Cybersecurity Attack & Defense Scenarios',
+        topics: [
+          'Blue Team: Defensive Security Strategies and Threat Monitoring',
+          'Red Team: Offensive Security Testing and Ethical Hacking Techniques',
+          'Purple Team: Collaborative Security Approach for Continuous Improvement'
+        ]
+      },
+      {
+        week: 'Module 11',
+        title: 'Offensive Security and Penetration Testing Techniques',
+        topics: [
+          'Real-World Attack Simulations on Vulnerable Services and Environments',
+          'Web Application Vulnerability Assessment and Security Testing',
+          'Identifying, Analyzing, and Reporting Security Vulnerabilities',
+          'Anonymity Techniques, Dark Web Fundamentals, and Secure Communication Practices'
+        ]
+      },
+      {
+        week: 'Module 12',
+        title: 'Security Testing and Vulnerability Assessment',
+        topics: [
+          'Comprehensive Security Audit Checklists for Vulnerability Assessment and Testing'
+        ]
+      },
+      {
+        week: 'Module 13',
+        title: 'Project Discussion, Career Guidance, and Course Doubt Resolution',
+        topics: [
+          'Project Overview, Planning, and Requirement Analysis',
+          'Project Review, Feedback, and Iterative Improvement Sessions',
+          'Continuous Doubt Resolution and Mentorship Support',
+          'Concept Revision and Interactive Q&A Sessions',
+          'Industry Use Cases and Real-World Case Study Discussions',
+          'Career Opportunities in Data Science and Emerging Domains',
+          'Job Roles, Career Pathways, and Market Trends',
+          'Key Skills and Competencies for Industry Readiness'
+        ]
       }
     ],
     projects: [
@@ -642,25 +1219,157 @@ export const COURSES = [
     enrollments: '1,400+',
     overview: 'Get introduced to cloud infrastructure. Learn about computing, storage, networking, database services, and deployment models on AWS.',
     curriculum: [
-      { 
-        week: 'Weeks 1-2', 
-        title: 'Cloud Core Models & Virtualization',
-        topics: ['Introduction to Cloud Computing: Scalability & Elasticity', 'Cloud Deployment Models (Public, Private, Hybrid)', 'Service Models: IaaS (Infrastructure), PaaS (Platform), SaaS (Software)', 'Virtualization & Hypervisors overview', 'Cloud Economics: Pay-as-you-go & cost optimization']
+      {
+        week: 'Module 1',
+        title: 'Introduction to Cloud Computing: Concepts, Service Models, & Modern Use Cases',
+        topics: [
+          'Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology',
+          'Service Models: Infrastructure as a Service (IaaS), Platform as a Service (PaaS), Software as a Service (SaaS)',
+          'Modern Enterprise Use Cases for Cloud Computing'
+        ]
       },
-      { 
-        week: 'Weeks 3-4', 
-        title: 'AWS Compute, Storage, & Identity IAM Services',
-        topics: ['AWS Global Infrastructure (Regions & Availability Zones)', 'Amazon EC2 (Elastic Compute Cloud): Launching & managing instances', 'Security Groups & Key Pairs', 'Amazon S3 (Simple Storage Service): Buckets, Policies, & Classes', 'AWS IAM (Identity & Access Management): Users, Groups, Roles']
+      {
+        week: 'Module 2',
+        title: 'Cloud Fundamentals: Core Concepts & Service Models',
+        topics: [
+          'Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology',
+          'Key Benefits of Cloud Computing: Scalability, Cost Efficiency, Flexibility, Security, and High Availability'
+        ]
       },
-      { 
-        week: 'Weeks 5-6', 
-        title: 'Cloud Networking & Route 53 Configurations',
-        topics: ['Amazon VPC (Virtual Private Cloud) fundamentals', 'Subnets (Public & Private), Internet Gateways, Route Tables', 'Network Access Control Lists (NACLs) vs. Security Groups', 'Elastic Load Balancing (ELB) types & setups', 'Amazon Route 53 DNS routing policies']
+      {
+        week: 'Module 3',
+        title: 'Dedicated Doubt-Clearing and Interactive Discussion Sessions',
+        topics: [
+          'Dedicated sessions will be conducted to address course-related doubts and encourage discussions'
+        ]
       },
-      { 
-        week: 'Weeks 7-8', 
-        title: 'Auto Scaling, Cloud Databases, & Monitoring Services',
-        topics: ['Amazon EC2 Auto Scaling setup', 'Amazon RDS (Relational Database Service) configurations', 'AWS CloudWatch: Logs, Metrics, & Alarms setup', 'AWS Billing & Budgets management dashboards', 'AWS Well-Architected Framework principles']
+      {
+        week: 'Module 4',
+        title: 'Cloud Fundamentals (Advanced Concepts & Practical Understanding)',
+        topics: [
+          'Cloud Computing Models: Service Models (IaaS, PaaS, SaaS) and Deployment Models (Public, Private, Hybrid, Multi-Cloud)'
+        ]
+      },
+      {
+        week: 'Module 5',
+        title: 'Microsoft Azure Fundamentals: Overview of Services & Architecture',
+        topics: [
+          'Introduction to Microsoft Azure: Overview and Core Capabilities',
+          'Exploring Azure Services: Service Tour and Practical Use Cases',
+          'Managing Azure Subscriptions: Setup, Configuration, and Access Control'
+        ]
+      },
+      {
+        week: 'Module 6',
+        title: 'Azure Networking: Virtual Networks, Subnets, and Connectivity',
+        topics: [
+          'Understanding Azure VPN: Purpose, Use Cases, and Hands-On Implementation',
+          'Introduction to Azure Regions: Geographic Distribution and Availability Zones',
+          'Virtual Networks (VNet) in Azure: Concepts, Configuration, and Best Practices'
+        ]
+      },
+      {
+        week: 'Module 7',
+        title: 'Regular Doubt-Clearing and Support Sessions',
+        topics: [
+          'Regular sessions will be held to resolve course-related doubts and facilitate interactive discussions.'
+        ]
+      },
+      {
+        week: 'Module 8',
+        title: 'Azure Networking (Advanced Configuration & Security)',
+        topics: [
+          'Implementing N-Tier Architecture in Azure: Design and Best Practices',
+          'Network Security Groups (NSGs): Configuration and Access Control',
+          'Azure Load Balancer: Traffic Distribution and High Availability',
+          'Ensuring Availability and High Availability in Azure Environments',
+          'Azure Application Gateway: Web Traffic Management and Security',
+          'Azure DNS: Domain Management and Name Resolution',
+          'Azure Traffic Manager: Global Traffic Routing and Performance Optimization'
+        ]
+      },
+      {
+        week: 'Module 9',
+        title: 'Azure Compute Services: Virtual Machines, App Services, & Containers',
+        topics: [
+          'Virtual Machines and Containers in Azure: Deployment and Management',
+          'Azure App Service: Hosting Web Apps and APIs',
+          'Serverless Computing in Azure: Functions and Event-Driven Architectures',
+          'Scaling Virtual Machines in Azure: Autoscaling and Load Management',
+          'Scaling Availability Sets for High Availability and Fault Tolerance',
+          'Virtual Machine Types and Sizes: Choosing the Right Compute Resources',
+          'Azure Kubernetes Service (AKS): Container Orchestration and Management',
+          'Advanced Azure App Services: Deployment, Scaling, and Monitoring'
+        ]
+      },
+      {
+        week: 'Module 10',
+        title: 'Azure Storage: Types of Data and Storage Solutions',
+        topics: [
+          'Overview of Azure Storage: Architecture, Capabilities, and Use Cases',
+          'Types of Azure Storage: Blob, File, Queue, Disk, and Data Lake Storage',
+          'Azure SQL Database: Managed Relational Database Services',
+          'Azure Cosmos DB: Globally Distributed, Multi-Model Database',
+          'Azure Blob Storage: Object Storage for Unstructured Data',
+          'Azure Data Lake Storage: Big Data Storage and Analytics',
+          'Azure Files: Managed File Shares for Cloud Applications',
+          'Azure Queue Storage: Messaging and Asynchronous Workflows',
+          'Disk Storage and Storage Tiers: Standard, Premium, and Ultra Disk Options',
+          'Storage Security: Encryption, Replication, and Access Management',
+          'Azure Storage Explorer: Managing and Monitoring Storage Accounts',
+          'Comparison of Azure Storage vs. On-Premises Storage Solutions',
+          'Hands-On Labs: Working with Blob and File Storage in Azure'
+        ]
+      },
+      {
+        week: 'Module 11',
+        title: 'Azure Security: Layered Security Approach & Best Practices',
+        topics: [
+          'Cloud Security Usage Scenarios: Practical Applications and Best Practices',
+          'Identity and Access Management (IAM): Authentication, Authorization, and Role-Based Access Control',
+          'Data Encryption: At-Rest, In-Transit, and Key Management',
+          'Managing Azure Certificates: Secure Communication and SSL/TLS Implementation',
+          'Network Protection: Securing Virtual Networks and Traffic Flow',
+          'Protecting Shared Documents and Data in Azure',
+          'Azure Advanced Threat Protection (ATP): Detecting, Preventing, and Responding to Security Threats'
+        ]
+      },
+      {
+        week: 'Module 12',
+        title: 'Azure Machine Learning: Introduction & Optimization',
+        topics: [
+          'Setting Up Monitoring with Azure Service Health: Alerts, Insights, and Issue Management',
+          'Implementing Azure Policy: Enforcing Organizational Standards and Compliance',
+          'Defining IT Compliance Using Azure Policy for Governance',
+          'Organizing Policies with Initiatives for Streamlined Management',
+          'Enterprise Governance in Azure: Best Practices and Frameworks',
+          'Defining Standardized Resources Using Azure Blueprints',
+          'Monitoring and Ensuring Service Compliance with Azure Compliance Manager'
+        ]
+      },
+      {
+        week: 'Module 13',
+        title: 'Azure Backup and Recovery Solutions & ARM Templates',
+        topics: [
+          'Azure Key Vault: Securely Manage Secrets, Keys, and Certificates',
+          'Scheduling and Automating Backups for Azure Virtual Machines (VMs)',
+          'Configuring Disaster Recovery (DR) Solutions in Azure',
+          'Cost Management and Optimization: Monitoring Spending and Reducing Cloud Expenses'
+        ]
+      },
+      {
+        week: 'Module 14',
+        title: 'Project Discussion, Career Guidance, & Doubt Resolution',
+        topics: [
+          'Project Overview and Requirements Analysis: Planning and Execution Strategy',
+          'Project Review, Feedback, and Iterative Improvement Sessions',
+          'Continuous Doubt Resolution and Mentorship Support',
+          'Concept Revision, Interactive Q&A, and Knowledge Reinforcement',
+          'Industry Use Cases and Real-World Application Discussions',
+          'Career Opportunities in Data Science and Emerging Domains',
+          'Job Roles, Career Pathways, and Professional Growth Strategies',
+          'Key Skills, Tools, and Competencies for Industry Readiness'
+        ]
       }
     ],
     projects: [
