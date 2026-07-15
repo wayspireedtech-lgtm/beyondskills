@@ -20,6 +20,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import ReturnRefundPolicy from './pages/ReturnRefundPolicy';
 import AiBrochure from './pages/AiBrochure';
+import FullStackLandingPage from './pages/FullStackLandingPage';
 import { Mail, Sparkles, X } from 'lucide-react';
 
 // Scroll to top on navigation change
@@ -36,7 +37,7 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   
   // Hide headers/footers on specific onboarding/checkout paths if desired
-  const isPortal = ['/checkout', '/onboarding'].includes(location.pathname) || location.pathname.includes('/brochure');
+  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page'].includes(location.pathname) || location.pathname.includes('/brochure');
   
   return (
     <div id="glow-bg-container" className="flex flex-col min-h-screen bg-white text-slate-900 relative">
@@ -157,6 +158,7 @@ export default function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
           <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
+          <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
           <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
           <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
           <Route path="/ambassador" element={<CampusAmbassador />} />
