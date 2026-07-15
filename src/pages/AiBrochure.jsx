@@ -160,7 +160,7 @@ const COURSE_METADATA = {
         current: "2024: $190 Billion",
         projected: "2030: $424 Billion",
         growth: 84,
-        details: "Expenditure on corporate threat protection is rising exponentially as online infrastructure expands globally."
+        details: "Expenditure on threat protection is rising exponentially as online infrastructure expands globally."
       },
       {
         label: "Annual Cybercrime Cost",
@@ -380,6 +380,8 @@ const DEFAULT_METADATA = {
   ]
 };
 
+const BOOKLET_COURSES = ['artificial-intelligence', 'data-science', 'data-analytics', 'hr-mgmt', 'cyber-security', 'machine-learning'];
+
 export default function AiBrochure() {
   const navigate = useNavigate();
   const { courseId } = useParams();
@@ -387,7 +389,7 @@ export default function AiBrochure() {
   const [activeDatasetIdx, setActiveDatasetIdx] = useState(0);
   
   // Booklet state parameters
-  const [isBookletMode, setIsBookletMode] = useState(courseId === 'artificial-intelligence');
+  const [isBookletMode, setIsBookletMode] = useState(BOOKLET_COURSES.includes(courseId));
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 20;
 
@@ -403,7 +405,7 @@ export default function AiBrochure() {
   useEffect(() => {
     setExpandedModules({ 0: true });
     setActiveDatasetIdx(0);
-    setIsBookletMode(courseId === 'artificial-intelligence');
+    setIsBookletMode(BOOKLET_COURSES.includes(courseId));
     setCurrentPage(1);
   }, [courseId]);
 
@@ -457,6 +459,616 @@ export default function AiBrochure() {
     document.body.removeChild(link);
   };
 
+  // Helper lookup function to render dynamic detailed syllabus for Pages 8-12
+  const getSyllabusContent = (cid, page) => {
+    const activeId = BOOKLET_COURSES.includes(cid) ? cid : 'artificial-intelligence';
+    
+    const db = {
+      'artificial-intelligence': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Python Setup & Structures",
+          title: "Python Fundamentals & Basic Structures",
+          desc: "Establish professional programming habits, configure terminal workspaces, and master control logic.",
+          sec1Title: "1. Setup & Environment",
+          sec1Items: [
+            "Installation and setup of Anaconda environment",
+            "Jupyter Notebook modern usage practices",
+            "Essential shortcuts and productivity tips in Jupyter Notebook",
+            "Understanding Python data types with real-world applications"
+          ],
+          sec2Title: "2. Structures & File Logic",
+          sec2Items: [
+            "Variable naming best practices (PEP 8 standards)",
+            "Lists, Tuples, Sets, and Dictionaries with practical use cases",
+            "Introduction to files and directories in modern dev environments",
+            "File I/O and context managers (with Statement)"
+          ],
+          sec3Title: "3. CLI & Loops Control Flow",
+          sec3Desc: "Looping constructs (for/while loops), conditional statements (if/elif/else), and terminal navigation."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Data Analysis & Visualization",
+          title: "Scientific Libraries & EDA",
+          desc: "Clean messy data tables, formulate array calculations, and design presentation-ready telemetry charts.",
+          sec1Title: "1. NumPy Computation",
+          sec1Items: [
+            "Introduction to machine learning scientific libraries",
+            "NumPy hands-on implementation & array operations",
+            "Matrix transformations and array vector calculations"
+          ],
+          sec2Title: "2. Pandas Wrangling & Visuals",
+          sec2Items: [
+            "Pandas: real-world data analysis and cleaning",
+            "Data transformation, grouping, and merging datasets",
+            "Exploratory analysis (EDA) using Matplotlib",
+            "Seaborn visualization for advanced insights"
+          ],
+          sec3Title: "3. Concept Strengthening & Doubt resolution",
+          sec3Desc: "Dedicated interactive discussion sessions to resolve course-related queries and reinforce core logic."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Relational SQL & Linear Modeling",
+          title: "SQL Databases & Statistical Modeling",
+          desc: "Manage data schemas, write SQL queries, analyze statistics, and establish supervised regression pipelines.",
+          sec1Title: "1. Databases & SQL",
+          sec1Items: [
+            "Excel: dashboard visual layouts and calculations",
+            "SQL Joins, data aggregations, and query writing",
+            "Relational database design & schema connections",
+            "Power BI: DAX queries & model charts"
+          ],
+          sec2Title: "2. Stats & Machine Learning",
+          sec2Items: [
+            "Statistical thinking: central tendencies & dispersion",
+            "IQR statistics & dispersion calculations",
+            "Supervised & unsupervised model fine-tuning",
+            "Linear & Logistic Regression concept checks"
+          ],
+          sec3Title: "3. Regression Evaluations & Predictions",
+          sec3Desc: "Hands-on practice mapping regression performance, evaluating metrics, and auditing classifications."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Data Processing & Ensembles",
+          title: "Data Preprocessing & Tree Models",
+          desc: "Standardize data inputs, manage outlier offsets, configure decision trees, and explore neural structures.",
+          sec1Title: "1. Data Standardization",
+          sec1Items: [
+            "Standardization, normalization, scaling",
+            "Outlier detection and missing value treatment",
+            "Feature scaling and selection techniques",
+            "Introduction to data preprocessing techniques"
+          ],
+          sec2Title: "2. Trees & Deep Learning",
+          sec2Items: [
+            "Decision Trees: CART concepts & algorithms",
+            "Bagging, Boosting, and Random Forest methods",
+            "Neural Networks: activation parameters & layers",
+            "Fundamentals of Deep Learning models"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Utilize Data Science libraries to execute data analysis, visualization, model building, and data extraction."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Text Intelligence & API Pipelines",
+          title: "NLP & Generative AI Specialization",
+          desc: "Construct text tokenizers, execute entity extractions (NER), download transformer pipelines, and invoke API agents.",
+          sec1Title: "1. Natural Language Processing",
+          sec1Items: [
+            "NLTK text parsing, tokenization, linguistics",
+            "spaCy: Named Entity Recognition (NER) & apps",
+            "Gensim topic modeling & semantic analysis",
+            "FastText: word representations & Deep Learning NLP"
+          ],
+          sec2Title: "2. Generative AI & LLMs",
+          sec2Items: [
+            "Hugging Face ecosystem & pre-trained transformers",
+            "Working of GenAI: GANs, VAEs, and LLMs",
+            "Overview of DALL-E, ChatGPT, and Gemini APIs",
+            "Prompt Engineering & building custom agents"
+          ],
+          sec3Title: "3. Real-World AI Applications",
+          sec3Desc: "Apply GenAI models to content generation, workflow automations, and RAG support portals."
+        }
+      },
+      'data-science': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Python Internals & Architecture",
+          title: "Python Fundamentals & Structures",
+          desc: "Configure virtual workspaces, establish PEP 8 variables, and control standard data streams.",
+          sec1Title: "1. Setup & Environment",
+          sec1Items: [
+            "Installation and setup of Anaconda environment",
+            "Jupyter Notebook overview with modern usage practices",
+            "Essential shortcut keys and productivity tips in Jupyter Notebook",
+            "Understanding Python data types with real-world applications"
+          ],
+          sec2Title: "2. Structures & File Logic",
+          sec2Items: [
+            "Best practices for naming variables in Python (PEP 8 Standards)",
+            "Python Data Structures: List, Tuple, Set, and Dictionary with practical use cases",
+            "Introduction to files and directories in modern dev environments",
+            "File handling: Reading text files and context managers"
+          ],
+          sec3Title: "3. CLI & Doubt Clearing",
+          sec3Desc: "Working with Command Line Interfaces (CLI), terminal navigation, and dedicated doubt clearing."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Control Logic & NumPy Data Analysis",
+          title: "Control Flow & NumPy Computing",
+          desc: "Construct conditional logic pathways and clean multi-dimensional arrays for machine learning.",
+          sec1Title: "1. Control Flow & Loops",
+          sec1Items: [
+            "Conditional statements in Python: if, elif, and else",
+            "Looping constructs: for loops and while loops"
+          ],
+          sec2Title: "2. NumPy Array Processing",
+          sec2Items: [
+            "Introduction to machine learning scientific libraries",
+            "NumPy: Hands-on implementation and practical applications",
+            "Data analysis with Pandas (data cleaning, transformation, and analysis)",
+            "Pandas: Hands-on data analysis and real-world applications"
+          ],
+          sec3Title: "3. Continuous Doubt Resolution",
+          sec3Desc: "Regular interactive doubtful resolution sessions to solidify data analytics concepts and loop frameworks."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Exploratory Data Analysis & Statistics",
+          title: "EDA, Statistics & Core ML Regressions",
+          desc: "Draw interactive telemetry charts, audit standard distributions, and predict simple variables.",
+          sec1Title: "1. Visualizations & EDA",
+          sec1Items: [
+            "Exploratory Data Analysis (EDA) and visualization using Matplotlib",
+            "Data visualization concepts and techniques",
+            "Seaborn: Hands-on visualization for advanced insights"
+          ],
+          sec2Title: "2. Statistical Foundations",
+          sec2Items: [
+            "Statistical thinking in Python: Building core foundations",
+            "Measures of central tendency, dispersion, and variance",
+            "IQR (Interquartile Range) statistics - hands-on practice",
+            "Introduction to machine learning classification & regressions"
+          ],
+          sec3Title: "3. Logistic Regression Foundations",
+          sec3Desc: "Logistic Regression concepts, evaluation metrics, and practical hands-on implementations."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Data Processing & Machine Learning Trees",
+          title: "Data Preprocessing & Tree Models",
+          desc: "Apply data scaling matrices, manage outliers, build CART models, and code deep learning basics.",
+          sec1Title: "1. Preprocessing & Regressions",
+          sec1Items: [
+            "Linear Regression model building and evaluation metrics",
+            "Introduction to data preprocessing: standardization, normalization",
+            "Outlier detection and missing value treatments",
+            "Feature scaling and feature selection techniques"
+          ],
+          sec2Title: "2. Decision Trees & ensembles",
+          sec2Items: [
+            "Decision Trees: Classification and Regression Trees (CART) concepts",
+            "Bagging techniques for model improvement",
+            "Boosting models and Random Forest methods",
+            "Fundamentals of Neural Networks and Deep Learning"
+          ],
+          sec3Title: "3. Neural Networks basics",
+          sec3Desc: "Neural networks activation parameters, layers, and basic Deep Learning models."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Excel Analysis, SQL & Power BI Dashboards",
+          title: "Excel, SQL & Power BI Visualization",
+          desc: "Build relational SQL databases, perform Excel pivots, and construct Power BI telemetry dashboards.",
+          sec1Title: "1. Excel & SQL Data Queries",
+          sec1Items: [
+            "Advanced Excel functions for data analysis & conditional formatting",
+            "Pivot tables for data summarization & interactive dashboards",
+            "SQL for data extraction: schema design, clauses, Joins"
+          ],
+          sec2Title: "2. Power BI Reporting",
+          sec2Items: [
+            "Introduction to Power BI Desktop and its interface",
+            "ETL Pipeline implementation in Power BI (extract, transform, load)",
+            "Creating calculated fields using DAX formulas",
+            "AI-powered features and advanced analytics in Power BI"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Capstone project deploying analytics scripts, SQL joins, and dashboard visual feeds."
+        }
+      },
+      'data-analytics': {
+        // Data analytics shares the exact same curriculum data in files
+      },
+      'cyber-security': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Threat Landscape & Linux System Commands",
+          title: "Cyber Security Fundamentals & Linux Command Line",
+          desc: "Audit online threat vectors, explore security principles, and master the Linux file system.",
+          sec1Title: "1. Cybersecurity Landscape",
+          sec1Items: [
+            "Cybersecurity Fundamentals: Definition, importance, and threat landscape",
+            "Cyber threats: malware, phishing, ransomware, social engineering, and APTs",
+            "Core security principles: CIA Triad (Confidentiality, Integrity, Availability)",
+            "Cybersecurity ethics, governance, compliance, and data protection"
+          ],
+          sec2Title: "2. Linux Administration",
+          sec2Items: [
+            "Introduction to Linux: commands, file system, and admin basics",
+            "Linux command-line fundamentals and productivity tips",
+            "Networking commands for troubleshooting and connectivity analysis",
+            "Service management and log monitoring in Linux systems"
+          ],
+          sec3Title: "3. Linux Directory Structure",
+          sec3Desc: "Linux file system architecture and directory structure (FHS standards) with doubt-clearing sessions."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Windows Security Config & Networking",
+          title: "Windows OS Security & Network Routing",
+          desc: "Configure Windows user accesses, script system diagnostics, and study TCP/IP protocols.",
+          sec1Title: "1. Windows Configuration",
+          sec1Items: [
+            "Introduction to Windows: system configuration and security basics",
+            "Access control models, user permissions, and User Account Control (UAC)",
+            "Windows security tools: firewall configuration and Microsoft Defender",
+            "Remote administration: WinRM, Remote Desktop Protocol (RDP)"
+          ],
+          sec2Title: "2. CLI Scripting & Networking",
+          sec2Items: [
+            "Command Prompt (CMD) commands and basic batch scripting",
+            "Introduction to PowerShell for automation and system management",
+            "Networking fundamentals: protocols, models (OSI/TCP-IP), ports",
+            "IP Addressing and Subnetting: IPv4/IPv6 concepts & network segmentation"
+          ],
+          sec3Title: "3. Firewall Config",
+          sec3Desc: "Firewall concepts, port security filters, and configuration for network security."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Ethical Hacking & Web Vulnerabilities",
+          title: "Ethical Hacking & Web Penetration Testing",
+          desc: "Run active network scans, bypass credentials, exploit file uploads, and mitigate OWASP Top 10.",
+          sec1Title: "1. Ethical Hacking Concepts",
+          sec1Items: [
+            "Ethical Hacking: concepts, tools, methodologies, and reconnaissance",
+            "Vulnerability assessment and professional security reporting",
+            "Windows and Linux system hacking and password cracking",
+            "Network analysis and testing using Wireshark"
+          ],
+          sec2Title: "2. Web App Security",
+          sec2Items: [
+            "Web application security, fuzzing, and directory enumeration",
+            "Subdomain enumeration, asset discovery, and authentication bypass",
+            "File Inclusion (LFI/RFI) and file upload exploits",
+            "Cross-Site Scripting (XSS), Command Injection, and SQL Injection (SQLi)"
+          ],
+          sec3Title: "3. OWASP Top 10 Mitigation",
+          sec3Desc: "OWASP Top 10 (2021) critical web security risks, vulnerability exploitation, and mitigations."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • SIEM Systems & Incident Response",
+          title: "SOC Operations, SIEM & Team Scenarios",
+          desc: "Analyze SIEM consoles, install intrusion detection systems, and rehearse Red/Blue attack scenarios.",
+          sec1Title: "1. SOC & SIEM Integration",
+          sec1Items: [
+            "Security Operations Center (SOC) roles, responsibilities, and workflows",
+            "Security Information and Event Management (SIEM) concepts",
+            "Security tools: installation, configuration, and integration",
+            "Building and configuring IDS, firewalls, and honeypots"
+          ],
+          sec2Title: "2. Threat Detection & Teams",
+          sec2Items: [
+            "Threat detection, incident reporting, and compliance practices",
+            "Red, Blue, and Purple Team: cybersecurity attack & defense scenarios",
+            "Blue Team: defensive security strategies and threat monitoring",
+            "Red Team: offensive security testing and ethical hacking techniques"
+          ],
+          sec3Title: "3. Collaborative Security",
+          sec3Desc: "Purple Team collaborative security approach for continuous organizational threat protection improvement."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Security Audits & Capstone Lab",
+          title: "Security Auditing & Pentest Capstones",
+          desc: "Compile detailed system audit reports and simulate offensive security campaigns.",
+          sec1Title: "1. Security Auditing",
+          sec1Items: [
+            "Security testing and vulnerability assessment checks",
+            "Comprehensive security audit checklists for vulnerability scans"
+          ],
+          sec2Title: "2. Offensive Simulation",
+          sec2Items: [
+            "Real-World attack simulations on vulnerable services",
+            "Web application vulnerability assessment and security testing",
+            "Identifying, analyzing, and reporting security vulnerabilities",
+            "Anonymity techniques, dark web fundamentals, and secure comms"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Capstone project executing vulnerability assessment and penetration testing (VAPT) on simulated networks."
+        }
+      },
+      'hr-mgmt': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Strategic HRM & Organizational Alignment",
+          title: "Strategic HR Management & Digital Transformation",
+          desc: "Align human resource operations with business goals and understand digital HR automated tools.",
+          sec1Title: "1. Strategic HRM",
+          sec1Items: [
+            "Introduction to Strategic HRM: Aligning strategies with business goals",
+            "Linking HRM with organizational strategy & performance metrics",
+            "Organizational growth through people-centric and data-driven HR strategies"
+          ],
+          sec2Title: "2. Goal Translation & Digital HR",
+          sec2Items: [
+            "Deriving HR strategy from organizational goals and objectives",
+            "Digital transformation in HR: emerging tech, automation, and challenges",
+            "Interactive doubt-clearing & discussion sessions for HR alignment"
+          ],
+          sec3Title: "3. Doubts Resolution",
+          sec3Desc: "Dedicated Q&A checkups to address course-related queries and strategic workforce cases."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Workforce Planning & Job Architecture",
+          title: "Workforce Planning & Job Design Techniques",
+          desc: "Manage manpower demand forecasts, compile job specifications, and run evaluation schemas.",
+          sec1Title: "1. Planning & Analysis",
+          sec1Items: [
+            "Workforce planning & job design: analysis, evaluation, and structuring",
+            "Manpower demand & supply analysis: forecasting workforce needs",
+            "HR Planning (HRP) process: strategic workforce planning, gap analysis"
+          ],
+          sec2Title: "2. Job Specifications",
+          sec2Items: [
+            "Job Description (JD): defining roles, responsibilities, and deliverables",
+            "Job Specification (JS): outlining skills, qualifications, and competencies",
+            "Job design techniques: structuring roles for productivity & efficiency",
+            "Methods of Job Evaluation (JE): systematic approaches to assess job value"
+          ],
+          sec3Title: "3. Compensation Alignment",
+          sec3Desc: "Establish systematic approaches to align compensation bands with evaluated role weights."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Advanced Workforce Analytics",
+          title: "Advanced Planning & Doubt Resolution",
+          desc: "Apply data-driven approaches to workforce planning, design future-ready roles, and resolve doubts.",
+          sec1Title: "1. Doubt Resolution",
+          sec1Items: [
+            "Regular doubt-clearing sessions to resolve course-related questions",
+            "Interactive discussions on strategic workforce cases"
+          ],
+          sec2Title: "2. Data-Driven Planning",
+          sec2Items: [
+            "Manpower demand & supply analysis using data-driven approaches",
+            "HR Planning process: resource optimization & gap analysis",
+            "Job description & specification: defining competency requirements",
+            "Job design strategies: creating efficient, engaging, and future-ready roles",
+            "Methods of Job Evaluation: pay structuring and internal equity"
+          ],
+          sec3Title: "3. Internal Equity Focus",
+          sec3Desc: "Modern techniques for role assessment, pay structuring, and maintaining internal equity."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Talent Acquisition & Recruitment AI",
+          title: "Talent Acquisition & Employee Development",
+          desc: "Build employer branding campaigns, review automated ATS keyword filters, and schedule training paths.",
+          sec1Title: "1. Talent Acquisition",
+          sec1Items: [
+            "Talent acquisition strategies: modern recruitment & hiring techniques",
+            "Employer branding, candidate experience, and sourcing",
+            "Individual differences: personality, attitudes, motivation, and assessments",
+            "AI & ML in recruitment: automation, resume screening, bias reduction",
+            "HR metrics in talent acquisition: Time-to-Hire, Cost-per-Hire, Quality"
+          ],
+          sec2Title: "2. Development & Engagement",
+          sec2Items: [
+            "Career planning & talent development: upskilling and reskilling",
+            "Training & Development: learning strategies for workforce growth",
+            "Career management: aligning individual goals with organizational plans",
+            "Employee engagement & modern workplace trends: culture, D&I, remote work"
+          ],
+          sec3Title: "3. Workplace Trends",
+          sec3Desc: "Enhancing employee engagement through culture, well-being, diversity, inclusion, and remote work practices."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Performance Systems, Labor Laws & AI",
+          title: "Performance Systems, Labor Laws & AI in HR",
+          desc: "Setup OKRs, appraise employee potentials, learn labor law compliance, and automate HR tasks.",
+          sec1Title: "1. Performance Management",
+          sec1Items: [
+            "PMS: goal setting, KPIs, appraisals, and continuous feedback",
+            "Performance appraisal systems: modern and continuous feedback methods",
+            "Potential Appraisal: identifying future leaders for succession planning",
+            "Performance management: OKRs/KPIs and 360-degree feedback"
+          ],
+          sec2Title: "2. Labor Laws & Change Mgmt",
+          sec2Items: [
+            "People management: leadership, motivation, and workplace culture",
+            "Managing individuals/teams in uncertain environments: Agile leadership",
+            "Compensation & Benefits: salary structures, incentives, and rewards",
+            "Labour laws & social security: compliance, regulations, and rights",
+            "Change management: organizational transformation and digital adoption"
+          ],
+          sec3Title: "3. AI in HR Automation",
+          sec3Desc: "Applicant Tracking Systems (ATS), task automation, collaborative scheduling, and AI-driven decision making."
+        }
+      },
+      'machine-learning': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Data Preprocessing & Libraries",
+          title: "Python Basics & Array Computations",
+          desc: "Configure python environments, learn loop control logic, and perform array maths using NumPy.",
+          sec1Title: "1. Setup & Environment",
+          sec1Items: [
+            "Installation of Anaconda Prompt & Jupyter Notebook overview",
+            "Jupyter Notebook usage best practices & shortcuts",
+            "Python programming basics: Loops, lists, and conditional flow",
+            "Understanding variable scopes and standard PEP 8 naming checks"
+          ],
+          sec2Title: "2. NumPy Computational Arrays",
+          sec2Items: [
+            "Introduction to scientific array computations in machine learning",
+            "NumPy: Multi-dimensional array operations and operations index",
+            "Array slicing, filtering, and matrix transformations",
+            "Hands-on implementation of vector calculations"
+          ],
+          sec3Title: "3. CLI & doubted resolutions",
+          sec3Desc: "Working with Command Line Interfaces (CLI), directory navigation, and doubts clearing."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Data Analysis & Visualization",
+          title: "Pandas Wrangling & Seaborn Visualization",
+          desc: "Filter datasets, clean missing data fields, perform pivots, and draw statistical dashboards.",
+          sec1Title: "1. Pandas Data Wrangling",
+          sec1Items: [
+            "Pandas library for filtering, cleaning, and grouping datasets",
+            "Handling missing values and transforming data frames",
+            "Merging, joining, and pivoting complex data tables",
+            "Real-world data manipulation checks and analytics"
+          ],
+          sec2Title: "2. Exploratory Data Visuals",
+          sec2Items: [
+            "Data visualization using Matplotlib library charts",
+            "Designing line, bar, scatter, and histogram plots",
+            "Seaborn visualization for advanced distribution insights",
+            "Exploratory Data Analysis (EDA) on real-world datasets"
+          ],
+          sec3Title: "3. Doubt resolution",
+          sec3Desc: "Dedicated interactive question loops to reinforce coding foundations and library checks."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Supervised Learning Algorithms",
+          title: "Supervised Classification & Regressions",
+          desc: "Understand regression math, evaluate classifications, and predict continuous variables.",
+          sec1Title: "1. Regressions Mathematics",
+          sec1Items: [
+            "Linear Regression and Logistic Regression mathematics",
+            "Hands-on implementation of Linear Regression pipelines",
+            "Logistic Regression: Concepts and practical applications"
+          ],
+          sec2Title: "2. Performance Evaluations",
+          sec2Items: [
+            "Model evaluation metrics: MSE, RMSE, R2 values",
+            "Classification metrics: Accuracy, Precision, Recall, F1-Score",
+            "Understanding confusion matrices and ROC-AUC curves",
+            "Cross-validation and bias-variance tradeoff diagnostics"
+          ],
+          sec3Title: "3. Overfitting checks",
+          sec3Desc: "Regularization concepts (L1/L2 ridge/lasso regressions) to prevent overfitting."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Ensemble Models & Tree Architectures",
+          title: "Tree-Based Models & Boosting Ensembles",
+          desc: "Train Decision Trees, construct Random Forest bagging, and deploy boosting classifiers.",
+          sec1Title: "1. Decision Trees (CART)",
+          sec1Items: [
+            "Tree-based algorithms: Decision Trees & splitting criteria (Gini/Entropy)",
+            "Hyperparameter tuning for decision trees (depth, leaf sizes)",
+            "Bagging techniques for model performance improvement"
+          ],
+          sec2Title: "2. Boosting & Random Forests",
+          sec2Items: [
+            "Random Forest classifiers: Bootstrap aggregation & ensembles",
+            "Boosting models: AdaBoost and Gradient Boosting algorithms",
+            "XGBoost: High-performance tree boosting implementations",
+            "Feature importance analysis in tree models"
+          ],
+          sec3Title: "3. Ensembles Capstone",
+          sec3Desc: "Hands-on project training ensemble classifiers to predict structured telemetry parameters."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Unsupervised Learning & MLOps",
+          title: "Unsupervised Clustering & Model Pipelines",
+          desc: "Segment datasets with K-Means, compress dimensions using PCA, and deploy predictive models.",
+          sec1Title: "1. Clustering & Dimensionality",
+          sec1Items: [
+            "Clustering models: K-Means and Hierarchical clustering",
+            "Finding optimal clusters: Elbow method & Silhouette scores",
+            "Dimensionality reduction using Principal Component Analysis (PCA)"
+          ],
+          sec2Title: "2. MLOps & Deployments",
+          sec2Items: [
+            "Saving models using joblib/pickle formats",
+            "Building end-to-end machine learning pipelines",
+            "Deploying ML model endpoints inside Flask/FastAPI routing",
+            "Monitoring model performance drift in production environments"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Final capstone project deploying an end-to-end machine learning model on cloud environments."
+        }
+      }
+    };
+
+    // If data-analytics, fallback to data-science since they carry matching schemas
+    const targetId = activeId === 'data-analytics' ? 'data-science' : activeId;
+    return db[targetId][page];
+  };
+
+  // Helper lookup function to render dynamic Page 3 metrics depending on course
+  const getMarketMetrics = (cid) => {
+    const activeId = BOOKLET_COURSES.includes(cid) ? cid : 'artificial-intelligence';
+    
+    const db = {
+      'artificial-intelligence': [
+        { label: "Enterprise AI Adoption", percent: 85, detail: "Companies replacing static logs with pipeline checks" },
+        { label: "AI Developer Job Openings", percent: 92, detail: "Active hiring requirements showing 2.5x growth" },
+        { label: "Salary Premium Trajectory", percent: 78, detail: "Higher salaries for engineers managing API models" }
+      ],
+      'data-science': [
+        { label: "Data Science Platform Market", percent: 86, detail: "Enterprise investments multiplying for predictive modeling" },
+        { label: "Data Scientist Hiring Demand", percent: 92, detail: "Job listings showing 3x growth in analytics requirements" },
+        { label: "Telemetry Log Parsing", percent: 80, detail: "Companies automating raw database schema parsing" }
+      ],
+      'data-analytics': [
+        { label: "Business Intelligence Market", percent: 72, detail: "Global conversion of raw operations data to dashboards" },
+        { label: "Power BI & SQL Openings", percent: 78, detail: "Active analytics requirements representing largest job chunk" },
+        { label: "Executive Dashboard Reliance", percent: 85, detail: "Business managers tracking real-time operations telemetry" }
+      ],
+      'cyber-security': [
+        { label: "Cybersecurity Market Size", percent: 84, detail: "Expenditure rising exponentially as threat landscape expands" },
+        { label: "Annual Cybercrime Cost", percent: 92, detail: "Penetration testers heavily recruited for protection" },
+        { label: "Cyber Job Openings Gap", percent: 89, detail: "Massive shortage of certified threat analysts globally" }
+      ],
+      'hr-mgmt': [
+        { label: "Global HR Tech Market", percent: 68, detail: "Investments rising fast in automated recruitment systems" },
+        { label: "HR Analytics Adoption", percent: 72, detail: "Hiring managers seeking metrics-driven talent strategists" },
+        { label: "ATS Filter Implementation", percent: 76, detail: "Companies pre-screening resumes through keywords filters" }
+      ],
+      'machine-learning': [
+        { label: "ML Platform Market size", percent: 88, detail: "Enterprise training pipelines expanding rapidly" },
+        { label: "Algorithm Hiring Demands", percent: 82, detail: "Surge in requirements for tree-based ensemble specialists" },
+        { label: "Enterprise ML Adaptations", percent: 75, detail: "Platforms running active ML pipelines to predict behaviors" }
+      ]
+    };
+    
+    return db[activeId === 'data-analytics' ? 'data-science' : activeId];
+  };
+
+  // Helper lookup function to render dynamic tools covered cells on Page 14
+  const getToolsList = (cid) => {
+    const activeId = BOOKLET_COURSES.includes(cid) ? cid : 'artificial-intelligence';
+    
+    const db = {
+      'artificial-intelligence': ["python", "sql", "pandas", "numpy", "scikit-learn", "tensorflow"],
+      'data-science': ["python", "sql", "pandas", "numpy", "scikit-learn", "excel"],
+      'data-analytics': ["python", "sql", "pandas", "numpy", "excel", "power-bi"],
+      'cyber-security': ["linux", "windows", "wireshark", "bash", "network", "python"],
+      'hr-mgmt': ["excel", "data-analytics", "power-bi", "nlp", "python", "sql"],
+      'machine-learning': ["python", "numpy", "pandas", "scikit-learn", "xgboost", "flask"]
+    };
+    
+    return db[activeId === 'data-analytics' ? 'data-science' : activeId];
+  };
+
+  // Helper lookup function to render dynamic tools footer text on Page 14
+  const getToolsFooter = (cid) => {
+    const activeId = BOOKLET_COURSES.includes(cid) ? cid : 'artificial-intelligence';
+    
+    const db = {
+      'artificial-intelligence': "Plus: Jupyter Notebooks, Hugging Face Transformers, Git, OpenAI APIs",
+      'data-science': "Plus: Jupyter Notebooks, Anaconda Navigator, GitHub, Power BI DAX formulas",
+      'data-analytics': "Plus: Excel VLOOKUP/Pivots, SQL Joins, Power BI desktop dashboard reports",
+      'cyber-security': "Plus: Kali Linux commands, Nmap port scanning, Metasploit, SIEM tools, Burp Suite",
+      'hr-mgmt': "Plus: ATS Screening keywords, KPI calculators, 360 Feedback sheets, Excel CTC models",
+      'machine-learning': "Plus: Jupyter Notebook, Anaconda, XGBoost, Cross Validation, API deployment tools"
+    };
+    
+    return db[activeId === 'data-analytics' ? 'data-science' : activeId];
+  };
+
   // Render individual pages for the interactive 20-page booklet
   const renderPageContent = (page) => {
     const pageIsDark = isPageDark(page);
@@ -496,19 +1108,19 @@ export default function AiBrochure() {
               </span>
               <h1 className="logo-font text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
                 <span className="bg-gradient-to-r from-[#0EA5E9] via-brand-purple to-[#2A4BFF] bg-clip-text text-transparent">
-                  AI & Data Science
+                  {course.title}
                 </span>
               </h1>
               <p className={`text-xs sm:text-sm md:text-base max-w-xl mx-auto font-light leading-relaxed font-mono ${textMuted}`}>
-                Learn Python, Data Analytics, Machine Learning & Generative AI in a hands-on production environment.
+                {course.overview}
               </p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-slate-200 dark:border-white/10 pt-6 mt-6 z-10">
               {[
-                { label: "Duration", value: "3 Months" },
+                { label: "Duration", value: course.duration || "3 Months" },
                 { label: "Delivery", value: "Live + Recorded" },
-                { label: "Hands-on Tasks", value: "10+ Projects" },
+                { label: "Hands-on Tasks", value: course.mentorLedProjects || "10+ Projects" },
                 { label: "Placement Support", value: "End-to-End" }
               ].map((item, idx) => (
                 <div key={idx} className={`p-3 rounded-xl backdrop-blur-sm border ${cardBg}`}>
@@ -558,29 +1170,26 @@ export default function AiBrochure() {
           </div>
         );
 
-      case 3:
+      case 3: {
+        const metrics = getMarketMetrics(course.id);
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-6 relative z-10">
               <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Market Trajectory</span>
-              <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Why AI & Data Science?</h2>
+              <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Why {course.title}?</h2>
               <p className={`text-xs sm:text-sm leading-relaxed font-mono ${textMuted}`}>
-                The global corporate environment is pivoting aggressively toward data parsing and model endpoints. Standard operational pipelines require automation.
+                The global corporate environment is pivoting aggressively toward digital workflow execution. Standard operational pipelines require automation.
               </p>
             </div>
 
             <div className="space-y-4 my-auto relative z-10">
-              {[
-                { label: "Enterprise AI Adoption", percent: 85, detail: "Companies replacing static logs with pipeline checks" },
-                { label: "AI Developer Job Openings", percent: 92, detail: "Active hiring requirements showing 2.5x growth" },
-                { label: "Salary Premium Trajectory", percent: 78, detail: "Higher salaries for engineers managing API models" }
-              ].map((item, idx) => (
+              {metrics.map((item, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex justify-between text-xs font-mono font-bold">
                     <span className={textPrimary}>{item.label}</span>
                     <span className="text-[#0EA5E9]">{item.percent}% Increase</span>
                   </div>
-                  <div className={`w-full ${pageIsDark ? 'bg-slate-900 border-white/5' : 'bg-slate-200 border-slate-350'} h-2 rounded-full overflow-hidden border`}>
+                  <div className={`w-full ${pageIsDark ? 'bg-slate-900 border-white/5' : 'bg-slate-200 border-slate-300'} h-2 rounded-full overflow-hidden border`}>
                     <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: `${item.percent}%` }}></div>
                   </div>
                   <p className="text-[9px] text-[#2A4BFF] dark:text-[#0EA5E9] font-mono leading-none">{item.detail}</p>
@@ -589,6 +1198,7 @@ export default function AiBrochure() {
             </div>
           </div>
         );
+      }
 
       case 4:
         return (
@@ -671,9 +1281,9 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 relative z-10">
               {[
-                { value: "3 Months", label: "Program Duration", desc: "Active cohort tracking" },
+                { value: course.duration || "3 Months", label: "Program Duration", desc: "Active cohort tracking" },
                 { value: "100+ Hours", label: "Coding & Mentorship", desc: "Live + Recorded sessions" },
-                { value: "10+ Projects", label: "Portfolio Tasks", desc: "Git repository builds" },
+                { value: course.mentorLedProjects || "10+ Projects", label: "Portfolio Tasks", desc: "Git repository builds" },
                 { value: "Capstone", label: "Production Project", desc: "Evaluated by managers" },
                 { value: "1 Year LMS", label: "Learning Portal Access", desc: "Code templates & videos" }
               ].map((item, idx) => (
@@ -694,7 +1304,7 @@ export default function AiBrochure() {
               <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Syllabus Flow</span>
               <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Learning Roadmap</h2>
               <p className={`text-[11px] font-mono ${textMuted}`}>
-                Progress systematically from initial scripting to training machine learning algorithms and deploying Generative AI models.
+                Progress systematically from initial scripting to training machine learning algorithms and deploying operational models.
               </p>
             </div>
 
@@ -703,8 +1313,8 @@ export default function AiBrochure() {
                 { step: "01", name: "Python Basics", detail: "Syntax & file logic" },
                 { step: "02", name: "Data Wrangling", detail: "NumPy & Pandas" },
                 { step: "03", name: "BI & SQL", detail: "Database queries" },
-                { step: "04", name: "Machine Learning", detail: "Classification/Regression" },
-                { step: "05", name: "Generative AI", detail: "LLMs & Hugging Face" }
+                { step: "04", name: "Advanced Analytics", detail: "Model optimization" },
+                { step: "05", name: "Deployments", detail: "API setups & Capstones" }
               ].map((item, idx) => (
                 <div key={idx} className={`p-3 rounded-xl text-center relative flex flex-col justify-between border ${cardBg}`}>
                   <div className="absolute top-2 left-2 text-[#0EA5E9] text-[9px] font-mono font-bold">{item.step}</div>
@@ -715,43 +1325,62 @@ export default function AiBrochure() {
             </div>
 
             <div className="text-center bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 text-[#2A4BFF] dark:text-[#0EA5E9] rounded-xl p-3 relative z-10 mt-4 text-[10px] font-mono">
-              🚀 Final Capstone Project: Integrate your custom LLM chat agent with live telemetry logs.
+              🚀 Final Capstone Project: Integrate your custom course project with live telemetry logs.
             </div>
           </div>
         );
 
       case 8:
+      case 9:
+      case 10:
+      case 11:
+      case 12: {
+        const content = getSyllabusContent(course.id, page);
         return (
           <div className="flex flex-col justify-between h-full relative z-10">
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 1</span>
-                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 1-2 • Python Internals & Architecture</span>
+                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>
+                  {content.module}
+                </span>
+                <span className="text-[10px] font-mono text-slate-500">
+                  {content.duration}
+                </span>
               </div>
-              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Python Fundamentals & Basic Structures</h2>
+              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>
+                {content.title}
+              </h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
-                Establish professional programming habits, configure terminal workspaces, and master control logic.
+                {content.desc}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Setup & Environment</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">
+                  {content.sec1Title}
+                </h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Installation and setup of Anaconda environment</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Jupyter Notebook modern usage practices</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Essential shortcuts and productivity tips in Jupyter Notebook</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Understanding Python data types with real-world applications</span></li>
+                  {content.sec1Items.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Structures & File Logic</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">
+                  {content.sec2Title}
+                </h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Variable naming best practices (PEP 8 standards)</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Lists, Tuples, Sets, and Dictionaries with practical use cases</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to files and directories in modern dev environments</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>File I/O and context managers (with Statement)</span></li>
+                  {content.sec2Items.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -759,210 +1388,22 @@ export default function AiBrochure() {
                 <div className="flex items-center gap-2">
                   <Code className="w-5 h-5 text-brand-purple" />
                   <div>
-                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. CLI & Loops Control Flow</h4>
-                    <p className="text-[9px] text-slate-500 font-mono">Looping constructs (for/while loops), conditional statements (if/elif/else), and terminal navigation.</p>
+                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>
+                      {content.sec3Title}
+                    </h4>
+                    <p className="text-[9px] text-slate-500 font-mono">
+                      {content.sec3Desc}
+                    </p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active coding</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">
+                  Active Q&A
+                </span>
               </div>
             </div>
           </div>
         );
-
-      case 9:
-        return (
-          <div className="flex flex-col justify-between h-full relative z-10">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 2</span>
-                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 3-5 • Data Analysis & Visualization</span>
-              </div>
-              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Scientific Libraries & EDA</h2>
-              <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
-                Clean messy data tables, formulate array calculations, and design presentation-ready telemetry charts.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. NumPy Computation</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to machine learning scientific libraries</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>NumPy hands-on implementation & array operations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Matrix transformations and array vector calculations</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Pandas Wrangling & Visuals</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Pandas: real-world data analysis and cleaning</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Data transformation, grouping, and merging datasets</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Exploratory analysis (EDA) using Matplotlib</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Seaborn visualization for advanced insights</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-3.5 rounded-xl border ${cardBg} md:col-span-2 flex justify-between items-center`}>
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-brand-purple" />
-                  <div>
-                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Concept Strengthening & Doubt resolution</h4>
-                    <p className="text-[9px] text-slate-500 font-mono">Dedicated interactive discussion sessions to resolve course-related queries and reinforce core logic.</p>
-                  </div>
-                </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active Q&A</span>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 10:
-        return (
-          <div className="flex flex-col justify-between h-full relative z-10">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 3</span>
-                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 6-7 • Relational SQL & Linear Modeling</span>
-              </div>
-              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>SQL Databases & Statistical Modeling</h2>
-              <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
-                Manage data schemas, write SQL queries, analyze statistics, and establish supervised regression pipelines.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Databases & SQL</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Excel: dashboard visual layouts and calculations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>SQL Joins, data aggregations, and query writing</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Relational database design & schema connections</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Power BI: DAX queries & model charts</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Stats & Machine Learning</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Statistical thinking: central tendencies & dispersion</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>IQR statistics & dispersion calculations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Supervised & unsupervised model fine-tuning</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Linear & Logistic Regression concept checks</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-3.5 rounded-xl border ${cardBg} md:col-span-2 flex justify-between items-center`}>
-                <div className="flex items-center gap-2">
-                  <Award className="w-5 h-5 text-brand-purple" />
-                  <div>
-                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Regression Evaluations & Predictions</h4>
-                    <p className="text-[9px] text-slate-500 font-mono">Hands-on practice mapping regression performance, evaluating metrics, and auditing classifications.</p>
-                  </div>
-                </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Theory + Code</span>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 11:
-        return (
-          <div className="flex flex-col justify-between h-full relative z-10">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 4</span>
-                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 8-10 • Data Processing & Ensembles</span>
-              </div>
-              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Data Preprocessing & Tree Models</h2>
-              <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
-                Standardize data inputs, manage outlier offsets, configure decision trees, and explore neural structures.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Data Standardization</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Standardization, normalization, scaling</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Outlier detection and missing value treatment</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Feature scaling and selection techniques</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to data preprocessing techniques</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Trees & Deep Learning</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Decision Trees: CART concepts & algorithms</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Bagging, Boosting, and Random Forest methods</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Neural Networks: activation parameters & layers</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Fundamentals of Deep Learning models</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-3.5 rounded-xl border ${cardBg} md:col-span-2 flex justify-between items-center`}>
-                <div className="flex items-center gap-2">
-                  <Rocket className="w-5 h-5 text-brand-purple" />
-                  <div>
-                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Capstone Real-world Implementation</h4>
-                    <p className="text-[9px] text-slate-500 font-mono">Utilize Data Science libraries to execute data analysis, visualization, model building, and data extraction.</p>
-                  </div>
-                </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Production Build</span>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 12:
-        return (
-          <div className="flex flex-col justify-between h-full relative z-10">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 5</span>
-                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 11-12 • Text Intelligence & API Pipelines</span>
-              </div>
-              <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>NLP & Generative AI Specialization</h2>
-              <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
-                Construct text tokenizers, execute entity extractions (NER), download transformer pipelines, and invoke API agents.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Natural Language Processing</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>NLTK text parsing, tokenization, linguistics</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>spaCy: Named Entity Recognition (NER) & apps</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Gensim topic modeling & semantic analysis</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>FastText: word representations & Deep Learning NLP</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Generative AI & LLMs</h3>
-                <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Hugging Face ecosystem & pre-trained transformers</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Working of GenAI: GANs, VAEs, and LLMs</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Overview of DALL-E, ChatGPT, and Gemini APIs</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Prompt Engineering & building custom agents</span></li>
-                </ul>
-              </div>
-
-              <div className={`p-3.5 rounded-xl border ${cardBg} md:col-span-2 flex justify-between items-center`}>
-                <div className="flex items-center gap-2">
-                  <Brain className="w-5 h-5 text-brand-purple animate-pulse" />
-                  <div>
-                    <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Real-World AI Applications</h4>
-                    <p className="text-[9px] text-slate-550 font-mono">Apply GenAI models to content generation, workflow automations, and RAG support portals.</p>
-                  </div>
-                </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Future Ready</span>
-              </div>
-            </div>
-          </div>
-        );
+      }
 
       case 13:
         return (
@@ -976,27 +1417,28 @@ export default function AiBrochure() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 my-auto relative z-10 pt-2">
-              {[
-                { title: "Netflix Recommendation", desc: "Build filtering models suggesting titles based on historical records.", tech: "Python, ML" },
-                { title: "Customer Churn Predictor", desc: "Deploy Random Forest structures predicting subscriber churn.", tech: "Scikit-Learn" },
-                { title: "AI Custom Support Agent", desc: "Design chat engines parsing custom text directories dynamically.", tech: "OpenAI API, RAG" },
-                { title: "NLP Resume ATS Matcher", desc: "Audit keywords on applicant PDF sheets against description logs.", tech: "spaCy, NLTK" }
-              ].map((item, idx) => (
+              {course.projects.slice(0, 4).map((item, idx) => (
                 <div key={idx} className={`p-3 rounded-xl flex flex-col justify-between border ${cardBg}`}>
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
-                    <p className={`text-[9px] font-mono mt-1 leading-snug ${textMuted}`}>{item.desc}</p>
+                    <p className={`text-[9px] font-mono mt-1 leading-snug ${textMuted}`}>{item.description}</p>
                   </div>
-                  <span className="text-[8px] font-mono text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20 w-fit mt-2">
-                    {item.tech}
-                  </span>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {item.techUsed && item.techUsed.map((tech, tIdx) => (
+                      <span key={tIdx} className="text-[8px] font-mono text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20 w-fit">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         );
 
-      case 14:
+      case 14: {
+        const tools = getToolsList(course.id);
+        const toolsFooter = getToolsFooter(course.id);
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-4 relative z-10">
@@ -1008,9 +1450,7 @@ export default function AiBrochure() {
             </div>
 
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 my-auto relative z-10">
-              {[
-                "python", "sql", "pandas", "numpy", "scikit-learn", "tensorflow", "react", "node.js"
-              ].map((tool, idx) => (
+              {tools.map((tool, idx) => (
                 <div key={idx} className={`p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border ${cardBg}`}>
                   <TechIcon name={tool} className="w-8 h-8" />
                   <span className={`text-[8px] font-mono font-bold uppercase tracking-wider block text-center truncate w-full ${textPrimary}`}>{tool}</span>
@@ -1019,10 +1459,11 @@ export default function AiBrochure() {
             </div>
             
             <div className={`text-[10px] font-mono text-center border-t pt-4 ${pageIsDark ? 'border-white/10 text-slate-400' : 'border-slate-200 text-slate-500'}`}>
-              Plus: Jupyter Notebooks, Hugging Face Transformers, Git Version Control, OpenAI API tokens
+              {toolsFooter}
             </div>
           </div>
         );
+      }
 
       case 15:
         return (
@@ -1093,7 +1534,13 @@ export default function AiBrochure() {
           </div>
         );
 
-      case 17:
+      case 17: {
+        const mentorList = course.mentors && course.mentors.length > 0 
+          ? course.mentors 
+          : [
+              { name: "Saurav Kumar Sinha", role: "Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini", experience: "8+ Years" },
+              { name: "Vinod Kumar Eslavath", role: "Assistant Manager - Data Scientist at Shemaroo", experience: "5+ Years" }
+            ];
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-4 relative z-10">
@@ -1105,24 +1552,27 @@ export default function AiBrochure() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto relative z-10 pt-4">
-              {[
-                { name: "Saurav Kumar Sinha", role: "Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini", exp: "8+ Years", details: "Directs neural network setups and software architectures." },
-                { name: "Vinod Kumar Eslavath", role: "Assistant Manager - Data Scientist at Shemaroo", exp: "5+ Years", details: "Guides preprocessing, scientific libraries, and ML modeling." }
-              ].map((mentor, idx) => (
+              {mentorList.slice(0, 2).map((mentor, idx) => (
                 <div key={idx} className={`p-5 rounded-xl flex flex-col justify-between border ${cardBg}`}>
                   <div className="space-y-2">
-                    <span className="text-[9px] text-[#0EA5E9] font-mono font-bold uppercase tracking-wider bg-[#2A4BFF]/25 px-2 py-0.5 rounded border border-[#2A4BFF]/30 w-fit block">{mentor.exp} Exp</span>
+                    <span className="text-[9px] text-[#0EA5E9] font-mono font-bold uppercase tracking-wider bg-[#2A4BFF]/25 px-2 py-0.5 rounded border border-[#2A4BFF]/30 w-fit block">{mentor.experience || "5+ Years"} Exp</span>
                     <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide mt-1 ${textPrimary}`}>{mentor.name}</h4>
                     <p className={`text-[9px] font-mono leading-none ${textMuted}`}>{mentor.role}</p>
                   </div>
-                  <p className={`text-[10px] font-mono mt-3 leading-relaxed border-t pt-2 ${pageIsDark ? 'border-white/5 text-slate-300' : 'border-slate-200 text-slate-600'}`}>{mentor.details}</p>
+                  <p className={`text-[10px] font-mono mt-3 leading-relaxed border-t pt-2 ${pageIsDark ? 'border-white/5 text-slate-300' : 'border-slate-200 text-slate-600'}`}>
+                    Guides preprocessing, scientific analysis, and core program architectures.
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         );
+      }
 
-      case 18:
+      case 18: {
+        const reviewObj = course.reviews && course.reviews[0] 
+          ? course.reviews[0] 
+          : { comment: "I've successfully finished my certification course. A big thank you to my mentors for their support.", user: "Aakash Sharma" };
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-4 relative z-10">
@@ -1137,13 +1587,13 @@ export default function AiBrochure() {
               <Quote className="w-10 h-10 text-[#0EA5E9]/10 absolute top-4 left-4 pointer-events-none" />
               <div className="relative z-10 pl-6 space-y-4">
                 <p className={`text-xs italic leading-relaxed font-mono ${textPrimary}`}>
-                  "I've successfully finished my AI course. A big thank you to my mentors for their continuous support. This journey has enriched my skills and provided clarity on my career path."
+                  "{reviewObj.comment}"
                 </p>
                 <div className="flex items-center space-x-2">
                   <div className="w-1.5 h-6 bg-[#2A4BFF] rounded-full"></div>
                   <div>
-                    <h5 className={`text-[10px] font-bold uppercase tracking-wider font-mono ${textPrimary}`}>Manshi Srivastav</h5>
-                    <span className="text-[9px] text-slate-400 font-mono block">AI & Data Science Student</span>
+                    <h5 className={`text-[10px] font-bold uppercase tracking-wider font-mono ${textPrimary}`}>{reviewObj.user}</h5>
+                    <span className="text-[9px] text-slate-400 font-mono block">{course.title} Student</span>
                   </div>
                 </div>
               </div>
@@ -1154,6 +1604,7 @@ export default function AiBrochure() {
             </div>
           </div>
         );
+      }
 
       case 19:
         return (
@@ -1245,20 +1696,28 @@ export default function AiBrochure() {
     }
   };
 
-  // Outer solid background is forced to white as requested by the user
-  const pageBgClass = isBookletMode && course.id === 'artificial-intelligence'
-    ? 'bg-white text-slate-900'
+  // Outer background is set to transparent to allow App.jsx grid pattern overlay to show behind
+  const pageBgClass = isBookletMode && BOOKLET_COURSES.includes(course.id)
+    ? 'bg-transparent text-slate-900'
     : 'bg-transparent text-slate-900';
 
   // Prevent vertical scrolling on desktop viewports in booklet mode
-  const containerHeightClass = isBookletMode && course.id === 'artificial-intelligence'
+  const containerHeightClass = isBookletMode && BOOKLET_COURSES.includes(course.id)
     ? 'md:h-screen md:max-h-screen md:overflow-hidden'
     : 'min-h-screen';
 
   return (
     <div className={`relative overflow-x-hidden ${containerHeightClass} ${pageBgClass}`}>
+      {/* Local Background Grid pattern forced inside for absolute visual clarity */}
+      {isBookletMode && BOOKLET_COURSES.includes(course.id) && (
+        <>
+          <div className="bg-grid-glow"></div>
+          <div className="bg-grid-pattern"></div>
+        </>
+      )}
+
       {/* Conditionally Render Booklet/PDF Reader or Standard Scrolling Web View */}
-      {isBookletMode && course.id === 'artificial-intelligence' ? (
+      {isBookletMode && BOOKLET_COURSES.includes(course.id) ? (
         <div className="relative z-10 pt-4 pb-4 px-4 max-w-6xl mx-auto flex flex-col justify-between h-full md:h-[calc(100vh-20px)] md:max-h-[calc(100vh-20px)]">
           {/* Header Controls Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 border p-4 rounded-2xl backdrop-blur-md mb-4 bg-white/95 border-slate-200 text-slate-800 shadow-sm">
@@ -1276,7 +1735,7 @@ export default function AiBrochure() {
               </span>
               <span className="hidden sm:inline-block w-1.5 h-6 bg-brand-purple rounded-full"></span>
               <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-600">
-                AI & DS Booklet
+                {course.title} Booklet
               </span>
             </div>
 
@@ -1289,16 +1748,16 @@ export default function AiBrochure() {
               >
                 <option value={1}>Page 1: Cover</option>
                 <option value={2}>Page 2: Who We Are</option>
-                <option value={3}>Page 3: Why AI/DS</option>
+                <option value={3}>Page 3: Why {course.title}</option>
                 <option value={4}>Page 4: Why BeyondSkills</option>
                 <option value={5}>Page 5: Eligibility</option>
                 <option value={6}>Page 6: Highlights</option>
                 <option value={7}>Page 7: Roadmap</option>
-                <option value={8}>Page 8: Module 1 (Python Setup)</option>
-                <option value={9}>Page 9: Module 2 (EDA & NumPy)</option>
-                <option value={10}>Page 10: Module 3 (SQL & Stats)</option>
-                <option value={11}>Page 11: Module 4 (CART & ML)</option>
-                <option value={12}>Page 12: Module 5 (GenAI & NLP)</option>
+                <option value={8}>Page 8: Module 1 Syllabus</option>
+                <option value={9}>Page 9: Module 2 Syllabus</option>
+                <option value={10}>Page 10: Module 3 Syllabus</option>
+                <option value={11}>Page 11: Module 4 Syllabus</option>
+                <option value={12}>Page 12: Module 5 Syllabus</option>
                 <option value={13}>Page 13: Portfolio Projects</option>
                 <option value={14}>Page 14: Tools Covered</option>
                 <option value={15}>Page 15: Career Suite</option>
@@ -1400,7 +1859,7 @@ export default function AiBrochure() {
       ) : (
         <>
           {/* View Mode Panel for Web Mode */}
-          {course.id === 'artificial-intelligence' && (
+          {BOOKLET_COURSES.includes(course.id) && (
             <div className="relative z-20 max-w-6xl mx-auto px-4 mt-6">
               <div className="bg-slate-950/80 border border-white/10 p-3 rounded-xl flex items-center justify-between text-white backdrop-blur-sm">
                 <span className="text-xs font-mono font-bold text-[#0EA5E9] flex items-center gap-1.5">
@@ -1490,7 +1949,7 @@ export default function AiBrochure() {
                 <p className="text-xs sm:text-sm text-slate-650 leading-relaxed text-justify font-mono">
                   At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
                 </p>
-                <p className="text-xs sm:text-sm text-slate-650 leading-relaxed text-justify font-mono">
+                <p className="text-xs sm:text-sm text-slate-655 leading-relaxed text-justify font-mono">
                   This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
                 </p>
               </div>
@@ -1604,7 +2063,7 @@ export default function AiBrochure() {
             <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
               <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
               <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
-              <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-mono">
+              <p className="text-xs sm:text-sm text-slate-555 leading-relaxed font-mono">
                 See the pathways open to you as you progress through the modules. Hover over each step to see salary levels and required tools.
               </p>
             </div>
@@ -1728,7 +2187,7 @@ export default function AiBrochure() {
             <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
               <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
               <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown ({course.curriculum.length} Modules)</h2>
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
+              <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-mono">
                 Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
               </p>
             </div>
@@ -1831,7 +2290,7 @@ export default function AiBrochure() {
                 <h2 className="logo-font text-3xl font-bold text-slate-900 leading-tight">
                   Upskilling & Career Acceleration Suite
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
+                <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-mono">
                   Acquiring hard technical competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
                 </p>
               </div>
