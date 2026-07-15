@@ -941,10 +941,10 @@ export const COURSES = [
       'Optimize recruitment pipelines and metrics tracking using Excel dashboards.'
     ],
     faqs: [
-      { q: 'Does this cover resume screening training?', a: 'Yes, we train on how HR teams evaluate resumes, aligning with our resume feedback service.' }
+      { q: 'Does this cover industry recruitment processes?', a: 'Yes, we train on how modern HR teams run digital recruitment pipelines and candidate parameters.' }
     ],
     reviews: [
-      { user: 'Aisha Khan', rating: 5, comment: 'Practical insights into ATS screening algorithms and mock recruiter calls.', date: 'June 2026' }
+      { user: 'Aisha Khan', rating: 5, comment: 'Practical insights into recruiting pipelines and hiring analytics.', date: 'June 2026' }
     ]
   },
   {
@@ -1429,14 +1429,14 @@ export const BLOGS = [
     content: 'Attribution has become the hardest part of digital marketing. With third-party cookies phased out, tracking rely on server-side connections. Smart organizations are integrating custom CRM hooks to push real-time conversion events directly to Meta Conversions API and Google Ads. Learn how first-party signals are helping campaigns target buyers with high precision...'
   },
   {
-    id: 'resume-tips',
-    title: 'How HR Teams Screening Resumes (And How to Beat the ATS)',
-    category: 'Resume Tips',
-    author: 'Meenakshi Iyer',
+    id: 'github-tips',
+    title: 'How to Build a High-Quality GitHub Profile',
+    category: 'Developer Tips',
+    author: 'Vikram Aditya',
     date: 'April 10, 2026',
-    summary: 'An inside look into ATS keyword scoring, structural alignment, and the checklist items recruitment managers look for in freshers.',
+    summary: 'An inside look into organizing repositories, writing clear README documentation, and presenting project structures.',
     image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80',
-    content: 'An average recruiter spends less than 7 seconds reviewing a resume. Automated Application Tracking Systems (ATS) scan for specific keywords, formatting clarity, and project structures. Our HR professionals emphasize listing tools, impact-driven bullet points, and avoiding double column grids which break parser engines. Learn the checklist for freshers...'
+    content: 'An average developer profile should have clear README documentation, organized code folders, and a consistent commit history. Automated parsers and technical interviewers look for clear code documentation. Learn the checklist for setting up your first repository...'
   }
 ];
 

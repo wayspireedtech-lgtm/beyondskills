@@ -114,7 +114,7 @@ export default function Verification() {
 
             {/* Compliance Disclaimer at the bottom of the certificate */}
             <p className="text-[8px] text-gray-600 leading-normal text-justify max-w-2xl mx-auto pt-6 border-t border-slate-200/60 print:border-gray-100">
-              <strong>Educational Scope Policy:</strong> This certificate verifies syllabus participation and mock project completion in the designated course. It is designed for skill building purposes and does not imply advanced competency or guarantee placement outcomes.
+              <strong>Educational Scope Policy:</strong> This certificate verifies syllabus participation and project-based coursework in the designated course. It is issued for skill development purposes and does not imply advanced competency or guarantee placement outcomes.
             </p>
 
           </div>

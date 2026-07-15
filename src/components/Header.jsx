@@ -70,7 +70,7 @@ export default function Header() {
               </div>
               {!isScrolled && (
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.16em] mt-1.5 select-none leading-none">
-                  Digital Services • Professional Programs • Future-Ready
+                  Digital Services • Technical Cohorts • Skills Academy
                 </span>
               )}
             </Link>

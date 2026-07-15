@@ -324,7 +324,7 @@ const COURSE_METADATA = {
         details: "Digital marketing budgets continue to expand as brands shift allocations from TV to Google/Meta search algorithms."
       },
       {
-        label: "ROI Tracker Placements",
+        label: "Performance Marketing Roles",
         current: "2022 Baseline",
         projected: "2026: +140% Openings",
         growth: 82,
@@ -446,7 +446,7 @@ const careerOutcomes = [
 const faqItems = [
   { q: "Is prior coding experience required?", a: "No. This program is structured to support beginners. We start with basic Conda setups, and progress step-by-step to advanced machine learning and Generative AI modules." },
   { q: "What hardware do I need?", a: "A standard laptop with at least 4GB RAM is sufficient. For training heavy models, we guide you through utilizing free cloud platforms like Google Colab and Kaggle Kernels." },
-  { q: "Will I get placement support?", a: "Yes. We offer extensive career preparation, including resume audits, portfolio reviews, GitHub profile tuning, and practice mock interviews led by industry professionals." },
+  { q: "Do you offer placement support?", a: "No, we do not offer job placement guarantees. However, we provide project reviews, GitHub profile alignment, and practical learning resources to help you showcase your skills to recruiters." },
   { q: "Are the projects verifiable?", a: "Yes. All capstone projects are pushed to your personal GitHub repository, providing concrete proof of your coding and implementation skills to hiring teams." }
 ];
 
@@ -524,7 +524,7 @@ export default function AiBrochure() {
   };
 
   const downloadSyllabusMock = () => {
-    alert("Syllabus download request simulated! Check your local browser downloads.");
+    alert("Curriculum download has been triggered. Please check your browser downloads folder.");
   };
   
   // Booklet state parameters
@@ -1707,7 +1707,7 @@ export default function AiBrochure() {
                 { label: "Duration", value: course.duration || "3 Months" },
                 { label: "Delivery", value: "Live + Recorded" },
                 { label: "Hands-on Tasks", value: course.mentorLedProjects || "10+ Projects" },
-                { label: "Placement Support", value: "End-to-End" }
+                { label: "Mentorship Focus", value: "Code Portfolio" }
               ].map((item, idx) => (
                 <div key={idx} className={`p-3 rounded-xl backdrop-blur-sm border ${cardBg}`}>
                   <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{item.label}</span>
@@ -1725,7 +1725,7 @@ export default function AiBrochure() {
               <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Welcome</span>
               <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Who We Are</h2>
               <p className={`text-xs sm:text-sm leading-relaxed font-mono text-justify ${textMuted}`}>
-                BeyondSkills is an AI-powered Digital Solutions & Professional Upskilling company helping students build practical, industry-ready capabilities.
+                BeyondSkills is a Gurugram-based tech training academy and digital services agency. We train students and working professionals on practical tech stacks used in the industry.
               </p>
               <p className={`text-xs sm:text-sm leading-relaxed font-mono text-justify ${textMuted}`}>
                 We operate a hybrid model: a professional agency deploying software systems globally, and a vocational academy training candidates on matching tech stacks.
@@ -2055,19 +2055,19 @@ export default function AiBrochure() {
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-4 relative z-10">
-              <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Career Acceleration</span>
-              <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Career Support Suite</h2>
+              <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Developer Setup</span>
+              <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Developer Setup Suite</h2>
               <p className={`text-xs font-mono ${textMuted}`}>
-                We dedicate support bandwidth to ensuring your portfolio projects translate to candidate interviews.
+                We provide technical setup support to ensure your portfolio projects are ready to showcase to employers.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto relative z-10">
               {[
-                { title: "ATS Resume Tuning", desc: "Format profiles to bypass operational filters and target keywords.", tag: "Resume Reviews" },
-                { title: "LinkedIn Brand Optimization", desc: "Write walkthrough articles explaining your code logic.", tag: "Branding" },
-                { title: "Mock Technical Assessments", desc: "Solve Python algorithms under pressure with mock examiners.", tag: "Technical Prep" },
-                { title: "Placement Placement Loop", desc: "Share verified profiles directly with partner agencies.", tag: "Referral Tracks" }
+                { title: "GitHub Profile Tuning", desc: "Organize your code repositories to showcase your projects clearly.", tag: "Profile Setup" },
+                { title: "Portfolio Web Hosting", desc: "Deploy your projects on live hosting platforms to demonstrate functionality.", tag: "Hosting" },
+                { title: "Technical Code Audits", desc: "Review your code syntax and folder structures with mentors.", tag: "Code Quality" },
+                { title: "Open Source Sharing", desc: "Make your project code public for the community and hiring managers.", tag: "Open Source" }
               ].map((item, idx) => (
                 <div key={idx} className={`p-4 rounded-xl space-y-1.5 flex flex-col justify-between border ${cardBg}`}>
                   <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
@@ -2113,7 +2113,7 @@ export default function AiBrochure() {
                   </p>
                 </div>
                 <div className={`border-t pt-3 mt-4 text-[9px] font-mono ${pageIsDark ? 'border-white/10 text-[#0EA5E9]' : 'border-slate-200 text-brand-purple'} font-bold`}>
-                  Includes mock reviews & resume analysis.
+                  Includes project reviews & code audits.
                 </div>
               </div>
             </div>
@@ -2901,10 +2901,10 @@ export default function AiBrochure() {
             <div className="max-w-7xl mx-auto">
               <div className="text-center max-w-3xl mx-auto mb-16">
                 <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
-                  Target Placement Roles
+                  Career Directions
                 </span>
                 <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#111111] mt-4 mb-4 tracking-tight">
-                  Placement & Career Paths
+                  Career Paths After This Program
                 </h2>
                 <p className="text-slate-500 text-sm leading-relaxed">
                   Equip yourself to compete for specialized developer and analytics roles in global technology pipelines.
@@ -2991,7 +2991,7 @@ export default function AiBrochure() {
                       <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
                       <h4 className="font-bold text-sm">Enquiry Submitted Successfully!</h4>
                       <p className="text-[11px] text-emerald-600 leading-relaxed">
-                        Check your email inbox (and simulated notifications) for advisor briefing schedules.
+                        Your enquiry has been received. A program advisor will reach out shortly.
                       </p>
                     </div>
                   ) : (

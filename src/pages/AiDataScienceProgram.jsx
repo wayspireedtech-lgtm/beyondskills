@@ -102,7 +102,7 @@ export default function AiDataScienceProgram() {
     },
     {
       q: "What career support is provided after the program?",
-      a: "We offer resume rebuilding, portfolio reviews, GitHub profile optimization, and live mock interview practice with senior data scientists to prepare you for job applications and corporate placements."
+      a: "We focus on project reviews, GitHub profile optimization, and live coding practices with senior data scientists to help you showcase your skills to potential recruiters."
     }
   ];
 
@@ -116,7 +116,7 @@ export default function AiDataScienceProgram() {
     { name: 'Projects', desc: 'Real-world deployment scenarios.' },
     { name: 'Portfolio', desc: 'GitHub reviews & dashboard assets.' },
     { name: 'Certificate', desc: 'Issuance of verifiable credentials.' },
-    { name: 'Career Support', desc: 'ATS resume optimization & mock runs.' }
+    { name: 'Developer Setup', desc: 'GitHub optimization & code reviews.' }
   ];
 
   // Tools and tech data
@@ -275,7 +275,7 @@ export default function AiDataScienceProgram() {
   };
 
   const downloadSyllabusMock = () => {
-    alert('BeyondSkills AI & Data Science Program Guide downloaded! (Simulated PDF download)');
+    alert('BeyondSkills AI & Data Science Program Guide — please check your browser downloads folder.');
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
         subject: `Syllabus Downloaded: AI & Data Science`,
@@ -723,7 +723,7 @@ export default function AiDataScienceProgram() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
-              Target Placement Roles
+              Career Directions
             </span>
             <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#111111] mt-4 mb-4 tracking-tight">
               AI & Data Science Career Paths
@@ -813,7 +813,7 @@ export default function AiDataScienceProgram() {
                   <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
                   <h4 className="font-bold text-sm">Enquiry Submitted Successfully!</h4>
                   <p className="text-[11px] text-emerald-600 leading-relaxed">
-                    Check your email inbox (and simulated notifications) for advisor briefing schedules.
+                    Your enquiry has been received. A program advisor will reach out shortly.
                   </p>
                 </div>
               ) : (

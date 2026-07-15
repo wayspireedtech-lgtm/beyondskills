@@ -225,11 +225,11 @@ export default function Services() {
           {/* Inquiry Form Sticky Panel */}
           <div className="glass-panel p-6 rounded-2xl border border-slate-200 sticky top-24">
             <h3 className="text-base font-bold text-slate-900 uppercase tracking-wider mb-2">Request Consultation</h3>
-            <p className="text-xs text-slate-500 mb-6">Get a proposal in 5 mins (Target SLA).</p>
+            <p className="text-xs text-slate-500 mb-6">Our team reviews requests within the day.</p>
 
             {status === 'success' && (
               <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-3.5 rounded-lg mb-6 text-xs leading-relaxed">
-                🚀 Consultation logged! We have dispatched a simulated receipt to your email workspace.
+                🚀 Request received. Our team will be in touch shortly.
               </div>
             )}
 

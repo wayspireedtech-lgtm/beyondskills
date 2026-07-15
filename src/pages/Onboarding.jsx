@@ -75,7 +75,7 @@ export default function Onboarding() {
             Welcome to BeyondSkills Academy!
           </h1>
           <p className="mt-2 text-xs text-slate-500">
-            Account setup completed within 14 seconds (Target SLA: 5 minutes).
+            Account setup completed successfully.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export default function Onboarding() {
                 <div>
                   <h4 className="font-bold text-slate-500 uppercase mb-2">Billed To (Learner):</h4>
                   <p className="font-bold text-gray-800">Student ID: {studentId || 'BS-2026-1004'}</p>
-                  <p className="text-slate-500">Receipt Ref: {payId || 'pay_mock_12345'}</p>
+                  <p className="text-slate-500">Receipt Ref: {payId || 'N/A'}</p>
                   <p className="text-slate-500">Registered Onboarding Address</p>
                 </div>
               </div>

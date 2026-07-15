@@ -1,27 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import About from './pages/About';
-import Services from './pages/Services';
-import Courses from './pages/Courses';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-import Auth from './pages/Auth';
-import Checkout from './pages/Checkout';
-import Onboarding from './pages/Onboarding';
-import Dashboard from './pages/Dashboard';
-import Verification from './pages/Verification';
-import AdminDashboard from './pages/AdminDashboard';
-import CourseDetails from './pages/CourseDetails';
-import CampusAmbassador from './pages/CampusAmbassador';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsAndConditions from './pages/TermsAndConditions';
-import ReturnRefundPolicy from './pages/ReturnRefundPolicy';
-import AiBrochure from './pages/AiBrochure';
-import FullStackLandingPage from './pages/FullStackLandingPage';
-import { Mail, Sparkles, X } from 'lucide-react';
+import { Mail, Sparkles, X, Loader2 } from 'lucide-react';
+
+// Lazy load page components for fast initial bundle loads
+const Home = React.lazy(() => import('./pages/Home'));
+const About = React.lazy(() => import('./pages/About'));
+const Services = React.lazy(() => import('./pages/Services'));
+const Courses = React.lazy(() => import('./pages/Courses'));
+const Blog = React.lazy(() => import('./pages/Blog'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const Auth = React.lazy(() => import('./pages/Auth'));
+const Checkout = React.lazy(() => import('./pages/Checkout'));
+const Onboarding = React.lazy(() => import('./pages/Onboarding'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Verification = React.lazy(() => import('./pages/Verification'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+const CourseDetails = React.lazy(() => import('./pages/CourseDetails'));
+const CampusAmbassador = React.lazy(() => import('./pages/CampusAmbassador'));
+const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
+const TermsAndConditions = React.lazy(() => import('./pages/TermsAndConditions'));
+const ReturnRefundPolicy = React.lazy(() => import('./pages/ReturnRefundPolicy'));
+const AiBrochure = React.lazy(() => import('./pages/AiBrochure'));
+const FullStackLandingPage = React.lazy(() => import('./pages/FullStackLandingPage'));
+
+// Premium, theme-matching loading fallback
+function LoadingSpinner() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] py-20 text-slate-900 z-50 relative">
+      <div className="relative w-16 h-16 mb-4">
+        {/* Outer ring */}
+        <div className="absolute inset-0 rounded-full border-4 border-slate-100"></div>
+        {/* Spinning gradient arc */}
+        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#2A4BFF] border-r-[#2A4BFF] animate-spin"></div>
+      </div>
+      <div className="flex items-center space-x-1.5 leading-none">
+        <span className="logo-font text-lg font-extrabold text-[#0A0E35]">Beyond</span>
+        <span className="logo-font text-lg font-extrabold bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] bg-clip-text text-transparent">Skills</span>
+      </div>
+      <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-2 animate-pulse">Loading Platform...</span>
+    </div>
+  );
+}
 
 // Scroll to top on navigation change
 function ScrollToTop() {
@@ -151,29 +172,31 @@ export default function App() {
       )}
 
       <LayoutWrapper>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services/:serviceId" element={<Services />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/course/:courseId" element={<CourseDetails />} />
-          <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
-          <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
-          <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
-          <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
-          <Route path="/ambassador" element={<CampusAmbassador />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/verify" element={<Verification />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-          <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
-        </Routes>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services/:serviceId" element={<Services />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/course/:courseId" element={<CourseDetails />} />
+            <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
+            <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
+            <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
+            <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
+            <Route path="/ambassador" element={<CampusAmbassador />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/verify" element={<Verification />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
+          </Routes>
+        </Suspense>
       </LayoutWrapper>
     </Router>
   );

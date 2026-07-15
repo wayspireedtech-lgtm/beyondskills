@@ -13,12 +13,12 @@ const OUTCOMES = [
   { title: "Weekly Mentor Reviews", desc: "Receive direct code audits and performance feedback from practicing software engineers to align your code with industry standards." },
   { title: "Live Doubt Solving", desc: "Participate in interactive sessions to debug your servers, refine database schemas, and resolve complex code blocks in real time." },
   { title: "Portfolio Development", desc: "Deploy your web applications on live hosting platforms, creating a professional development portfolio ready to show employers." },
-  { title: "Resume Building", desc: "Structure your resume sheets to highlight your developer profile, technical stack proficiency, and core project contributions." },
-  { title: "Mock Interviews", desc: "Practice coding algorithms, system design questions, and technical interview parameters to build confidence." },
+  { title: "Version Control", desc: "Learn to use Git and GitHub to commit, push, and manage your codebase professionally." },
+  { title: "Live Code Reviews", desc: "Participate in live programming reviews with industry mentors to check code quality." },
   { title: "GitHub Portfolio", desc: "Learn to manage code directories, create branches, and maintain a professional commit history on your profile." },
   { title: "Real Coding Assignments", desc: "Tackle structured weekly milestone exercises designed to test your understanding of MERN stack APIs." },
   { title: "One-Year LMS Access", desc: "Watch recorded class sessions, access developer guides, and download code templates for 1 year from your batch start." },
-  { title: "Career Guidance", desc: "Understand the software recruitment landscape, navigate entry-level applications, and optimize your LinkedIn presence." }
+  { title: "Industry Best Practices", desc: "Learn modern development methodologies, clean code principles, and repository patterns." }
 ];
 
 const CURRICULUM = [
@@ -724,7 +724,7 @@ export default function FullStackLandingPage() {
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-red-500 font-bold mt-0.5">✗</span>
-                <span><strong>Minimal interview preparation:</strong> Accessing static study guides without algorithm review drills or mock sessions.</span>
+                <span><strong>Static reference materials:</strong> Relying on static text tutorials without active mentor code reviews or hands-on practice.</span>
               </li>
             </ul>
           </div>
@@ -750,7 +750,7 @@ export default function FullStackLandingPage() {
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-emerald-500 font-bold mt-0.5">✓</span>
-                <span><strong>Structured Preparation:</strong> Practice data manipulation, DOM operations, and Express middleware parameters.</span>
+                <span><strong>Structured Projects:</strong> Practice data manipulation, DOM operations, and Express server APIs in production environments.</span>
               </li>
             </ul>
           </div>
@@ -791,7 +791,7 @@ export default function FullStackLandingPage() {
 
           {/* End timeline extra info */}
           <div className="mt-8 text-center bg-white/5 border border-white/10 max-w-xl mx-auto p-4 rounded-xl text-xs text-slate-300 leading-normal font-mono">
-            *Final milestone: Portfolio verification, customized resume audit reviews, and technical mock interviews preparation.
+            *Final milestone: Portfolio verification, final project submission, and certificate allocation.
           </div>
         </div>
       </section>
@@ -934,8 +934,8 @@ export default function FullStackLandingPage() {
               { step: "05", title: "Assignments", desc: "Submit weekly code milestone exercises." },
               { step: "06", title: "Projects", desc: "Develop and coordinate database applications." },
               { step: "07", title: "Portfolio", desc: "Commit your code and deploy to Vercel/Render." },
-              { step: "08", title: "Resume Setup", desc: "Structure your developer profile details." },
-              { step: "09", title: "Mock Audits", desc: "Practice coding algorithms & reviews." },
+              { step: "08", title: "Git Push", desc: "Host all your verified project files on GitHub." },
+              { step: "09", title: "Final Review", desc: "Verify complete project compilation with mentors." },
               { step: "10", title: "Completion", desc: "Receive program certificate credentials." }
             ].map((journey, idx) => (
               <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/25 transition-all">
@@ -968,7 +968,7 @@ export default function FullStackLandingPage() {
             { label: "Eligibility Threshold", value: "Beginner to Intermediate", extra: "No coding background required", icon: Users },
             { label: "LMS Access Period", value: "1 Year LMS Access", extra: "Access recordings for 1 year from start", icon: BookOpen },
             { label: "Projects Completed", value: "8+ Practical Projects", extra: "Portfolio building focus", icon: Code },
-            { label: "Career Guidance", value: "Resume & Mock Audits", extra: "Navigate Software recruitment paths", icon: Briefcase },
+            { label: "Mentorship Focus", value: "Code Review & Guidance", extra: "Learn professional workflow methodologies", icon: Briefcase },
             { label: "Milestone Credentials", value: "Completion Certificate", extra: "BeyondSkills Program Certificate", icon: Award }
           ].map((detail, idx) => {
             const Icon = detail.icon;
@@ -997,7 +997,7 @@ export default function FullStackLandingPage() {
               Cohort Success Stories
             </h2>
             <p className="text-slate-500 text-sm mt-3">
-              Below are real student placement narratives reflecting upskilling outcomes.
+              Below are accounts from students who completed the program.
             </p>
           </div>
 
@@ -1020,7 +1020,7 @@ export default function FullStackLandingPage() {
               </div>
               <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
                 <p><strong>Affiliation:</strong> Delhi Technological University (DTU)</p>
-                <p><strong>Placement Outcome:</strong> Frontend Intern at Hashedin by Deloitte (6.5 LPA Package)</p>
+                <p><strong>Current Role:</strong> Frontend Intern at Hashedin by Deloitte (6.5 LPA)</p>
                 <p className="italic text-slate-500 pt-2 border-t border-slate-100">
                   "The project reviews were extremely critical. Siddharth mentored me on organizing my React context trees and building clean portfolio directories. That helped me qualify for the internship interview."
                 </p>
@@ -1045,7 +1045,7 @@ export default function FullStackLandingPage() {
               </div>
               <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
                 <p><strong>Affiliation:</strong> ex-Operations Associate</p>
-                <p><strong>Placement Outcome:</strong> Backend Analyst at Paytm (8.2 LPA Package)</p>
+                <p><strong>Current Role:</strong> Backend Analyst at Paytm (8.2 LPA)</p>
                 <p className="italic text-slate-500 pt-2 border-t border-slate-100">
                   "Being from a non-developer Operations background, transitioning was tough. Dr. Aris guided me through Express routers, MongoDB aggregations, and REST protocols. The 1 year LMS recorded videos let me revise after shifts."
                 </p>
@@ -1070,9 +1070,9 @@ export default function FullStackLandingPage() {
               </div>
               <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
                 <p><strong>Affiliation:</strong> Mechanical Stream Graduate</p>
-                <p><strong>Placement Outcome:</strong> Junior Developer at Cognizant (5.8 LPA Package)</p>
+                <p><strong>Current Role:</strong> Junior Developer at Cognizant (5.8 LPA)</p>
                 <p className="italic text-slate-500 pt-2 border-t border-slate-100">
-                  "I had zero coding background. The cohort journey layout (starting with basic HTML layouts and JS parameters) kept the learning curve manageable. The mock technical audits helped remove interview nervousness."
+                  "I had zero coding background. The cohort journey layout (starting with basic HTML layouts and JS parameters) kept the learning curve manageable. The live project reviews and mentor feedback helped build real confidence going into interviews."
                 </p>
               </div>
             </div>

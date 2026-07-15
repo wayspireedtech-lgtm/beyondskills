@@ -218,7 +218,7 @@ export default function CampusAmbassador() {
               <CheckCircle className="w-12 h-12 text-brand-purple mx-auto" />
               <h4 className="text-base font-bold text-slate-900">Application Submitted!</h4>
               <p className="text-xs text-slate-500 leading-relaxed max-w-md mx-auto">
-                Check your email inbox. We have simulated an email notification confirming your application reception and next steps guidelines.
+                Your application has been received. Our campus team will reach out within 48 hours.
               </p>
             </div>
           ) : (
@@ -318,7 +318,7 @@ export default function CampusAmbassador() {
               <div className="bg-slate-100 p-4 rounded-xl flex items-start space-x-2 text-[10px] text-slate-500 leading-normal border border-slate-200/60">
                 <ShieldAlert className="w-4.5 h-4.5 text-brand-purple flex-shrink-0 mt-0.5" />
                 <p>
-                  <strong>Selection Notice:</strong> Application submission is a validation check. Final selection is subject to verification of college enrollment status and telephonic screening assessment logs.
+                  <strong>Selection Notice:</strong> Submitting this form does not guarantee selection. Final decisions are subject to college enrollment verification and a brief screening call.
                 </p>
               </div>
 

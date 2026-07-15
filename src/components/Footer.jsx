@@ -1,26 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Mail, Phone, MapPin, ShieldAlert, Sparkles } from 'lucide-react';
 
 export default function Footer() {
+  const location = useLocation();
+  const normalizedPath = location.pathname.replace(/\/$/, '') || '/';
+  const isCoursePage = normalizedPath === '/courses' || 
+                       normalizedPath.startsWith('/course') || 
+                       normalizedPath.startsWith('/programs') || 
+                       normalizedPath === '/full-stack-web-development-landing-page';
+  const isAboutPage = normalizedPath === '/about';
+
   return (
     <footer className="bg-slate-950 border-t border-slate-900 text-slate-400 relative z-10">
       
       {/* Placement Disclaimer Header / Banner */}
-      <div className="bg-slate-900/50 border-b border-slate-900 py-6 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 md:space-x-6">
-          <div className="flex items-center space-x-3 text-brand-purple">
-            <ShieldAlert className="w-8 h-8 flex-shrink-0" />
-            <div>
-              <h4 className="text-sm font-bold text-slate-200 uppercase tracking-wider">MANDATORY COMPLIANCE DISCLAIMER</h4>
-              <p className="text-xs text-slate-400">Please read our educational scope & placement conditions below.</p>
+      {isCoursePage && (
+        <div className="bg-slate-900/50 border-b border-slate-900 py-6 px-4">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0 md:space-x-6">
+            <div className="flex items-center space-x-3 text-brand-purple">
+              <ShieldAlert className="w-8 h-8 flex-shrink-0" />
+              <div>
+                <h4 className="text-sm font-bold text-slate-200 uppercase tracking-wider">MANDATORY COMPLIANCE DISCLAIMER</h4>
+                <p className="text-xs text-slate-400">Please read our educational scope & placement conditions below.</p>
+              </div>
+            </div>
+            <div className="text-[11px] text-slate-400 max-w-4xl text-left leading-relaxed">
+              <strong>NO JOB OR PLACEMENT GUARANTEE:</strong> BeyondSkills does not guarantee employment, internships, placements, salary packages, or job offers. Enrollment does not create entitlement to employment. Our academy provides education, industry mentorship, practical projects, and skills verification certificates. Learners remain fully responsible for their own career progression and job search outcomes.
             </div>
           </div>
-          <div className="text-[11px] text-slate-400 max-w-4xl text-left leading-relaxed">
-            <strong>NO JOB OR PLACEMENT GUARANTEE:</strong> BeyondSkills does not guarantee employment, internships, placements, salary packages, or job offers. Enrollment does not create entitlement to employment. Our academy provides education, industry mentorship, practical projects, and skills verification certificates. Learners remain fully responsible for their own career progression and job search outcomes.
-          </div>
         </div>
-      </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -36,11 +46,11 @@ export default function Footer() {
                 </span>
               </div>
               <span className="text-[7px] font-bold text-slate-400 uppercase tracking-[0.16em] mt-1 select-none leading-none">
-                Digital Services • Professional Programs • Future-Ready
+                Digital Services • Technical Cohorts • Skills Academy
               </span>
             </Link>
             <p className="text-sm text-slate-400 mb-5 leading-relaxed">
-              Accelerating digital growth for brands through our cutting-edge digital services while equipping developers, marketers, and leaders of tomorrow with industry-focused professional programs.
+              Accelerating digital growth for brands through our digital services while equipping developers, marketers, and leaders with industry-focused cohorts.
             </p>
             <p className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-5">
               We don't just follow the future. <br />
@@ -51,7 +61,7 @@ export default function Footer() {
                 ESTD. 2022
               </span>
               <span className="text-[9px] font-bold tracking-wider text-brand-blue uppercase select-none">
-                INNOVATE | EMPOWER | GROW BEYOND
+                INNOVATE | TRAIN | GROW BEYOND
               </span>
             </div>
           </div>
@@ -133,20 +143,22 @@ export default function Footer() {
         </div>
 
         {/* Detailed Compliance Disclaimers */}
-        <div className="mt-16 pt-8 border-t border-slate-900 grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs text-slate-400 leading-relaxed text-justify">
-          <div>
-            <h5 className="font-bold text-slate-300 uppercase tracking-wider mb-2">EDUCATIONAL SCOPE & POLICIES</h5>
-            <p>
-              All academic certifications and learning materials provided by BeyondSkills are designed for Basic to Intermediate levels of industry education. The programs are structured to deliver project-based knowledge, code repositories development, and guided support. Completion of course requirements signifies participation, syllabus coverage, and passing standard test templates, and does not certify professional expertise or licensing.
-            </p>
+        {isAboutPage && (
+          <div className="mt-16 pt-8 border-t border-slate-900 grid grid-cols-1 lg:grid-cols-2 gap-8 text-xs text-slate-400 leading-relaxed text-justify">
+            <div>
+              <h5 className="font-bold text-slate-300 uppercase tracking-wider mb-2">EDUCATIONAL SCOPE & POLICIES</h5>
+              <p>
+                All academic certifications and learning materials provided by BeyondSkills are designed for Basic to Intermediate levels of industry education. The programs are structured to deliver project-based knowledge, code repositories development, and guided support. Completion of course requirements signifies participation, syllabus coverage, and passing standard test templates, and does not certify professional expertise or licensing.
+              </p>
+            </div>
+            <div>
+              <h5 className="font-bold text-slate-300 uppercase tracking-wider mb-2">BUSINESS VERTICAL SEPARATION</h5>
+              <p>
+                The Digital Marketing & Web Development Services and the Digital Services Programs operate as distinct commercial business verticals. Services (custom programming, digital strategy campaigns, ads placement) are governed by specific corporate agreements and deliverables SLA. Educational classes, recorded video lessons, student login workspace access, and assessments are governed exclusively by candidate enrollment terms.
+              </p>
+            </div>
           </div>
-          <div>
-            <h5 className="font-bold text-slate-300 uppercase tracking-wider mb-2">BUSINESS VERTICAL SEPARATION</h5>
-            <p>
-              The Digital Marketing & Web Development Services and the Digital Services Programs operate as distinct commercial business verticals. Services (custom programming, digital strategy campaigns, ads placement) are governed by specific corporate agreements and deliverables SLA. Educational classes, recorded video lessons, student login workspace access, and assessments are governed exclusively by candidate enrollment terms.
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* Footer Bottom copyright */}
         <div className="mt-12 pt-8 border-t border-slate-900/60 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400">

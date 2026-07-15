@@ -36,7 +36,7 @@ export default function About() {
         </h1>
         <p className="mt-6 text-slate-500 max-w-3xl mx-auto text-sm sm:text-base leading-relaxed">
           Founded in 2022, BeyondSkills operates as a combined technology services organization. 
-          We solve digital problems for enterprises through our Agency, and train the next generation of technicians through our Academy.
+          We solve digital problems for businesses through our Agency, and train working professionals and students through our Academy.
         </p>
       </section>
 
@@ -60,7 +60,7 @@ export default function About() {
                 <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide">Our Mission</h4>
               </div>
               <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                To empower individuals and organizations through high-quality digital services and practical education that bridges the gap between academic learning and industry requirements.
+                To support individuals and organizations through high-quality digital services and practical education that aligns with engineering requirements.
               </p>
             </div>
 

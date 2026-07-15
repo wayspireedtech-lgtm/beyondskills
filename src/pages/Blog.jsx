@@ -6,7 +6,7 @@ export default function Blog() {
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Artificial Intelligence', 'Web Development', 'Digital Marketing', 'Resume Tips'];
+  const categories = ['All', 'Artificial Intelligence', 'Web Development', 'Digital Marketing', 'Developer Tips'];
 
   const filteredBlogs = selectedCategory === 'All'
     ? BLOGS
@@ -27,7 +27,7 @@ export default function Blog() {
             Industry Tech & Career Guidance
           </h1>
           <p className="mt-4 text-slate-500 text-sm sm:text-base">
-            Articles, resume checklists, and software engineering updates written by active specialists.
+            Articles, developer guides, and software engineering updates written by active specialists.
           </p>
         </div>
 

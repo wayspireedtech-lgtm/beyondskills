@@ -86,7 +86,7 @@ export default function Home() {
 
   const stats = [
     { value: '2022', label: 'Company Registered', icon: Award },
-    { value: '10,000+', label: 'Learners Empowered', icon: Users },
+    { value: '10,000+', label: 'Learners Trained', icon: Users },
     { value: '250+', label: 'Projects Delivered', icon: Briefcase },
     { value: '4.6 / 5', label: 'Learner Rating', icon: Star },
     { value: '50+', label: 'Expert Mentors', icon: Sparkles },
@@ -171,7 +171,7 @@ export default function Home() {
         {/* Heading */}
         <h1 className="logo-font text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.15] max-w-6xl mx-auto uppercase">
           Building Solutions. <br />
-          Empowering People. <br />
+          Upskilling Teams. <br />
           <span className="bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan bg-clip-text text-transparent">
             Creating Impact.
           </span>
@@ -179,12 +179,12 @@ export default function Home() {
         
         {/* Subhead / Tagline */}
         <h2 className="mt-6 text-base sm:text-xl font-bold tracking-wider text-brand-blue uppercase">
-          Empowering Skills, Elevating Futures.
+          Practical Education, Verified Skills.
         </h2>
         
         {/* Description */}
         <p className="mt-4 text-sm sm:text-base text-slate-500 max-w-3xl mx-auto leading-relaxed">
-          From delivering digital solutions that drive growth to empowering individuals with future-ready skills, 
+          From delivering digital solutions that drive growth to training individuals with developer-ready technical skills, 
           we've been on a journey to create real impact.
         </p>
 
@@ -593,7 +593,7 @@ export default function Home() {
               {[
                 'Dual Model: High-quality Recorded + Weekly Live Mentor Sessions',
                 'Instructed by 50+ Mentors with 5+ Years Industry Experience',
-                'Weekly Live Mock Interview Prep & Coding Labs'
+                'Weekly Live Coding Labs & Mentor Reviews'
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-brand-purple flex-shrink-0 mt-0.5" />
@@ -689,7 +689,7 @@ export default function Home() {
         <div className="text-center mb-12">
           <h2 className="logo-font text-3xl font-bold text-slate-900 mb-2">Get In Touch</h2>
           <p className="text-xs text-slate-500 uppercase tracking-widest">
-            Automatic email acknowledgments dispatch within 5 minutes SLA.
+            We review every submission and respond the same day.
           </p>
         </div>
 
@@ -708,13 +708,13 @@ export default function Home() {
 
           {submitStatus === 'agency_success' && (
             <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-4 rounded-xl mb-6 text-xs sm:text-sm">
-              🚀 Request Logged! A confirmation has been dispatched to your email.
+              🚀 Request received. Our team will be in touch shortly.
             </div>
           )}
           
           {submitStatus === 'academy_success' && (
             <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-4 rounded-xl mb-6 text-xs sm:text-sm">
-              📚 Consultation Request Logged! Check your active mock alerts box for details.
+              📚 Enquiry received. A program advisor will reach out shortly.
             </div>
           )}
 

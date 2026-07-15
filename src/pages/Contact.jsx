@@ -99,7 +99,7 @@ export default function Contact() {
                 <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider">Response SLA Agreement</h4>
               </div>
               <p className="text-[11px] text-slate-500 leading-relaxed">
-                All submissions automatically prompt digital CRM receipts to verify email routing checks. Our admissions and account representatives review details within 5 minutes.
+                All submissions are logged immediately. Our admissions and account teams review details the same day and will follow up by phone or email.
               </p>
             </div>
           </div>
@@ -120,13 +120,13 @@ export default function Contact() {
             <div className="glass-panel p-8 rounded-2xl border border-slate-200">
               {status === 'agency_success' && (
                 <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-4 rounded-xl mb-6 text-xs">
-                  🚀 Service Request Received! An acknowledgement letter has been dispatched to your email (simulated SLA toast triggered).
+                  🚀 Request received. A team member will be in touch shortly.
                 </div>
               )}
               
               {status === 'academy_success' && (
                 <div className="bg-brand-purple/15 border border-brand-purple/30 text-slate-900 p-4 rounded-xl mb-6 text-xs">
-                  📚 Consultation Request Logged! An advisor notification has been dispatched (simulated SLA toast triggered).
+                  📚 Enquiry received. A program advisor will reach out shortly.
                 </div>
               )}
 
