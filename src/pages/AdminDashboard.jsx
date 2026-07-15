@@ -32,10 +32,11 @@ export default function AdminDashboard() {
   const [showImportLeadModal, setShowImportLeadModal] = useState(false);
   const [showEditLeadModal, setShowEditLeadModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showSheetsSyncModal, setShowSheetsSyncModal] = useState(false);
   
   // Form Bindings
   const [newLeadForm, setNewLeadForm] = useState({
-    name: '', email: '', phone: '', type: 'Inbound', program: 'artificial-intelligence', 
+    name: '', email: '', phone: '', type: 'Ads Leads', program: 'artificial-intelligence', 
     budget: '₹14,000', college: '', message: '', status: 'New', subStatus: 'QUALIFIED'
   });
   const [importText, setImportText] = useState('');
@@ -43,6 +44,11 @@ export default function AdminDashboard() {
     name: '', email: '', role: 'BDA', reportsTo: '', password: ''
   });
   const [noteText, setNoteText] = useState('');
+
+  // Google Sheets integration bindings
+  const [googleFormSheetUrl, setGoogleFormSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_google_form') || '');
+  const [adsSheetUrl, setAdsSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_ads') || '');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Selected Lead state for Details Modal
   const [selectedLead, setSelectedLead] = useState(null);
@@ -133,17 +139,17 @@ export default function AdminDashboard() {
     setDbItem('beyondskills_leads', updatedLeads);
   };
 
-  // Seed demo data helper
+  // Seed demo data helper with new campaign categories
   const handleSeedDemoData = () => {
     const demoLeads = [
-      { id: 'LD001', name: 'Roshan Kumar maharana', email: 'roshan.k@gmail.com', phone: '9776741640', date: '25 Jun 2026', type: 'SOP Screening', program: 'DA FLAGSHIP - UTTAM', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Unspecified', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: 'CB', s3: 'CB', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Status 1 DNP, Status 2 CB: Scheduled call back.', date: new Date().toISOString() }] },
-      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'SOP Screening', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
-      { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Duration', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', profession: 'Working Professional (< 30k) [WP-1]', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }] },
-      { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'Inbound', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: 'QUALIFIED', s2: 'Already Paid', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }] },
-      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Chat', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] }
+      { id: 'LD001', name: 'Roshan Kumar maharana', email: 'roshan.k@gmail.com', phone: '9776741640', date: '25 Jun 2026', type: 'Google Form Leads', program: 'DA FLAGSHIP - UTTAM', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Unspecified', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: 'CB', s3: 'CB', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Status 1 DNP, Status 2 CB: Scheduled call back.', date: new Date().toISOString() }] },
+      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'Google Form Leads', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
+      { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Ads Leads', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', profession: 'Working Professional (< 30k) [WP-1]', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }] },
+      { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'WhatsApp Marketing Leads', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: 'QUALIFIED', s2: 'Already Paid', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }] },
+      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Ads Leads', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] }
     ];
     saveLeadsToDb(demoLeads);
-    alert('Demo CRM Leads seeded successfully!');
+    alert('Demo CRM Leads seeded successfully with Ads, Google Form, and WhatsApp campaigns!');
   };
 
   // Add lead action
@@ -171,7 +177,7 @@ export default function AdminDashboard() {
     saveLeadsToDb([...leads, leadEntry]);
     setShowAddLeadModal(false);
     setNewLeadForm({
-      name: '', email: '', phone: '', type: 'Inbound', program: 'artificial-intelligence', 
+      name: '', email: '', phone: '', type: 'Ads Leads', program: 'artificial-intelligence', 
       budget: '₹14,000', college: '', message: '', status: 'New', subStatus: 'QUALIFIED'
     });
   };
@@ -190,7 +196,7 @@ export default function AdminDashboard() {
             email: cols[1] || 'no-email@beyondskills.com',
             phone: cols[2] || '0000000000',
             date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-            type: cols[3] || 'Inbound',
+            type: cols[3] || 'Ads Leads',
             program: cols[4] || 'ai-data-science',
             assignedBDM: isBdaUser ? currentUser.reportsTo || '' : '',
             assignedBDA: isBdaUser ? currentUser.name : '',
@@ -211,6 +217,216 @@ export default function AdminDashboard() {
     } catch (e) {
       alert('Error parsing CSV. Please format as: Name, Email, Phone, Type, Program, Message');
     }
+  };
+
+  // CSV parsing logic for Google Sheet Syncing
+  const parseSheetCSV = (csvText) => {
+    const lines = csvText.split(/\r?\n/);
+    if (lines.length < 2) return [];
+    
+    // Clean headers
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, '').toLowerCase());
+    
+    // Find key index mappings dynamically
+    const nameIdx = headers.findIndex(h => h.includes('name'));
+    const emailIdx = headers.findIndex(h => h.includes('email') || h.includes('mail'));
+    const phoneIdx = headers.findIndex(h => h.includes('phone') || h.includes('mobile') || h.includes('contact'));
+    const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('time'));
+    const programIdx = headers.findIndex(h => h.includes('program') || h.includes('course') || h.includes('interest'));
+    const notesIdx = headers.findIndex(h => h.includes('note') || h.includes('msg') || h.includes('message') || h.includes('comment') || h.includes('feedback'));
+
+    const parsedRecords = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      // Comma splitter supporting quoted CSV fields
+      const cols = [];
+      let insideQuotes = false;
+      let currentCol = '';
+      
+      for (let c = 0; c < line.length; c++) {
+        const char = line[c];
+        if (char === '"' || char === "'") {
+          insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+          cols.push(currentCol.trim().replace(/^["']|["']$/g, ''));
+          currentCol = '';
+        } else {
+          currentCol += char;
+        }
+      }
+      cols.push(currentCol.trim().replace(/^["']|["']$/g, ''));
+      
+      const parsedName = nameIdx !== -1 ? cols[nameIdx] : cols[0];
+      if (parsedName) {
+        parsedRecords.push({
+          name: parsedName,
+          email: emailIdx !== -1 ? cols[emailIdx] : 'no-email@beyondskills.com',
+          phone: phoneIdx !== -1 ? cols[phoneIdx] : '0000000000',
+          date: dateIdx !== -1 ? cols[dateIdx] : new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          program: programIdx !== -1 ? cols[programIdx] : 'ai-data-science',
+          notes: notesIdx !== -1 ? cols[notesIdx] : 'Synced from sheet'
+        });
+      }
+    }
+    
+    return parsedRecords;
+  };
+
+  // Google Sheets integration pull sync triggers
+  const handleSyncGoogleSheets = async () => {
+    if (!googleFormSheetUrl && !adsSheetUrl) {
+      alert('Please enter at least one published Google Sheet CSV URL first.');
+      return;
+    }
+    
+    setIsSyncing(true);
+    let formLeadsAdded = 0;
+    let adsLeadsAdded = 0;
+    const currentLeadsList = [...leads];
+
+    try {
+      // Sync Google Form Leads Sheet
+      if (googleFormSheetUrl) {
+        const res = await fetch(googleFormSheetUrl);
+        if (res.ok) {
+          const csvText = await res.text();
+          const parsed = parseSheetCSV(csvText);
+          parsed.forEach(row => {
+            // Avoid duplicate phones
+            if (!currentLeadsList.some(l => l.phone === row.phone)) {
+              currentLeadsList.push({
+                id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
+                name: row.name,
+                email: row.email,
+                phone: row.phone,
+                date: row.date,
+                type: 'Google Form Leads',
+                program: row.program,
+                assignedBDM: '',
+                assignedBDA: '',
+                status: 'New',
+                subStatus: 'QUALIFIED',
+                profession: 'Unspecified',
+                mentor: 'None',
+                duration: 'None',
+                callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+                history: [{ note: row.notes, date: new Date().toISOString() }]
+              });
+              formLeadsAdded++;
+            }
+          });
+        }
+      }
+
+      // Sync Ads Leads Sheet
+      if (adsSheetUrl) {
+        const res = await fetch(adsSheetUrl);
+        if (res.ok) {
+          const csvText = await res.text();
+          const parsed = parseSheetCSV(csvText);
+          parsed.forEach(row => {
+            if (!currentLeadsList.some(l => l.phone === row.phone)) {
+              currentLeadsList.push({
+                id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
+                name: row.name,
+                email: row.email,
+                phone: row.phone,
+                date: row.date,
+                type: 'Ads Leads',
+                program: row.program,
+                assignedBDM: '',
+                assignedBDA: '',
+                status: 'New',
+                subStatus: 'QUALIFIED',
+                profession: 'Unspecified',
+                mentor: 'None',
+                duration: 'None',
+                callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+                history: [{ note: row.notes, date: new Date().toISOString() }]
+              });
+              adsLeadsAdded++;
+            }
+          });
+        }
+      }
+
+      saveLeadsToDb(currentLeadsList);
+      alert(`Sync Complete!\nSuccessfully imported:\n- ${formLeadsAdded} leads from Google Form Sheet\n- ${adsLeadsAdded} leads from Meta Ads Sheet.`);
+    } catch (e) {
+      console.error(e);
+      alert('Error fetching Sheets. Please ensure Sheets are correctly Published as Comma-separated values (.csv)');
+    } finally {
+      setIsSyncing(false);
+      setShowSheetsSyncModal(false);
+    }
+  };
+
+  // Mock simulation sheet sync
+  const handleSimulateSync = () => {
+    const mockGoogleFormCSV = `Timestamp,Full Name,Email,Mobile,Course Program,Query Notes\n2026-07-15 14:02,Rajesh Kumar,rajesh.k@gmail.com,9898980011,ai-data-science,Wants to apply for scholarship\n2026-07-15 14:25,Anjali Mehta,anjali@yahoo.com,8787870022,full-stack-web-development,Inquired on MERN stack fee structure`;
+    const mockAdsCSV = `Lead ID,Ad Name,Full Name,Email,Phone,Program Interested\nld_ads_445,AI_Lead_Generation,Vikram Aditya,vikram@outlook.com,7676760033,ai-data-science\nld_ads_446,Fullstack_Camp,Priya Verma,priya@gmail.com,9595950044,full-stack-web-development`;
+
+    let addedCount = 0;
+    const currentLeadsList = [...leads];
+
+    // Parse Google Form mock
+    const formParsed = parseSheetCSV(mockGoogleFormCSV);
+    formParsed.forEach(row => {
+      if (!currentLeadsList.some(l => l.phone === row.phone)) {
+        currentLeadsList.push({
+          id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
+          name: row.name,
+          email: row.email,
+          phone: row.phone,
+          date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          type: 'Google Form Leads',
+          program: row.program,
+          assignedBDM: '',
+          assignedBDA: '',
+          status: 'New',
+          subStatus: 'QUALIFIED',
+          profession: 'Unspecified',
+          mentor: 'None',
+          duration: 'None',
+          callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+          history: [{ note: row.notes, date: new Date().toISOString() }]
+        });
+        addedCount++;
+      }
+    });
+
+    // Parse Ads mock
+    const adsParsed = parseSheetCSV(mockAdsCSV);
+    adsParsed.forEach(row => {
+      if (!currentLeadsList.some(l => l.phone === row.phone)) {
+        currentLeadsList.push({
+          id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
+          name: row.name,
+          email: row.email,
+          phone: row.phone,
+          date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          type: 'Ads Leads',
+          program: row.program,
+          assignedBDM: '',
+          assignedBDA: '',
+          status: 'New',
+          subStatus: 'QUALIFIED',
+          profession: 'Unspecified',
+          mentor: 'None',
+          duration: 'None',
+          callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+          history: [{ note: 'Imported from mock Facebook/Instagram Campaign', date: new Date().toISOString() }]
+        });
+        addedCount++;
+      }
+    });
+
+    saveLeadsToDb(currentLeadsList);
+    alert(`Mock Sheet Sync Simulation Successful!\nAdded ${addedCount} new unique lead records to the database.`);
+    setShowSheetsSyncModal(false);
   };
 
   // Delete lead
@@ -344,8 +560,8 @@ export default function AdminDashboard() {
 
   // CRM Statistics calculations (Filtered for BDA if BDA is logged in)
   const statsTotalLeads = accessibleLeads.length;
-  const statsMasterclassLeads = accessibleLeads.filter(l => l.type === 'Masterclass Leads' || l.type === 'SOP Screening').length;
-  const statsConversionRate = statsTotalLeads > 0 ? ((accessibleLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 100).toFixed(1) : 0;
+  const statsMasterclassLeads = accessibleLeads.filter(l => l.type === 'Google Form Leads').length;
+  const statsConversionRate = statsTotalLeads > 0 ? ((accessibleLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 1051).toFixed(1) : 0;
   const statsSuccessfulEnrollments = accessibleLeads.filter(l => l.status === 'Enrolled').length;
   const statsHotLeads = accessibleLeads.filter(l => l.status === 'Follow Up').length;
 
@@ -492,7 +708,7 @@ export default function AdminDashboard() {
               
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Masterclass Leads</span>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Google Form Leads</span>
                   <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsMasterclassLeads}</p>
                 </div>
                 <div className="bg-amber-500/15 text-amber-500 p-2.5 rounded-xl border border-amber-500/30">
@@ -566,35 +782,28 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Lead Profile Analysis Demographics */}
+              {/* Marketing Lead Source Breakdown */}
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white flex flex-col justify-between">
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-4 mb-4">
                     <PieChart className="w-4.5 h-4.5 text-[#2A4BFF]" />
-                    <span>Lead Profile Analysis (Demographics)</span>
+                    <span>Lead Campaign Categories</span>
                   </h3>
                   
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
-                      { name: 'Student Profiles', label: 'Student', count: accessibleLeads.filter(l => l.profession === 'Student').length },
-                      { name: 'Working Professional (< 30k) [WP-1]', label: 'WP-1', count: accessibleLeads.filter(l => l.profession === 'Working Professional (< 30k) [WP-1]').length },
-                      { name: 'Working Professional (>= 30k) [WP-2]', label: 'WP-2', count: accessibleLeads.filter(l => l.profession === 'Working Professional (>= 30k) [WP-2]').length },
-                      { name: 'Unemployed Candidates', label: 'Unemployed', count: accessibleLeads.filter(l => l.profession === 'Unemployed').length },
-                      { name: 'Unspecified Profiles', label: 'Unspecified', count: accessibleLeads.filter(l => !l.profession || l.profession === 'Unspecified').length }
+                      { name: 'Ads Campaign Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads').length },
+                      { name: 'Google Form Leads', count: accessibleLeads.filter(l => l.type === 'Google Form Leads').length },
+                      { name: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length }
                     ].map((src, idx) => {
                       const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
                       return (
-                        <div key={idx} className="relative space-y-1 pb-1">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-slate-400 flex items-center">
-                              <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
-                              {src.name}
-                            </span>
-                            <span className="text-white font-bold">{src.count} ({pct}%)</span>
-                          </div>
-                          <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                            <div className="bg-[#2A4BFF] h-full" style={{ width: `${pct}%` }}></div>
-                          </div>
+                        <div key={idx} className="flex items-center justify-between border-b border-white/5 pb-2">
+                          <span className="text-slate-400 flex items-center">
+                            <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
+                            {src.name}
+                          </span>
+                          <span className="text-white font-bold">{src.count} ({pct}%)</span>
                         </div>
                       );
                     })}
@@ -650,6 +859,13 @@ export default function AdminDashboard() {
                     <h3 className="font-bold text-sm uppercase tracking-wider text-brand-cyan">Active Lead Filters</h3>
                     <div className="flex items-center space-x-2">
                       <button 
+                        onClick={() => setShowSheetsSyncModal(true)} 
+                        className="bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white border border-[#0EA5E9]/20 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5 shadow"
+                      >
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Google Sheet Sync</span>
+                      </button>
+                      <button 
                         onClick={() => setShowImportLeadModal(true)} 
                         className="bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5"
                       >
@@ -686,11 +902,9 @@ export default function AdminDashboard() {
                         className="w-full bg-[#050718] border border-white/15 rounded-lg px-3 py-2 text-white outline-none focus:border-brand-cyan cursor-pointer"
                       >
                         <option value="">All Types</option>
-                        <option value="Inbound">Inbound</option>
-                        <option value="High Intent Leads">High Intent Leads</option>
-                        <option value="SOP Screening">SOP Screening</option>
-                        <option value="Duration">Duration</option>
-                        <option value="Chat">Chat</option>
+                        <option value="Ads Leads">Ads Leads</option>
+                        <option value="Google Form Leads">Google Form Leads</option>
+                        <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
                       </select>
                     </div>
                     <div>
@@ -1213,7 +1427,7 @@ export default function AdminDashboard() {
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-white/10 pb-4">Roster Allocation Status</h3>
                   
                   {leads.length === 0 ? (
-                    <div className="text-center py-10 text-slate-500 text-xs italic font-mono">
+                    <div className="text-center py-10 text-slate-555 text-xs italic font-mono">
                       Database is empty. Set BDM / BDA details in Leads tab or click "Seed Demo Data".
                     </div>
                   ) : (
@@ -1312,7 +1526,7 @@ export default function AdminDashboard() {
                     <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Allocation Board</h3>
                     
                     <div className="space-y-4 pt-4 text-xs">
-                      <div className="bg-slate-955/40 border border-white/5 p-3 rounded-lg">
+                      <div className="bg-slate-950/40 border border-white/5 p-3 rounded-lg">
                         <p className="text-[10px] text-slate-400 uppercase font-mono font-bold tracking-widest">Active queue summary</p>
                         <p className="text-xl font-bold mt-1 text-white">{selectedLeadIndexes.length} leads selected</p>
                       </div>
@@ -1791,11 +2005,9 @@ export default function AdminDashboard() {
                     onChange={(e) => setNewLeadForm({ ...newLeadForm, type: e.target.value })}
                     className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
                   >
-                    <option value="Inbound">Inbound</option>
-                    <option value="High Intent Leads">High Intent Leads</option>
-                    <option value="SOP Screening">SOP Screening</option>
-                    <option value="Duration">Duration</option>
-                    <option value="Chat">Chat</option>
+                    <option value="Ads Leads">Ads Leads</option>
+                    <option value="Google Form Leads">Google Form Leads</option>
+                    <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
                   </select>
                 </div>
                 <div>
@@ -1838,6 +2050,82 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* -------------------- MODAL: GOOGLE SHEETS SYNC MANAGER -------------------- */}
+      {showSheetsSyncModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-white relative">
+            <button 
+              onClick={() => setShowSheetsSyncModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-[#0EA5E9] flex items-center space-x-1.5">
+              <RefreshCw className="w-5 h-5 animate-spin" />
+              <span>Google Sheet Sync Console</span>
+            </h3>
+            
+            <div className="space-y-4 text-xs">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Google Form Leads CSV Link</label>
+                <input 
+                  type="text"
+                  value={googleFormSheetUrl}
+                  onChange={(e) => {
+                    setGoogleFormSheetUrl(e.target.value);
+                    localStorage.setItem('beyondskills_sheet_google_form', e.target.value);
+                  }}
+                  placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[11px]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Meta Ads Leads CSV Link</label>
+                <input 
+                  type="text"
+                  value={adsSheetUrl}
+                  onChange={(e) => {
+                    setAdsSheetUrl(e.target.value);
+                    localStorage.setItem('beyondskills_sheet_ads', e.target.value);
+                  }}
+                  placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[11px]"
+                />
+              </div>
+
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-1.5 leading-relaxed text-slate-350">
+                <p className="font-bold text-slate-300">How to publish your Sheets for Direct Integration:</p>
+                <ol className="list-decimal list-inside space-y-1 font-mono text-[10px]">
+                  <li>Open your Google Sheet linked with Google Forms / FB Ads.</li>
+                  <li>Click <strong className="text-white">File &gt; Share &gt; Publish to web</strong>.</li>
+                  <li>Select the targets and choose format: <strong className="text-white">Comma-separated values (.csv)</strong>.</li>
+                  <li>Copy and paste the published link in the input fields above.</li>
+                </ol>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button 
+                  onClick={handleSyncGoogleSheets}
+                  disabled={isSyncing}
+                  className="flex-grow bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg flex items-center justify-center space-x-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                  <span>{isSyncing ? 'Syncing Leads...' : 'Sync Active Sheets'}</span>
+                </button>
+                <button 
+                  onClick={handleSimulateSync}
+                  className="bg-white/10 hover:bg-white/15 text-slate-200 font-bold text-xs uppercase tracking-wider px-4 rounded-xl transition-all cursor-pointer"
+                  title="Test immediately with demo mock CSV rows"
+                >
+                  Simulate Sync
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* -------------------- MODAL: IMPORT LEADS -------------------- */}
       {showImportLeadModal && (
         <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
@@ -1858,7 +2146,7 @@ export default function AdminDashboard() {
               <textarea 
                 value={importText}
                 onChange={(e) => setImportText(e.target.value)}
-                placeholder="Rohit Verma, rohit@gmail.com, 9922883344, Inbound, ai-data-science, Needs evening batch&#10;Sneha Roy, sneha@yahoo.com, 8833772211, Chat, full-stack-web-development, Inquired on EMI plans"
+                placeholder="Rohit Verma, rohit@gmail.com, 9922883344, Ads Leads, ai-data-science, Facebook Campaign"
                 rows="6"
                 className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2.5 text-white outline-none focus:border-[#2A4BFF] font-mono leading-relaxed"
               ></textarea>
@@ -2036,7 +2324,7 @@ export default function AdminDashboard() {
                 ></textarea>
                 
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-slate-500 font-mono italic">
+                  <span className="text-[10px] text-slate-555 font-mono italic">
                     Press Log Note to permanently capture dial call history timeline update tags.
                   </span>
                   <button 
@@ -2054,8 +2342,8 @@ export default function AdminDashboard() {
                 {selectedLead.history && selectedLead.history.length > 0 ? (
                   selectedLead.history.map((log, i) => (
                     <div key={i} className="bg-white/5 p-3 rounded-lg border border-white/5 text-xs relative font-mono">
-                      <p className="text-slate-300 italic">"{log.note}"</p>
-                      <span className="text-[10px] text-slate-550 mt-1 block">
+                      <p className="text-slate-350 italic">"{log.note}"</p>
+                      <span className="text-[10px] text-slate-555 mt-1 block">
                         Logged date: {new Date(log.date).toLocaleString()}
                       </span>
                     </div>
