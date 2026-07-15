@@ -98,33 +98,34 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="text-slate-900 min-h-screen relative pt-12 pb-24">
-      {/* Background glow */}
-      <div className="absolute top-20 right-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
-
+    <div className="bg-[#05050C] text-slate-100 min-h-screen relative pt-24 pb-24 overflow-x-hidden">
+      {/* Background Grid Pattern Overlay */}
+      <div className="bg-grid-glow"></div>
+      <div className="bg-grid-pattern opacity-[0.25]"></div>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-6 mb-10 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-6 mb-10 gap-4">
           <div>
-            <span className="text-xs font-bold text-brand-cyan uppercase">BeyondSkills Admin Center</span>
-            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
+            <span className="text-xs font-bold text-brand-cyan uppercase tracking-widest font-mono">BeyondSkills Admin Center</span>
+            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-white mt-1">
               Analytics & CRM Console
             </h1>
           </div>
           
           {/* Action Tabs */}
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'analytics' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'analytics' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
               Analytics
             </button>
-            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'leads' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'leads' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
               Leads Inbox ({leads.length})
             </button>
-            <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'students' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+            <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'students' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
               Students ({students.length})
             </button>
-            <button onClick={() => setActiveSubTab('enrollments')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${activeSubTab === 'enrollments' ? 'bg-brand-cyan text-black' : 'bg-slate-100 border border-slate-200 text-slate-700 hover:text-slate-900'}`}>
+            <button onClick={() => setActiveSubTab('enrollments')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'enrollments' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
               Enrollments ({payments.length})
             </button>
           </div>
@@ -137,42 +138,42 @@ export default function AdminDashboard() {
             {/* Stat Row */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Total Revenue</span>
-                  <p className="text-2xl font-extrabold font-mono mt-1">₹{totalRevenue.toLocaleString()}</p>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Total Revenue</span>
+                  <p className="text-2xl font-extrabold font-mono mt-1 text-white">₹{totalRevenue.toLocaleString()}</p>
                 </div>
-                <div className="bg-[#4ADE80]/15 text-[#4ADE80] p-2.5 rounded-xl">
+                <div className="bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20 p-2.5 rounded-xl">
                   <DollarSign className="w-5 h-5" />
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Success Enrollments</span>
-                  <p className="text-2xl font-extrabold font-mono mt-1">{totalEnrollments}</p>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Success Enrollments</span>
+                  <p className="text-2xl font-extrabold font-mono mt-1 text-white">{totalEnrollments}</p>
                 </div>
-                <div className="bg-brand-purple/15 text-brand-purple p-2.5 rounded-xl">
+                <div className="bg-[#2A4BFF]/10 text-[#2A4BFF] border border-[#2A4BFF]/20 p-2.5 rounded-xl">
                   <Users className="w-5 h-5" />
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Payment Success Rate</span>
-                  <p className="text-2xl font-extrabold font-mono mt-1">{paymentSuccessRate}%</p>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Payment Success Rate</span>
+                  <p className="text-2xl font-extrabold font-mono mt-1 text-white">{paymentSuccessRate}%</p>
                 </div>
-                <div className="bg-[#60A5FA]/15 text-[#60A5FA] p-2.5 rounded-xl">
+                <div className="bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/20 p-2.5 rounded-xl">
                   <Percent className="w-5 h-5" />
                 </div>
               </div>
 
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200/60 flex items-center justify-between">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-bold">Academy Leads</span>
-                  <p className="text-2xl font-extrabold font-mono mt-1">{leads.length}</p>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Academy Leads</span>
+                  <p className="text-2xl font-extrabold font-mono mt-1 text-white">{leads.length}</p>
                 </div>
-                <div className="bg-brand-cyan/15 text-brand-cyan p-2.5 rounded-xl">
+                <div className="bg-[#A855F7]/10 text-[#A855F7] border border-[#A855F7]/20 p-2.5 rounded-xl">
                   <Inbox className="w-5 h-5" />
                 </div>
               </div>
@@ -183,8 +184,8 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
               {/* Conversion Funnel */}
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md space-y-4">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
                   <LineChart className="w-4.5 h-4.5 text-brand-cyan" />
                   <span>Interactive Conversion Funnel</span>
                 </h3>
@@ -192,11 +193,11 @@ export default function AdminDashboard() {
                   {funnelSteps.map((step, idx) => (
                     <div key={idx} className="relative">
                       <div className="flex justify-between items-center text-xs mb-1.5">
-                        <span className="text-slate-700 font-medium">{step.name}</span>
-                        <span className="font-mono text-slate-900 font-bold">{step.value} ({step.pct})</span>
+                        <span className="text-slate-300 font-mono">{step.name}</span>
+                        <span className="font-mono text-white font-bold">{step.value} ({step.pct})</span>
                       </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div className="bg-gradient-to-r from-brand-purple to-brand-cyan h-full" style={{ width: step.pct }}></div>
+                      <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden border border-white/5">
+                        <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: step.pct }}></div>
                       </div>
                     </div>
                   ))}
@@ -204,19 +205,19 @@ export default function AdminDashboard() {
               </div>
 
               {/* Lead Source Breakdown */}
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md space-y-4">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
                   <PieChart className="w-4.5 h-4.5 text-brand-cyan" />
                   <span>Lead Attribution Sources</span>
                 </h3>
                 <div className="space-y-3.5 pt-4 text-xs">
                   {leadSources.map((src, idx) => (
-                    <div key={idx} className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-                      <span className="text-slate-500 flex items-center">
-                        <Globe className="w-4 h-4 text-brand-purple mr-2" />
+                    <div key={idx} className="flex items-center justify-between border-b border-white/10 pb-2 text-slate-300">
+                      <span className="text-slate-400 flex items-center">
+                        <Globe className="w-4 h-4 text-[#2A4BFF] mr-2" />
                         {src.name}
                       </span>
-                      <span className="font-bold text-slate-900">{src.value}%</span>
+                      <span className="font-bold text-white">{src.value}%</span>
                     </div>
                   ))}
                 </div>
@@ -228,11 +229,11 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               
               {/* Mentor Stats */}
-              <div className="lg:col-span-2 glass-panel p-6 rounded-2xl border border-slate-200 space-y-4">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2">Mentor Performance Ratings</h3>
+              <div className="lg:col-span-2 bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md space-y-4">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Mentor Performance Ratings</h3>
                 <table className="w-full text-xs text-left">
                   <thead>
-                    <tr className="border-b border-slate-200/60 text-slate-500 pb-2">
+                    <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] font-mono tracking-widest">
                       <th className="py-2">Mentor Name</th>
                       <th className="py-2">Course Module</th>
                       <th className="py-2 text-center">Avg Rating</th>
@@ -241,14 +242,14 @@ export default function AdminDashboard() {
                   </thead>
                   <tbody>
                     {mentorPerformance.map((m, idx) => (
-                      <tr key={idx} className="border-b border-slate-200/60 last:border-b-0 text-slate-700">
-                        <td className="py-2.5 font-semibold text-slate-900">{m.name}</td>
-                        <td className="py-2.5 text-slate-500">{m.course}</td>
-                        <td className="py-2.5 text-center font-bold text-brand-cyan flex items-center justify-center">
-                          <Star className="w-3.5 h-3.5 fill-current mr-1" />
+                      <tr key={idx} className="border-b border-white/10 last:border-b-0 text-slate-300">
+                        <td className="py-2.5 font-semibold text-white">{m.name}</td>
+                        <td className="py-2.5 text-slate-400">{m.course}</td>
+                        <td className="py-2.5 text-center font-bold text-[#0EA5E9] flex items-center justify-center">
+                          <Star className="w-3.5 h-3.5 fill-current mr-1 text-amber-400" />
                           <span>{m.rating}</span>
                         </td>
-                        <td className="py-2.5 text-right font-mono text-slate-500">{m.count}</td>
+                        <td className="py-2.5 text-right font-mono text-slate-400">{m.count}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -256,19 +257,19 @@ export default function AdminDashboard() {
               </div>
 
               {/* Engagement & Completion Rates */}
-              <div className="glass-panel p-6 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-6">
+              <div className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-2xl shadow-xl backdrop-blur-md flex flex-col justify-between space-y-6">
                 <div>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Syllabus Progress Metrics</h3>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">Syllabus Progress Metrics</h3>
                   <div className="mt-6 text-center space-y-2">
-                    <span className="text-4xl font-extrabold font-mono text-slate-900">{completionRate}%</span>
-                    <p className="text-xs text-slate-500">Course Completion Rate</p>
+                    <span className="text-4xl font-extrabold font-mono text-white">{completionRate}%</span>
+                    <p className="text-xs text-slate-400">Course Completion Rate</p>
                   </div>
                   <div className="mt-6 text-center space-y-2">
-                    <span className="text-4xl font-extrabold font-mono text-slate-900">{engagementRate}%</span>
-                    <p className="text-xs text-slate-500">Active Weekly Interaction Rate</p>
+                    <span className="text-4xl font-extrabold font-mono text-white">{engagementRate}%</span>
+                    <p className="text-xs text-slate-400">Active Weekly Interaction Rate</p>
                   </div>
                 </div>
-                <div className="border-t border-slate-200/60 pt-4 text-[10px] text-slate-500 leading-normal text-justify">
+                <div className="border-t border-white/10 pt-4 text-[10px] text-slate-500 leading-normal text-justify font-mono">
                   Measurements reflect student ticks in recorded lecture modules and mock exam assessment logs.
                 </div>
               </div>
@@ -278,312 +279,311 @@ export default function AdminDashboard() {
           </div>
         ) : (
           /* LEADS CRM INBOX VIEW */
-          <div className="space-y-6 animate-fade-in">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Lead Submission Inbox</h3>
-            
-            {leads.length === 0 ? (
-              <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
-                <Inbox className="w-10 h-10 text-slate-500 mx-auto" />
-                <h4 className="font-bold text-slate-900 text-sm">Leads Inbox is Empty</h4>
-                <p className="text-xs text-slate-500">No new client consultation or academy registration request found.</p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {leads.map((lead, idx) => (
-                  <div key={idx} className="glass-panel p-6 rounded-xl border border-slate-200 relative space-y-4">
-                    
-                    {/* Badge header */}
-                    <div className="flex items-center justify-between">
-                      <span className={`text-[9px] font-bold uppercase px-2.5 py-0.5 rounded tracking-widest ${lead.type === 'Agency' ? 'bg-[#3399FF]/10 border border-[#3399FF]/30 text-[#3399FF]' : 'bg-brand-purple/10 border border-brand-purple/30 text-brand-purple'}`}>
-                        {lead.type} Request
-                      </span>
-                      <div className="flex items-center space-x-2 text-[10px] text-slate-500 font-mono">
-                        <span>{new Date(lead.date).toLocaleDateString()} {new Date(lead.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        <button onClick={() => handleDeleteLead(idx)} className="text-slate-500 hover:text-brand-blue p-1 rounded focus:outline-none transition-colors" title="Delete Inquiry">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Metadata fields */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Contact Name:</span>
-                        <span className="text-slate-900 font-medium">{lead.name}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Email Address:</span>
-                        <span className="text-slate-900 font-mono">{lead.email}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Phone Number:</span>
-                        <span className="text-slate-900 font-mono">{lead.phone}</span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs border-t border-slate-200/60 pt-3">
-                      {lead.type === 'Agency' ? (
-                        <>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Company Name:</span>
-                            <span className="text-slate-900">{lead.company}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Service Category:</span>
-                            <span className="text-slate-900">{lead.service}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Project Budget:</span>
-                            <span className="text-brand-cyan font-bold font-mono">{lead.budget}</span>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">College / Org:</span>
-                            <span className="text-slate-900">{lead.college}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Interest Program:</span>
-                            <span className="text-slate-900 uppercase font-mono">{lead.course}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500 block uppercase text-[9px] font-bold">Current Status:</span>
-                            <span className="text-slate-900">{lead.status}</span>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Messages briefs */}
-                    {lead.message && (
-                      <div className="bg-slate-100 border border-slate-200/60 p-3 rounded-lg text-xs text-slate-700">
-                        <strong className="text-[9px] text-slate-500 block uppercase mb-1">Message Content:</strong>
-                        <p className="italic">"{lead.message}"</p>
-                      </div>
-                    )}
-
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeSubTab === 'students' && (
-          <div className="space-y-6 animate-fade-in">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Registered Students & LMS Credentials</h3>
-            
-            {students.length === 0 ? (
-              <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
-                <Users className="w-10 h-10 text-slate-500 mx-auto" />
-                <h4 className="font-bold text-slate-900 text-sm">No Students Registered</h4>
-                <p className="text-xs text-slate-550">No student accounts have been created in the database yet.</p>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {students.map((student, idx) => (
-                  <div key={idx} className="glass-panel p-6 rounded-xl border border-slate-200 space-y-4">
-                    
-                    {/* Header with Name & Student ID */}
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-3 gap-2">
-                      <div>
-                        <h4 className="text-sm font-extrabold text-slate-900">{student.name}</h4>
-                        <p className="text-[10px] text-slate-500 font-mono mt-0.5">ID: {student.studentId || 'N/A'}</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-[9px] font-bold tracking-widest text-[#4ADE80] bg-[#4ADE80]/10 border border-[#4ADE80]/30 px-2.5 py-0.5 rounded uppercase">
-                          Active Student
+          activeSubTab === 'leads' ? (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Lead Submission Inbox</h3>
+              
+              {leads.length === 0 ? (
+                <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
+                  <Inbox className="w-10 h-10 text-slate-500 mx-auto" />
+                  <h4 className="font-bold text-white text-sm">Leads Inbox is Empty</h4>
+                  <p className="text-xs text-slate-400">No new client consultation or academy registration request found.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {leads.map((lead, idx) => (
+                    <div key={idx} className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-xl relative space-y-4 shadow-xl">
+                      
+                      {/* Badge header */}
+                      <div className="flex items-center justify-between">
+                        <span className={`text-[9px] font-bold uppercase px-2.5 py-0.5 rounded tracking-widest ${lead.type === 'Agency' ? 'bg-[#0EA5E9]/10 border border-[#0EA5E9]/30 text-[#0EA5E9]' : 'bg-[#2A4BFF]/10 border border-[#2A4BFF]/30 text-[#2A4BFF]'}`}>
+                          {lead.type} Request
                         </span>
+                        <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-mono">
+                          <span>{new Date(lead.date).toLocaleDateString()} {new Date(lead.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                          <button onClick={() => handleDeleteLead(idx)} className="text-slate-400 hover:text-red-500 p-1 rounded focus:outline-none transition-colors cursor-pointer" title="Delete Inquiry">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Contact & Allocated Courses info */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Email Address:</span>
-                        <span className="text-slate-900 font-mono font-medium">{student.email}</span>
+                      {/* Metadata fields */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Contact Name:</span>
+                          <span className="text-white font-medium">{lead.name}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Email Address:</span>
+                          <span className="text-white font-mono">{lead.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Phone Number:</span>
+                          <span className="text-white font-mono">{lead.phone}</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Phone Number:</span>
-                        <span className="text-slate-900 font-mono">{student.phone || 'N/A'}</span>
-                      </div>
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Enrolled Program(s):</span>
-                        <span className="text-slate-900 uppercase font-mono font-semibold">
-                          {student.activeCourses && student.activeCourses.length > 0 
-                            ? student.activeCourses.join(', ') 
-                            : 'None'}
-                        </span>
-                      </div>
-                    </div>
 
-                    {/* Manual Course Allocation Option */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-slate-200/60 text-xs">
-                      <div>
-                        <span className="text-slate-500 block uppercase text-[9px] font-bold">Manual Course Management:</span>
-                        <p className="text-[11px] text-slate-500 mt-0.5">Assign a new course program to this student's profile directly.</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <select 
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              handleAllocateCourse(idx, e.target.value);
-                              e.target.value = ''; // Reset select
-                            }
-                          }}
-                          className="bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 outline-none focus:border-brand-cyan"
-                        >
-                          <option value="">-- Choose Course to Allocate --</option>
-                          <option value="artificial-intelligence">Artificial Intelligence</option>
-                          <option value="machine-learning">Machine Learning</option>
-                          <option value="data-science-analytics">Data Science & Analytics</option>
-                          <option value="full-stack-web">Full Stack Web (MERN)</option>
-                          <option value="stock-market">Stock Market</option>
-                          <option value="digital-marketing-cert">Digital Marketing</option>
-                          <option value="hr-mgmt">HR Management</option>
-                          <option value="cyber-security">Cyber Security</option>
-                          <option value="cloud-computing">Cloud Computing</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* LMS Credentials Setup Section */}
-                    <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-4">
-                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Wayspire LMS Credentials</span>
-                        {student.lmsUsername && student.lmsPassword ? (
-                          <span className="text-[8px] font-bold text-[#4ADE80] uppercase bg-[#4ADE80]/15 px-2 py-0.5 rounded tracking-widest border border-[#4ADE80]/20">Active</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs border-t border-white/10 pt-3">
+                        {lead.type === 'Agency' ? (
+                          <>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Company Name:</span>
+                              <span className="text-white">{lead.company}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Service Category:</span>
+                              <span className="text-white">{lead.service}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Project Budget:</span>
+                              <span className="text-brand-cyan font-bold font-mono">{lead.budget}</span>
+                            </div>
+                          </>
                         ) : (
-                          <span className="text-[8px] font-bold text-amber-500 uppercase bg-amber-500/15 px-2 py-0.5 rounded tracking-widest border border-amber-500/20">Pending Upload</span>
+                          <>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">College / Org:</span>
+                              <span className="text-white">{lead.college}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Interest Program:</span>
+                              <span className="text-white uppercase font-mono">{lead.course}</span>
+                            </div>
+                            <div>
+                              <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Current Status:</span>
+                              <span className="text-white">{lead.status}</span>
+                            </div>
+                          </>
                         )}
                       </div>
 
-                      {editingStudentIdx === idx ? (
-                        /* Editing LMS Form */
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
-                          <div>
-                            <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">LMS Username / Email</label>
-                            <input 
-                              type="text" 
-                              value={lmsForm.lmsUsername}
-                              onChange={(e) => setLmsForm({ ...lmsForm, lmsUsername: e.target.value })}
-                              placeholder="e.g. jatin@gmail.com"
-                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-brand-purple"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">LMS Password</label>
-                            <input 
-                              type="text" 
-                              value={lmsForm.lmsPassword}
-                              onChange={(e) => setLmsForm({ ...lmsForm, lmsPassword: e.target.value })}
-                              placeholder="e.g. Wayspire@2026"
-                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 outline-none focus:border-brand-purple"
-                            />
-                          </div>
-                          <div className="flex space-x-2">
-                            <button 
-                              type="button"
-                              onClick={() => handleSaveLmsCredentials(idx)}
-                              className="flex-grow bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-black font-bold py-2 rounded-lg text-xs uppercase"
-                            >
-                              Save
-                            </button>
-                            <button 
-                              type="button"
-                              onClick={() => setEditingStudentIdx(null)}
-                              className="px-3 bg-slate-800 hover:bg-slate-750 text-slate-400 font-bold py-2 rounded-lg text-xs uppercase"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        /* Read-only Credentials Display */
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-grow">
-                            <div>
-                              <span className="text-[8px] text-slate-500 uppercase tracking-wider block">Username</span>
-                              <span className="text-xs font-mono text-slate-300 font-semibold">{student.lmsUsername || 'Not Configured'}</span>
-                            </div>
-                            <div>
-                              <span className="text-[8px] text-slate-500 uppercase tracking-wider block">Password</span>
-                              <span className="text-xs font-mono text-slate-300 font-semibold">{student.lmsPassword || 'Not Configured'}</span>
-                            </div>
-                          </div>
-                          <button 
-                            type="button"
-                            onClick={() => startEditingLms(idx, student)}
-                            className="bg-brand-purple hover:bg-brand-purple/90 text-white text-[10px] font-bold px-4 py-2 rounded-lg uppercase tracking-wider self-start sm:self-center transition-colors"
-                          >
-                            Set Credentials
-                          </button>
+                      {/* Messages briefs */}
+                      {lead.message && (
+                        <div className="bg-white/5 border border-white/10 p-3 rounded-lg text-xs text-slate-200">
+                          <strong className="text-[9px] text-slate-400 block uppercase font-mono tracking-wider mb-1">Message Content:</strong>
+                          <p className="italic">"{lead.message}"</p>
                         </div>
                       )}
+
                     </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : activeSubTab === 'students' ? (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Registered Students & LMS Credentials</h3>
+              
+              {students.length === 0 ? (
+                <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
+                  <Users className="w-10 h-10 text-slate-500 mx-auto" />
+                  <h4 className="font-bold text-white text-sm">No Students Registered</h4>
+                  <p className="text-xs text-slate-400">No student accounts have been created in the database yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {students.map((student, idx) => (
+                    <div key={idx} className="bg-[#0A0E35]/65 border border-white/10 p-6 rounded-xl space-y-4 shadow-xl">
+                      
+                      {/* Header with Name & Student ID */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-3 gap-2">
+                        <div>
+                          <h4 className="text-sm font-extrabold text-white">{student.name}</h4>
+                          <p className="text-[10px] text-slate-400 font-mono mt-0.5">ID: {student.studentId || 'N/A'}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-[9px] font-bold tracking-widest text-[#4ADE80] bg-[#4ADE80]/15 border border-[#4ADE80]/30 px-2.5 py-0.5 rounded uppercase">
+                            Active Student
+                          </span>
+                        </div>
+                      </div>
 
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                      {/* Contact & Allocated Courses info */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Email Address:</span>
+                          <span className="text-slate-200 font-mono font-medium">{student.email}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Phone Number:</span>
+                          <span className="text-slate-200 font-mono">{student.phone || 'N/A'}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Enrolled Program(s):</span>
+                          <span className="text-white uppercase font-mono font-semibold">
+                            {student.activeCourses && student.activeCourses.length > 0 
+                              ? student.activeCourses.join(', ') 
+                              : 'None'}
+                          </span>
+                        </div>
+                      </div>
 
-        {activeSubTab === 'enrollments' && (
-          <div className="space-y-6 animate-fade-in">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Successful Course Enrollments</h3>
-            
-            {payments.length === 0 ? (
-              <div className="glass-panel p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
-                <Users className="w-10 h-10 text-slate-500 mx-auto" />
-                <h4 className="font-bold text-slate-900 text-sm">No Enrollments Found</h4>
-                <p className="text-xs text-slate-550">No students have purchased any certification program yet.</p>
-              </div>
-            ) : (
-              <div className="bg-[#0b0f19] border border-slate-800 rounded-2xl p-6 shadow-xl overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-350 min-w-[700px]">
-                  <thead>
-                    <tr className="border-b border-slate-800 text-slate-500 pb-2 uppercase text-[9px] tracking-wider">
-                      <th className="py-3 px-4">Student ID</th>
-                      <th className="py-3 px-4">Name / Email</th>
-                      <th className="py-3 px-4">Course Enrolled</th>
-                      <th className="py-3 px-4">Format</th>
-                      <th className="py-3 px-4">Payment Ref</th>
-                      <th className="py-3 px-4 text-right">Amount</th>
-                      <th className="py-3 px-4 text-right">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {payments.map((p, idx) => {
-                      const users = getDbItem('beyondskills_users', []);
-                      const stu = users.find(u => u.studentId === p.studentId || u.email === p.email);
-                      return (
-                        <tr key={idx} className="border-b border-slate-800/60 hover:bg-slate-900/30 text-slate-300 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-bold text-slate-400">{p.studentId || 'N/A'}</td>
-                          <td className="py-3.5 px-4">
-                            <p className="font-semibold text-slate-100">{stu?.name || p.email.split('@')[0]}</p>
-                            <p className="text-[10px] text-slate-500 font-mono mt-0.5">{p.email}</p>
-                          </td>
-                          <td className="py-3.5 px-4 font-semibold text-slate-200 uppercase">{p.courseId?.replace(/-/g, ' ')}</td>
-                          <td className="py-3.5 px-4">
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${p.mode === 'self-paced' ? 'bg-amber-550/10 text-amber-500 border border-amber-550/20' : 'bg-brand-purple/10 text-brand-purple border border-brand-purple/20'}`}>
-                              {p.mode === 'self-paced' ? 'Self Paced' : 'Mentor Led'}
-                            </span>
-                          </td>
-                          <td className="py-3.5 px-4 font-mono text-slate-500">{p.paymentId || 'N/A'}</td>
-                          <td className="py-3.5 px-4 text-right font-mono font-bold text-brand-cyan">₹{p.amount?.toLocaleString()}</td>
-                          <td className="py-3.5 px-4 text-right text-slate-500 font-mono">
-                            {new Date(p.date).toLocaleDateString()}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+                      {/* Manual Course Allocation Option */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-white/10 text-xs">
+                        <div>
+                          <span className="text-slate-400 block uppercase text-[9px] font-bold font-mono tracking-wider">Manual Course Management:</span>
+                          <p className="text-[11px] text-slate-400 mt-0.5">Assign a new course program to this student's profile directly.</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <select 
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                handleAllocateCourse(idx, e.target.value);
+                                e.target.value = ''; // Reset select
+                              }
+                            }}
+                            className="bg-[#0A0E35] border border-white/15 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-brand-cyan cursor-pointer"
+                          >
+                            <option value="">-- Choose Course to Allocate --</option>
+                            <option value="artificial-intelligence">Artificial Intelligence</option>
+                            <option value="machine-learning">Machine Learning</option>
+                            <option value="data-science-analytics">Data Science & Analytics</option>
+                            <option value="full-stack-web">Full Stack Web (MERN)</option>
+                            <option value="stock-market">Stock Market</option>
+                            <option value="digital-marketing-cert">Digital Marketing</option>
+                            <option value="hr-mgmt">HR Management</option>
+                            <option value="cyber-security">Cyber Security</option>
+                            <option value="cloud-computing">Cloud Computing</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* LMS Credentials Setup Section */}
+                      <div className="bg-slate-950/60 border border-white/5 p-4 rounded-xl space-y-4">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Wayspire LMS Credentials</span>
+                          {student.lmsUsername && student.lmsPassword ? (
+                            <span className="text-[8px] font-bold text-[#4ADE80] uppercase bg-[#4ADE80]/15 px-2 py-0.5 rounded tracking-widest border border-[#4ADE80]/20">Active</span>
+                          ) : (
+                            <span className="text-[8px] font-bold text-amber-500 uppercase bg-amber-500/15 px-2 py-0.5 rounded tracking-widest border border-amber-500/20">Pending Upload</span>
+                          )}
+                        </div>
+
+                        {editingStudentIdx === idx ? (
+                          /* Editing LMS Form */
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                            <div>
+                              <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">LMS Username / Email</label>
+                              <input 
+                                type="text" 
+                                value={lmsForm.lmsUsername}
+                                onChange={(e) => setLmsForm({ ...lmsForm, lmsUsername: e.target.value })}
+                                placeholder="e.g. jatin@gmail.com"
+                                className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">LMS Password</label>
+                              <input 
+                                type="text" 
+                                value={lmsForm.lmsPassword}
+                                onChange={(e) => setLmsForm({ ...lmsForm, lmsPassword: e.target.value })}
+                                placeholder="e.g. Wayspire@2026"
+                                className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                              />
+                            </div>
+                            <div className="flex space-x-2">
+                              <button 
+                                type="button"
+                                onClick={() => handleSaveLmsCredentials(idx)}
+                                className="flex-grow bg-[#4ADE80] hover:bg-[#4ADE80]/90 text-black font-bold py-2 rounded-lg text-xs uppercase cursor-pointer"
+                              >
+                                Save
+                              </button>
+                              <button 
+                                type="button"
+                                onClick={() => setEditingStudentIdx(null)}
+                                className="px-3 bg-white/10 hover:bg-white/15 text-slate-300 font-bold py-2 rounded-lg text-xs uppercase cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Read-only Credentials Display */
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-grow">
+                              <div>
+                                <span className="text-[8px] text-slate-500 uppercase tracking-wider block font-mono">Username</span>
+                                <span className="text-xs font-mono text-slate-200 font-semibold">{student.lmsUsername || 'Not Configured'}</span>
+                              </div>
+                              <div>
+                                <span className="text-[8px] text-slate-500 uppercase tracking-wider block font-mono">Password</span>
+                                <span className="text-xs font-mono text-slate-200 font-semibold">{student.lmsPassword || 'Not Configured'}</span>
+                              </div>
+                            </div>
+                            <button 
+                              type="button"
+                              onClick={() => startEditingLms(idx, student)}
+                              className="bg-[#2A4BFF] hover:brightness-110 text-white text-[10px] font-bold px-4 py-2 rounded-lg uppercase tracking-wider self-start sm:self-center transition-colors cursor-pointer"
+                            >
+                              Set Credentials
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            /* ENROLLMENTS VIEW */
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Successful Course Enrollments</h3>
+              
+              {payments.length === 0 ? (
+                <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
+                  <Users className="w-10 h-10 text-slate-500 mx-auto" />
+                  <h4 className="font-bold text-white text-sm">No Enrollments Found</h4>
+                  <p className="text-xs text-slate-400">No students have purchased any certification program yet.</p>
+                </div>
+              ) : (
+                <div className="bg-[#0A0E35]/65 border border-white/10 rounded-2xl p-6 shadow-xl overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300 min-w-[700px]">
+                    <thead>
+                      <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                        <th className="py-3 px-4">Student ID</th>
+                        <th className="py-3 px-4">Name / Email</th>
+                        <th className="py-3 px-4">Course Enrolled</th>
+                        <th className="py-3 px-4">Format</th>
+                        <th className="py-3 px-4">Payment Ref</th>
+                        <th className="py-3 px-4 text-right">Amount</th>
+                        <th className="py-3 px-4 text-right">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payments.map((p, idx) => {
+                        const users = getDbItem('beyondskills_users', []);
+                        const stu = users.find(u => u.studentId === p.studentId || u.email === p.email);
+                        return (
+                          <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-350 transition-colors">
+                            <td className="py-3.5 px-4 font-mono font-bold text-slate-400">{p.studentId || 'N/A'}</td>
+                            <td className="py-3.5 px-4">
+                              <p className="font-semibold text-white">{stu?.name || p.email.split('@')[0]}</p>
+                              <p className="text-[10px] text-slate-400 font-mono mt-0.5">{p.email}</p>
+                            </td>
+                            <td className="py-3.5 px-4 font-semibold text-white uppercase">{p.courseId?.replace(/-/g, ' ')}</td>
+                            <td className="py-3.5 px-4">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${p.mode === 'self-paced' ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' : 'bg-[#2A4BFF]/10 text-[#2A4BFF] border border-[#2A4BFF]/20'}`}>
+                                {p.mode === 'self-paced' ? 'Self Paced' : 'Mentor Led'}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 font-mono text-slate-450">{p.paymentId || 'N/A'}</td>
+                            <td className="py-3.5 px-4 text-right font-mono font-bold text-brand-cyan">₹{p.amount?.toLocaleString()}</td>
+                            <td className="py-3.5 px-4 text-right text-slate-450 font-mono">
+                              {new Date(p.date).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )
         )}
 
       </div>
