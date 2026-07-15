@@ -72,29 +72,29 @@ export default function AdminDashboard() {
   const totalEnrollments = payments.filter(p => p.status === 'Success').length;
   
   // Analytics Mock Data
-  const paymentSuccessRate = 96.2;
-  const engagementRate = 78.4;
-  const completionRate = 42.5;
+  const paymentSuccessRate = 0;
+  const engagementRate = 0;
+  const completionRate = 0;
 
   const funnelSteps = [
-    { name: 'Website Visitors', value: '12,500', pct: '100%' },
-    { name: 'Syllabus Page Views', value: '4,200', pct: '33.6%' },
-    { name: 'Initiated Checkout', value: '850', pct: '6.8%' },
-    { name: 'Enrolled Students', value: totalEnrollments + 120, pct: '1.2%' } // Combined mock + active
+    { name: 'Website Visitors', value: '0', pct: '0%' },
+    { name: 'Syllabus Page Views', value: '0', pct: '0%' },
+    { name: 'Initiated Checkout', value: '0', pct: '0%' },
+    { name: 'Enrolled Students', value: totalEnrollments, pct: totalEnrollments > 0 ? '100%' : '0%' }
   ];
 
   const leadSources = [
-    { name: 'Google Search Ads', value: 45 },
-    { name: 'Meta Performance Ads', value: 30 },
-    { name: 'Organic SEO', value: 15 },
-    { name: 'Direct Referrals', value: 10 }
+    { name: 'Google Search Ads', value: 0 },
+    { name: 'Meta Performance Ads', value: 0 },
+    { name: 'Organic SEO', value: 0 },
+    { name: 'Direct Referrals', value: 0 }
   ];
 
   const mentorPerformance = [
-    { name: 'Dr. Aris Rawat', course: 'AI & Data Science', rating: 4.8, count: 58 },
-    { name: 'Vikram Aditya', course: 'Full Stack Development', rating: 4.7, count: 72 },
-    { name: 'Kunal Sen', course: 'Digital Marketing', rating: 4.6, count: 35 },
-    { name: 'Meenakshi Iyer', course: 'HR Management', rating: 4.5, count: 20 }
+    { name: 'Dr. Aris Rawat', course: 'AI & Data Science', rating: 0, count: 0 },
+    { name: 'Vikram Aditya', course: 'Full Stack Development', rating: 0, count: 0 },
+    { name: 'Kunal Sen', course: 'Digital Marketing', rating: 0, count: 0 },
+    { name: 'Meenakshi Iyer', course: 'HR Management', rating: 0, count: 0 }
   ];
 
   return (

@@ -183,12 +183,6 @@ export default function Header() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:space-x-4">
             {currentUser ? (
               <div className="flex items-center space-x-3">
-                {!isScrolled && (
-                  <span className="text-xs text-slate-300 font-mono bg-white/10 px-2.5 py-1 rounded border border-white/10">
-                    ID: {currentUser.studentId || 'Admin'}
-                  </span>
-                )}
-                
                 {currentUser.email === 'beyondskills.ai@gmail.com' ? (
                   <Link to="/admin" className={`text-xs font-semibold uppercase tracking-wider text-brand-cyan hover:bg-brand-cyan hover:text-white bg-brand-cyan/10 border border-brand-cyan/25 rounded-full transition-all ${isScrolled ? 'px-3 py-1.5' : 'px-4 py-2'}`}>
                     Admin Portal
@@ -263,12 +257,8 @@ export default function Header() {
           <Link to="/verify" className="block px-3 py-2 text-base font-semibold text-slate-200 hover:text-[#2A4BFF] border-b border-white/5">
             Verify Certificate
           </Link>
-
           {currentUser ? (
             <div className="pt-4 px-3 flex flex-col space-y-3">
-              <span className="text-xs text-slate-400 font-mono">
-                Student ID: {currentUser.studentId || 'Admin'}
-              </span>
               {currentUser.email === 'beyondskills.ai@gmail.com' ? (
                 <Link to="/admin" className="text-center bg-[#0EA5E9]/10 text-[#0EA5E9] hover:bg-[#0EA5E9] hover:text-white border border-[#0EA5E9]/20 text-center font-bold py-2 rounded-lg">
                   Admin Panel
