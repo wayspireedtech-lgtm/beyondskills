@@ -13,6 +13,17 @@ import {
 export default function AdminDashboard() {
   const navigate = useNavigate();
   
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('beyondskills_admin_theme');
+    return saved !== null ? saved === 'dark' : true;
+  });
+
+  const toggleTheme = (dark) => {
+    setIsDarkMode(dark);
+    localStorage.setItem('beyondskills_admin_theme', dark ? 'dark' : 'light');
+  };
+
   // CRM States
   const [currentUser, setCurrentUser] = useState(null);
   const [leads, setLeads] = useState([]);
@@ -82,8 +93,9 @@ export default function AdminDashboard() {
       setLandingPages(getDbItem('beyondskills_landing_pages', []));
       
       // Seed default CRM Users if none exist
+      const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
       let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
-      if (existingCrmUsers.length === 0) {
+      if (!crmUsersSeeded && existingCrmUsers.length === 0) {
         existingCrmUsers = [
           { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
           { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
@@ -93,6 +105,7 @@ export default function AdminDashboard() {
           { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
         ];
         setDbItem('beyondskills_crm_users', existingCrmUsers);
+        localStorage.setItem('beyondskills_crm_users_seeded', 'true');
       }
       setCrmUsers(existingCrmUsers);
       if (existingCrmUsers.length > 0 && !selectedBdaName) {
@@ -217,7 +230,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
-    if (!loggedInUser) {
+    if (!loggedInUser || !['Admin', 'BDA', 'BDM', 'Sales Head'].includes(loggedInUser.role)) {
       setCurrentUser(null);
       return;
     }
@@ -231,8 +244,9 @@ export default function AdminDashboard() {
     setLandingPages(getDbItem('beyondskills_landing_pages', []));
     
     // Seed default CRM Users if none exist
+    const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
     let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
-    if (existingCrmUsers.length === 0) {
+    if (!crmUsersSeeded && existingCrmUsers.length === 0) {
       existingCrmUsers = [
         { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
         { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
@@ -242,6 +256,7 @@ export default function AdminDashboard() {
         { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
       ];
       setDbItem('beyondskills_crm_users', existingCrmUsers);
+      localStorage.setItem('beyondskills_crm_users_seeded', 'true');
     }
     setCrmUsers(existingCrmUsers);
     if (existingCrmUsers.length > 0 && !selectedBdaName) {
@@ -971,7 +986,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="bg-[#030712] text-slate-100 min-h-screen flex font-sans overflow-x-hidden antialiased">
+    <div className={`min-h-screen flex font-sans overflow-x-hidden antialiased text-[13px] sm:text-sm transition-colors duration-300 admin-theme-container ${isDarkMode ? 'bg-[#030712] text-slate-100 admin-theme-dark' : 'bg-[#F8FAFC] text-slate-800 admin-theme-light'}`}>
       {/* Sidebar Navigation */}
       <aside className="w-64 bg-[#0B0F19] border-r border-white/5 flex flex-col shrink-0">
         {/* Branding header */}
@@ -1027,18 +1042,6 @@ export default function AdminDashboard() {
           >
             <ClipboardList className="w-4 h-4" />
             <span>Follow-ups Board</span>
-          </button>
-
-          <button 
-            onClick={() => { setActiveMainTab('leads_manager'); setLeadsSubTab('tasks'); }}
-            className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
-              activeMainTab === 'leads_manager' && leadsSubTab === 'tasks'
-                ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
-                : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <CheckSquare className="w-4 h-4" />
-            <span>Tasks</span>
           </button>
 
           {!isBdaUser && (
@@ -1154,11 +1157,23 @@ export default function AdminDashboard() {
           )}
 
           {/* Theme toggler */}
-          <div className="flex bg-[#030712] p-1 rounded-xl border border-white/5 text-xs text-slate-400 font-bold">
-            <button className="flex-1 flex items-center justify-center py-1.5 rounded-lg hover:text-white cursor-pointer transition-all">
+          <div className={`flex p-1 rounded-xl border text-xs font-bold transition-all duration-300 ${isDarkMode ? 'bg-[#030712] border-white/5 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+            <button 
+              type="button"
+              onClick={() => toggleTheme(false)}
+              className={`flex-1 flex items-center justify-center py-1.5 rounded-lg cursor-pointer transition-all ${
+                !isDarkMode ? 'bg-white text-[#2A4BFF] border border-slate-200/80 shadow-sm' : 'hover:text-white'
+              }`}
+            >
               Light
             </button>
-            <button className="flex-1 bg-white/5 border border-white/5 flex items-center justify-center py-1.5 rounded-lg text-white cursor-pointer transition-all">
+            <button 
+              type="button"
+              onClick={() => toggleTheme(true)}
+              className={`flex-1 flex items-center justify-center py-1.5 rounded-lg cursor-pointer transition-all ${
+                isDarkMode ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' : 'hover:text-slate-900'
+              }`}
+            >
               Dark
             </button>
           </div>
@@ -1175,9 +1190,31 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-grow flex flex-col min-h-screen bg-[#030712] relative overflow-y-auto">
-        {/* Dynamic spot gradient */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(45,67,184,0.03),transparent_45%)] pointer-events-none z-0"></div>
+      <div className={`flex-grow flex flex-col min-h-screen relative overflow-y-auto transition-colors duration-300 ${isDarkMode ? 'bg-[#030712]' : 'bg-[#F8FAFC]'}`}>
+        {/* Colorful Ambient Glow Spots & Grid Background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 select-none">
+          {/* Grid Pattern with subtle tint */}
+          <div className={`absolute inset-0 bg-[size:16px_28px] ${
+            isDarkMode 
+              ? 'bg-[linear-gradient(to_right,rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.03)_1px,transparent_1px)]' 
+              : 'bg-[linear-gradient(to_right,rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.02)_1px,transparent_1px)]'
+          }`}></div>
+
+          {/* Spot 1: Neon Cyan */}
+          <div className={`absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full blur-[130px] opacity-60 transition-colors duration-500 ${
+            isDarkMode ? 'bg-cyan-500/10' : 'bg-cyan-300/15'
+          }`}></div>
+          
+          {/* Spot 2: Indigo / Purple */}
+          <div className={`absolute top-[40%] right-[-10%] w-[550px] h-[550px] rounded-full blur-[140px] opacity-50 transition-colors duration-500 ${
+            isDarkMode ? 'bg-indigo-500/8' : 'bg-indigo-300/15'
+          }`}></div>
+          
+          {/* Spot 3: Rose / Pink */}
+          <div className={`absolute bottom-[-10%] left-[20%] w-[500px] h-[500px] rounded-full blur-[130px] opacity-40 transition-colors duration-500 ${
+            isDarkMode ? 'bg-rose-500/8' : 'bg-rose-300/15'
+          }`}></div>
+        </div>
         
         <div className="p-8 max-w-7xl w-full mx-auto space-y-8 z-10 relative">
           
@@ -1411,14 +1448,6 @@ export default function AdminDashboard() {
                 }`}
               >
                 Follow-ups Board (Kanban)
-              </button>
-              <button 
-                onClick={() => setLeadsSubTab('tasks')}
-                className={`pb-3 font-bold border-b-2 transition-all ${
-                  leadsSubTab === 'tasks' ? 'border-[#2A4BFF] text-[#2A4BFF]' : 'border-transparent text-slate-500 hover:text-slate-900'
-                }`}
-              >
-                Action Items (Tasks)
               </button>
             </div>
 
@@ -1839,87 +1868,6 @@ export default function AdminDashboard() {
                     </div>
                   );
                 })}
-              </div>
-            )}
-
-            {/* Subtab 3: Tasks */}
-            {leadsSubTab === 'tasks' && (
-              <div className="space-y-6 animate-fade-in text-white">
-                
-                {/* Summary widgets row */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Pending Tasks</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-white">{accessibleLeads.filter(l => l.status === 'Follow Up').length}</p>
-                    </div>
-                    <ClipboardList className="w-5 h-5 text-[#2A4BFF]" />
-                  </div>
-                  <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Overdue Alerts</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-red-500">
-                        {accessibleLeads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date) < new Date().setHours(0,0,0,0)).length}
-                      </p>
-                    </div>
-                    <ShieldAlert className="w-5 h-5 text-red-500" />
-                  </div>
-                  <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Due Today</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-brand-cyan">
-                        {accessibleLeads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date).toDateString() === new Date().toDateString()).length}
-                      </p>
-                    </div>
-                    <Calendar className="w-5 h-5 text-brand-cyan" />
-                  </div>
-                  <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
-                    <div>
-                      <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Completed Actions</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-[#4ADE80]">{accessibleLeads.filter(l => l.status === 'Enrolled').length}</p>
-                    </div>
-                    <CheckCircle2 className="w-5 h-5 text-[#4ADE80]" />
-                  </div>
-                </div>
-
-                {/* Tasks list */}
-                <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl">
-                  <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-white/10 pb-4">Required BDA Action Items</h3>
-                  
-                  {accessibleLeads.filter(l => l.status === 'Follow Up').length === 0 ? (
-                    <div className="text-center py-10 text-slate-500 text-xs italic font-mono">
-                      No pending tasks found. All follow-up actions completed!
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs text-slate-300">
-                        <thead>
-                          <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
-                            <th className="py-2 px-3">Lead Name</th>
-                            <th className="py-2 px-3">Assigned Associate</th>
-                            <th className="py-2 px-3">Required Action</th>
-                            <th className="py-2 px-3">Follow Up Date</th>
-                            <th className="py-2 px-3 text-right">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {accessibleLeads.filter(l => l.status === 'Follow Up').map((lead, idx) => (
-                            <tr key={idx} className="border-b border-white/5 text-slate-300">
-                              <td className="py-2.5 px-3 font-semibold text-white">{lead.name}</td>
-                              <td className="py-2.5 px-3 font-mono text-slate-400">{lead.assignedBDA || 'Unassigned'}</td>
-                              <td className="py-2.5 px-3 text-brand-cyan">Call Candidate (Substatus: {lead.subStatus})</td>
-                              <td className="py-2.5 px-3 font-mono text-slate-400">{lead.date}</td>
-                              <td className="py-2.5 px-3 text-right font-mono text-xs">
-                                <span className="text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded tracking-wide font-bold">PENDING</span>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-
               </div>
             )}
 
