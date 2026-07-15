@@ -3,23 +3,22 @@ import {
   Code, BookOpen, Clock, Award, Users, CheckCircle, ArrowRight, Check, 
   ChevronRight, Calendar, ShieldAlert, Sparkles, Phone, Mail, Globe, 
   Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download,
-  MessageCircle, Layout, Server, Database, GitBranch, ShieldCheck
+  MessageCircle, Layout, Server, Database, GitBranch, ShieldCheck, Laptop, 
+  TrendingUp, RefreshCw, BarChart2, Shield
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/mockDb';
 
-const BENEFITS = [
-  { title: "Beginner Friendly", desc: "No coding background needed. We start from basic syntax and HTML tags." },
-  { title: "Practical Learning", desc: "Focus on clean coding, folder setups, and hosting active web apps." },
-  { title: "Mentor Guidance", desc: "Weekly review sessions led by active professional web engineers." },
-  { title: "Live Sessions", desc: "Attend live training blocks to clarify queries and discuss concepts." },
-  { title: "Real Projects", desc: "Build applications backed by databases and dynamic routing structures." },
-  { title: "Career Guidance", desc: "Equip yourself to navigate recruitment steps and highlight your developer skills." },
-  { title: "Resume Support", desc: "Structure your resume sheets to focus on code portfolios and core technologies." },
-  { title: "Interview Preparation", desc: "Practice coding algorithms, DOM manipulations, and Express server questions." },
-  { title: "Learning Community", desc: "Collaborate and share code directories with cohort members in chat channels." },
-  { title: "LMS Access", desc: "Watch recorded lectures and access code libraries for 1-year from the batch start date." },
-  { title: "Assignments", desc: "Tackle weekly milestone checks to validate your database and API models." },
-  { title: "Portfolio Development", desc: "Host 3 core projects on GitHub as concrete proof of your capabilities." }
+const OUTCOMES = [
+  { title: "Build 8+ Practical Projects", desc: "Construct fully functional web applications from scratch, building a tangible repository that proves your capabilities to recruiters." },
+  { title: "Weekly Mentor Reviews", desc: "Receive direct code audits and performance feedback from practicing software engineers to align your code with industry standards." },
+  { title: "Live Doubt Solving", desc: "Participate in interactive sessions to debug your servers, refine database schemas, and resolve complex code blocks in real time." },
+  { title: "Portfolio Development", desc: "Deploy your web applications on live hosting platforms, creating a professional development portfolio ready to show employers." },
+  { title: "Resume Building", desc: "Structure your resume sheets to highlight your developer profile, technical stack proficiency, and core project contributions." },
+  { title: "Mock Interviews", desc: "Practice coding algorithms, system design questions, and technical interview parameters to build confidence." },
+  { title: "GitHub Portfolio", desc: "Learn to manage code directories, create branches, and maintain a professional commit history on your profile." },
+  { title: "Real Coding Assignments", desc: "Tackle structured weekly milestone exercises designed to test your understanding of MERN stack APIs." },
+  { title: "One-Year LMS Access", desc: "Watch recorded class sessions, access developer guides, and download code templates for 1 year from your batch start." },
+  { title: "Career Guidance", desc: "Understand the software recruitment landscape, navigate entry-level applications, and optimize your LinkedIn presence." }
 ];
 
 const CURRICULUM = [
@@ -34,12 +33,54 @@ const CURRICULUM = [
 ];
 
 const SAMPLE_PROJECTS = [
-  { title: "Developer Portfolio Website", desc: "Build and host a personal developer website featuring responsive structures, CSS transitions, and form variables.", tech: ["HTML5", "CSS Grid", "JavaScript", "Vercel"] },
-  { title: "Weather Forecast Application", desc: "Create a visual widget that fetches live weather forecasts using asynchronous fetch requests.", tech: ["React.js", "REST APIs", "Tailwind CSS"] },
-  { title: "Task Management Board", desc: "Construct a collaborative dashboard enabling users to create, delete, and filter priority tasks.", tech: ["MERN Stack", "Express APIs"] },
-  { title: "E-Commerce Web Portal", desc: "Build a digital storefront featuring item grids, shopping cart actions, and secure login modules.", tech: ["MERN Stack", "MongoDB Atlas"] },
-  { title: "Secure Authentication API", desc: "Develop a backend server implementing bcrypt encryption, JWT tokens, and route protection.", tech: ["Node.js", "Express.js", "JWT"] },
-  { title: "Student Learning Dashboard", desc: "Design a study portal for students to track course milestones, read logs, and submit assignments.", tech: ["React", "Mongoose", "Tailwind"] }
+  { 
+    title: "Developer Portfolio Website", 
+    desc: "Build and host a personal developer website featuring responsive structures, CSS transitions, and form variables.", 
+    tech: ["HTML5", "CSS Grid", "JavaScript", "Vercel"],
+    learn: "Responsive UI layouts, semantic structure, and web hosting workflows.",
+    skills: "CSS Grid, Flexbox, Vercel Deployment, Git Setup",
+    outcome: "A live personal site to showcase all your cohort projects to recruiters."
+  },
+  { 
+    title: "Weather Forecast Application", 
+    desc: "Create a visual widget that fetches live weather forecasts using asynchronous fetch requests.", 
+    tech: ["React.js", "REST APIs", "Tailwind CSS"],
+    learn: "React component states, API consumption, and rendering dynamic data.",
+    skills: "React Hooks, Fetch API, Tailwind Utility Classes",
+    outcome: "A functional weather dashboard fetching real-time global weather parameters."
+  },
+  { 
+    title: "Task Management Board", 
+    desc: "Construct a collaborative dashboard enabling users to create, delete, and filter priority tasks.", 
+    tech: ["MERN Stack", "Express APIs"],
+    learn: "Creating REST APIs, setting up Express routers, and updating MongoDB data.",
+    skills: "Express Routing, MongoDB CRUD Operations, Axios Client Integration",
+    outcome: "A database-backed workspace board supporting full task lifecycle management."
+  },
+  { 
+    title: "E-Commerce Web Portal", 
+    desc: "Build a digital storefront featuring item grids, shopping cart actions, and secure login modules.", 
+    tech: ["MERN Stack", "MongoDB Atlas"],
+    learn: "State management for shopping carts, user sessions, and database search queries.",
+    skills: "Context API, Mongoose Schemas, Database Query Optimization",
+    outcome: "An online store prototype supporting cart persistence and item filtering."
+  },
+  { 
+    title: "Secure Authentication API", 
+    desc: "Develop a backend server implementing bcrypt encryption, JWT tokens, and route protection.", 
+    tech: ["Node.js", "Express.js", "JWT"],
+    learn: "Backend security practices, hashing passwords, and validating session tokens.",
+    skills: "JWT Authorization, bcrypt Hashing, Express Middleware Controls",
+    outcome: "A secure authentication API ready to protect private client paths and admin panels."
+  },
+  { 
+    title: "Student Learning Dashboard", 
+    desc: "Design a study portal for students to track course milestones, read logs, and submit assignments.", 
+    tech: ["React", "Mongoose", "Tailwind"],
+    learn: "Building complex relational student data models and visual progress bars.",
+    skills: "React Components, Complex Database Aggregations, Responsive Dashboards",
+    outcome: "A study planner portal featuring visual progress states and file upload logic."
+  }
 ];
 
 const FAQS = [
@@ -63,7 +104,7 @@ export default function FullStackLandingPage() {
     qualification: 'Undergraduate',
     experience: 'Beginner - No Coding',
     goal: 'Land a Tech Job',
-    contactTime: 'Morning 9 AM - 12 PM'
+    contactTime: '' // Made optional by default
   });
   const [status, setStatus] = useState(null);
   const [faqOpen, setFaqOpen] = useState({});
@@ -72,7 +113,6 @@ export default function FullStackLandingPage() {
   useEffect(() => {
     document.title = "Full Stack Web Development Program | BeyondSkills Upskilling";
     
-    // Add Meta description
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
       metaDesc = document.createElement('meta');
@@ -81,7 +121,6 @@ export default function FullStackLandingPage() {
     }
     metaDesc.content = "Master web development with BeyondSkills' MERN Stack Certification Program. Attend live mentor-led sessions, build database-connected web apps, and compile coding portfolios.";
 
-    // Schema Markup
     const schemaData = {
       "@context": "https://schema.org",
       "@type": "Course",
@@ -130,7 +169,7 @@ export default function FullStackLandingPage() {
       phone: enquiryForm.phone,
       college: enquiryForm.qualification, 
       status: enquiryForm.experience, 
-      message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime}`,
+      message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime || 'Not Specified'}`,
       campaign: utmCampaign,
       source: utmSource,
       utmMedium: utmMedium,
@@ -143,14 +182,13 @@ export default function FullStackLandingPage() {
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
 
-    // simulated Google Sheets request trigger
     console.log("Saving lead metrics to mock Google Sheets table schema:", newLead);
 
     // Trigger local SLA toast notification
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
         subject: `Enrollment Application Registered: ${enquiryForm.name}`,
-        body: `Dear ${enquiryForm.name},\n\nWe have logged your application profile for the Full Stack Web Development cohort. \n\nOur team has received your registration under campaign parameters: ${utmCampaign}. An admissions counselor has been assigned and will reach out during your preferred window (${enquiryForm.contactTime}) at ${enquiryForm.phone}.\n\nSincerely,\nBeyondSkills Cohort Coordinator`
+        body: `Dear ${enquiryForm.name},\n\nWe have logged your application profile for the Full Stack Web Development cohort. \n\nOur team has received your registration under campaign parameters: ${utmCampaign}. An admissions counselor has been assigned and will reach out to you at ${enquiryForm.phone}.\n\nSincerely,\nBeyondSkills Cohort Coordinator`
       }
     }));
 
@@ -162,7 +200,7 @@ export default function FullStackLandingPage() {
       qualification: 'Undergraduate',
       experience: 'Beginner - No Coding',
       goal: 'Land a Tech Job',
-      contactTime: 'Morning 9 AM - 12 PM'
+      contactTime: ''
     });
     setTimeout(() => setStatus(null), 6000);
   };
@@ -221,13 +259,13 @@ export default function FullStackLandingPage() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full font-mono">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Full Stack Web Development Cohort</span>
+              <span>Become a Full Stack Developer</span>
             </span>
-            <h1 className="font-manrope font-extrabold text-[#0F172A] text-4xl sm:text-6xl tracking-tight leading-[1.08]">
-              Build Real Web Applications with <span className="text-[#2563EB]">MERN Stack Mentorship</span>
+            <h1 className="font-manrope font-extrabold text-[#0F172A] text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08]">
+              Build Production-Ready Web Applications with <span className="text-[#2563EB]">Industry Mentorship</span>
             </h1>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl">
-              Master frontend designs, express backend routing, and MongoDB databases. Participate in live mentor-led sessions, build structural projects, and prepare coding portfolios.
+            <p className="text-slate-650 text-sm sm:text-base leading-relaxed max-w-xl">
+              Learn HTML, CSS, JavaScript, React, Node.js, Express.js and MongoDB through live mentor-led sessions, practical assignments and real-world projects designed to prepare you for internships and software development roles.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 max-w-md pt-2">
@@ -246,16 +284,15 @@ export default function FullStackLandingPage() {
               </button>
             </div>
 
-            {/* Trust Badges */}
+            {/* Trust Indicators directly below CTA */}
             <div className="pt-6 border-t border-slate-100">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 font-mono">Cohort Standards</p>
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-[11px] text-slate-600 font-medium">
-                {["Practical Learning", "Hands-on Projects", "Mentor Support", "Career Guidance", "Completion Certificate"].map((badge, idx) => (
-                  <div key={idx} className="flex items-center space-x-1.5">
-                    <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
-                    <span>{badge}</span>
-                  </div>
-                ))}
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 font-mono">What is included</p>
+              <div className="flex flex-wrap gap-x-5 gap-y-2.5 text-xs text-slate-700 font-medium">
+                <span className="flex items-center space-x-1.5"><Check className="w-4 h-4 text-emerald-500" /> <span>Beginner Friendly</span></span>
+                <span className="flex items-center space-x-1.5"><Check className="w-4 h-4 text-emerald-500" /> <span>Live Mentor Sessions</span></span>
+                <span className="flex items-center space-x-1.5"><Check className="w-4 h-4 text-emerald-500" /> <span>Real Projects</span></span>
+                <span className="flex items-center space-x-1.5"><Check className="w-4 h-4 text-emerald-500" /> <span>Interview Preparation</span></span>
+                <span className="flex items-center space-x-1.5"><Check className="w-4 h-4 text-emerald-500" /> <span>1 Year LMS Access</span></span>
               </div>
             </div>
           </div>
@@ -267,7 +304,7 @@ export default function FullStackLandingPage() {
               className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xl w-full transition-all duration-300"
             >
               <h3 className="font-manrope font-bold text-[#0F172A] text-base sm:text-lg mb-4 text-left border-b border-slate-100 pb-2">
-                Admission Enquiry Form
+                Cohort Admission Enquiry
               </h3>
               
               {status === 'success' ? (
@@ -275,7 +312,7 @@ export default function FullStackLandingPage() {
                   <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
                   <h4 className="font-bold text-xs">Enquiry Registered Successfully!</h4>
                   <p className="text-[11px] text-emerald-600 leading-relaxed">
-                    Your details have been logged in the admissions queue. An advisor will reach out during your preferred contact window.
+                    Your details have been logged in the admissions queue. An advisor will reach out to you shortly.
                   </p>
                 </div>
               ) : (
@@ -288,7 +325,7 @@ export default function FullStackLandingPage() {
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
                       className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                      placeholder="e.g., Faisal Shah" 
+                      placeholder="e.g., Rohan Sharma" 
                     />
                   </div>
                   
@@ -301,7 +338,7 @@ export default function FullStackLandingPage() {
                         value={enquiryForm.email}
                         onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
                         className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                        placeholder="faisal@gmail.com" 
+                        placeholder="e.g., rohan@gmail.com" 
                       />
                     </div>
                     <div>
@@ -312,7 +349,7 @@ export default function FullStackLandingPage() {
                         value={enquiryForm.phone}
                         onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
                         className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                        placeholder="+91 99999 99999" 
+                        placeholder="e.g., 99999 99999" 
                       />
                     </div>
                   </div>
@@ -325,23 +362,23 @@ export default function FullStackLandingPage() {
                         onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
                         className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
                       >
-                        <option value="Undergraduate">Undergraduate</option>
-                        <option value="Postgraduate">Postgraduate</option>
+                        <option value="Undergraduate">Undergraduate Student</option>
+                        <option value="Postgraduate">Postgraduate Student</option>
                         <option value="Fresh Graduate">Fresh Graduate</option>
-                        <option value="Working Professional">Working Prof.</option>
+                        <option value="Working Professional">Working Professional</option>
                         <option value="Other">Other</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Coding Exp *</label>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Coding Experience *</label>
                       <select 
                         value={enquiryForm.experience}
                         onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
                         className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
                       >
-                        <option value="Beginner - No Coding">Beginner</option>
-                        <option value="Basic - Little Coding">Basic</option>
-                        <option value="Intermediate - Code Daily">Intermediate</option>
+                        <option value="Beginner - No Coding">Beginner - No Coding</option>
+                        <option value="Basic - Little Coding">Basic - Little Coding</option>
+                        <option value="Intermediate - Code Daily">Intermediate - Code Daily</option>
                       </select>
                     </div>
                   </div>
@@ -356,27 +393,28 @@ export default function FullStackLandingPage() {
                       >
                         <option value="Land a Tech Job">Land a Tech Job</option>
                         <option value="Freelancing/Independent">Freelancing</option>
-                        <option value="Build a Startup">Build Startup</option>
-                        <option value="General Upskilling">Upskilling</option>
+                        <option value="Build a Startup">Build a Startup</option>
+                        <option value="General Upskilling">General Upskilling</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Preferred Call Time *</label>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Preferred Call Time (Optional)</label>
                       <select 
                         value={enquiryForm.contactTime}
                         onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
                         className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
                       >
-                        <option value="Morning 9 AM - 12 PM">9 AM - 12 PM</option>
-                        <option value="Afternoon 12 PM - 4 PM">12 PM - 4 PM</option>
-                        <option value="Evening 4 PM - 8 PM">4 PM - 8 PM</option>
+                        <option value="">Select time...</option>
+                        <option value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
+                        <option value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
+                        <option value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
                       </select>
                     </div>
                   </div>
 
                   <button 
                     type="submit" 
-                    className="w-full mt-2 py-3 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer"
+                    className="w-full mt-2 py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer"
                   >
                     Apply Now
                   </button>
@@ -392,34 +430,58 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 3. WHY LEARN FULL STACK WEB DEVELOPMENT */}
+      {/* 3. NEW TRUST METRICS SECTION */}
+      <section className="py-12 bg-white max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <div className="text-center mb-10">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#2563EB] font-mono">Trusted Learning Experience</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-left">
+          {[
+            { metric: "7,000+", label: "Students Trained", desc: "Across diverse academic cohorts" },
+            { metric: "100+", label: "Hiring Partners", desc: "Aspirations for program graduates" },
+            { metric: "100+", label: "College Collaborations", desc: "Collaborative campus connections" },
+            { metric: "Industry", label: "Mentorship", desc: "Led by working software engineers" },
+            { metric: "Hands-on", label: "Learning", desc: "Weekly project milestone exercises" }
+          ].map((stat, idx) => (
+            <div key={idx} className="bg-slate-50 border border-slate-200/60 p-5 rounded-2xl space-y-1">
+              <span className="text-2xl font-extrabold text-[#0F172A] font-manrope tracking-tight block">{stat.metric}</span>
+              <span className="text-xs font-bold text-[#2563EB] block">{stat.label}</span>
+              <span className="text-[10px] text-slate-500 block leading-normal">{stat.desc}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. WHY COMPANIES HIRE FULL STACK DEVELOPERS */}
       <section className="py-16 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
             <div className="lg:col-span-7 space-y-6">
-              <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Target Landscape</span>
+              <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Industry Hiring Insights</span>
               <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
-                Why Learn Full Stack Web Development
+                Why Companies Hire Full Stack Developers
               </h2>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Full Stack Web Development is a highly sought-after technology career path. Product companies, fast-growing SaaS startups, and digital solution agencies look for developers capable of handling user-facing visuals as well as backend REST APIs and database models.
+              <p className="text-slate-650 text-xs sm:text-sm leading-relaxed">
+                Modern engineering teams seek versatile developers who can conceptualize backend services and build responsive, fast-loading visual interfaces. This program focuses on equipping you with both frontend and backend capabilities to help you stand out.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="space-y-4 pt-2">
                 {[
-                  "Companies seek developers who can manage both interface experiences and backend engines.",
-                  "Enables you to build and launch complete web applications quickly as a single developer.",
-                  "Offers remote freelance opportunities and high-paying professional career roles.",
-                  "Gives you the foundational skills to build custom prototypes for startup ideas."
+                  { title: "Versatile Project Handling", text: "Product teams prefer developers who understand both frontend layouts and databases to streamline communication and deliver web features faster." },
+                  { title: "Independent Product Building", text: "Startups hire Full Stack developers to design, code, and deploy minimal viable products from scratch without needing extra resources." },
+                  { title: "Growing Freelance Demand", text: "Small businesses and international clients require developers who can take a web project from raw visual folders to a live-hosted portal." }
                 ].map((item, idx) => (
-                  <div key={idx} className="flex items-start space-x-2 text-xs text-slate-600">
-                    <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
+                  <div key={idx} className="flex items-start space-x-3 text-xs">
+                    <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <strong className="text-slate-900 block font-manrope">{item.title}</strong>
+                      <span className="text-slate-500 leading-normal block mt-0.5">{item.text}</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Developer visual profile snippet placed here as graphic support */}
+            {/* Visual Code Mockup */}
             <div className="lg:col-span-5">
               <div className="bg-[#0A0E29] border border-white/10 rounded-2xl p-5 shadow-2xl relative text-slate-350">
                 <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
@@ -428,16 +490,16 @@ export default function FullStackLandingPage() {
                     <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
                     <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
                   </div>
-                  <span className="text-[9px] font-mono text-slate-500">developer_environment.js</span>
+                  <span className="text-[9px] font-mono text-slate-500">mern_architecture.js</span>
                 </div>
                 <div className="font-mono text-xs text-slate-300 space-y-2 bg-slate-950 p-4 rounded-xl border border-white/5 overflow-x-auto">
-                  <div className="text-blue-400">const developerProfile = &#123;</div>
-                  <div className="pl-4">name: "BeyondSkills Student",</div>
-                  <div className="pl-4">duration: "4 Months",</div>
-                  <div className="pl-4">frameworks: ["React.js", "Node.js", "Express.js"],</div>
-                  <div className="pl-4">database: "MongoDB Atlas",</div>
-                  <div className="pl-4">verifiableCertificate: false,</div>
-                  <div className="pl-4">projectsBuilt: ["E-Commerce", "Admin Portal", "LMS"]</div>
+                  <div className="text-blue-400">const mernStack = &#123;</div>
+                  <div className="pl-4">frontend: "React.js Component UI",</div>
+                  <div className="pl-4">backend: "Node.js & Express API Routes",</div>
+                  <div className="pl-4">database: "MongoDB Data Collections",</div>
+                  <div className="pl-4">hosting: ["Vercel", "Render Cloud"],</div>
+                  <div className="pl-4">lmsAccessPeriod: "1 Year",</div>
+                  <div className="pl-4">newCohortStarts: "Every Month"</div>
                   <div className="text-blue-400">&#125;;</div>
                 </div>
               </div>
@@ -446,34 +508,125 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 4. WHY BEYONDSKILLS (12 Icon Cards) */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">The BeyondSkills Advantage</span>
+      {/* 5. NEW CAREER OUTCOMES SECTION */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Target Job Profiles</span>
           <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
-            Designed for Practical Competence
+            Career Opportunities After This Program
           </h2>
+          <p className="text-slate-500 text-sm mt-3">
+            Build the technical skills required to qualify for developer internships, entry-level software jobs, and freelance opportunities.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {BENEFITS.map((benefit, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/25 hover:shadow-md transition-all group">
-              <div className="space-y-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white transition-all">
-                  <Check className="w-4 h-4" />
-                </div>
-                <h4 className="font-manrope font-bold text-slate-800 text-sm uppercase tracking-wide">{benefit.title}</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">{benefit.desc}</p>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+          {[
+            { role: "Frontend Developer", desc: "Specialize in building interactive client-side interfaces, responsive visual grids, and dynamic state-driven layouts using React.js." },
+            { role: "Backend Developer", desc: "Build Express API microservices, configure middleware routes, implement JWT tokens, and coordinate MongoDB database actions." },
+            { role: "Full Stack Developer", desc: "Combine client-side React code with backend Express routing to develop complete, database-backed web portals." },
+            { role: "React.js Developer", desc: "Focus specifically on component design systems, state context trees, dynamic custom hooks, and route parameters." },
+            { role: "Node.js API Engineer", desc: "Optimize server execution scripts, handle file uploads, and configure CORS parameters to support external applications." },
+            { role: "Software Engineer", desc: "Apply software engineering basics, maintain Git commit logs, and write clean code scripts to solve data problems." }
+          ].map((job, idx) => (
+            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 transition-all">
+              <h3 className="font-manrope font-bold text-[#0F172A] text-base">{job.role}</h3>
+              <p className="text-xs text-slate-550 leading-relaxed">{job.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 5. CURRICULUM ROADMAP TIMELINE */}
+      {/* 6. WHY BEYONDSKILLS (REWRITTEN ADVANTAGE SECTION) */}
+      <section className="py-16 bg-slate-50 border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">The BeyondSkills Advantage</span>
+            <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
+              Designed for Practical Competence
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 text-left">
+            {OUTCOMES.map((item, idx) => (
+              <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/20 transition-all group">
+                <div className="space-y-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white transition-all">
+                    <Check className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-manrope font-bold text-slate-800 text-xs uppercase tracking-wide leading-tight">{item.title}</h4>
+                  <p className="text-[11px] text-slate-500 leading-normal">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. NEW COMPARISON SECTION (Why BeyondSkills?) */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Program Comparison</span>
+          <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
+            How BeyondSkills Compares
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+          {/* Traditional Learning */}
+          <div className="bg-slate-50 border border-slate-200/60 p-8 rounded-3xl space-y-6">
+            <h3 className="text-lg font-bold text-slate-500 border-b border-slate-200 pb-3 uppercase tracking-wider font-manrope">Traditional Learning</h3>
+            <ul className="space-y-4 text-xs text-slate-500">
+              <li className="flex items-start space-x-3">
+                <span className="text-red-500 font-bold mt-0.5">✗</span>
+                <span><strong>Theory-focused lectures:</strong> Heavy focus on syntax definitions without practical hosting configurations.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-red-500 font-bold mt-0.5">✗</span>
+                <span><strong>Recorded tutorials only:</strong> Passive watching without active mentor code reviews or debugging assistance.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-red-500 font-bold mt-0.5">✗</span>
+                <span><strong>Simple exercise files:</strong> Submitting basic code scripts instead of compiling complete portfolio projects.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-red-500 font-bold mt-0.5">✗</span>
+                <span><strong>Minimal interview preparation:</strong> Accessing static study guides without algorithm review drills or mock sessions.</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* BeyondSkills */}
+          <div className="bg-white border-2 border-[#2563EB]/25 p-8 rounded-3xl space-y-6 relative shadow-lg">
+            <div className="absolute -top-3.5 left-8 bg-[#2563EB] text-white text-[9px] font-bold font-mono px-3 py-1 rounded-full uppercase tracking-wider">
+              Recommended Cohort
+            </div>
+            <h3 className="text-lg font-bold text-[#2563EB] border-b border-blue-100 pb-3 uppercase tracking-wider font-manrope">BeyondSkills</h3>
+            <ul className="space-y-4 text-xs text-slate-700">
+              <li className="flex items-start space-x-3">
+                <span className="text-emerald-500 font-bold mt-0.5">✓</span>
+                <span><strong>Hands-on Projects:</strong> Learn by coding, folder configurations, and hosting live React and Node applications.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-emerald-500 font-bold mt-0.5">✓</span>
+                <span><strong>Live Interactive Reviews:</strong> Share code directories with cohort mentors and resolve programming doubts.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-emerald-500 font-bold mt-0.5">✓</span>
+                <span><strong>Git Portfolio Integration:</strong> Document your development progress by maintaining active GitHub repositories.</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <span className="text-emerald-500 font-bold mt-0.5">✓</span>
+                <span><strong>Structured Preparation:</strong> Practice data manipulation, DOM operations, and Express middleware parameters.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. CURRICULUM ROADMAP TIMELINE */}
       <section className="py-16 bg-slate-900 text-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[#F97316] text-[10px] font-extrabold tracking-widest uppercase border border-[#F97316]/30 px-3 py-1 rounded bg-[#F97316]/5 font-mono">
               Timeline Modules
@@ -510,7 +663,7 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 6. PROJECTS SHOWCASE */}
+      {/* 9. PROJECTS SHOWCASE */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Hands-On Practice</span>
@@ -526,14 +679,31 @@ export default function FullStackLandingPage() {
           {SAMPLE_PROJECTS.map((project, idx) => (
             <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-between hover:shadow-md transition-shadow relative">
               <div className="space-y-4">
+                
+                {/* Simulated Mock screenshot header */}
+                <div className="w-full h-32 bg-slate-900 border border-white/10 rounded-xl relative overflow-hidden flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#2563EB]/15 to-[#F97316]/5"></div>
+                  <div className="flex flex-col items-center space-y-1 relative z-10">
+                    <Laptop className="w-8 h-8 text-white/40" />
+                    <span className="text-[9px] font-mono text-slate-400">[ Project Screenshot Placeholder ]</span>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-bold text-[#2563EB] uppercase border border-blue-100 px-2 py-0.5 rounded bg-blue-50 font-mono">
                     Portfolio Module
                   </span>
                   <span className="text-[10px] text-slate-400 font-mono">Sample</span>
                 </div>
+                
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">{project.title}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed">{project.desc}</p>
+                
+                <div className="bg-slate-50 border border-slate-200/60 p-3.5 rounded-xl space-y-2 text-[11px] text-slate-650 leading-normal">
+                  <p><strong>What You Will Learn:</strong> {project.learn}</p>
+                  <p><strong>Skills Gained:</strong> {project.skills}</p>
+                  <p className="text-blue-600 font-semibold"><strong>Outcome:</strong> {project.outcome}</p>
+                </div>
               </div>
 
               <div className="border-t border-slate-100 pt-4 mt-6">
@@ -550,39 +720,85 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 7. THE LEARNING EXPERIENCE JOURNEY */}
+      {/* 10. NEW MENTOR SECTION */}
       <section className="py-16 bg-slate-50 border-t border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Learning Journey</span>
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Cohort Instructors</span>
             <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
-              The BeyondSkills Method
+              Meet Your Mentors
             </h2>
+            <p className="text-slate-500 text-sm mt-3">
+              Learn directly from software engineers who understand industry coding standards and recruitment parameters.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-            {[
-              { step: "01", title: "Attend live mentor sessions", desc: "Interact with practicing engineers on structured evenings." },
-              { step: "02", title: "Complete assignments", desc: "Receive code reviews from teaching assistants." },
-              { step: "03", title: "Build project portfolios", desc: "Pushes deliverables to your personal Git repository." },
-              { step: "04", title: "Prepare for interviews", desc: "Drill algorithm parameters and review technical code questions." }
-            ].map((step, idx) => (
-              <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl hover:border-blue-500/25 transition-all">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center font-mono font-bold text-sm mb-4">
-                  {step.step}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-5xl mx-auto">
+            {[1, 2].map((num) => (
+              <div key={num} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center font-mono text-slate-400 text-sm font-bold">
+                    M{num}
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900">[ Mentor Name Placeholder ]</h4>
+                    <p className="text-[10px] text-slate-400">[ Technical Role / Designation ]</p>
+                    <p className="text-[9px] text-[#2563EB] font-mono">[ Experience Placeholder ]</p>
+                  </div>
                 </div>
-                <h4 className="font-manrope font-bold text-slate-800 text-sm uppercase tracking-wide mb-1.5">{step.title}</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+                <div className="border-t border-slate-100 pt-3 text-[11px] text-slate-500 leading-normal space-y-2">
+                  <p><strong>Past Company Experience:</strong> [ Company Logos Placeholder ]</p>
+                  <p className="italic">"[ Introduction narrative placeholder: Details regarding the mentor's past projects, programming focus, and cohort support guidelines will be logged here. ]"</p>
+                  <p className="text-[#2563EB] font-medium font-mono text-[9px] cursor-pointer hover:underline">[ LinkedIn Profile Link ]</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 8. PROGRAM DETAILS cards */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 11. NEW PROGRAM JOURNEY (Visual Roadmap) */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Overview details</span>
+          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Roadmap Milestone Cycles</span>
+          <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
+            The Program Journey
+          </h2>
+        </div>
+
+        <div className="relative max-w-4xl mx-auto">
+          {/* Horizontal line for desktop timelines */}
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 -translate-y-1/2 z-0"></div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 text-left relative z-10">
+            {[
+              { step: "01", title: "Apply", desc: "Submit your cohort application form online." },
+              { step: "02", title: "Admission Call", desc: "Review details with program advisor." },
+              { step: "03", title: "Enrollment", desc: "Log details and activate your study credential." },
+              { step: "04", title: "Live Classes", desc: "Attend evening sessions (mostly after 6:00 PM)." },
+              { step: "05", title: "Assignments", desc: "Submit weekly code milestone exercises." },
+              { step: "06", title: "Projects", desc: "Develop and coordinate database applications." },
+              { step: "07", title: "Portfolio", desc: "Commit your code and deploy to Vercel/Render." },
+              { step: "08", title: "Resume Setup", desc: "Structure your developer profile details." },
+              { step: "09", title: "Mock Audits", desc: "Practice coding algorithms & reviews." },
+              { step: "10", title: "Completion", desc: "Receive program certificate credentials." }
+            ].map((journey, idx) => (
+              <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/25 transition-all">
+                <div>
+                  <span className="text-[10px] font-bold text-[#F97316] font-mono block mb-1.5">Milestone {journey.step}</span>
+                  <h4 className="font-manrope font-bold text-slate-800 text-xs uppercase tracking-wide mb-1">{journey.title}</h4>
+                  <p className="text-[11px] text-slate-500 leading-normal">{journey.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 12. PROGRAM PARAMETERS */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Overview Details</span>
           <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
             Program Parameters
           </h2>
@@ -590,27 +806,35 @@ export default function FullStackLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {[
-            { label: "Timeline Duration", value: "4 Months", extra: "Structured weekly modules" },
-            { label: "Class Schedule", value: "Evening Classes (Mostly after 6:00 PM)", extra: "Timetable shared upon enrollment" },
-            { label: "Instructor Pool", value: "Tech Leads & Senior Engineers", extra: "Practicing software engineers" },
-            { label: "Skill Threshold", value: "Beginner to Intermediate", extra: "No coding background required" },
-            { label: "Delivery Format", value: "Live Classes + Recorded Access", extra: "Flexible 1-year LMS access" },
-            { label: "Support Language", value: "English / Hindi Support", extra: "Clear query explanations" },
-            { label: "Learning Access", value: "1 Year LMS Access", extra: "Access recordings for 1 year from start" },
-            { label: "Cohort Cycles", value: "New Batches Start Every Month", extra: "Regular monthly intake tracks" },
-            { label: "Milestone Credentials", value: "Completion Certificate", extra: "BeyondSkills Program Certificate" }
-          ].map((detail, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 transition-all">
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{detail.label}</span>
-              <p className="text-sm sm:text-base font-bold text-slate-900 font-manrope">{detail.value}</p>
-              <p className="text-[10px] text-slate-500">{detail.extra}</p>
-            </div>
-          ))}
+            { label: "Timeline Duration", value: "4 Months", extra: "Structured weekly modules", icon: Clock },
+            { label: "Class Timings", value: "Evening Classes (Mostly after 6:00 PM)", extra: "Detailed schedule shared upon enrollment", icon: Calendar },
+            { label: "Delivery Mode", value: "Live Classes + Recorded Access", extra: "Flexible online access", icon: Laptop },
+            { label: "Support Language", value: "English / Hindi Support", extra: "Clear query explanations", icon: Globe },
+            { label: "Eligibility Threshold", value: "Beginner to Intermediate", extra: "No coding background required", icon: Users },
+            { label: "LMS Access Period", value: "1 Year LMS Access", extra: "Access recordings for 1 year from start", icon: BookOpen },
+            { label: "Projects Completed", value: "8+ Practical Projects", extra: "Portfolio building focus", icon: Code },
+            { label: "Career Guidance", value: "Resume & Mock Audits", extra: "Navigate Software recruitment paths", icon: Briefcase },
+            { label: "Milestone Credentials", value: "Completion Certificate", extra: "BeyondSkills Program Certificate", icon: Award }
+          ].map((detail, idx) => {
+            const Icon = detail.icon;
+            return (
+              <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl hover:border-[#2563EB]/25 transition-all flex items-start space-x-4">
+                <div className="p-2.5 bg-blue-50 text-[#2563EB] rounded-xl flex-shrink-0 mt-0.5">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider block font-mono">{detail.label}</span>
+                  <p className="text-sm sm:text-base font-bold text-slate-900 font-manrope">{detail.value}</p>
+                  <p className="text-[10px] text-slate-500 leading-normal">{detail.extra}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      {/* 9. TESTIMONIALS Placeholders only */}
-      <section className="py-16 bg-slate-50 border-t border-b border-slate-100">
+      {/* 13. SOCIAL PROOF Testimonial Placeholders */}
+      <section className="py-16 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Student Success</span>
@@ -624,24 +848,32 @@ export default function FullStackLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
             {[
-              { name: "Rohan Sharma", role: "College Student", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" },
-              { name: "Priya Patel", role: "Working Professional", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" },
-              { name: "Amit Kumar", role: "Career Changer", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" }
+              { name: "Rohan Sharma", role: "College Student", college: "[ College Name Placeholder ]", salary: "[ Target Salary Placeholder ]" },
+              { name: "Priya Patel", role: "Working Professional", college: "[ Past Organization Placeholder ]", salary: "[ Target Salary Placeholder ]" },
+              { name: "Amit Kumar", role: "Career Changer", college: "[ Academic Stream Placeholder ]", salary: "[ Target Salary Placeholder ]" }
             ].map((student, num) => (
               <div key={num} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-mono text-slate-400 text-xs font-bold">
-                    P{num + 1}
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-mono text-slate-400 text-xs font-bold">
+                      P{num + 1}
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-slate-900">{student.name}</p>
+                      <p className="text-[9px] text-slate-400">{student.role}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900">{student.name}</p>
-                    <p className="text-[9px] text-slate-400">{student.role}</p>
-                  </div>
+                  <span className="text-[8px] font-mono text-[#2563EB] bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
+                    Placeholder
+                  </span>
                 </div>
-                <div className="border-t border-slate-100 pt-3">
-                  <p className="text-xs text-slate-400 italic">
-                    {student.desc}
+                <div className="space-y-2 text-xs text-slate-500">
+                  <p><strong>Affiliation:</strong> {student.college}</p>
+                  <p><strong>Target Outcome:</strong> {student.salary}</p>
+                  <p className="italic text-slate-400 pt-2 border-t border-slate-100">
+                    "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]"
                   </p>
+                  <p className="text-[9px] text-slate-400 font-mono"><strong>Company Logo:</strong> [ Placement Logo Placeholder ]</p>
                 </div>
               </div>
             ))}
@@ -649,7 +881,7 @@ export default function FullStackLandingPage() {
 
           {/* Hiring partners mockup section */}
           <div className="mt-12 border-t border-slate-200/60 pt-8 text-center">
-            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-6 font-mono">Hiring Partner Placements</span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-6 font-mono">Companies Where Our Learners Aspire to Work</span>
             <div className="flex flex-wrap items-center justify-center gap-8 opacity-45">
               {["Google Cloud", "Microsoft", "AWS Cloud", "HubSpot", "Shopify"].map((p, idx) => (
                 <span key={idx} className="font-extrabold text-slate-400 tracking-wider text-xs uppercase font-mono">
@@ -661,7 +893,7 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 10. ACCORDION FAQS */}
+      {/* 14. ACCORDION FAQS */}
       <section className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Got Questions?</span>
@@ -690,24 +922,30 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 11. FINAL CTA SECTION (SCROLLS TO TOP) */}
+      {/* 15. FINAL CTA SECTION (SCROLLS TO TOP) */}
       <section className="py-20 bg-slate-50 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1 rounded font-mono">
-            Start Today
+            Start Your Developer Journey Today
           </span>
           <h2 className="font-manrope font-extrabold text-[#0F172A] text-3xl sm:text-4xl">
-            Start Building Real Software with BeyondSkills
+            Build Your Portfolio with BeyondSkills
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
             Register details at the top of the page to schedule a live training counseling session. Download the syllabus models and receive detailed briefs from academy mentors.
           </p>
-          <div className="pt-4">
+          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4">
             <button 
               onClick={scrollToHeroForm}
               className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/10 cursor-pointer"
             >
-              Apply Now
+              Reserve Your Seat
+            </button>
+            <button 
+              onClick={scrollToHeroForm}
+              className="bg-slate-150 hover:bg-slate-200 text-[#0F172A] font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl transition-all border border-slate-300/60 cursor-pointer"
+            >
+              Talk to Our Program Advisor
             </button>
           </div>
           <p className="text-[10px] text-slate-400 leading-normal max-w-sm mx-auto">
@@ -717,26 +955,52 @@ export default function FullStackLandingPage() {
       </section>
 
       {/* Standalone Footer */}
-      <footer className="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative z-10 text-center">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center justify-center space-x-1 group">
-            <span className="logo-font font-extrabold tracking-tight text-white text-lg">
-              Beyond
-            </span>
-            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-lg">
-              Skills
-            </span>
+      <footer className="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-start text-left">
+          
+          <div className="space-y-4">
+            <div className="flex items-center space-x-1 group">
+              <span className="logo-font font-extrabold tracking-tight text-white text-lg">
+                Beyond
+              </span>
+              <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-lg">
+                Skills
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-xs">
+              Upskilling cohorts combining live mentorship and project assessments.
+            </p>
           </div>
-          <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-            Upskilling cohorts combining live mentorship and project assessments.
-          </p>
-          <div className="border-t border-white/5 pt-6 text-[10px] text-slate-500 font-mono">
-            &copy; {new Date().getFullYear()} BeyondSkills. All rights reserved.
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2563EB] font-mono">Contact Details</h4>
+            <div className="text-xs text-slate-400 space-y-2">
+              <p className="flex items-center space-x-2">
+                <Mail className="w-4 h-4 text-slate-500" />
+                <span>connect@beyondskills.in</span>
+              </p>
+              <p className="flex items-center space-x-2">
+                <MessageCircle className="w-4 h-4 text-slate-500" />
+                <span>WhatsApp Chat Support</span>
+              </p>
+            </div>
           </div>
+
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#2563EB] font-mono">Quick Links</h4>
+            <div className="text-xs text-slate-400 flex flex-col space-y-2">
+              <a href="/privacy" className="hover:underline">Privacy Policy</a>
+              <a href="/terms" className="hover:underline">Terms & Conditions</a>
+            </div>
+          </div>
+          
+        </div>
+        <div className="max-w-7xl mx-auto border-t border-white/5 mt-8 pt-6 text-center text-[10px] text-slate-500 font-mono">
+          &copy; {new Date().getFullYear()} BeyondSkills. All rights reserved.
         </div>
       </footer>
 
-      {/* 12. Floating WhatsApp button */}
+      {/* 16. Floating WhatsApp button */}
       <a 
         href="https://wa.me/919999999999?text=Hi%20BeyondSkills,%20I'm%20interested%2520in%2520the%2520Full%2520Stack%2520Web%2520Development%2520Cohort!"
         target="_blank" 
@@ -749,7 +1013,7 @@ export default function FullStackLandingPage() {
         </span>
       </a>
 
-      {/* 13. Sticky Mobile Apply CTA Bar */}
+      {/* 17. Sticky Mobile Apply CTA Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-100 p-3 flex sm:hidden items-center justify-between shadow-2xl">
         <div>
           <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">Cohort Program</span>
