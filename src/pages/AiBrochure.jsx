@@ -3,9 +3,11 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { 
   Brain, Code, CheckCircle, ChevronDown, ChevronUp, Sparkles, 
   TrendingUp, Briefcase, Award, Rocket, ArrowRight, BarChart3, 
-  Users, BookOpen, Quote, ShieldCheck, Mail, Calendar, HelpCircle, FileText
+  Users, BookOpen, Quote, ShieldCheck, Mail, Calendar, HelpCircle, FileText,
+  ChevronLeft, ArrowLeft, Download, Maximize2, Minimize2, Laptop, GraduationCap, MapPin, Phone, Globe, Eye, BookOpenCheck
 } from 'lucide-react';
 import { COURSES } from '../utils/mockDb';
+import TechIcon from '../components/TechIcon';
 
 const COMPANYS_TIEUPS = [
   "Google Cloud", "Microsoft", "AWS Cloud", "Razorpay", "HubSpot", "Meta Ads", "Vercel", "Shopify"
@@ -383,6 +385,11 @@ export default function AiBrochure() {
   const { courseId } = useParams();
   const [expandedModules, setExpandedModules] = useState({ 0: true });
   const [activeDatasetIdx, setActiveDatasetIdx] = useState(0);
+  
+  // Booklet state parameters
+  const [isBookletMode, setIsBookletMode] = useState(courseId === 'artificial-intelligence');
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 20;
 
   // Retrieve course content dynamically from the COURSES mock database
   const course = COURSES.find(c => c.id === courseId) || COURSES.find(c => c.id === 'artificial-intelligence');
@@ -391,7 +398,23 @@ export default function AiBrochure() {
   useEffect(() => {
     setExpandedModules({ 0: true });
     setActiveDatasetIdx(0);
+    setIsBookletMode(courseId === 'artificial-intelligence');
+    setCurrentPage(1);
   }, [courseId]);
+
+  // Handle keyboard navigation for booklet mode
+  useEffect(() => {
+    if (!isBookletMode) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        setCurrentPage(prev => Math.max(1, prev - 1));
+      } else if (e.key === 'ArrowRight') {
+        setCurrentPage(prev => Math.min(totalPages, prev + 1));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isBookletMode]);
 
   if (!course) {
     return (
@@ -420,514 +443,1378 @@ export default function AiBrochure() {
     navigate(`/checkout?courseId=${course.id}&mode=mentor-led`);
   };
 
+  const handleDownloadBrochure = () => {
+    const link = document.createElement('a');
+    link.href = `/brochures/${course.id}.pdf`;
+    link.download = `${course.title.replace(/[^a-zA-Z0-9]/g, '_')}_Brochure.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Render individual pages for the interactive 20-page booklet
+  const renderPageContent = (page) => {
+    switch (page) {
+      case 1:
+        return (
+          <div className="flex flex-col justify-between h-full text-center relative overflow-hidden p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl">
+            {/* Ambient Background Grid */}
+            <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{
+              backgroundImage: `linear-gradient(to right, #2A4BFF 1px, transparent 1px), linear-gradient(to bottom, #2A4BFF 1px, transparent 1px)`,
+              backgroundSize: '20px 20px'
+            }}></div>
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#2A4BFF]/20 rounded-full blur-[80px] pointer-events-none"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#0EA5E9]/15 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div className="flex justify-between items-center z-10">
+              <span className="logo-font text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                <Brain className="w-5 h-5 text-[#0EA5E9] animate-pulse" />
+                BeyondSkills
+              </span>
+              <span className="text-[10px] font-mono text-slate-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full uppercase tracking-wider">
+                Interactive Edition
+              </span>
+            </div>
+
+            <div className="my-auto space-y-6 z-10">
+              <span className="inline-flex items-center space-x-2 bg-[#2A4BFF]/20 text-[#0EA5E9] font-mono text-[10px] font-bold tracking-widest px-4 py-1.5 rounded-full border border-[#2A4BFF]/30 uppercase">
+                <Sparkles className="w-4 h-4 text-[#0EA5E9]" />
+                <span>Certification Program</span>
+              </span>
+              <h1 className="logo-font text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                <span className="bg-gradient-to-r from-[#0EA5E9] via-white to-[#2A4BFF] bg-clip-text text-transparent">
+                  AI & Data Science
+                </span>
+              </h1>
+              <p className="text-slate-300 text-xs sm:text-sm md:text-base max-w-xl mx-auto font-light leading-relaxed font-mono">
+                Learn Python, Data Analytics, Machine Learning & Generative AI in a hands-on production environment.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-white/10 pt-6 mt-6 z-10">
+              {[
+                { label: "Duration", value: "3 Months" },
+                { label: "Delivery", value: "Live + Recorded" },
+                { label: "Hands-on Tasks", value: "10+ Projects" },
+                { label: "Placement Support", value: "End-to-End" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-3 rounded-xl backdrop-blur-sm">
+                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{item.label}</span>
+                  <span className="text-xs font-extrabold mt-0.5 text-[#0EA5E9] block">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-brand-purple/10 rounded-full blur-3xl z-0"></div>
+            
+            <div className="space-y-6 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Welcome</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Who We Are</h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono text-justify">
+                BeyondSkills is an AI-powered Digital Solutions & Professional Upskilling company helping students build practical, industry-ready capabilities.
+              </p>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono text-justify">
+                We operate a hybrid model: a professional agency deploying software systems globally, and a vocational academy training candidates on matching tech stacks.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-6 relative z-10">
+              {[
+                { title: "10,000+ Learners", desc: "Trained across domains", icon: Users },
+                { title: "250+ Projects", desc: "Built inside simulation", icon: Code },
+                { title: "Startup India", desc: "Government recognized", icon: Award },
+                { title: "ISO & MSME", desc: "Quality standards certified", icon: ShieldCheck }
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start space-x-3">
+                    <div className="bg-[#2A4BFF]/20 p-2 rounded-lg text-[#0EA5E9] flex-shrink-0">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs font-mono">{item.title}</h4>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5 leading-normal">{item.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-6 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Market Trajectory</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Why AI & Data Science?</h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
+                The global corporate environment is pivoting aggressively toward data parsing and model endpoints. Standard operational pipelines require automation.
+              </p>
+            </div>
+
+            <div className="space-y-4 my-auto relative z-10">
+              {[
+                { label: "Enterprise AI Adoption", percent: 85, detail: "Companies replacing static logs with pipeline checks" },
+                { label: "AI Developer Job Openings", percent: 92, detail: "Active hiring requirements showing 2.5x growth" },
+                { label: "Salary Premium Trajectory", percent: 78, detail: "Higher salaries for engineers managing API models" }
+              ].map((item, idx) => (
+                <div key={idx} className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-mono font-bold">
+                    <span className="text-slate-200">{item.label}</span>
+                    <span className="text-[#0EA5E9]">{item.percent}% Increase</span>
+                  </div>
+                  <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-white/5">
+                    <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: `${item.percent}%` }}></div>
+                  </div>
+                  <p className="text-[9px] text-slate-400 font-mono leading-none">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 4:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-6 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Key Differentiators</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Why BeyondSkills?</h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
+                Skip obsolete university textbooks. We build your programming foundations using the exact software architectures our development agency deploys for real clients.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 relative z-10">
+              {[
+                { title: "Production Workflows", desc: "Work with real CSV logs, clean arrays, and deploy scripts.", icon: Code },
+                { title: "Agency Mentorship", desc: "Taught by engineers from EY, Nokia, and Tietoevry.", icon: Users },
+                { title: "Verifiable Badges", desc: "Earn secure project credentials verifiable by HR teams.", icon: ShieldCheck },
+                { title: "Structured Support", desc: "Technical blocker tickets resolved within daily SLAs.", icon: Rocket }
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="bg-white/5 border border-white/10 p-3.5 rounded-xl space-y-1">
+                    <div className="flex items-center space-x-2 text-[#0EA5E9]">
+                      <Icon className="w-4 h-4" />
+                      <h4 className="font-bold text-xs font-mono uppercase tracking-wide">{item.title}</h4>
+                    </div>
+                    <p className="text-[10px] text-slate-300 font-mono leading-normal">{item.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-6 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Eligibility</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Who Should Join?</h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
+                Whether you want to build custom analytics tools, write deep learning models, or automate executive reporting, this program provides the structural pathways.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-6 relative z-10">
+              {[
+                { title: "Engineering & CS Students", desc: "Acquire portfolio project builds for tech interviews.", icon: GraduationCap },
+                { title: "BCA / BSc / BCom Grads", desc: "Establish verified technical skills to stand out.", icon: Award },
+                { title: "MBA & Business Analysts", desc: "Master SQL databases and dashboard modeling.", icon: BarChart3 },
+                { title: "Career Switchers", desc: "Transition from non-tech positions into development.", icon: Briefcase }
+              ].map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={idx} className="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center space-x-3">
+                    <div className="bg-[#2A4BFF]/25 p-2 rounded-lg text-[#0EA5E9] flex-shrink-0">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-xs font-mono">{item.title}</h4>
+                      <p className="text-[9px] text-slate-400 font-mono mt-0.5 leading-tight">{item.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-6 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Key Metrics</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Program Highlights</h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-mono">
+                A highly comprehensive, structured path designed to convert beginners into capable pipeline developers.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 relative z-10">
+              {[
+                { value: "3 Months", label: "Program Duration", desc: "Active cohort tracking" },
+                { value: "100+ Hours", label: "Coding & Mentorship", desc: "Live + Recorded sessions" },
+                { value: "10+ Projects", label: "Portfolio Tasks", desc: "Git repository builds" },
+                { value: "Capstone", label: "Production Project", desc: "Evaluated by managers" },
+                { value: "1 Year LMS", label: "Learning Portal Access", desc: "Code templates & videos" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl text-center flex flex-col justify-between">
+                  <span className="text-sm font-extrabold text-[#0EA5E9] block font-mono">{item.value}</span>
+                  <span className="text-[9px] text-white font-bold uppercase tracking-wider block font-mono mt-1">{item.label}</span>
+                  <span className="text-[8px] text-slate-400 font-mono mt-0.5 block">{item.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Syllabus Flow</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Learning Roadmap</h2>
+              <p className="text-[11px] text-slate-300 font-mono">
+                Progress systematically from initial scripting to training machine learning algorithms and deploying Generative AI models.
+              </p>
+            </div>
+
+            <div className="my-auto grid grid-cols-2 md:grid-cols-5 gap-3.5 relative z-10 pt-4">
+              {[
+                { step: "01", name: "Python Basics", detail: "Syntax & file logic" },
+                { step: "02", name: "Data Wrangling", detail: "NumPy & Pandas" },
+                { step: "03", name: "BI & SQL", detail: "Database queries" },
+                { step: "04", name: "Machine Learning", detail: "Classification/Regression" },
+                { step: "05", name: "Generative AI", detail: "LLMs & Hugging Face" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-3 rounded-xl text-center relative flex flex-col justify-between">
+                  <div className="absolute top-2 left-2 text-[#0EA5E9] text-[9px] font-mono font-bold">{item.step}</div>
+                  <h4 className="font-extrabold text-white text-xs font-mono uppercase tracking-wide mt-4">{item.name}</h4>
+                  <p className="text-[9px] text-slate-400 font-mono mt-1 leading-tight">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center bg-[#2A4BFF]/20 border border-[#2A4BFF]/30 rounded-xl p-3 relative z-10 mt-4 text-[10px] font-mono text-[#0EA5E9]">
+              🚀 Final Capstone Project: Integrate your custom LLM chat agent with live telemetry logs.
+            </div>
+          </div>
+        );
+
+      case 8:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Module 1</span>
+                <span className="text-[9px] font-mono text-slate-400">Weeks 1-2</span>
+              </div>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Python Fundamentals</h2>
+              <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                Establish robust engineering practices by configuring terminal workspaces and programming core control flows.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-3.5 relative z-10 pt-4">
+              {[
+                { title: "Anaconda Workspace Setup", desc: "Initialize environments and structure Jupyter Notebook folders." },
+                { title: "Python Data Structures", desc: "Configure lists, dictionaries, variables, functions, and scopes." },
+                { title: "File Directory Handling", desc: "Read unstructured CSV files and automate file extractions." },
+                { title: "Syntax Control Flows", desc: "Implement logic loops, checks, exception catches, and error logs." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-left">
+                  <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 9:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Module 2</span>
+                <span className="text-[9px] font-mono text-slate-400">Weeks 3-5</span>
+              </div>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Data Wrangling & EDA</h2>
+              <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                Clean outliers, resolve missing database parameters, and analyze numeric array matrices.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-3.5 relative z-10 pt-4">
+              {[
+                { title: "NumPy Vector Arrays", desc: "Configure multi-dimensional index arrays and execute math calculations." },
+                { title: "Pandas Data Cleaning", desc: "Filter, merge, group datasets, and resolve missing records." },
+                { title: "Exploratory Analysis (EDA)", desc: "Audit distribution arrays, metrics, summaries, and telemetry parameters." },
+                { title: "Telemetry Visualizations", desc: "Design scatter charts, matrices, and histograms using Matplotlib/Seaborn." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-left">
+                  <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 10:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Module 3</span>
+                <span className="text-[9px] font-mono text-slate-400">Weeks 6-7</span>
+              </div>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Excel, SQL & Power BI</h2>
+              <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                Extract relational data points and construct automated, interactive business dashboards.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-3.5 relative z-10 pt-4">
+              {[
+                { title: "Advanced Excel Operations", desc: "Apply lookups, filters, pivot tables, and manage sheet matrices." },
+                { title: "SQL Relational Databases", desc: "Write database queries, join relational tables, and filter parameters." },
+                { title: "Power BI Data Modelling", desc: "Configure data connections, configure structures, and manage schemas." },
+                { title: "Interactive Dashboards", desc: "Construct DAX measures, design visuals, and deploy executive reports." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-left">
+                  <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 11:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Module 4</span>
+                <span className="text-[9px] font-mono text-slate-400">Weeks 8-10</span>
+              </div>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Machine Learning & Neural Nets</h2>
+              <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                Train predictive models, analyze classifications, and deploy Scikit-Learn algorithms.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-3.5 relative z-10 pt-4">
+              {[
+                { title: "Supervised Regression Models", desc: "Train Linear and Logistic regressions, and evaluate performance logs." },
+                { title: "Classification Decision Trees", desc: "Design CART decision systems, audit branches, and test predictions." },
+                { title: "Ensemble Models", desc: "Deploy bagging, boosting, Random Forests, and XGBoost structures." },
+                { title: "Neural Network Foundations", desc: "Evaluate activation parameters, neural layers, and TensorFlow setups." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-left">
+                  <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 12:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Module 5</span>
+                <span className="text-[9px] font-mono text-slate-400">Weeks 11-12</span>
+              </div>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">NLP & Generative AI</h2>
+              <p className="text-xs text-slate-300 font-mono leading-relaxed">
+                Integrate LLM API setups, configure prompt frameworks, and deploy Hugging Face models.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-3.5 relative z-10 pt-4">
+              {[
+                { title: "Text Preprocessing & NLP", desc: "Configure tokenizers, stemming layers, and TF-IDF representations." },
+                { title: "Language Models & spaCy", desc: "Utilize NLTK and spaCy models to perform intent searches." },
+                { title: "Hugging Face APIs", desc: "Configure local transformer instances and pull huggingface models." },
+                { title: "Generative AI Systems", desc: "Call OpenAI API keys, structure prompts, and deploy RAG agents." }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start space-x-3 text-left">
+                  <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[10px] text-slate-400 font-mono mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 13:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Practice</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Featured Projects</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Construct actual deployable portfolios representing real corporate telemetry situations.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 my-auto relative z-10 pt-2">
+              {[
+                { title: "Netflix Recommendation", desc: "Build filtering models suggesting titles based on historical records.", tech: "Python, ML" },
+                { title: "Customer Churn Predictor", desc: "Deploy Random Forest structures predicting subscriber churn.", tech: "Scikit-Learn" },
+                { title: "AI Custom Support Agent", desc: "Design chat engines parsing custom text directories dynamically.", tech: "OpenAI API, RAG" },
+                { title: "NLP Resume ATS Matcher", desc: "Audit keywords on applicant PDF sheets against description logs.", tech: "spaCy, NLTK" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col justify-between">
+                  <div>
+                    <h4 className="font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                    <p className="text-[9px] text-slate-400 font-mono mt-1 leading-snug">{item.desc}</p>
+                  </div>
+                  <span className="text-[8px] font-mono text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20 w-fit mt-2">
+                    {item.tech}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 14:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Technologies</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Tools Covered</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Gain hands-on proficiency in the standard developer ecosystems required by global engineering operations.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 my-auto relative z-10">
+              {[
+                "python", "sql", "pandas", "numpy", "scikit-learn", "tensorflow", "react", "node.js"
+              ].map((tool, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-white/10 transition-colors">
+                  <TechIcon name={tool} className="w-8 h-8" />
+                  <span className="text-[8px] text-slate-300 font-mono font-bold uppercase tracking-wider block text-center truncate w-full">{tool}</span>
+                </div>
+              ))}
+            </div>
+            
+            <div className="text-[10px] font-mono text-slate-400 text-center border-t border-white/10 pt-4">
+              Plus: Jupyter Notebooks, Hugging Face Transformers, Git Version Control, OpenAI API tokens
+            </div>
+          </div>
+        );
+
+      case 15:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Career Acceleration</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Career Support Suite</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                We dedicate support bandwidth to ensuring your portfolio projects translate to candidate interviews.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto relative z-10">
+              {[
+                { title: "ATS Resume Tuning", desc: "Format profiles to bypass operational filters and target keywords.", tag: "Resume Reviews" },
+                { title: "LinkedIn Brand Optimization", desc: "Write walkthrough articles explaining your code logic.", tag: "Branding" },
+                { title: "Mock Technical Assessments", desc: "Solve Python algorithms under pressure with mock examiners.", tag: "Technical Prep" },
+                { title: "Placement Placement Loop", desc: "Share verified profiles directly with partner agencies.", tag: "Referral Tracks" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl space-y-1.5 flex flex-col justify-between">
+                  <h4 className="font-extrabold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                  <p className="text-[10px] text-slate-400 font-mono mt-0.5 leading-snug">{item.desc}</p>
+                  <span className="text-[8px] font-mono text-[#0EA5E9] uppercase font-bold tracking-wider">{item.tag}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 16:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Pathways</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Learning Pathways</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Choose the program enrollment pathway that matches your learning schedule.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto relative z-10 pt-4">
+              <div className="bg-white/5 border border-white/10 p-5 rounded-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[#0EA5E9] font-mono text-[9px] font-bold uppercase tracking-wider block">Recorded Track</span>
+                  <h4 className="font-extrabold text-white text-sm font-mono mt-1">Essential Track</h4>
+                  <p className="text-[10px] text-slate-400 font-mono mt-2 leading-relaxed">
+                    Access our full database library of pre-recorded lectures and download templates to learn independently.
+                  </p>
+                </div>
+                <div className="border-t border-white/10 pt-3 mt-4 text-[9px] font-mono text-slate-400">
+                  Includes certification and code support.
+                </div>
+              </div>
+
+              <div className="bg-[#2A4BFF]/10 border border-[#2A4BFF]/30 p-5 rounded-xl flex flex-col justify-between">
+                <div>
+                  <span className="text-[#0EA5E9] font-mono text-[9px] font-bold uppercase tracking-wider block">Live Cohort Track</span>
+                  <h4 className="font-extrabold text-white text-sm font-mono mt-1">Professional Track</h4>
+                  <p className="text-[10px] text-slate-300 font-mono mt-2 leading-relaxed">
+                    Participate in weekend cohort workshops directed by EY/Nokia engineers. Backed by Slack support SLA channels.
+                  </p>
+                </div>
+                <div className="border-t border-[#2A4BFF]/30 pt-3 mt-4 text-[9px] font-mono text-[#0EA5E9] font-bold">
+                  Includes mock reviews & resume analysis.
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 17:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Faculty</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Industry Mentors</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Classes are designed and directed by active developers carrying extensive software production histories.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto relative z-10 pt-4">
+              {[
+                { name: "Saurav Kumar Sinha", role: "Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini", exp: "8+ Years", details: "Directs neural network setups and software architectures." },
+                { name: "Vinod Kumar Eslavath", role: "Assistant Manager - Data Scientist at Shemaroo", exp: "5+ Years", details: "Guides preprocessing, scientific libraries, and ML modeling." }
+              ].map((mentor, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-5 rounded-xl flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="text-[9px] text-[#0EA5E9] font-mono font-bold uppercase tracking-wider bg-[#2A4BFF]/20 px-2 py-0.5 rounded border border-[#2A4BFF]/30 w-fit block">{mentor.exp} Exp</span>
+                    <h4 className="font-extrabold text-white text-xs font-mono uppercase tracking-wide mt-1">{mentor.name}</h4>
+                    <p className="text-[9px] text-slate-400 font-mono leading-none">{mentor.role}</p>
+                  </div>
+                  <p className="text-[10px] text-slate-300 font-mono mt-3 leading-relaxed border-t border-white/5 pt-2">{mentor.details}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 18:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Reviews</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Student Success</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Hear from candidates who successfully completed domain certification and project tasks.
+              </p>
+            </div>
+
+            <div className="bg-[#0A0E35]/95 border border-[#2A4BFF]/25 p-6 rounded-xl my-auto relative z-10">
+              <Quote className="w-10 h-10 text-[#0EA5E9]/10 absolute top-4 left-4 pointer-events-none" />
+              <div className="relative z-10 pl-6 space-y-4">
+                <p className="text-slate-200 text-xs italic leading-relaxed font-mono">
+                  "I've successfully finished my AI course. A big thank you to my mentors for their continuous support. This journey has enriched my skills and provided clarity on my career path."
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-1.5 h-6 bg-[#2A4BFF] rounded-full"></div>
+                  <div>
+                    <h5 className="text-[10px] font-bold uppercase tracking-wider font-mono text-white">Manshi Srivastav</h5>
+                    <span className="text-[9px] text-slate-400 font-mono block">AI & Data Science Student</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center text-[10px] font-mono text-[#0EA5E9] bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 rounded-lg p-2.5">
+              🏆 Verified credentials: Project completions issue cryptographic badges links directly for HR checks.
+            </div>
+          </div>
+        );
+
+      case 19:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Compliance</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Trust & Accreditation</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                BeyondSkills is registered with national quality standardization agencies and entrepreneurship panels.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto relative z-10">
+              {[
+                { title: "Startup India", detail: "Government-registered digital skills platform.", badge: "Recognized Entity" },
+                { title: "ISO Certified", detail: "Certified systems for learning delivery & curriculum.", badge: "ISO 9001:2015" },
+                { title: "MSME Registered", detail: "Recognized operational upskilling organization.", badge: "Government of India" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col justify-between text-center">
+                  <h4 className="font-extrabold text-white text-xs font-mono uppercase tracking-wide leading-tight">{item.title}</h4>
+                  <p className="text-[9px] text-slate-400 font-mono mt-1 leading-snug">{item.detail}</p>
+                  <span className="text-[8px] font-mono text-[#0EA5E9] mt-3 font-bold block">{item.badge}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center text-[10px] font-mono text-slate-400">
+              Certificates carry unique tracking hashes to prevent credential forging.
+            </div>
+          </div>
+        );
+
+      case 20:
+        return (
+          <div className="flex flex-col justify-between h-full p-8 md:p-12 bg-slate-950 text-white border border-[#2A4BFF]/30 rounded-2xl relative overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#2A4BFF]/10 rounded-full blur-2xl"></div>
+
+            <div className="space-y-4 relative z-10">
+              <span className="text-[10px] text-[#0EA5E9] font-mono font-bold uppercase tracking-widest bg-[#2A4BFF]/20 px-3 py-1 rounded border border-[#2A4BFF]/30">Admissions</span>
+              <h2 className="logo-font text-2xl sm:text-3xl font-bold text-white">Start Your Journey</h2>
+              <p className="text-xs text-slate-300 font-mono">
+                Secure your slot in our upcoming training cohort. Reach out to admissions handlers to resolve query blockers.
+              </p>
+            </div>
+
+            <div className="my-auto space-y-4 relative z-10 pt-4 max-w-sm mx-auto w-full">
+              <a href="https://www.beyondskills.in" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 bg-white/5 hover:bg-white/10 border border-white/10 p-3.5 rounded-xl transition-colors">
+                <Globe className="w-5 h-5 text-[#0EA5E9]" />
+                <div>
+                  <span className="text-[9px] text-slate-400 font-mono block">Website</span>
+                  <span className="text-xs font-mono font-bold text-white">www.beyondskills.in</span>
+                </div>
+              </a>
+
+              <a href="tel:+918130927999" className="flex items-center space-x-3 bg-white/5 hover:bg-white/10 border border-white/10 p-3.5 rounded-xl transition-colors">
+                <Phone className="w-5 h-5 text-[#0EA5E9]" />
+                <div>
+                  <span className="text-[9px] text-slate-400 font-mono block">Hotline</span>
+                  <span className="text-xs font-mono font-bold text-white">+91 81309 27999</span>
+                </div>
+              </a>
+
+              <a href="mailto:admissions@wayspire.in" className="flex items-center space-x-3 bg-white/5 hover:bg-white/10 border border-white/10 p-3.5 rounded-xl transition-colors">
+                <Mail className="w-5 h-5 text-[#0EA5E9]" />
+                <div>
+                  <span className="text-[9px] text-slate-400 font-mono block">Admissions Email</span>
+                  <span className="text-xs font-mono font-bold text-white">admissions@wayspire.in</span>
+                </div>
+              </a>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 mt-4 border-t border-white/10 justify-between items-center z-10">
+              <button 
+                onClick={handleEnrollClick}
+                className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer text-center font-mono"
+              >
+                Enroll Now
+              </button>
+              <span className="text-[9px] text-slate-400 font-mono">
+                BeyondSkills © 2026. All rights reserved.
+              </span>
+            </div>
+          </div>
+        );
+
+      default:
+        return <div>Page Not Found</div>;
+    }
+  };
+
   return (
     <div className="text-slate-900 min-h-screen relative overflow-x-hidden bg-transparent">
       {/* Background spotlights to layer with the global interactive grid */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[140px] pointer-events-none z-0"></div>
       <div className="absolute top-[1200px] left-[-300px] w-[600px] h-[600px] bg-brand-cyan/8 rounded-full blur-[140px] pointer-events-none z-0"></div>
       
-      {/* 1. Hero Section (Futuristic Dark Theme) */}
-      <section className="relative z-10 pt-16 pb-24 px-4 sm:px-6 lg:px-8 border-b border-slate-900/60 bg-[#060A24] text-white overflow-hidden">
-        {/* Neon Grid Lines overlay inside hero */}
-        <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{
-          backgroundImage: `
-            linear-gradient(to right, #2A4BFF 1px, transparent 1px),
-            linear-gradient(to bottom, #2A4BFF 1px, transparent 1px)
-          `,
-          backgroundSize: '24px 24px'
-        }}></div>
-        
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center max-w-4xl mx-auto space-y-6">
-            <span className="inline-flex items-center space-x-2 bg-[#2A4BFF]/20 text-[#0EA5E9] font-mono text-xs font-bold tracking-widest px-4 py-1.5 rounded-full border border-[#2A4BFF]/30 uppercase">
-              <Sparkles className="w-4.5 h-4.5 text-[#0EA5E9] animate-pulse" />
-              <span>Interactive Digital Brochure</span>
-            </span>
-            
-            <h1 className="logo-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-              Master <span className="bg-gradient-to-r from-[#0EA5E9] to-[#2A4BFF] bg-clip-text text-transparent">{course.title}</span>
-            </h1>
-            
-            <p className="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto font-light leading-relaxed font-mono">
-              {course.overview}
-            </p>
-            
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button 
-                onClick={handleEnrollClick}
-                className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20 cursor-pointer"
+      {/* Conditionally Render Booklet/PDF Reader or Standard Scrolling Web View */}
+      {isBookletMode && course.id === 'artificial-intelligence' ? (
+        <div className="relative z-10 pt-4 pb-16 px-4 max-w-6xl mx-auto flex flex-col justify-between min-h-[calc(100vh-80px)]">
+          {/* Header Controls Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-950/80 border border-white/10 p-4 rounded-2xl backdrop-blur-md mb-6">
+            <div className="flex items-center space-x-3">
+              <span className="logo-font text-lg font-bold text-white tracking-tight flex items-center gap-1.5">
+                <Brain className="w-5 h-5 text-[#0EA5E9]" />
+                BeyondSkills
+              </span>
+              <span className="hidden sm:inline-block w-1.5 h-6 bg-brand-purple rounded-full"></span>
+              <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-300">
+                {course.title} Syllabus
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-2.5">
+              {/* Dropdown to jump directly to sections */}
+              <select
+                value={currentPage}
+                onChange={(e) => setCurrentPage(Number(e.target.value))}
+                className="bg-slate-900 border border-white/10 text-white font-mono text-xs px-3 py-1.5 rounded-lg focus:border-brand-purple outline-none"
               >
-                Register & Enroll Now
+                <option value={1}>Page 1: Cover</option>
+                <option value={2}>Page 2: Who We Are</option>
+                <option value={3}>Page 3: Why AI/DS</option>
+                <option value={4}>Page 4: Why BeyondSkills</option>
+                <option value={5}>Page 5: Eligibility</option>
+                <option value={6}>Page 6: Highlights</option>
+                <option value={7}>Page 7: Roadmap</option>
+                <option value={8}>Page 8: Module 1 (Python)</option>
+                <option value={9}>Page 9: Module 2 (Wrangling)</option>
+                <option value={10}>Page 10: Module 3 (BI & SQL)</option>
+                <option value={11}>Page 11: Module 4 (Predictive ML)</option>
+                <option value={12}>Page 12: Module 5 (GenAI & NLP)</option>
+                <option value={13}>Page 13: Portfolio Projects</option>
+                <option value={14}>Page 14: Tools Covered</option>
+                <option value={15}>Page 15: Career Suite</option>
+                <option value={16}>Page 16: Learning Pathways</option>
+                <option value={17}>Page 17: Industry Faculty</option>
+                <option value={18}>Page 18: Success & Reviews</option>
+                <option value={19}>Page 19: Accreditations</option>
+                <option value={20}>Page 20: Contact Admissions</option>
+              </select>
+
+              {/* Toggle to change view back to scrolling landing page */}
+              <button
+                onClick={() => setIsBookletMode(false)}
+                className="bg-white/10 hover:bg-white/15 border border-white/10 text-white font-mono text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer"
+                title="Switch to Scrolling Web Mode"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Scroll View</span>
               </button>
-              <a 
-                href="#curriculum"
-                className="w-full sm:w-auto bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all text-center"
+
+              {/* Download Brochure */}
+              <button
+                onClick={handleDownloadBrochure}
+                className="bg-[#2A4BFF] hover:brightness-110 text-white font-mono text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-all cursor-pointer"
+                title="Download PDF Brochure"
               >
-                Explore Syllabus modules
-              </a>
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Download PDF</span>
+              </button>
             </div>
           </div>
-          
-          {/* Key Program Pillars grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
-            {[
-              { label: "Duration", value: course.duration },
-              { label: "Delivery Mode", value: course.delivery },
-              { label: "Hands-on projects", value: course.mentorLedProjects },
-              { label: "Rating & Badges", value: `${course.rating} ★ (verifiable)` }
-            ].map((pillar, idx) => (
-              <div key={idx} className="bg-white/5 border border-white/10 p-5 rounded-2xl text-center backdrop-blur-md">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{pillar.label}</span>
-                <span className="text-xs sm:text-sm font-extrabold mt-1 text-white block">{pillar.value}</span>
-              </div>
-            ))}
+
+          {/* Centered Booklet Canvas Layout */}
+          <div className="flex-grow flex items-center justify-center relative my-4">
+            
+            {/* Previous Page Floating Button Overlay */}
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className={`absolute left-0 md:-left-6 z-20 w-10 h-10 md:w-12 md:h-12 bg-slate-950/80 border border-white/10 hover:border-brand-cyan/50 rounded-full flex items-center justify-center text-white backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none`}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            {/* Main Page Slide Box */}
+            <div className="w-full md:max-w-4xl md:h-[600px] md:aspect-[1.414] bg-transparent shadow-2xl relative transition-all duration-300 transform scale-100">
+              {renderPageContent(currentPage)}
+            </div>
+
+            {/* Next Page Floating Button Overlay */}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+              className={`absolute right-0 md:-right-6 z-20 w-10 h-10 md:w-12 md:h-12 bg-slate-950/80 border border-white/10 hover:border-brand-cyan/50 rounded-full flex items-center justify-center text-white backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none`}
+            >
+              <ArrowRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Bottom Pagination & Progress Controls */}
+          <div className="flex flex-col items-center space-y-3.5 mt-6 bg-slate-950/40 p-4 rounded-2xl border border-white/5 backdrop-blur-sm">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="text-slate-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
+              >
+                Previous
+              </button>
+              <span className="text-white font-mono text-xs font-bold bg-[#2A4BFF]/25 border border-[#2A4BFF]/30 px-3 py-1 rounded-lg">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="text-slate-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
+              >
+                Next
+              </button>
+            </div>
+            
+            {/* Completion Progress Bar */}
+            <div className="w-full max-w-md bg-slate-900 h-1 rounded-full overflow-hidden border border-white/5">
+              <div 
+                className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-300"
+                style={{ width: `${(currentPage / totalPages) * 100}%` }}
+              ></div>
+            </div>
+
+            <div className="text-[10px] font-mono text-slate-500">
+              💡 Hint: You can use your keyboard's <kbd className="bg-slate-800 text-slate-300 px-1 py-0.5 rounded border border-white/10 font-bold">Left</kbd> and <kbd className="bg-slate-800 text-slate-300 px-1 py-0.5 rounded border border-white/10 font-bold">Right</kbd> arrow keys to turn pages.
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* 2. Brand Introduction (Beyond Skills Overview) */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-5 space-y-5">
-            <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
-              Beyond Skills Academy
-            </span>
-            <h2 className="logo-font text-3xl font-extrabold text-slate-900 leading-tight">
-              Bridging Corporate Realities with Expert Pedagogy
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
-              At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
-            </p>
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
-              This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
-            </p>
-          </div>
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { title: "Active Tech Mentors", desc: "Classes are designed and run by managers from Tietoevry, EY, and Nokia with 5+ years of live experience.", icon: Users },
-              { title: "Production Workflows", desc: "Skip academic toy tasks. Clean actual raw datasets, handle real CSV files, and deploy developer architectures.", icon: Code },
-              { title: "Verifiable Badges", desc: "Recipients gain secure cryptographic badges linked to their projects, proving verification directly to HR teams.", icon: Award },
-              { title: "End-to-End Support", desc: "From technical setup issues to resume construction reviews, our mentors resolve blocks within daily SLAs.", icon: ShieldCheck }
-            ].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="bg-[#0A0E35]/90 border border-[#2A4BFF]/20 hover:border-brand-purple/40 p-5 rounded-2xl transition-all group text-white shadow-xl">
-                  <div className="bg-[#2A4BFF]/20 p-2.5 rounded-xl text-[#0EA5E9] w-fit mb-3 group-hover:scale-105 transition-transform">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h4 className="font-bold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-1">{item.title}</h4>
-                  <p className="text-[11px] sm:text-xs text-slate-300 leading-normal font-mono">{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Why Learn Section & Dataset Dashboard */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
-            <h2 className="logo-font text-3xl font-bold text-white">Why You Must Master {course.title}</h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-              We compile recent dataset reports demonstrating the massive demand trajectory for {course.techStack ? course.techStack.slice(0, 3).join(', ') : 'modern'} skillsets.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Left Dataset Navigation Cards */}
-            <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
-              {datasetsList.map((data, idx) => (
+      ) : (
+        <>
+          {/* View Mode Panel for Web Mode */}
+          {course.id === 'artificial-intelligence' && (
+            <div className="relative z-20 max-w-6xl mx-auto px-4 mt-6">
+              <div className="bg-slate-950/80 border border-white/10 p-3 rounded-xl flex items-center justify-between text-white backdrop-blur-sm">
+                <span className="text-xs font-mono font-bold text-[#0EA5E9] flex items-center gap-1.5">
+                  <BookOpenCheck className="w-4 h-4" />
+                  Try booklet/PDF reader mode for this course
+                </span>
                 <button
-                  key={idx}
-                  onClick={() => setActiveDatasetIdx(idx)}
-                  className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
-                    activeDatasetIdx === idx 
-                      ? 'bg-[#0F174A]/90 border-[#2A4BFF] shadow-lg ring-1 ring-[#2A4BFF]/40 text-white' 
-                      : 'bg-[#0A0E35]/70 border-[#2A4BFF]/10 text-slate-300 hover:bg-[#0B1240]/80'
-                  }`}
+                  onClick={() => setIsBookletMode(true)}
+                  className="bg-[#2A4BFF] hover:brightness-110 text-white font-mono text-xs px-4 py-2 rounded-lg flex items-center space-x-1.5 transition-all cursor-pointer"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className={`font-bold text-xs uppercase tracking-wide font-mono ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-300'}`}>{data.label}</span>
-                    <TrendingUp className={`w-4 h-4 ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-400'}`} />
-                  </div>
-                  <div className="flex justify-between items-baseline mt-3">
-                    <span className="text-[10px] text-slate-400 font-mono">{data.current}</span>
-                    <span className={`text-xs font-extrabold font-mono ${activeDatasetIdx === idx ? 'text-white' : 'text-[#2A4BFF]'}`}>{data.projected}</span>
-                  </div>
-                  {/* Dynamic Progress indicator bar */}
-                  <div className="w-full bg-slate-950 h-1.5 rounded-full mt-2.5 overflow-hidden">
-                    <div 
-                      className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-700"
-                      style={{ width: activeDatasetIdx === idx ? `${data.growth}%` : '8%' }}
-                    ></div>
-                  </div>
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Switch to Booklet Mode</span>
                 </button>
-              ))}
+              </div>
             </div>
+          )}
 
-            {/* Right Interactive Data Details Card */}
-            <div className="lg:col-span-7 bg-[#05092A] text-white p-8 rounded-3xl border border-[#2A4BFF]/20 relative overflow-hidden flex flex-col justify-between shadow-2xl">
-              {/* Graphic mesh watermark */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-cyan/15 rounded-full blur-2xl z-0"></div>
-              
-              <div className="relative z-10 space-y-6">
-                <div className="flex items-center space-x-2 text-[#0EA5E9]">
-                  <BarChart3 className="w-5 h-5" />
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Active Data Feed</span>
-                </div>
+          {/* 1. Hero Section (Futuristic Dark Theme) */}
+          <section className="relative z-10 pt-16 pb-24 px-4 sm:px-6 lg:px-8 border-b border-slate-900/60 bg-[#060A24] text-white overflow-hidden">
+            {/* Neon Grid Lines overlay inside hero */}
+            <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{
+              backgroundImage: `
+                linear-gradient(to right, #2A4BFF 1px, transparent 1px),
+                linear-gradient(to bottom, #2A4BFF 1px, transparent 1px)
+              `,
+              backgroundSize: '24px 24px'
+            }}></div>
+            
+            <div className="max-w-6xl mx-auto relative z-10">
+              <div className="text-center max-w-4xl mx-auto space-y-6">
+                <span className="inline-flex items-center space-x-2 bg-[#2A4BFF]/20 text-[#0EA5E9] font-mono text-xs font-bold tracking-widest px-4 py-1.5 rounded-full border border-[#2A4BFF]/30 uppercase">
+                  <Sparkles className="w-4.5 h-4.5 text-[#0EA5E9] animate-pulse" />
+                  <span>Interactive Digital Brochure</span>
+                </span>
                 
-                <h3 className="text-xl sm:text-2xl font-bold logo-font">
-                  {datasetsList[activeDatasetIdx].label}
-                </h3>
+                <h1 className="logo-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                  Master <span className="bg-gradient-to-r from-[#0EA5E9] to-[#2A4BFF] bg-clip-text text-transparent">{course.title}</span>
+                </h1>
                 
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light font-mono">
-                  {datasetsList[activeDatasetIdx].details}
+                <p className="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto font-light leading-relaxed font-mono">
+                  {course.overview}
                 </p>
                 
-                <div className="border-t border-white/10 pt-6 grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Current Index</span>
-                    <span className="text-sm font-bold text-slate-200">{datasetsList[activeDatasetIdx].current}</span>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Projected Capacity</span>
-                    <span className="text-sm font-bold text-[#0EA5E9]">{datasetsList[activeDatasetIdx].projected}</span>
-                  </div>
+                <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <button 
+                    onClick={handleEnrollClick}
+                    className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20 cursor-pointer"
+                  >
+                    Register & Enroll Now
+                  </button>
+                  <a 
+                    href="#curriculum"
+                    className="w-full sm:w-auto bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all text-center"
+                  >
+                    Explore Syllabus modules
+                  </a>
                 </div>
               </div>
-
-              <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 mt-8 flex items-center space-x-3 text-xs text-slate-300">
-                <Rocket className="w-5 h-5 text-[#2A4BFF] flex-shrink-0 animate-bounce" />
-                <p className="font-mono">Learn these exact tools to stay ahead of corporate workflow automation shifts.</p>
+              
+              {/* Key Program Pillars grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
+                {[
+                  { label: "Duration", value: course.duration },
+                  { label: "Delivery Mode", value: course.delivery },
+                  { label: "Hands-on projects", value: course.mentorLedProjects },
+                  { label: "Rating & Badges", value: `${course.rating} ★ (verifiable)` }
+                ].map((pillar, idx) => (
+                  <div key={idx} className="bg-white/5 border border-white/10 p-5 rounded-2xl text-center backdrop-blur-md">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{pillar.label}</span>
+                    <span className="text-xs sm:text-sm font-extrabold mt-1 text-white block">{pillar.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* 4. Zig-Zag Career Roadmap Section */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 relative">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
-          <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
-            See the pathways open to you as you progress through the modules. Hover over each step to see salary levels and required tools.
-          </p>
-        </div>
+          {/* 2. Brand Introduction (Beyond Skills Overview) */}
+          <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-5 space-y-5">
+                <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
+                  Beyond Skills Academy
+                </span>
+                <h2 className="logo-font text-3xl font-extrabold text-slate-900 leading-tight">
+                  Bridging Corporate Realities with Expert Pedagogy
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
+                  At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
+                </p>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
+                  This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
+                </p>
+              </div>
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { title: "Active Tech Mentors", desc: "Classes are designed and run by managers from Tietoevry, EY, and Nokia with 5+ years of live experience.", icon: Users },
+                  { title: "Production Workflows", desc: "Skip academic toy tasks. Clean actual raw datasets, handle real CSV files, and deploy developer architectures.", icon: Code },
+                  { title: "Verifiable Badges", desc: "Recipients gain secure cryptographic badges linked to their projects, proving verification directly to HR teams.", icon: Award },
+                  { title: "End-to-End Support", desc: "From technical setup issues to resume construction reviews, our mentors resolve blocks within daily SLAs.", icon: ShieldCheck }
+                ].map((item, idx) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={idx} className="bg-[#0A0E35]/90 border border-[#2A4BFF]/20 hover:border-brand-purple/40 p-5 rounded-2xl transition-all group text-white shadow-xl">
+                      <div className="bg-[#2A4BFF]/20 p-2.5 rounded-xl text-[#0EA5E9] w-fit mb-3 group-hover:scale-105 transition-transform">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <h4 className="font-bold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-1">{item.title}</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-300 leading-normal font-mono">{item.desc}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
 
-        {/* The Zig-Zag Roadmap Layout */}
-        <div className="relative pt-6">
-          
-          {/* Weaving Glowing Neon Road (md+) */}
-          <svg 
-            className="absolute top-0 bottom-0 left-0 right-0 w-full h-full pointer-events-none hidden md:block z-0" 
-            viewBox="0 0 1000 960" 
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient id="road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#2A4BFF" />
-                <stop offset="50%" stopColor="#0EA5E9" />
-                <stop offset="100%" stopColor="#2A4BFF" />
-              </linearGradient>
-              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-            {/* Elegant glowing snaking road path weaving back and forth between cards */}
-            <path 
-              d="M 500 0 C 320 120, 320 200, 500 300 C 680 400, 680 480, 500 580 C 320 680, 320 760, 500 860 C 600 910, 600 940, 500 960" 
-              fill="none" 
-              stroke="url(#road-grad)" 
-              strokeWidth="6" 
-              strokeLinecap="round" 
-              strokeDasharray="12 8" 
-              filter="url(#glow)"
-              className="opacity-70" 
-            />
-          </svg>
+          {/* 3. Why Learn Section & Dataset Dashboard */}
+          <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
+                <h2 className="logo-font text-3xl font-bold text-white">Why You Must Master {course.title}</h2>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
+                  We compile recent dataset reports demonstrating the massive demand trajectory for {course.techStack ? course.techStack.slice(0, 3).join(', ') : 'modern'} skillsets.
+                </p>
+              </div>
 
-          <div className="space-y-8 relative z-10">
-            {roadmapList.map((step, idx) => {
-              const isEven = idx % 2 === 0;
-              return (
-                <div key={idx} className={`flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                {/* Left Dataset Navigation Cards */}
+                <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
+                  {datasetsList.map((data, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveDatasetIdx(idx)}
+                      className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
+                        activeDatasetIdx === idx 
+                          ? 'bg-[#0F174A]/90 border-[#2A4BFF] shadow-lg ring-1 ring-[#2A4BFF]/40 text-white' 
+                          : 'bg-[#0A0E35]/70 border-[#2A4BFF]/10 text-slate-300 hover:bg-[#0B1240]/80'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className={`font-bold text-xs uppercase tracking-wide font-mono ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-300'}`}>{data.label}</span>
+                        <TrendingUp className={`w-4 h-4 ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-400'}`} />
+                      </div>
+                      <div className="flex justify-between items-baseline mt-3">
+                        <span className="text-[10px] text-slate-400 font-mono">{data.current}</span>
+                        <span className={`text-xs font-extrabold font-mono ${activeDatasetIdx === idx ? 'text-white' : 'text-[#2A4BFF]'}`}>{data.projected}</span>
+                      </div>
+                      {/* Dynamic Progress indicator bar */}
+                      <div className="w-full bg-slate-950 h-1.5 rounded-full mt-2.5 overflow-hidden">
+                        <div 
+                          className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-700"
+                          style={{ width: activeDatasetIdx === idx ? `${data.growth}%` : '8%' }}
+                        ></div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Right Interactive Data Details Card */}
+                <div className="lg:col-span-7 bg-[#05092A] text-white p-8 rounded-3xl border border-[#2A4BFF]/20 relative overflow-hidden flex flex-col justify-between shadow-2xl">
+                  {/* Graphic mesh watermark */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-cyan/15 rounded-full blur-2xl z-0"></div>
                   
-                  {/* Content card representing the role (Dark Glassmorphic) */}
-                  <div className="w-full md:w-[45%]">
-                    <div className="bg-[#0A0E35]/95 border border-[#2A4BFF]/25 p-5 rounded-2xl hover:border-[#2A4BFF]/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 relative text-white">
-                      {/* Decorative subtle dot highlight on card border */}
-                      <div className="absolute top-0 right-0 w-8 h-8 bg-[#2A4BFF]/10 rounded-bl-3xl group-hover:bg-[#2A4BFF]/20 transition-colors z-0"></div>
-                      
-                      <div className="relative z-10 space-y-2.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wide">Milestone {step.step}</span>
-                          <span className="text-xs font-extrabold text-[#0EA5E9] bg-[#2A4BFF]/15 px-2.5 py-0.5 rounded border border-[#2A4BFF]/30 font-mono">
-                            {step.salary}
-                          </span>
-                        </div>
-                        
-                        <h4 className="text-sm sm:text-base font-bold text-white leading-snug group-hover:text-[#0EA5E9] transition-colors">{step.role}</h4>
-                        
-                        <p className="text-[11px] text-slate-300 leading-relaxed font-light font-mono">{step.description}</p>
-                        
-                        {/* Tools tags */}
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                          {step.tech.map((tag, tIdx) => (
-                            <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center space-x-2 text-[#0EA5E9]">
+                      <BarChart3 className="w-5 h-5" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Active Data Feed</span>
+                    </div>
+                    
+                    <h3 className="text-xl sm:text-2xl font-bold logo-font">
+                      {datasetsList[activeDatasetIdx].label}
+                    </h3>
+                    
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light font-mono">
+                      {datasetsList[activeDatasetIdx].details}
+                    </p>
+                    
+                    <div className="border-t border-white/10 pt-6 grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Current Index</span>
+                        <span className="text-sm font-bold text-slate-200">{datasetsList[activeDatasetIdx].current}</span>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Projected Capacity</span>
+                        <span className="text-sm font-bold text-[#0EA5E9]">{datasetsList[activeDatasetIdx].projected}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Bullet center marker (md+) */}
-                  <div className="w-10 h-10 bg-[#060A24] border-2 border-[#2A4BFF] rounded-full flex items-center justify-center text-white text-xs font-mono font-bold z-10 shadow-lg relative hidden md:flex">
-                    {step.step}
-                    {/* Pulsing indicator ring */}
-                    <div className="absolute -inset-1.5 border border-[#2A4BFF]/40 rounded-full animate-ping opacity-60 pointer-events-none"></div>
+                  <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 mt-8 flex items-center space-x-3 text-xs text-slate-300">
+                    <Rocket className="w-5 h-5 text-[#2A4BFF] flex-shrink-0 animate-bounce" />
+                    <p className="font-mono">Learn these exact tools to stay ahead of corporate workflow automation shifts.</p>
                   </div>
-
-                  {/* Empty space filler for alignment (md+) */}
-                  <div className="w-full md:w-[45%] hidden md:block"></div>
-
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Company Tie-ups & Hiring Partners */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-b border-slate-900 bg-[#040824]/80 z-10 relative">
-        <div className="max-w-6xl mx-auto text-center space-y-8">
-          <div>
-            <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3 py-1 rounded">Tie-ups & Placements</span>
-            <h3 className="logo-font text-xl sm:text-2xl font-bold text-white mt-3">Where Our Alumni Work & Get Hired</h3>
-          </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-center max-w-4xl mx-auto pt-4">
-            {COMPANYS_TIEUPS.map((company, idx) => (
-              <div 
-                key={idx} 
-                className="flex flex-col items-center justify-center space-y-3 group"
-              >
-                {/* Clean white round casing for official brand logo to stand out */}
-                <div className="bg-white p-4.5 rounded-full shadow-lg border border-slate-100 flex items-center justify-center w-16 h-16 group-hover:scale-110 transition-transform duration-300">
-                  <img src={LOGO_IMAGES[company]} alt={company} className="w-9 h-9 object-contain" />
-                </div>
-                <span className="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">{company}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Detailed Week-by-Week Curriculum */}
-      <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto z-10 relative scroll-mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
-          <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown ({course.curriculum.length} Modules)</h2>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
-            Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
-          </p>
-        </div>
-
-        {/* Accordions (Premium Dark Theme boxes) */}
-        <div className="space-y-3.5">
-          {course.curriculum.map((module, idx) => {
-            const isExpanded = expandedModules[idx];
-            return (
-              <div 
-                key={idx} 
-                className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
-                  isExpanded 
-                    ? 'border-[#2A4BFF]/50 shadow-lg bg-[#0C153D]/95 text-white' 
-                    : 'border-[#2A4BFF]/15 hover:border-[#2A4BFF]/30 hover:shadow-md bg-[#0A0E35]/90 text-slate-200 hover:bg-[#0E174E]/90'
-                }`}
-              >
-                {/* Header */}
-                <button
-                  onClick={() => toggleModule(idx)}
-                  className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center space-x-4">
-                    <span className="bg-[#2A4BFF]/25 border border-[#2A4BFF]/40 text-[#0EA5E9] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
-                      Module {idx + 1}
-                    </span>
-                    <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wide font-mono leading-relaxed">
-                      {module.title}
-                    </h4>
-                  </div>
-                  <div className="text-slate-400 hover:text-white ml-2 flex-shrink-0">
-                    {isExpanded ? <ChevronUp className="w-5 h-5 text-[#0EA5E9]" /> : <ChevronDown className="w-5 h-5" />}
-                  </div>
-                </button>
-
-                {/* Subtopics List */}
-                {isExpanded && (
-                  <div className="p-5 border-t border-[#2A4BFF]/20 bg-slate-950/40 space-y-3.5 animate-fade-in text-slate-100">
-                    <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider font-bold">Topics Covered</p>
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {module.topics.map((topic, tIdx) => (
-                        <li key={tIdx} className="flex items-start space-x-2 text-xs leading-relaxed font-light font-mono text-slate-300">
-                          <CheckCircle className="w-4 h-4 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
-                          <span>{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 7. Projects Showcase Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
-            <h2 className="logo-font text-3xl font-bold text-white">Hands-On Development Tasks</h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-              We believe in building. You will complete dynamic industry project builds during the program duration.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {course.projects.map((proj, idx) => (
-              <div 
-                key={idx} 
-                className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/45 hover:shadow-xl transition-all duration-300 group text-white"
-              >
-                <div>
-                  <div className="bg-[#2A4BFF]/20 text-[#0EA5E9] border border-[#2A4BFF]/30 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
-                    Project 0{idx + 1}
-                  </div>
-                  <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
-                  <p className="text-[11px] text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
-                </div>
-                <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
-                  {proj.techUsed && proj.techUsed.map((t, tIdx) => (
-                    <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
-                      {t}
-                    </span>
-                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
 
-      {/* 8. Upskilling Sessions Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-5 space-y-5">
-            <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
-              Career Readiness
-            </span>
-            <h2 className="logo-font text-3xl font-bold text-slate-900 leading-tight">
-              Upskilling & Career Acceleration Suite
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
-              Acquiring hard technical competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
-            </p>
-          </div>
-          
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { 
-                title: "1-on-1 Resume Builder", 
-                desc: "We analyze your project statements, audit technical keywords, and re-format structures to pass ATS screening algorithms.",
-                action: "ATS Optimization Reviews"
-              },
-              { 
-                title: "LinkedIn Branding", 
-                desc: "Learn to write content showcasing your capstone steps, optimize search banners, and network with active technology managers.",
-                action: "Creator Mode Optimization"
-              },
-              { 
-                title: "Public Speaking & Pitching", 
-                desc: "Weekly demo days where students present code architectures, explaining algorithms to peers and building narrative speaking skills.",
-                action: "Public Technical Explanations"
-              },
-              { 
-                title: "Mock Technical & HR Reviews", 
-                desc: "Replicate live interview telemetry: solve Python arrays under pressure and answer logic checks from agency managers.",
-                action: "Simulated Telemetry Rounds"
-              }
-            ].map((suite, idx) => (
-              <div key={idx} className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 hover:border-[#2A4BFF]/45 hover:shadow-lg p-6 rounded-2xl transition-all text-white">
-                <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
-                <p className="text-[11px] text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
-                <span className="text-[9px] text-[#0EA5E9] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/20 px-2 py-0.5 rounded">
-                  {suite.action}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. End CTA Section & Founder's Quote */}
-      <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#060A24] text-white text-center overflow-hidden">
-        {/* Glow vector background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
-        
-        <div className="max-w-4xl mx-auto relative z-10 space-y-10">
-          <div className="max-w-2xl mx-auto space-y-4">
-            <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/10 px-3 py-1 rounded">
-              Ready to Accelerate
-            </span>
-            <h2 className="logo-font text-3xl sm:text-4xl font-extrabold leading-tight">
-              Get Industry Ready with Beyond Skills
-            </h2>
-            <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-mono">
-              Skip traditional academic lags. Enroll today to secure direct support access and build working projects.
-            </p>
-          </div>
-
-          {/* Founder Quote card */}
-          <div className="bg-[#0A0E35]/90 border border-[#2A4BFF]/25 p-8 rounded-3xl text-left max-w-2xl mx-auto relative shadow-2xl">
-            <Quote className="w-10 h-10 text-[#0EA5E9]/15 absolute top-4 left-4 pointer-events-none" />
-            <div className="relative z-10 pl-6 space-y-4">
-              <p className="text-slate-200 text-xs sm:text-sm italic leading-relaxed font-light font-mono">
-                "BeyondSkills was founded to resolve the extreme misalignment between college textbooks and corporate realities. We do not just teach syntax; we construct engineers who can build products and navigate technical issues autonomously."
+          {/* 4. Zig-Zag Career Roadmap Section */}
+          <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 relative">
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
+              <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
+                See the pathways open to you as you progress through the modules. Hover over each step to see salary levels and required tools.
               </p>
-              <div className="flex items-center space-x-2">
-                <div className="w-1.5 h-6 bg-[#2A4BFF] rounded-full"></div>
-                <div>
-                  <h5 className="text-xs font-bold uppercase tracking-wider font-mono text-white">Founder, BeyondSkills</h5>
-                  <span className="text-[10px] text-slate-400 font-mono">Agency & Academy Operations</span>
+            </div>
+
+            {/* The Zig-Zag Roadmap Layout */}
+            <div className="relative pt-6">
+              
+              {/* Weaving Glowing Neon Road (md+) */}
+              <svg 
+                className="absolute top-0 bottom-0 left-0 right-0 w-full h-full pointer-events-none hidden md:block z-0" 
+                viewBox="0 0 1000 960" 
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#2A4BFF" />
+                    <stop offset="50%" stopColor="#0EA5E9" />
+                    <stop offset="100%" stopColor="#2A4BFF" />
+                  </linearGradient>
+                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                {/* Elegant glowing snaking road path weaving back and forth between cards */}
+                <path 
+                  d="M 500 0 C 320 120, 320 200, 500 300 C 680 400, 680 480, 500 580 C 320 680, 320 760, 500 860 C 600 910, 600 940, 500 960" 
+                  fill="none" 
+                  stroke="url(#road-grad)" 
+                  strokeWidth="6" 
+                  strokeLinecap="round" 
+                  strokeDasharray="12 8" 
+                  filter="url(#glow)"
+                  className="opacity-70" 
+                />
+              </svg>
+
+              <div className="space-y-8 relative z-10">
+                {roadmapList.map((step, idx) => {
+                  const isEven = idx % 2 === 0;
+                  return (
+                    <div key={idx} className={`flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                      
+                      {/* Content card representing the role (Dark Glassmorphic) */}
+                      <div className="w-full md:w-[45%]">
+                        <div className="bg-[#0A0E35]/95 border border-[#2A4BFF]/25 p-5 rounded-2xl hover:border-[#2A4BFF]/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 relative text-white">
+                          {/* Decorative subtle dot highlight on card border */}
+                          <div className="absolute top-0 right-0 w-8 h-8 bg-[#2A4BFF]/10 rounded-bl-3xl group-hover:bg-[#2A4BFF]/20 transition-colors z-0"></div>
+                          
+                          <div className="relative z-10 space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wide">Milestone {step.step}</span>
+                              <span className="text-xs font-extrabold text-[#0EA5E9] bg-[#2A4BFF]/15 px-2.5 py-0.5 rounded border border-[#2A4BFF]/30 font-mono">
+                                {step.salary}
+                              </span>
+                            </div>
+                            
+                            <h4 className="text-sm sm:text-base font-bold text-white leading-snug group-hover:text-[#0EA5E9] transition-colors">{step.role}</h4>
+                            
+                            <p className="text-[11px] text-slate-300 leading-relaxed font-light font-mono">{step.description}</p>
+                            
+                            {/* Tools tags */}
+                            <div className="flex flex-wrap gap-1.5 pt-1">
+                              {step.tech.map((tag, tIdx) => (
+                                <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bullet center marker (md+) */}
+                      <div className="w-10 h-10 bg-[#060A24] border-2 border-[#2A4BFF] rounded-full flex items-center justify-center text-white text-xs font-mono font-bold z-10 shadow-lg relative hidden md:flex">
+                        {step.step}
+                        {/* Pulsing indicator ring */}
+                        <div className="absolute -inset-1.5 border border-[#2A4BFF]/40 rounded-full animate-ping opacity-60 pointer-events-none"></div>
+                      </div>
+
+                      {/* Empty space filler for alignment (md+) */}
+                      <div className="w-full md:w-[45%] hidden md:block"></div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* 5. Company Tie-ups & Hiring Partners */}
+          <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-b border-slate-900 bg-[#040824]/80 z-10 relative">
+            <div className="max-w-6xl mx-auto text-center space-y-8">
+              <div>
+                <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3 py-1 rounded">Tie-ups & Placements</span>
+                <h3 className="logo-font text-xl sm:text-2xl font-bold text-white mt-3">Where Our Alumni Work & Get Hired</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-center max-w-4xl mx-auto pt-4">
+                {COMPANYS_TIEUPS.map((company, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex flex-col items-center justify-center space-y-3 group"
+                  >
+                    {/* Clean white round casing for official brand logo to stand out */}
+                    <div className="bg-white p-4.5 rounded-full shadow-lg border border-slate-100 flex items-center justify-center w-16 h-16 group-hover:scale-110 transition-transform duration-300">
+                      <img src={LOGO_IMAGES[company]} alt={company} className="w-9 h-9 object-contain" />
+                    </div>
+                    <span className="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-wider">{company}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 6. Detailed Week-by-Week Curriculum */}
+          <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto z-10 relative scroll-mt-20">
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
+              <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown ({course.curriculum.length} Modules)</h2>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
+                Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
+              </p>
+            </div>
+
+            {/* Accordions (Premium Dark Theme boxes) */}
+            <div className="space-y-3.5">
+              {course.curriculum.map((module, idx) => {
+                const isExpanded = expandedModules[idx];
+                return (
+                  <div 
+                    key={idx} 
+                    className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+                      isExpanded 
+                        ? 'border-[#2A4BFF]/50 shadow-lg bg-[#0C153D]/95 text-white' 
+                        : 'border-[#2A4BFF]/15 hover:border-[#2A4BFF]/30 hover:shadow-md bg-[#0A0E35]/90 text-slate-200 hover:bg-[#0E174E]/90'
+                    }`}
+                  >
+                    {/* Header */}
+                    <button
+                      onClick={() => toggleModule(idx)}
+                      className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center space-x-4">
+                        <span className="bg-[#2A4BFF]/25 border border-[#2A4BFF]/40 text-[#0EA5E9] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
+                          Module {idx + 1}
+                        </span>
+                        <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wide font-mono leading-relaxed">
+                          {module.title}
+                        </h4>
+                      </div>
+                      <div className="text-slate-400 hover:text-white ml-2 flex-shrink-0">
+                        {isExpanded ? <ChevronUp className="w-5 h-5 text-[#0EA5E9]" /> : <ChevronDown className="w-5 h-5" />}
+                      </div>
+                    </button>
+
+                    {/* Subtopics List */}
+                    {isExpanded && (
+                      <div className="p-5 border-t border-[#2A4BFF]/20 bg-slate-950/40 space-y-3.5 animate-fade-in text-slate-100">
+                        <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider font-bold">Topics Covered</p>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {module.topics.map((topic, tIdx) => (
+                            <li key={tIdx} className="flex items-start space-x-2 text-xs leading-relaxed font-light font-mono text-slate-300">
+                              <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                              <span>{topic}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* 7. Projects Showcase Section */}
+          <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
+                <h2 className="logo-font text-3xl font-bold text-white">Hands-On Development Tasks</h2>
+                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
+                  We believe in building. You will complete dynamic industry project builds during the program duration.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {course.projects.map((proj, idx) => (
+                  <div 
+                    key={idx} 
+                    className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/45 hover:shadow-xl transition-all duration-300 group text-white"
+                  >
+                    <div>
+                      <div className="bg-[#2A4BFF]/20 text-[#0EA5E9] border border-[#2A4BFF]/30 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
+                        Project 0{idx + 1}
+                      </div>
+                      <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
+                      <p className="text-[11px] text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
+                      {proj.techUsed && proj.techUsed.map((t, tIdx) => (
+                        <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 8. Upskilling Sessions Section */}
+          <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-5 space-y-5">
+                <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
+                  Career Readiness
+                </span>
+                <h2 className="logo-font text-3xl font-bold text-slate-900 leading-tight">
+                  Upskilling & Career Acceleration Suite
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-mono">
+                  Acquiring hard technical competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
+                </p>
+              </div>
+              
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[
+                  { 
+                    title: "1-on-1 Resume Builder", 
+                    desc: "We analyze your project statements, audit technical keywords, and re-format structures to pass ATS screening algorithms.",
+                    action: "ATS Optimization Reviews"
+                  },
+                  { 
+                    title: "LinkedIn Branding", 
+                    desc: "Learn to write content showcasing your capstone steps, optimize search banners, and network with active technology managers.",
+                    action: "Creator Mode Optimization"
+                  },
+                  { 
+                    title: "Public Speaking & Pitching", 
+                    desc: "Weekly demo days where students present code architectures, explaining algorithms to peers and building narrative speaking skills.",
+                    action: "Public Technical Explanations"
+                  },
+                  { 
+                    title: "Mock Technical & HR Reviews", 
+                    desc: "Replicate live interview telemetry: solve Python arrays under pressure and answer logic checks from agency managers.",
+                    action: "Simulated Telemetry Rounds"
+                  }
+                ].map((suite, idx) => (
+                  <div key={idx} className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 hover:border-[#2A4BFF]/45 hover:shadow-lg p-6 rounded-2xl transition-all text-white">
+                    <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
+                    <p className="text-[11px] text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
+                    <span className="text-[9px] text-[#0EA5E9] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/20 px-2 py-0.5 rounded">
+                      {suite.action}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* 9. End CTA Section & Founder's Quote */}
+          <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#060A24] text-white text-center overflow-hidden">
+            {/* Glow vector background */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+            
+            <div className="max-w-4xl mx-auto relative z-10 space-y-10">
+              <div className="max-w-2xl mx-auto space-y-4">
+                <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/10 px-3 py-1 rounded">
+                  Ready to Accelerate
+                </span>
+                <h2 className="logo-font text-3xl sm:text-4xl font-extrabold leading-tight">
+                  Get Industry Ready with Beyond Skills
+                </h2>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-mono">
+                  Skip traditional academic lags. Enroll today to secure direct support access and build working projects.
+                </p>
+              </div>
+
+              {/* Founder Quote card */}
+              <div className="bg-[#0A0E35]/90 border border-[#2A4BFF]/25 p-8 rounded-3xl text-left max-w-2xl mx-auto relative shadow-2xl">
+                <Quote className="w-10 h-10 text-[#0EA5E9]/15 absolute top-4 left-4 pointer-events-none" />
+                <div className="relative z-10 pl-6 space-y-4">
+                  <p className="text-slate-200 text-xs sm:text-sm italic leading-relaxed font-light font-mono">
+                    "BeyondSkills was founded to resolve the extreme misalignment between college textbooks and corporate realities. We do not just teach syntax; we construct engineers who can build products and navigate technical issues autonomously."
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-6 bg-[#2A4BFF] rounded-full"></div>
+                    <div>
+                      <h5 className="text-xs font-bold uppercase tracking-wider font-mono text-white">Founder, BeyondSkills</h5>
+                      <span className="text-[10px] text-slate-400 font-mono">Agency & Academy Operations</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-6">
+                <button 
+                  onClick={handleEnrollClick}
+                  className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-10 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 cursor-pointer"
+                >
+                  Get Started & Enroll Now
+                </button>
+                <div className="mt-4 flex items-center justify-center space-x-2 text-[10px] text-slate-400 font-mono">
+                  <Mail className="w-3.5 h-3.5 text-[#2A4BFF]" />
+                  <span>Contact: admissions@wayspire.in / support@beyondskills.co</span>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="pt-6">
-            <button 
-              onClick={handleEnrollClick}
-              className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-10 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 cursor-pointer"
-            >
-              Get Started & Enroll Now
-            </button>
-            <div className="mt-4 flex items-center justify-center space-x-2 text-[10px] text-slate-400 font-mono">
-              <Mail className="w-3.5 h-3.5 text-[#2A4BFF]" />
-              <span>Contact: admissions@wayspire.in / support@beyondskills.co</span>
-            </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </div>
   );
 }
