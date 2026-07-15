@@ -4,7 +4,7 @@ import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
-  const [agencyForm, setAgencyForm] = useState({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: 'Less than 1 LPA', message: '' });
+  const [agencyForm, setAgencyForm] = useState({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: 'Below 1 Lakh', message: '' });
   const [academyForm, setAcademyForm] = useState({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
   const [status, setStatus] = useState(null);
 
@@ -23,7 +23,7 @@ export default function Contact() {
     }));
 
     setStatus('agency_success');
-    setAgencyForm({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: 'Less than 1 LPA', message: '' });
+    setAgencyForm({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: 'Below 1 Lakh', message: '' });
     setTimeout(() => setStatus(null), 5000);
   };
 
@@ -167,7 +167,7 @@ export default function Contact() {
                     <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Estimated Budget *</label>
                       <select value={agencyForm.budget} onChange={(e) => setAgencyForm({...agencyForm, budget: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
-                        <option value="Less than 1 LPA">Less than 1 LPA</option>
+                        <option value="Below 1 Lakh">Below 1 Lakh</option>
                         <option value="₹1,00,000 - ₹3,00,000">₹1,00,000 - ₹3,00,000</option>
                         <option value="₹3,00,000 - ₹5,00,000">₹3,00,000 - ₹5,00,000</option>
                         <option value="₹5,00,000+">₹5,00,000+</option>
