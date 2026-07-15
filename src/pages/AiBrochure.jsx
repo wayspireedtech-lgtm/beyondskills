@@ -451,8 +451,21 @@ export default function AiBrochure() {
   };
 
   const handleDownloadBrochure = () => {
+    const mapping = {
+      'artificial-intelligence': 'ai-ml.pdf',
+      'machine-learning': 'ai-ml.pdf',
+      'data-science': 'data-science-analytics.pdf',
+      'data-analytics': 'data-science-analytics.pdf',
+      'cyber-security': 'cyber-security.pdf',
+      'hr-mgmt': 'hr-mgmt.pdf',
+      'cloud-computing': 'cloud-computing.pdf',
+      'stock-market': 'stock-market.pdf',
+      'full-stack-web': 'full-stack-web.pdf',
+      'digital-marketing-cert': 'digital-marketing-cert.pdf'
+    };
+    const filename = mapping[course.id] || `${course.id}.pdf`;
     const link = document.createElement('a');
-    link.href = `/brochures/${course.id}.pdf`;
+    link.href = `/brochures/${filename}`;
     link.download = `${course.title.replace(/[^a-zA-Z0-9]/g, '_')}_Brochure.pdf`;
     document.body.appendChild(link);
     link.click();
