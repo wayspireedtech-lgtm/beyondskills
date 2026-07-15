@@ -98,34 +98,31 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="bg-[#05050C] text-slate-100 min-h-screen relative pt-24 pb-24 overflow-x-hidden">
-      {/* Background Grid Pattern Overlay */}
-      <div className="bg-grid-glow"></div>
-      <div className="bg-grid-pattern opacity-[0.25]"></div>
+    <div className="text-slate-900 min-h-screen relative pt-24 pb-24 overflow-x-hidden">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
         
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-6 mb-10 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-6 mb-10 gap-4">
           <div>
-            <span className="text-xs font-bold text-brand-cyan uppercase tracking-widest font-mono">BeyondSkills Admin Center</span>
-            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-white mt-1">
+            <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-widest font-mono">BeyondSkills Admin Center</span>
+            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
               Analytics & CRM Console
             </h1>
           </div>
           
           {/* Action Tabs */}
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'analytics' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setActiveSubTab('analytics')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'analytics' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border border-slate-200/80 text-slate-655 hover:bg-slate-100 hover:text-slate-900'}`}>
               Analytics
             </button>
-            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'leads' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setActiveSubTab('leads')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'leads' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border border-slate-200/80 text-slate-655 hover:bg-slate-100 hover:text-slate-900'}`}>
               Leads Inbox ({leads.length})
             </button>
-            <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'students' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setActiveSubTab('students')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'students' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border border-slate-200/80 text-slate-655 hover:bg-slate-100 hover:text-slate-900'}`}>
               Students ({students.length})
             </button>
-            <button onClick={() => setActiveSubTab('enrollments')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'enrollments' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10'}`}>
+            <button onClick={() => setActiveSubTab('enrollments')} className={`px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all cursor-pointer ${activeSubTab === 'enrollments' ? 'bg-[#2A4BFF] text-white shadow-lg shadow-blue-500/20' : 'bg-slate-50 border border-slate-200/80 text-slate-655 hover:bg-slate-100 hover:text-slate-900'}`}>
               Enrollments ({payments.length})
             </button>
           </div>
@@ -281,7 +278,7 @@ export default function AdminDashboard() {
           /* LEADS CRM INBOX VIEW */
           activeSubTab === 'leads' ? (
             <div className="space-y-6 animate-fade-in">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Lead Submission Inbox</h3>
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-[#2A4BFF] pl-3">Lead Submission Inbox</h3>
               
               {leads.length === 0 ? (
                 <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
@@ -372,7 +369,7 @@ export default function AdminDashboard() {
             </div>
           ) : activeSubTab === 'students' ? (
             <div className="space-y-6 animate-fade-in">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Registered Students & LMS Credentials</h3>
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-[#2A4BFF] pl-3">Registered Students & LMS Credentials</h3>
               
               {students.length === 0 ? (
                 <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
@@ -531,7 +528,7 @@ export default function AdminDashboard() {
           ) : (
             /* ENROLLMENTS VIEW */
             <div className="space-y-6 animate-fade-in">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2 border-l-2 border-brand-cyan pl-3">Successful Course Enrollments</h3>
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 border-l-2 border-[#2A4BFF] pl-3">Successful Course Enrollments</h3>
               
               {payments.length === 0 ? (
                 <div className="bg-[#0A0E35]/65 border border-white/10 p-8 rounded-2xl text-center max-w-md mx-auto space-y-4">
