@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
+import fs from 'fs';
 
 // Load environment variables from .env
 dotenv.config();
@@ -104,6 +105,72 @@ app.post('/api/verify-payment', (req, res) => {
   } catch (error) {
     console.error('Payment Signature Verification Error:', error);
     res.status(500).json({ error: 'An error occurred during payment signature verification.' });
+  }
+});
+
+// Webhook leads database helper path
+const LEADS_FILE = './leads_db.json';
+
+// GET: Fetch all webhook leads
+app.get('/api/webhook/leads', (req, res) => {
+  try {
+    if (!fs.existsSync(LEADS_FILE)) {
+      return res.status(200).json([]);
+    }
+    const data = fs.readFileSync(LEADS_FILE, 'utf-8');
+    res.status(200).json(JSON.parse(data || '[]'));
+  } catch (error) {
+    console.error('Error fetching leads:', error);
+    res.status(500).json({ error: 'Failed to retrieve leads from database.' });
+  }
+});
+
+// POST: Add new lead (from Google Apps Script webhook / Ads triggers)
+app.post('/api/webhook/leads', (req, res) => {
+  try {
+    const { name, email, phone, type, program, notes } = req.body;
+    
+    if (!name || !phone) {
+      return res.status(400).json({ error: 'Name and Phone fields are required.' });
+    }
+
+    let existingLeads = [];
+    if (fs.existsSync(LEADS_FILE)) {
+      const data = fs.readFileSync(LEADS_FILE, 'utf-8');
+      existingLeads = JSON.parse(data || '[]');
+    }
+
+    // Check if phone already exists in server webhook DB
+    if (existingLeads.some(l => l.phone === phone)) {
+      return res.status(200).json({ success: false, message: 'Lead with this phone number already exists.' });
+    }
+
+    const newLead = {
+      id: `LD${String(existingLeads.length + 101).padStart(3, '0')}`,
+      name,
+      email: email || 'no-email@beyondskills.com',
+      phone,
+      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      type: type || 'Google Form Leads',
+      program: program || 'artificial-intelligence',
+      assignedBDM: '',
+      assignedBDA: '',
+      status: 'New',
+      subStatus: 'QUALIFIED',
+      profession: 'Unspecified',
+      mentor: 'None',
+      duration: 'None',
+      callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+      history: notes ? [{ note: notes, date: new Date().toISOString() }] : []
+    };
+
+    existingLeads.push(newLead);
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(existingLeads, null, 2), 'utf-8');
+
+    res.status(201).json({ success: true, message: 'Lead recorded successfully.', lead: newLead });
+  } catch (error) {
+    console.error('Error saving lead via webhook:', error);
+    res.status(500).json({ error: 'Internal server error while processing webhook.' });
   }
 });
 

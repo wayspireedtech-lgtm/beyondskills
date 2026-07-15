@@ -74,6 +74,38 @@ export default function AdminDashboard() {
   // Selected BDA for detailed BDA Performance sub-status view
   const [selectedBdaName, setSelectedBdaName] = useState('');
 
+  const fetchWebhookLeads = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/webhook/leads');
+      if (res.ok) {
+        const webhookLeads = await res.json();
+        if (webhookLeads && webhookLeads.length > 0) {
+          const currentLocal = getDbItem('beyondskills_leads', []);
+          let updated = [...currentLocal];
+          let updatedCount = 0;
+          
+          webhookLeads.forEach(wLead => {
+            if (!updated.some(l => l.phone === wLead.phone)) {
+              const newId = `LD${String(updated.length + 1).padStart(3, '0')}`;
+              updated.push({
+                ...wLead,
+                id: newId
+              });
+              updatedCount++;
+            }
+          });
+          
+          if (updatedCount > 0) {
+            setLeads(updated);
+            setDbItem('beyondskills_leads', updated);
+          }
+        }
+      }
+    } catch (e) {
+      // Quiet fail to prevent console noise during local offline testing
+    }
+  };
+
   useEffect(() => {
     // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
@@ -105,6 +137,11 @@ export default function AdminDashboard() {
       const firstBda = existingCrmUsers.find(u => u.role === 'BDA');
       if (firstBda) setSelectedBdaName(firstBda.name);
     }
+
+    // Fetch initial leads and set polling interval
+    fetchWebhookLeads();
+    const interval = setInterval(fetchWebhookLeads, 6000);
+    return () => clearInterval(interval);
   }, [navigate]);
 
   const handleLogout = () => {
