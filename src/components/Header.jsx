@@ -54,7 +54,7 @@ export default function Header() {
       <div className={`transition-all duration-500 ease-in-out pointer-events-auto mx-auto ${
         isScrolled 
           ? `max-w-6xl w-[92%] mt-3 ${isOpen ? 'rounded-3xl' : 'rounded-full'} bg-[#0A0E35]/95 border border-white/10 shadow-2xl shadow-slate-950/50 backdrop-blur-lg px-6` 
-          : 'max-w-[1440px] w-full mt-0 rounded-none bg-[#0A0E35] border-b border-white/10 px-4 sm:px-6 lg:px-8'
+          : `max-w-6xl w-[92%] mt-4 ${isOpen ? 'rounded-3xl' : 'rounded-full'} bg-[#0A0E35] border border-white/10 shadow-lg px-6`
       }`}>
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
           {/* Logo */}
