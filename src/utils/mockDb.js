@@ -1500,3 +1500,40 @@ if (!localStorage.getItem('beyondskills_payments')) {
 if (!localStorage.getItem('beyondskills_certificates')) {
   setDbItem('beyondskills_certificates', []);
 }
+
+// Initial Landing Pages Seed
+const INITIAL_LANDING_PAGES = [
+  {
+    slug: 'full-stack-web-development',
+    courseId: 'full-stack-web',
+    heroHeadline: 'Become a Full Stack Web Developer. Live.',
+    heroSubheadline: 'A comprehensive, structured 4-month developer cohort. Master HTML, CSS, JavaScript, React, Node.js, Express, and MongoDB under the guidance of active software engineers.',
+    ctaText: 'Apply For Cohort',
+    highlights: [
+      'Beginner Friendly',
+      'Live Mentor Sessions',
+      'Real Projects',
+      'Interview Preparation',
+      '1 Year LMS Access'
+    ],
+    faqs: [
+      { q: 'Who is this program for?', a: 'This program is designed for college students, fresh graduates, beginners, and working professionals looking to transition into web development. No prior coding experience is required.' },
+      { q: 'Can beginners join without prior coding experience?', a: 'Yes. The curriculum starts with the basics of programming syntax and HTML/CSS, then guides you step-by-step to advanced React and backend server deployment.' },
+      { q: 'How are classes conducted?', a: 'Live sessions are conducted mostly in the evening after 6:00 PM. A comprehensive cohort schedule is provided to students upon enrollment. Recorded access, assignment guides, and chat support channels are available throughout the week.' },
+      { q: 'Will I build projects during the course?', a: 'Yes. You will build and deploy several practical web projects, including landing pages, dashboards, and database-backed web applications.' }
+    ]
+  }
+];
+
+if (!localStorage.getItem('beyondskills_blogs')) {
+  setDbItem('beyondskills_blogs', BLOGS);
+}
+
+if (!localStorage.getItem('beyondskills_mentors')) {
+  setDbItem('beyondskills_mentors', MENTORS);
+}
+
+if (!localStorage.getItem('beyondskills_landing_pages')) {
+  setDbItem('beyondskills_landing_pages', INITIAL_LANDING_PAGES);
+}
+

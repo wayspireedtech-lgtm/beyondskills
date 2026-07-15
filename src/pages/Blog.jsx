@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { BLOGS } from '../utils/mockDb';
+import { BLOGS, getDbItem } from '../utils/mockDb';
 import { Calendar, User, ArrowRight, X, BookOpen, Sparkles } from 'lucide-react';
 
 export default function Blog() {
   const [selectedBlog, setSelectedBlog] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  const dynamicBlogs = getDbItem('beyondskills_blogs', BLOGS);
+
   const categories = ['All', 'Artificial Intelligence', 'Web Development', 'Digital Marketing', 'Developer Tips'];
 
   const filteredBlogs = selectedCategory === 'All'
-    ? BLOGS
-    : BLOGS.filter(b => b.category === selectedCategory);
+    ? dynamicBlogs
+    : dynamicBlogs.filter(b => b.category === selectedCategory);
 
   return (
     <div className="text-slate-900 min-h-screen relative pt-12 pb-24">

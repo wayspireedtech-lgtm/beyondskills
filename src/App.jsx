@@ -24,6 +24,7 @@ const TermsAndConditions = React.lazy(() => import('./pages/TermsAndConditions')
 const ReturnRefundPolicy = React.lazy(() => import('./pages/ReturnRefundPolicy'));
 const AiBrochure = React.lazy(() => import('./pages/AiBrochure'));
 const FullStackLandingPage = React.lazy(() => import('./pages/FullStackLandingPage'));
+const CustomLandingPage = React.lazy(() => import('./pages/CustomLandingPage'));
 
 // Premium, theme-matching loading fallback
 function LoadingSpinner() {
@@ -181,6 +182,7 @@ export default function App() {
             <Route path="/course/:courseId" element={<CourseDetails />} />
             <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
             <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
+            <Route path="/lp/:slug" element={<CustomLandingPage />} />
             <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
             <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
             <Route path="/ambassador" element={<CampusAmbassador />} />

@@ -6,7 +6,8 @@ import {
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
   FileSpreadsheet, ClipboardList, CheckSquare, BarChart, Settings, 
   UserPlus, RefreshCw, Eye, Edit2, X, Check, CheckCircle2, ChevronRight,
-  TrendingUp, Calendar, AlertCircle, Sparkles, Phone, ShieldCheck, LogOut
+  TrendingUp, Calendar, AlertCircle, Sparkles, Phone, ShieldCheck, LogOut,
+  FileText, BookOpen
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -18,6 +19,25 @@ export default function AdminDashboard() {
   const [payments, setPayments] = useState([]);
   const [students, setStudents] = useState([]);
   const [crmUsers, setCrmUsers] = useState([]);
+
+  // Blogs, Mentors & Landing Page Editor States
+  const [blogs, setBlogs] = useState([]);
+  const [showAddBlogModal, setShowAddBlogModal] = useState(false);
+  const [showEditBlogModal, setShowEditBlogModal] = useState(false);
+  const [selectedBlogIdx, setSelectedBlogIdx] = useState(null);
+  const [blogForm, setBlogForm] = useState({ title: '', category: 'Artificial Intelligence', author: '', date: '', summary: '', image: '', content: '' });
+
+  const [mentors, setMentors] = useState([]);
+  const [showAddMentorModal, setShowAddMentorModal] = useState(false);
+  const [showEditMentorModal, setShowEditMentorModal] = useState(false);
+  const [selectedMentorIdx, setSelectedMentorIdx] = useState(null);
+  const [mentorForm, setMentorForm] = useState({ name: '', role: '', org: '', exp: '', image: '' });
+
+  const [landingPages, setLandingPages] = useState([]);
+  const [showAddLpModal, setShowAddLpModal] = useState(false);
+  const [showEditLpModal, setShowEditLpModal] = useState(false);
+  const [selectedLpIdx, setSelectedLpIdx] = useState(null);
+  const [lpForm, setLpForm] = useState({ slug: '', courseId: 'full-stack-web', heroHeadline: '', heroSubheadline: '', ctaText: 'Apply Now', highlights: '', faqs: '' });
   
   // Navigation Tabs
   // Active Main Tab: 'analytics' | 'leads_manager' | 'allocation' | 'bda_performance' | 'users'
@@ -121,6 +141,9 @@ export default function AdminDashboard() {
     setLeads(getDbItem('beyondskills_leads', []));
     setPayments(getDbItem('beyondskills_payments', []));
     setStudents(getDbItem('beyondskills_users', []));
+    setBlogs(getDbItem('beyondskills_blogs', []));
+    setMentors(getDbItem('beyondskills_mentors', []));
+    setLandingPages(getDbItem('beyondskills_landing_pages', []));
     
     // Seed default CRM Users if none exist
     let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
@@ -151,6 +174,141 @@ export default function AdminDashboard() {
     localStorage.removeItem('beyondskills_current_user');
     window.dispatchEvent(new Event('auth_change'));
     navigate('/auth');
+  };
+
+  // BLOG CRUD Handlers
+  const handleAddBlog = (e) => {
+    e.preventDefault();
+    const cleanId = blogForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const updated = [...blogs, { 
+      ...blogForm, 
+      id: cleanId, 
+      date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) 
+    }];
+    setBlogs(updated);
+    setDbItem('beyondskills_blogs', updated);
+    setShowAddBlogModal(false);
+    setBlogForm({ title: '', category: 'Artificial Intelligence', author: '', date: '', summary: '', image: '', content: '' });
+  };
+
+  const handleEditBlog = (idx) => {
+    setSelectedBlogIdx(idx);
+    setBlogForm(blogs[idx]);
+    setShowEditBlogModal(true);
+  };
+
+  const handleSaveEditBlog = (e) => {
+    e.preventDefault();
+    const updated = [...blogs];
+    updated[selectedBlogIdx] = blogForm;
+    setBlogs(updated);
+    setDbItem('beyondskills_blogs', updated);
+    setShowEditBlogModal(false);
+    setSelectedBlogIdx(null);
+    setBlogForm({ title: '', category: 'Artificial Intelligence', author: '', date: '', summary: '', image: '', content: '' });
+  };
+
+  const handleDeleteBlog = (idx) => {
+    if (window.confirm('Are you sure you want to delete this blog post?')) {
+      const updated = blogs.filter((_, i) => i !== idx);
+      setBlogs(updated);
+      setDbItem('beyondskills_blogs', updated);
+    }
+  };
+
+  // MENTOR CRUD Handlers
+  const handleAddMentor = (e) => {
+    e.preventDefault();
+    const updated = [...mentors, mentorForm];
+    setMentors(updated);
+    setDbItem('beyondskills_mentors', updated);
+    setShowAddMentorModal(false);
+    setMentorForm({ name: '', role: '', org: '', exp: '', image: '' });
+  };
+
+  const handleEditMentor = (idx) => {
+    setSelectedMentorIdx(idx);
+    setMentorForm(mentors[idx]);
+    setShowEditMentorModal(true);
+  };
+
+  const handleSaveEditMentor = (e) => {
+    e.preventDefault();
+    const updated = [...mentors];
+    updated[selectedMentorIdx] = mentorForm;
+    setMentors(updated);
+    setDbItem('beyondskills_mentors', updated);
+    setShowEditMentorModal(false);
+    setSelectedMentorIdx(null);
+    setMentorForm({ name: '', role: '', org: '', exp: '', image: '' });
+  };
+
+  const handleDeleteMentor = (idx) => {
+    if (window.confirm('Are you sure you want to delete this mentor?')) {
+      const updated = mentors.filter((_, i) => i !== idx);
+      setMentors(updated);
+      setDbItem('beyondskills_mentors', updated);
+    }
+  };
+
+  // LANDING PAGE CRUD Handlers
+  const handleAddLp = (e) => {
+    e.preventDefault();
+    const parsedHighlights = lpForm.highlights.split('\n').filter(h => h.trim() !== '');
+    const parsedFaqs = lpForm.faqs.split('\n\n').map(pair => {
+      const lines = pair.split('\n');
+      return { q: lines[0]?.replace(/^Q:\s*/i, '') || '', a: lines[1]?.replace(/^A:\s*/i, '') || '' };
+    }).filter(f => f.q !== '');
+
+    const updated = [...landingPages, {
+      ...lpForm,
+      highlights: parsedHighlights,
+      faqs: parsedFaqs
+    }];
+    setLandingPages(updated);
+    setDbItem('beyondskills_landing_pages', updated);
+    setShowAddLpModal(false);
+    setLpForm({ slug: '', courseId: 'full-stack-web', heroHeadline: '', heroSubheadline: '', ctaText: 'Apply Now', highlights: '', faqs: '' });
+  };
+
+  const handleEditLp = (idx) => {
+    setSelectedLpIdx(idx);
+    const target = landingPages[idx];
+    setLpForm({
+      ...target,
+      highlights: (target.highlights || []).join('\n'),
+      faqs: (target.faqs || []).map(f => `Q: ${f.q}\nA: ${f.a}`).join('\n\n')
+    });
+    setShowEditLpModal(true);
+  };
+
+  const handleSaveEditLp = (e) => {
+    e.preventDefault();
+    const parsedHighlights = lpForm.highlights.split('\n').filter(h => h.trim() !== '');
+    const parsedFaqs = lpForm.faqs.split('\n\n').map(pair => {
+      const lines = pair.split('\n');
+      return { q: lines[0]?.replace(/^Q:\s*/i, '') || '', a: lines[1]?.replace(/^A:\s*/i, '') || '' };
+    }).filter(f => f.q !== '');
+
+    const updated = [...landingPages];
+    updated[selectedLpIdx] = {
+      ...lpForm,
+      highlights: parsedHighlights,
+      faqs: parsedFaqs
+    };
+    setLandingPages(updated);
+    setDbItem('beyondskills_landing_pages', updated);
+    setShowEditLpModal(false);
+    setSelectedLpIdx(null);
+    setLpForm({ slug: '', courseId: 'full-stack-web', heroHeadline: '', heroSubheadline: '', ctaText: 'Apply Now', highlights: '', faqs: '' });
+  };
+
+  const handleDeleteLp = (idx) => {
+    if (window.confirm('Are you sure you want to delete this landing page config?')) {
+      const updated = landingPages.filter((_, i) => i !== idx);
+      setLandingPages(updated);
+      setDbItem('beyondskills_landing_pages', updated);
+    }
   };
 
   // Check if BDA profile
@@ -713,6 +871,39 @@ export default function AdminDashboard() {
               >
                 <Users className="w-4 h-4" />
                 <span>BDA Performance</span>
+              </button>
+              <button 
+                onClick={() => setActiveMainTab('blogs_manager')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'blogs_manager' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Manage Blogs</span>
+              </button>
+              <button 
+                onClick={() => setActiveMainTab('mentors_manager')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'mentors_manager' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <Award className="w-4 h-4" />
+                <span>Manage Mentors</span>
+              </button>
+              <button 
+                onClick={() => setActiveMainTab('landing_pages_manager')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'landing_pages_manager' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <Globe className="w-4 h-4" />
+                <span>Landing Page Editor</span>
               </button>
               <button 
                 onClick={() => setActiveMainTab('users')} 
@@ -1988,6 +2179,173 @@ export default function AdminDashboard() {
           </div>
         )}
 
+        {/* -------------------- MAIN TAB: MANAGE BLOGS -------------------- */}
+        {activeMainTab === 'blogs_manager' && !isBdaUser && (
+          <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6 text-white animate-fade-in">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">Blog Post Manager</h3>
+              <button 
+                onClick={() => {
+                  setBlogForm({ title: '', category: 'Artificial Intelligence', author: '', date: '', summary: '', image: '', content: '' });
+                  setShowAddBlogModal(true);
+                }}
+                className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Blog Post</span>
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-350 min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                    <th className="py-2.5 px-3">Title</th>
+                    <th className="py-2.5 px-3">Category</th>
+                    <th className="py-2.5 px-3">Author</th>
+                    <th className="py-2.5 px-3">Date</th>
+                    <th className="py-2.5 px-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {blogs.map((b, idx) => (
+                    <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                      <td className="py-3 px-3 font-semibold text-white max-w-xs truncate" title={b.title}>{b.title}</td>
+                      <td className="py-3 px-3">
+                        <span className="text-[9px] font-bold bg-[#2A4BFF]/10 text-brand-cyan border border-brand-cyan/20 px-2.5 py-0.5 rounded uppercase">
+                          {b.category}
+                        </span>
+                      </td>
+                      <td className="py-3 px-3">{b.author}</td>
+                      <td className="py-3 px-3 font-mono text-xs">{b.date}</td>
+                      <td className="py-3 px-3 text-right space-x-2">
+                        <button 
+                          onClick={() => handleEditBlog(idx)}
+                          className="p-1 bg-[#2A4BFF]/10 hover:bg-[#2A4BFF]/25 text-[#0EA5E9] rounded border border-brand-cyan/20 transition-all cursor-pointer inline-flex"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteBlog(idx)}
+                          className="p-1 bg-red-500/10 hover:bg-red-500/25 text-red-400 rounded border border-red-500/25 transition-all cursor-pointer inline-flex"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* -------------------- MAIN TAB: MANAGE MENTORS -------------------- */}
+        {activeMainTab === 'mentors_manager' && !isBdaUser && (
+          <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6 text-white animate-fade-in">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">Mentor Roster Manager</h3>
+              <button 
+                onClick={() => {
+                  setMentorForm({ name: '', role: '', org: '', exp: '', image: '' });
+                  setShowAddMentorModal(true);
+                }}
+                className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Mentor Profile</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {mentors.map((m, idx) => (
+                <div key={idx} className="bg-[#050718] border border-white/5 rounded-2xl p-5 text-center relative group">
+                  <div className="absolute top-4 right-4 flex space-x-1.5">
+                    <button 
+                      onClick={() => handleEditMentor(idx)}
+                      className="p-1.5 bg-[#2A4BFF]/20 hover:bg-[#2A4BFF]/35 text-[#0EA5E9] border border-brand-cyan/25 rounded-lg transition-all cursor-pointer"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteMentor(idx)}
+                      className="p-1.5 bg-red-500/20 hover:bg-red-500/35 text-red-400 border border-red-500/25 rounded-lg transition-all cursor-pointer"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <img src={m.image} alt={m.name} className="w-16 h-16 rounded-full object-cover mx-auto mb-3 border border-white/10" />
+                  <h4 className="font-bold text-sm text-white">{m.name}</h4>
+                  <p className="text-xs text-brand-purple font-medium mt-0.5">{m.role}</p>
+                  <p className="text-[10px] text-slate-400 mt-1">{m.org} • {m.exp} Exp</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* -------------------- MAIN TAB: LANDING PAGE EDITOR -------------------- */}
+        {activeMainTab === 'landing_pages_manager' && !isBdaUser && (
+          <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6 text-white animate-fade-in">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">Landing Page Config Editor</h3>
+              <button 
+                onClick={() => {
+                  setLpForm({ slug: '', courseId: 'full-stack-web', heroHeadline: '', heroSubheadline: '', ctaText: 'Apply Now', highlights: '', faqs: '' });
+                  setShowAddLpModal(true);
+                }}
+                className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all shadow-md flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Landing Page</span>
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-355 min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                    <th className="py-2.5 px-3">Live URL Slug</th>
+                    <th className="py-2.5 px-3">Target Course</th>
+                    <th className="py-2.5 px-3">Hero Headline</th>
+                    <th className="py-2.5 px-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {landingPages.map((lp, idx) => (
+                    <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                      <td className="py-3 px-3 font-mono text-brand-cyan font-bold">
+                        <a href={`/lp/${lp.slug}`} target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center space-x-1.5">
+                          <span>/lp/{lp.slug}</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 inline text-slate-400" />
+                        </a>
+                      </td>
+                      <td className="py-3 px-3 uppercase text-[10px] font-mono text-slate-400">{lp.courseId}</td>
+                      <td className="py-3 px-3 max-w-xs truncate" title={lp.heroHeadline}>{lp.heroHeadline}</td>
+                      <td className="py-3 px-3 text-right space-x-2">
+                        <button 
+                          onClick={() => handleEditLp(idx)}
+                          className="p-1.5 bg-[#2A4BFF]/10 hover:bg-[#2A4BFF]/25 text-[#0EA5E9] rounded border border-brand-cyan/20 transition-all cursor-pointer inline-flex"
+                          title="Edit Landing Page"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteLp(idx)}
+                          className="p-1.5 bg-red-500/10 hover:bg-red-500/25 text-red-400 rounded border border-red-500/25 transition-all cursor-pointer inline-flex"
+                          title="Delete Page"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* -------------------- MODAL: ADD LEAD -------------------- */}
@@ -2418,6 +2776,561 @@ export default function AdminDashboard() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: ADD BLOG POST -------------------- */}
+      {showAddBlogModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 text-white relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setShowAddBlogModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create Blog Post</h3>
+            
+            <form onSubmit={handleAddBlog} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Blog Title</label>
+                  <input 
+                    type="text" required
+                    value={blogForm.title}
+                    onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
+                    placeholder="e.g. Introduction to React 19"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Category</label>
+                  <select 
+                    value={blogForm.category}
+                    onChange={(e) => setBlogForm({ ...blogForm, category: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Developer Tips">Developer Tips</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Author Name</label>
+                  <input 
+                    type="text" required
+                    value={blogForm.author}
+                    onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
+                    placeholder="e.g. Nitin Sir"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Cover Image URL</label>
+                  <input 
+                    type="url" required
+                    value={blogForm.image}
+                    onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                    placeholder="https://images.unsplash.com/..."
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Short Summary</label>
+                <textarea 
+                  required rows={2}
+                  value={blogForm.summary}
+                  onChange={(e) => setBlogForm({ ...blogForm, summary: e.target.value })}
+                  placeholder="Summarize the article in 2 sentences..."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Markdown Content</label>
+                <textarea 
+                  required rows={8}
+                  value={blogForm.content}
+                  onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                  placeholder="Write the full post contents here..."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono leading-relaxed"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Publish Blog Post
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: EDIT BLOG POST -------------------- */}
+      {showEditBlogModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 text-white relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => {
+                setShowEditBlogModal(false);
+                setSelectedBlogIdx(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Edit Blog Post</h3>
+            
+            <form onSubmit={handleSaveEditBlog} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Blog Title</label>
+                  <input 
+                    type="text" required
+                    value={blogForm.title}
+                    onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Category</label>
+                  <select 
+                    value={blogForm.category}
+                    onChange={(e) => setBlogForm({ ...blogForm, category: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="Digital Marketing">Digital Marketing</option>
+                    <option value="Developer Tips">Developer Tips</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Author Name</label>
+                  <input 
+                    type="text" required
+                    value={blogForm.author}
+                    onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Cover Image URL</label>
+                  <input 
+                    type="url" required
+                    value={blogForm.image}
+                    onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Short Summary</label>
+                <textarea 
+                  required rows={2}
+                  value={blogForm.summary}
+                  onChange={(e) => setBlogForm({ ...blogForm, summary: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Markdown Content</label>
+                <textarea 
+                  required rows={8}
+                  value={blogForm.content}
+                  onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono leading-relaxed"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: ADD MENTOR -------------------- */}
+      {showAddMentorModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 text-white relative">
+            <button 
+              onClick={() => setShowAddMentorModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Add Mentor Profile</h3>
+            
+            <form onSubmit={handleAddMentor} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Mentor Name</label>
+                <input 
+                  type="text" required
+                  value={mentorForm.name}
+                  onChange={(e) => setMentorForm({ ...mentorForm, name: e.target.value })}
+                  placeholder="e.g. Sanchit Sir"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Role/Designation</label>
+                  <input 
+                    type="text" required
+                    value={mentorForm.role}
+                    onChange={(e) => setMentorForm({ ...mentorForm, role: e.target.value })}
+                    placeholder="e.g. Director, Web Division"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Experience Duration</label>
+                  <input 
+                    type="text" required
+                    value={mentorForm.exp}
+                    onChange={(e) => setMentorForm({ ...mentorForm, exp: e.target.value })}
+                    placeholder="e.g. 8+ Years"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Background / Company Org</label>
+                <input 
+                  type="text" required
+                  value={mentorForm.org}
+                  onChange={(e) => setMentorForm({ ...mentorForm, org: e.target.value })}
+                  placeholder="e.g. Ex-Microsoft, Founder"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Photo URL</label>
+                <input 
+                  type="url" required
+                  value={mentorForm.image}
+                  onChange={(e) => setMentorForm({ ...mentorForm, image: e.target.value })}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Confirm Add Mentor
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: EDIT MENTOR -------------------- */}
+      {showEditMentorModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 text-white relative">
+            <button 
+              onClick={() => {
+                setShowEditMentorModal(false);
+                setSelectedMentorIdx(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Edit Mentor Profile</h3>
+            
+            <form onSubmit={handleSaveEditMentor} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Mentor Name</label>
+                <input 
+                  type="text" required
+                  value={mentorForm.name}
+                  onChange={(e) => setMentorForm({ ...mentorForm, name: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Role/Designation</label>
+                  <input 
+                    type="text" required
+                    value={mentorForm.role}
+                    onChange={(e) => setMentorForm({ ...mentorForm, role: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Experience Duration</label>
+                  <input 
+                    type="text" required
+                    value={mentorForm.exp}
+                    onChange={(e) => setMentorForm({ ...mentorForm, exp: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Background / Company Org</label>
+                <input 
+                  type="text" required
+                  value={mentorForm.org}
+                  onChange={(e) => setMentorForm({ ...mentorForm, org: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Photo URL</label>
+                <input 
+                  type="url" required
+                  value={mentorForm.image}
+                  onChange={(e) => setMentorForm({ ...mentorForm, image: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: ADD LANDING PAGE -------------------- */}
+      {showAddLpModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 text-white relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setShowAddLpModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create Custom Landing Page</h3>
+            
+            <form onSubmit={handleAddLp} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">URL Slug Path</label>
+                  <input 
+                    type="text" required
+                    value={lpForm.slug}
+                    onChange={(e) => setLpForm({ ...lpForm, slug: e.target.value.toLowerCase().replace(/[^a-z0-9_-]+/g, '-') })}
+                    placeholder="e.g. artificial-intelligence-cohort"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[#0EA5E9]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Target Course Binding</label>
+                  <select 
+                    value={lpForm.courseId}
+                    onChange={(e) => setLpForm({ ...lpForm, courseId: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="full-stack-web">Full Stack Web Development</option>
+                    <option value="artificial-intelligence">Artificial Intelligence & Data Science</option>
+                    <option value="digital-marketing">Digital Marketing Performance</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Hero Title Headline</label>
+                <input 
+                  type="text" required
+                  value={lpForm.heroHeadline}
+                  onChange={(e) => setLpForm({ ...lpForm, heroHeadline: e.target.value })}
+                  placeholder="e.g. Master Practical Artificial Intelligence. Live."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Hero Subheadline</label>
+                <textarea 
+                  required rows={2}
+                  value={lpForm.heroSubheadline}
+                  onChange={(e) => setLpForm({ ...lpForm, heroSubheadline: e.target.value })}
+                  placeholder="Provide a compelling secondary pitch for the cohort..."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">CTA Button Label</label>
+                  <input 
+                    type="text" required
+                    value={lpForm.ctaText}
+                    onChange={(e) => setLpForm({ ...lpForm, ctaText: e.target.value })}
+                    placeholder="e.g. Apply For Cohort"
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Highlights (One highlight per line)</label>
+                <textarea 
+                  required rows={4}
+                  value={lpForm.highlights}
+                  onChange={(e) => setLpForm({ ...lpForm, highlights: e.target.value })}
+                  placeholder="Beginner Friendly&#10;Live Sessions&#10;Real Projects"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">FAQs (Format: Q: Question&#10;A: Answer separated by double newlines)</label>
+                <textarea 
+                  required rows={6}
+                  value={lpForm.faqs}
+                  onChange={(e) => setLpForm({ ...lpForm, faqs: e.target.value })}
+                  placeholder="Q: Who is this program for?&#10;A: Beginners and experts alike.&#10;&#10;Q: How to apply?&#10;A: Fill this form."
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono leading-relaxed"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Create Landing Page Config
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- MODAL: EDIT LANDING PAGE -------------------- */}
+      {showEditLpModal && (
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 text-white relative max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => {
+                setShowEditLpModal(false);
+                setSelectedLpIdx(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Edit Landing Page Config</h3>
+            
+            <form onSubmit={handleSaveEditLp} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">URL Slug Path</label>
+                  <input 
+                    type="text" required
+                    value={lpForm.slug}
+                    onChange={(e) => setLpForm({ ...lpForm, slug: e.target.value.toLowerCase().replace(/[^a-z0-9_-]+/g, '-') })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[#0EA5E9]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Target Course Binding</label>
+                  <select 
+                    value={lpForm.courseId}
+                    onChange={(e) => setLpForm({ ...lpForm, courseId: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="full-stack-web">Full Stack Web Development</option>
+                    <option value="artificial-intelligence">Artificial Intelligence & Data Science</option>
+                    <option value="digital-marketing">Digital Marketing Performance</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Hero Title Headline</label>
+                <input 
+                  type="text" required
+                  value={lpForm.heroHeadline}
+                  onChange={(e) => setLpForm({ ...lpForm, heroHeadline: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Hero Subheadline</label>
+                <textarea 
+                  required rows={2}
+                  value={lpForm.heroSubheadline}
+                  onChange={(e) => setLpForm({ ...lpForm, heroSubheadline: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">CTA Button Label</label>
+                  <input 
+                    type="text" required
+                    value={lpForm.ctaText}
+                    onChange={(e) => setLpForm({ ...lpForm, ctaText: e.target.value })}
+                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Highlights (One highlight per line)</label>
+                <textarea 
+                  required rows={4}
+                  value={lpForm.highlights}
+                  onChange={(e) => setLpForm({ ...lpForm, highlights: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">FAQs (Format: Q: Question&#10;A: Answer separated by double newlines)</label>
+                <textarea 
+                  required rows={6}
+                  value={lpForm.faqs}
+                  onChange={(e) => setLpForm({ ...lpForm, faqs: e.target.value })}
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono leading-relaxed"
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </form>
           </div>
         </div>
       )}

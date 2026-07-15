@@ -1,8 +1,9 @@
 import React from 'react';
 import { Target, Eye, ShieldCheck, Milestone, Calendar, Sparkles } from 'lucide-react';
-import { MENTORS } from '../utils/mockDb';
+import { MENTORS, getDbItem } from '../utils/mockDb';
 
 export default function About() {
+  const dynamicMentors = getDbItem('beyondskills_mentors', MENTORS);
   const coreValues = [
     { title: 'Industry Relevance', desc: 'Bridging the gap between theory and actual corporate processes through practical project tasks.', icon: Target },
     { title: 'Expert Guidance', desc: 'Direct feedback and live sessions run by managers with 5+ years of active market exposure.', icon: ShieldCheck },
@@ -122,7 +123,7 @@ export default function About() {
         <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-slate-900 mb-4">Our Leadership</h2>
         <p className="text-center text-slate-500 text-xs sm:text-sm mb-12">Experienced industry directors steering the Agency and Academy projects.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          {MENTORS.map((m, idx) => (
+          {dynamicMentors.map((m, idx) => (
             <div key={idx} className="text-center">
               <img src={m.image} alt={m.name} className="w-28 h-28 rounded-full object-cover mx-auto mb-4 border border-slate-200" />
               <h4 className="font-bold text-slate-900 text-sm">{m.name}</h4>
