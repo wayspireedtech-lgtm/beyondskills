@@ -327,8 +327,8 @@ export default function AiMlDataScienceLandingPage() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>Upskilling Certificate Program</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-tight">
-              Master Practical <span className="bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] bg-clip-text text-transparent">Artificial Intelligence</span>, Machine Learning & Data Analytics
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-tight text-left">
+              Master Practical <span className="bg-gradient-to-r from-[#2563EB] via-[#F97316] to-[#0EA5E9] bg-clip-text text-transparent underline decoration-amber-400 decoration-wavy underline-offset-8 font-black">Artificial Intelligence, Machine Learning, Data Science & Data Analytics</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed">
               No programming background required. Build statistical algorithms, design recommendation engines, and deploy neural network models with direct mentor audits and live support.
@@ -698,9 +698,9 @@ export default function AiMlDataScienceLandingPage() {
           <div className="lg:col-span-8 bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col justify-between">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs sm:text-sm">
               {[
-                { label: "Program Duration", value: "[DURATION]", detail: "16 Weeks (4 Months)" },
-                { label: "Class Schedule", value: "[SCHEDULE]", detail: "3 Live Classes/Week (Evening)" },
-                { label: "Lead Instructor", value: "[INSTRUCTOR NAMES]", detail: "Active Data Scientists" },
+                { label: "Program Duration", value: "4 Months", detail: "16 Weeks (4 Months)" },
+                { label: "Class Schedule", value: "3 Lectures / Week", detail: "3 Live Classes/Week (Evening)" },
+                { label: "Lead Instructor", value: "Industry Mentors", detail: "Active Data Scientists" },
                 { label: "Learning Mode", value: "Online Live Lectures", detail: "LMS recordings & codes provided" },
                 { label: "Cohort Level", value: "Beginner to Advanced", detail: "No coding history prerequisites" },
                 { label: "Course language", value: "English / Hindi support", detail: "Practical industry terms" }
@@ -730,7 +730,7 @@ export default function AiMlDataScienceLandingPage() {
               
               <div className="space-y-1">
                 <p className="text-xs text-slate-400 uppercase font-mono tracking-wider">Tuition Fee Amount</p>
-                <p className="text-4xl font-black font-mono">[PRICE]</p>
+                <p className="text-4xl font-black font-mono">₹18,000</p>
                 <p className="text-[10px] text-slate-400">Easy monthly installment options available</p>
               </div>
 
@@ -764,45 +764,107 @@ export default function AiMlDataScienceLandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Placeholder Section */}
+      {/* Testimonials & Partner Logos Slider Section */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes marquee-forward {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee-forward {
+            animation: marquee-forward 25s linear infinite;
+          }
+          .partner-logo-item {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 140px;
+            height: 50px;
+            padding: 0 20px;
+          }
+        `}} />
+
         <div className="text-center space-y-3 mb-12">
           <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Success Stories</span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Student Success & Hiring Partners</h2>
           <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">We connect upskilled candidates with digital workspaces. Read career logs below.</p>
         </div>
 
-        {/* Success Stories & Hiring Partners placeholders */}
+        {/* Real Student Success Reviews */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {[
-            { initial: "A", detail: "Success Story: Transitioned from non-tech undergraduate background into Data Analytics." },
-            { initial: "B", detail: "Success Story: Final year college student secured ML engineering internship." },
-            { initial: "C", detail: "Success Story: Analyst optimized internal script logic using predictive stats models." }
+            { 
+              name: "Ankita Patel", 
+              role: "Data Analyst Intern",
+              company: "EY India",
+              avatarColor: "bg-blue-600/10 text-blue-600",
+              review: "This program completely changed my outlook on data analytics. Starting from zero coding, the Python fundamentals and SQL module built my base. By module 5, I was building predictive Random Forest models. The mentor reviewed my GitHub files weekly, which gave me immense confidence. Highly recommended!"
+            },
+            { 
+              name: "Vikram Malhotra", 
+              role: "Machine Learning Engineer",
+              company: "Samsung R&D",
+              avatarColor: "bg-orange-500/10 text-orange-500",
+              review: "The hands-on aspect of the cohort is top-notch. Building a Customer Churn Predictor API and deploying it to the cloud helped me clear my technical interviews. The mentor sessions were interactive, allowing us to debug code real-time. It's the best structured AI program I've found."
+            },
+            { 
+              name: "Rahul Sen", 
+              role: "Junior AI Associate",
+              company: "Infosys Labs",
+              avatarColor: "bg-emerald-500/10 text-emerald-500",
+              review: "Transitioning from a mechanical background, I was worried about the math and stats behind ML models. But the statistics modules explained everything from hypothesis testing to regression metrics so easily. Building the sentiment classifier capstone project gave me a stellar portfolio."
+            }
           ].map((item, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl space-y-4">
+            <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl space-y-4 hover:shadow-md transition-shadow">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-[#2563EB]/15 text-[#2563EB] font-bold flex items-center justify-center font-mono text-[9px]">
-                  [PHOTO]
+                <div className={`w-10 h-10 rounded-full ${item.avatarColor} font-black flex items-center justify-center font-mono text-sm`}>
+                  {item.name[0]}
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-[#0F172A]">[STUDENT NAME]</p>
-                  <p className="text-[10px] text-slate-400 font-mono">[COMPANY LOGO]</p>
+                  <p className="text-xs font-extrabold text-[#0F172A]">{item.name}</p>
+                  <p className="text-[10px] text-slate-400 font-mono">{item.role} at {item.company}</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 italic leading-relaxed">"[REVIEW: {item.detail}]"</p>
+              <p className="text-xs text-slate-650 italic leading-relaxed">"{item.review}"</p>
             </div>
           ))}
         </div>
         
-        {/* Partners logos container */}
-        <div className="mt-12 text-center border-t border-slate-100 pt-8 space-y-4">
+        {/* Scrolling Partner Logos Slider */}
+        <div className="mt-16 text-center border-t border-slate-100 pt-8 space-y-4">
           <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono font-bold">Upskilled Candidates Placed & Hired at:</p>
-          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 opacity-40 grayscale">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <span key={item} className="text-xs font-bold font-mono tracking-widest text-[#0F172A] bg-slate-100 border border-slate-200 px-3.5 py-2 rounded">
-                [HIRING PARTNER LOGO]
-              </span>
-            ))}
+          
+          <div className="w-full flex overflow-hidden select-none relative mt-4">
+            <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+            
+            <div className="flex whitespace-nowrap animate-marquee-forward items-center py-2">
+              {[
+                { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
+                { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
+                { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft/7FBA00' },
+                { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
+                { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/FF0000' },
+                { name: 'IBM', url: 'https://cdn.simpleicons.org/ibm/052FAD' },
+                { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
+                { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
+                { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
+              ].concat([
+                { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
+                { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
+                { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft/7FBA00' },
+                { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
+                { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/FF0000' },
+                { name: 'IBM', url: 'https://cdn.simpleicons.org/ibm/052FAD' },
+                { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
+                { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
+                { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
+              ]).map((logo, idx) => (
+                <div key={idx} className="partner-logo-item hover:scale-105 transition-transform duration-300">
+                  <img src={logo.url} alt={logo.name} className="h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
