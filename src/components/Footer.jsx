@@ -88,7 +88,7 @@ export default function Footer() {
           {/* Column 3: Academy Courses */}
           <div>
             <h3 className="text-slate-200 font-bold text-sm tracking-widest uppercase mb-6 border-l-2 border-brand-purple pl-3">
-              Training Program
+              Upskilling Programs
             </h3>
             <ul className="space-y-4 text-sm text-slate-400">
               <li>

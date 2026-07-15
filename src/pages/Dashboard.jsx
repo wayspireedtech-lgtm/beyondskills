@@ -85,7 +85,7 @@ export default function Dashboard() {
                 <span className="text-[10px] font-bold text-[#4ADE80] bg-[#4ADE80]/10 border border-[#4ADE80]/30 px-3 py-1 rounded-full uppercase tracking-widest">Enrollment Status: Active</span>
                 <h1 className="logo-font text-2.5xl sm:text-3xl font-extrabold text-slate-900 mt-2">Enrollment Successful!</h1>
                 <p className="text-xs text-slate-550 leading-relaxed max-w-md mx-auto">
-                  Your payment has been successfully verified. You have been granted lifetime access to the following professional training program(s).
+                  Your payment has been successfully verified. You have been granted lifetime access to the following professional upskilling program(s).
                 </p>
               </div>
 

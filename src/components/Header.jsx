@@ -104,7 +104,7 @@ export default function Header() {
                  onMouseEnter={() => setCoursesDropdown(true)}
                  onMouseLeave={() => setCoursesDropdown(false)}>
               <button className={`flex items-center space-x-1 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none ${location.pathname.startsWith('/courses') ? 'text-white bg-brand-purple shadow-md shadow-brand-purple/20' : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60'}`}>
-                <span>Training Program</span>
+                <span>Upskilling Programs</span>
                 <ChevronDown className="w-3.5 h-3.5" />
               </button>
                           {coursesDropdown && (
@@ -218,7 +218,7 @@ export default function Header() {
           </Link>
 
           <div className="px-3 py-1 text-[11px] font-bold text-brand-purple tracking-widest uppercase">
-            Training Program
+            Upskilling Programs
           </div>
           <Link to="/courses" className="block px-6 py-1.5 text-sm hover:text-brand-purple text-slate-600">
             All Certification Courses
