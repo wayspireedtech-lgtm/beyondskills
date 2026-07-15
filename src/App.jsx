@@ -16,6 +16,7 @@ import Verification from './pages/Verification';
 import AdminDashboard from './pages/AdminDashboard';
 import CourseDetails from './pages/CourseDetails';
 import FullStackProgram from './pages/FullStackProgram';
+import AiDataScienceProgram from './pages/AiDataScienceProgram';
 import CampusAmbassador from './pages/CampusAmbassador';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -159,6 +160,7 @@ export default function App() {
           <Route path="/course/:courseId" element={<CourseDetails />} />
           <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
           <Route path="/programs/full-stack-web-development" element={<FullStackProgram />} />
+          <Route path="/programs/ai-data-science" element={<AiDataScienceProgram />} />
           <Route path="/ambassador" element={<CampusAmbassador />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
