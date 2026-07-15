@@ -24,6 +24,7 @@ const TermsAndConditions = React.lazy(() => import('./pages/TermsAndConditions')
 const ReturnRefundPolicy = React.lazy(() => import('./pages/ReturnRefundPolicy'));
 const AiBrochure = React.lazy(() => import('./pages/AiBrochure'));
 const FullStackLandingPage = React.lazy(() => import('./pages/FullStackLandingPage'));
+const AiMlDataScienceLandingPage = React.lazy(() => import('./pages/AiMlDataScienceLandingPage'));
 const CustomLandingPage = React.lazy(() => import('./pages/CustomLandingPage'));
 
 // Premium, theme-matching loading fallback
@@ -59,7 +60,7 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   
   // Hide headers/footers on specific onboarding/checkout paths if desired
-  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/admin'].includes(location.pathname) || location.pathname.includes('/brochure');
+  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/ai-ml-data-science-landing-page', '/admin'].includes(location.pathname) || location.pathname.includes('/brochure');
   
   return (
     <div id="glow-bg-container" className="flex flex-col min-h-screen bg-white text-slate-900 relative">
@@ -182,6 +183,7 @@ export default function App() {
             <Route path="/course/:courseId" element={<CourseDetails />} />
             <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
             <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
+            <Route path="/ai-ml-data-science-landing-page" element={<AiMlDataScienceLandingPage />} />
             <Route path="/lp/:slug" element={<CustomLandingPage />} />
             <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
             <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
