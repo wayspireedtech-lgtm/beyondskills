@@ -380,7 +380,7 @@ const DEFAULT_METADATA = {
   ]
 };
 
-const BOOKLET_COURSES = ['artificial-intelligence', 'data-science', 'data-analytics', 'hr-mgmt', 'cyber-security', 'machine-learning'];
+const BOOKLET_COURSES = ['artificial-intelligence', 'data-science', 'data-analytics', 'hr-mgmt', 'cyber-security', 'machine-learning', 'cloud-computing', 'stock-market', 'digital-marketing-cert', 'full-stack-web'];
 
 export default function AiBrochure() {
   const navigate = useNavigate();
@@ -450,27 +450,6 @@ export default function AiBrochure() {
     navigate(`/checkout?courseId=${course.id}&mode=mentor-led`);
   };
 
-  const handleDownloadBrochure = () => {
-    const mapping = {
-      'artificial-intelligence': 'ai-ml.pdf',
-      'machine-learning': 'ai-ml.pdf',
-      'data-science': 'data-science-analytics.pdf',
-      'data-analytics': 'data-science-analytics.pdf',
-      'cyber-security': 'cyber-security.pdf',
-      'hr-mgmt': 'hr-mgmt.pdf',
-      'cloud-computing': 'cloud-computing.pdf',
-      'stock-market': 'stock-market.pdf',
-      'full-stack-web': 'full-stack-web.pdf',
-      'digital-marketing-cert': 'digital-marketing-cert.pdf'
-    };
-    const filename = mapping[course.id] || `${course.id}.pdf`;
-    const link = document.createElement('a');
-    link.href = `/brochures/${filename}`;
-    link.download = `${course.title.replace(/[^a-zA-Z0-9]/g, '_')}_Brochure.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   // Helper lookup function to render dynamic detailed syllabus for Pages 8-12
   const getSyllabusContent = (cid, page) => {
@@ -1002,6 +981,434 @@ export default function AiBrochure() {
           sec3Title: "3. Capstone Real-world Implementation",
           sec3Desc: "Final capstone project deploying an end-to-end machine learning model on cloud environments."
         }
+      },
+      'cloud-computing': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Introduction & Service Models",
+          title: "Cloud Fundamentals & Infrastructure Models",
+          desc: "Understand cloud service paradigms, resource scales, and shared security divisions.",
+          sec1Title: "1. Cloud Fundamentals",
+          sec1Items: [
+            "Introduction to Cloud Computing: Service models (IaaS, PaaS, SaaS)",
+            "What it is and why it matters in modern technology",
+            "Key benefits: scalability, cost efficiency, flexibility, security",
+            "High availability and global deployment parameters"
+          ],
+          sec2Title: "2. Infrastructure Basics",
+          sec2Items: [
+            "Difference between public, private, and hybrid clouds",
+            "Understanding cloud elasticity and billing trigger loops",
+            "Virtualization platforms and bare metal structures",
+            "Shared responsibility security models"
+          ],
+          sec3Title: "3. Interactive Doubt Clearing",
+          sec3Desc: "Dedicated sessions to address course-related doubts, service setups, and resource groups."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Azure Basics & Core Networks",
+          title: "Azure Cloud Console & VNet Configuration",
+          desc: "Deploy Microsoft subscriptions, manage resource groups, and route virtual private networks.",
+          sec1Title: "1. Microsoft Azure Setup",
+          sec1Items: [
+            "Introduction to Microsoft Azure: Overview & capabilities",
+            "Exploring Azure services: service tour and practical use cases",
+            "Managing Azure Subscriptions: Setup and access control",
+            "Azure Portal dashboards & CLI configuration"
+          ],
+          sec2Title: "2. Azure Networking",
+          sec2Items: [
+            "Virtual Networks (VNet) in Azure: Concepts & configuration",
+            "Understanding Azure VPN: Purpose and implementation",
+            "Subnetting, routing tables, and gateway configurations",
+            "Azure regions, geographic distribution, and availability zones"
+          ],
+          sec3Title: "3. Connectivity Labs",
+          sec3Desc: "Hands-on labs configuring virtual networks, remote access tunnels, and subnet permissions."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Advanced Security & Traffic",
+          title: "Global Traffic Routing & Network Firewalls",
+          desc: "Implement load balancing, register DNS paths, and write network filter policies (NSGs).",
+          sec1Title: "1. Traffic Routing & DNS",
+          sec1Items: [
+            "Azure Load Balancer: Traffic distribution & high availability",
+            "Azure Application Gateway: Web traffic management & security",
+            "Azure Traffic Manager: Global traffic routing",
+            "Azure DNS: Domain management and name resolution"
+          ],
+          sec2Title: "2. Network Security",
+          sec2Items: [
+            "Implementing N-Tier architecture design & best practices",
+            "Network Security Groups (NSGs): Configuration & access control",
+            "Application Security Groups (ASGs) configurations",
+            "Configuring public/private endpoints"
+          ],
+          sec3Title: "3. Infrastructure Security",
+          sec3Desc: "Deploying NSG rule matrix filters, load balancer listeners, and domain routes."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Compute Services & Storage",
+          title: "Azure Virtual Machines & Database Architectures",
+          desc: "Provision virtual machines, host APIs in app containers, and configure Blob and SQL storage.",
+          sec1Title: "1. Azure Compute Nodes",
+          sec1Items: [
+            "Virtual Machines and Containers in Azure: Deployment & management",
+            "Azure App Service: Hosting web apps & backend REST APIs",
+            "Serverless computing in Azure: Functions & event architectures",
+            "Azure Kubernetes Service (AKS): Container orchestration"
+          ],
+          sec2Title: "2. Azure Cloud Storage",
+          sec2Items: [
+            "Overview of Azure Storage: Architecture, limits, and use cases",
+            "Types: Blob (unstructured), File (shares), Queue, Disk options",
+            "Azure SQL Database: Managed relational database services",
+            "Azure Cosmos DB: Globally distributed database"
+          ],
+          sec3Title: "3. Storage Management",
+          sec3Desc: "Managing files inside Azure Storage Explorer, configuring auto-scaling compute sets, and backup points."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Security, Governance & Backup",
+          title: "Azure Identity IAM & Backup Recoveries",
+          desc: "Audit role-based permissions (RBAC), run ARM template automations, and plan disaster backups.",
+          sec1Title: "1. Governance & Compliance",
+          sec1Items: [
+            "Identity & Access Management (IAM): Role-Based Access Control",
+            "Data Encryption: At-rest, In-transit, and key vault secrets",
+            "Azure Policy: Enforcing organizational standards",
+            "Azure Blueprints & Azure Compliance Manager guidelines"
+          ],
+          sec2Title: "2. Backup & ML Introduction",
+          sec2Items: [
+            "Azure Backup and recovery solutions & scheduling backups",
+            "Azure Resource Manager (ARM) templates & automated deployment",
+            "Overview of Azure Machine Learning and cost optimization",
+            "Azure Service Health: Alerts, insights, and issues management"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Configure ARM templates, deploy secure database networks, and implement backup strategies."
+        }
+      },
+      'stock-market': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Market Architecture & Trading Basics",
+          title: "Financial Markets & Order Operations",
+          desc: "Analyze stock exchanges, understand regulatory margins, and execute limits/stop-losses.",
+          sec1Title: "1. Market Structure",
+          sec1Items: [
+            "Overview of financial markets: stock, bond, commodity markets",
+            "Key participants: investors, traders, brokers, regulators (SEBI)",
+            "Understanding stock exchanges: NSE, BSE, NYSE, NASDAQ",
+            "Stock market indices: Nifty 50, Sensex, S&P 500, Dow Jones"
+          ],
+          sec2Title: "2. Trading Operations",
+          sec2Items: [
+            "What is a stock? Common vs Preferred shares",
+            "How to buy and sell: market, limit, stop-loss orders",
+            "Brokerage accounts: types and setup procedures",
+            "Introduction to trading platforms, terminal interfaces, and margins"
+          ],
+          sec3Title: "3. Execution Labs",
+          sec3Desc: "Simulating order placements, managing margins, and navigating trading terminals."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Fundamental & Technical Analysis",
+          title: "Equity Valuations & Technical Indicators",
+          desc: "Audit corporate balance sheets, read P/E ratios, draw trendlines, and configure RSI/MACD charts.",
+          sec1Title: "1. Fundamental Analysis",
+          sec1Items: [
+            "Financial statements: income statements & balance sheets",
+            "Cash flow statements and earnings reports",
+            "Key financial ratios: P/E, PEG, ROE, ROCE, Debt-to-Equity",
+            "Analyzing corporate performances & industry trends"
+          ],
+          sec2Title: "2. Technical Analysis",
+          sec2Items: [
+            "Introduction to technical analysis and charting platforms",
+            "Chart types: Line, Bar, and Candlestick patterns",
+            "Key indicators: Moving Averages, RSI, MACD, Bollinger Bands",
+            "Understanding support & resistance levels, trendlines, and volumes"
+          ],
+          sec3Title: "3. Research Diagnostics",
+          sec3Desc: "Analyzing balance sheets, identifying chart trends, and backtesting indicator parameters."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Investment Strategies & Risk Management",
+          title: "Investment Styles & Portfolio Construction",
+          desc: "Formulate compounding portfolios, allocate assets, and manage risk position sizing.",
+          sec1Title: "1. Investment Strategies",
+          sec1Items: [
+            "Value investing, growth investing, and dividend income styles",
+            "Active vs passive investing: Index funds & ETFs",
+            "Long-term vs short-term compounding strategies",
+            "Developing a structured investment process"
+          ],
+          sec2Title: "2. Risk & Portfolio Diversification",
+          sec2Items: [
+            "Understanding risk and return parameters in investing",
+            "Asset allocation and constructing diversified portfolios",
+            "Position sizing logic and limiting single-stock exposures",
+            "Mitigating systemic vs non-systemic risk vectors"
+          ],
+          sec3Title: "3. Portfolio Allocations",
+          sec3Desc: "Designing custom asset allocation matrices and backtesting historical portfolios."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Derivatives & Market Psychology",
+          title: "Options Derivatives & Behavioral Finance",
+          desc: "Study options calls/puts, structure covered hedges, and analyze investor biases.",
+          sec1Title: "1. Derivatives & Hedging",
+          sec1Items: [
+            "Introduction to derivatives: Options, Futures, and CFDs",
+            "Option contracts: Calls, Puts, Strike prices, and Expiry dates",
+            "Basic options strategies: Covered calls & Protective puts",
+            "Understanding ETFs, mutual funds, and alternative assets"
+          ],
+          sec2Title: "2. Behavioral Finance",
+          sec2Items: [
+            "Introduction to behavioral finance: cognitive biases",
+            "Common biases: overconfidence, herd behavior, loss aversion",
+            "Market sentiment, fear & greed index, and panic cycles",
+            "Identifying psychological patterns in trading decisions"
+          ],
+          sec3Title: "3. Derivatives Execution",
+          sec3Desc: "Simulating option call/put strategies and calculating risk-to-reward ratios."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Regulations, Ethics & Capstone",
+          title: "Regulatory Compliance & Equity Research Capstone",
+          desc: "Inspect SEBI guidelines, prevent manipulation, and compile a stock research evaluation portfolio.",
+          sec1Title: "1. Market Regulations",
+          sec1Items: [
+            "Regulatory bodies: SEBI, SEC, FINRA rules and mandates",
+            "Understanding market manipulation and pump-and-dump checks",
+            "Insider trading regulations and corporate governance ethics",
+            "Risk disclosures and investor protection guidelines"
+          ],
+          sec2Title: "2. Capstone Research",
+          sec2Items: [
+            "Analyzing a selected stock's financials and chart patterns",
+            "Creating a mock paper-trading investment portfolio",
+            "Integrating technical overlays with fundamental valuation models",
+            "Peer-reviewing valuation reports and trading system logic"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Presenting a detailed equity research report and mock portfolio performance logs."
+        }
+      },
+      'digital-marketing-cert': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Introduction & Marketing Funnels",
+          title: "Digital Marketing Funnels & Brand Positionings",
+          desc: "Design target customer profiles, map buyer journeys, and study standard marketing metrics (CAC).",
+          sec1Title: "1. Digital Landscape",
+          sec1Items: [
+            "Understanding core concepts & scope of Digital Marketing",
+            "Traditional vs Digital Marketing, and customer behaviors",
+            "Market segmentation, target customer profiling, and positioning",
+            "The 4Ps of marketing: Product, Price, Place, and Promotion"
+          ],
+          sec2Title: "2. Funnels & Journeys",
+          sec2Items: [
+            "Marketing Funnel: Awareness, Interest, Desire, Action",
+            "Customer journey mapping: From awareness to retention",
+            "Formulating cross-channel acquisition strategies",
+            "KPIs for tracking customer acquisition costs (CAC)"
+          ],
+          sec3Title: "3. Campaigns Design",
+          sec3Desc: "Designing customer persona avatars and mapping multi-channel campaign funnels."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • WordPress Branding & Search Engine SEO",
+          title: "WordPress Web Branding & SEO Optimization",
+          desc: "Host WordPress websites, optimize on-page meta tags, audit technical schemas, and write keywords.",
+          sec1Title: "1. Website Branding",
+          sec1Items: [
+            "Brand identity building: Logo, colors, voice, and assets",
+            "WordPress development: Domain registration & hosting setups",
+            "Building responsive, SEO-friendly websites on WordPress",
+            "Storytelling in digital branding to connect with audiences"
+          ],
+          sec2Title: "2. Search Engine Optimization (SEO)",
+          sec2Items: [
+            "Keyword research: short-tail, long-tail, and search intent",
+            "On-page SEO: Content optimization, meta tags, and alt text",
+            "Technical SEO: Site speed, sitemaps, indexability, schemas",
+            "Off-page SEO: Link building, backlinks, and local citations"
+          ],
+          sec3Title: "3. SEO Auditing Labs",
+          sec3Desc: "Running keyword research with SEO tools and auditing a page's technical parameters."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Paid Ads, Google PPC & Analytics",
+          title: "Google Search PPC Ads & Google Analytics GA4",
+          desc: "Configure search groups, launch video ads, deploy GA4 custom pixels, and analyze traffic logs.",
+          sec1Title: "1. Google PPC Ads",
+          sec1Items: [
+            "Introduction to Google Ads: Overview of PPC advertising",
+            "Campaign types: Search, Display, Video, Shopping, and PMax",
+            "Google Ad group structuring, bidding models, and quality score",
+            "Ad copies creation, extensions, and landing page conversions"
+          ],
+          sec2Title: "2. Google Analytics (GA4)",
+          sec2Items: [
+            "Analytics setup: Configuring Google Analytics (GA4) properties",
+            "Custom tracking codes deployment and event tracking parameters",
+            "Metrics audit: Traffic source, conversion rates, and bounce rates",
+            "Cohort analysis, funnel visualizations, and ROI calculations"
+          ],
+          sec3Title: "3. Telemetry Ad Reports",
+          sec3Desc: "Simulating A/B copy tests, auditing tracking codes, and designing dashboards."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Social Media Optimization & Meta Ads",
+          title: "Social Media Optimization & Meta Campaign Manager",
+          desc: "Draft content calendars, launch Facebook/Instagram ads, build custom audiences, and deploy Meta pixels.",
+          sec1Title: "1. Organic Social Media (SMO)",
+          sec1Items: [
+            "Profile creation and search optimization across platform indexes",
+            "Trending hashtag strategies and organic discovery hacks",
+            "Content planning and structuring social calendars",
+            "Short-form video tactics, influencer reviews, and outreach"
+          ],
+          sec2Title: "2. Meta Ads (FB & IG)",
+          sec2Items: [
+            "Meta Ad Manager: Setting up business managers and ad sets",
+            "Audience targeting: Demographics, custom and lookalike segments",
+            "Facebook/Instagram ads: Video, image, carousel, lead ads",
+            "Deploying Meta pixels to trace visitor conversions and retarget"
+          ],
+          sec3Title: "3. Audience Targeting Labs",
+          sec3Desc: "Installing Meta pixels, building custom custom audiences, and auditing ad ROI."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Email Automation, Affiliate & Reputation",
+          title: "Email Marketing Automations & Growth Capstones",
+          desc: "Build database lists, set up drip sequences, manage ORM reviews, and analyze ad campaign metrics.",
+          sec1Title: "1. Email Automations",
+          sec1Items: [
+            "Building lists: opt-ins, lead magnets, and databases",
+            "Campaign execution in Mailchimp & HubSpot platforms",
+            "Writing engaging subject lines and setting up drip schedules",
+            "Analyzing metrics: open rates, CTRs, and unsubscribe records"
+          ],
+          sec2Title: "2. Affiliate & ORM",
+          sec2Items: [
+            "Affiliate marketing models: CPA, CPC, CPL systems",
+            "Online Reputation Management (ORM): Brand monitoring reviews",
+            "Content marketing strategy: Content pillars & planning",
+            "Statutory guidelines for digital ads disclosures"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Final capstone project deploying integrated email drip sequences and analyzing ad spend logs."
+        }
+      },
+      'full-stack-web': {
+        8: {
+          module: "Module 1", duration: "Weeks 1-2 • Frontend HTML & Basic CSS",
+          title: "Web Architecture, Semantic HTML & CSS Basics",
+          desc: "Write semantic layout code, build forms with inputs, and apply basic typography/dimension styling.",
+          sec1Title: "1. Web Architecture",
+          sec1Items: [
+            "How websites work: Client-server architecture and requests",
+            "HTML structure: Document setup, head, body, semantics",
+            "HTML tags: Forms, input fields, tables, lists, validation",
+            "Responsive design concepts and mobile-first viewpoints"
+          ],
+          sec2Title: "2. CSS Fundamentals",
+          sec2Items: [
+            "Introduction to CSS: Inline, internal, and external styles",
+            "Selectors: class, ID, pseudo-selectors, parent-child structures",
+            "CSS Box Model: Margins, padding, borders, dimensions",
+            "Styling elements: colors, gradients, backgrounds, typography"
+          ],
+          sec3Title: "3. Code Layouts Labs",
+          sec3Desc: "Building semantic profile pages and styling forms with CSS layouts."
+        },
+        9: {
+          module: "Module 2", duration: "Weeks 3-5 • Responsive CSS & Javascript Basics",
+          title: "Responsive Flex/Grid & JS Variables/Loops",
+          desc: "Implement CSS flexbox/grids, write Javascript control loops, and trigger DOM element select modifications.",
+          sec1Title: "1. Responsive CSS",
+          sec1Items: [
+            "Advanced CSS layouts: Flexbox alignment parameters",
+            "CSS Grid systems for multi-dimensional layouts",
+            "CSS transitions, keyframe animations, and transformations",
+            "Tailwind CSS utility setups and configuration checks"
+          ],
+          sec2Title: "2. Javascript Fundamentals",
+          sec2Items: [
+            "Variables & Data types: let, const, arrays, objects",
+            "Operators, loops (for/while), conditional statements",
+            "Functions: Arrow functions, return scopes, closures",
+            "DOM Manipulation: Selecting elements, changing content/styles"
+          ],
+          sec3Title: "3. Interactive Actions",
+          sec3Desc: "Dedicated doubt clearing sessions on JavaScript functions and DOM event listener triggers."
+        },
+        10: {
+          module: "Module 3", duration: "Weeks 6-7 • Advanced JS & React Component Basics",
+          title: "Async Javascript & React.js State Basics",
+          desc: "Write async promises, validate forms data, configure local storage, and study React JSX setups.",
+          sec1Title: "1. Advanced JS",
+          sec1Items: [
+            "Asynchronous JS: Callbacks, Promises, Async/Await",
+            "Event handling, bubbling, and forms input validations",
+            "Cookies, local storage, and session token storage",
+            "Built-in objects: Date, Math, JSON parsing methods"
+          ],
+          sec2Title: "2. React.js Component Basics",
+          sec2Items: [
+            "Introduction to React.js and Virtual DOM principles",
+            "React component architecture, JSX parameters, and imports",
+            "Passing parameters through React props, conditional rendering",
+            "State management: useState and simple event loops"
+          ],
+          sec3Title: "3. Component Designs",
+          sec3Desc: "Constructing reusable UI cards, mapping arrays into lists, and tracking state triggers."
+        },
+        11: {
+          module: "Module 4", duration: "Weeks 8-10 • Advanced React, APIs & Toolings",
+          title: "React Hooks, Dynamic Routes & REST API Fetching",
+          desc: "Execute useEffect hooks, setup client paths with Router, and connect elements with backend REST endpoints.",
+          sec1Title: "1. React Hooks & Router",
+          sec1Items: [
+            "React hooks lifecycle tracking: useEffect, useRef",
+            "React Router routing setup: Routes, Route, Link pathing",
+            "Context API for global state variables management",
+            "Optimizing React rendering performance blocks"
+          ],
+          sec2Title: "2. API Data Handling",
+          sec2Items: [
+            "Fetching REST API endpoints using Axios & Fetch options",
+            "Handling loading and error alerts states in components",
+            "Formik and validations libraries for forms data checks",
+            "Testing components using React Testing Library"
+          ],
+          sec3Title: "3. Integrated API Labs",
+          sec3Desc: "Connecting React frontend panels with external REST JSON endpoints."
+        },
+        12: {
+          module: "Module 5", duration: "Weeks 11-12 • Node, Express, MongoDB & Auth",
+          title: "Node Server APIs, MongoDB Atlas & JWT Security",
+          desc: "Build backend Express routes, query database documents, configure JWT logins, and deploy capstones.",
+          sec1Title: "1. Node.js & Express REST APIs",
+          sec1Items: [
+            "Node.js server setups, npm packages management",
+            "Express.js routes parameters, request/response models",
+            "Creating custom middleware structures for requests",
+            "Git version control: branching, merging, GitHub workflows"
+          ],
+          sec2Title: "2. Database Integration & Auth",
+          sec2Items: [
+            "MongoDB Atlas cloud clusters & MongoDB queries (CRUD)",
+            "Relational MySQL queries: SELECT, joins, schemas",
+            "Security: Bcrypt password hashing & JWT tokens",
+            "Connecting frontend inputs with backend REST routes"
+          ],
+          sec3Title: "3. Capstone Real-world Implementation",
+          sec3Desc: "Deploying a full stack application to cloud servers (Vercel/Render) with MongoDB databases."
+        }
       }
     };
 
@@ -1044,6 +1451,26 @@ export default function AiBrochure() {
         { label: "ML Platform Market size", percent: 88, detail: "Enterprise training pipelines expanding rapidly" },
         { label: "Algorithm Hiring Demands", percent: 82, detail: "Surge in requirements for tree-based ensemble specialists" },
         { label: "Enterprise ML Adaptations", percent: 75, detail: "Platforms running active ML pipelines to predict behaviors" }
+      ],
+      'cloud-computing': [
+        { label: "Global Cloud Market Size", percent: 88, detail: "Enterprise cloud hosting allocations are accelerating fast" },
+        { label: "Cloud Openings Growth", percent: 85, detail: "Hiring demands focusing heavily on certified cloud architects" },
+        { label: "VPC Deployments", percent: 80, detail: "Companies replacing standard servers with cloud VPC routing" }
+      ],
+      'stock-market': [
+        { label: "Retail Trading Demat Accounts", percent: 90, detail: "Retail investment participation experiencing historic volumes" },
+        { label: "Algorithmic Exchanges Volume", percent: 82, detail: "A massive share of exchange volumes processed programmatically" },
+        { label: "Financial Literacy Search Indices", percent: 78, detail: "Sharp increase in demand for fundamental analysis research" }
+      ],
+      'digital-marketing-cert': [
+        { label: "Digital Advertising Spend", percent: 78, detail: "Digital marketing budgets expanding fast on Google & Meta Ads" },
+        { label: "Performance Marketing Jobs", percent: 82, detail: "Hiring focuses on marketers who track campaign pixel funnels" },
+        { label: "Outreach Leads Automations", percent: 80, detail: "Businesses deploying drip campaigns to automate outreach" }
+      ],
+      'full-stack-web': [
+        { label: "Web Application Market Value", percent: 82, detail: "Global scaling of React, Node.js and REST API applications" },
+        { label: "Developer Openings Index", percent: 86, detail: "Active hiring registrations seeking dynamic frontend SPA modelers" },
+        { label: "Vercel / Edge Host Deployments", percent: 78, detail: "Headless web portals deployed to serverless microservices" }
       ]
     };
     
@@ -1060,7 +1487,11 @@ export default function AiBrochure() {
       'data-analytics': ["python", "sql", "pandas", "numpy", "excel", "power-bi"],
       'cyber-security': ["linux", "windows", "wireshark", "bash", "network", "python"],
       'hr-mgmt': ["excel", "data-analytics", "power-bi", "nlp", "python", "sql"],
-      'machine-learning': ["python", "numpy", "pandas", "scikit-learn", "xgboost", "flask"]
+      'machine-learning': ["python", "numpy", "pandas", "scikit-learn", "xgboost", "flask"],
+      'cloud-computing': ["windows", "linux", "python", "sql", "network", "bash"],
+      'stock-market': ["excel", "data-analytics", "python", "pandas", "numpy", "sql"],
+      'digital-marketing-cert': ["excel", "power-bi", "nlp", "python", "sql", "pandas"],
+      'full-stack-web': ["react", "node.js", "python", "sql", "pandas", "numpy"]
     };
     
     return db[activeId === 'data-analytics' ? 'data-science' : activeId];
@@ -1076,12 +1507,15 @@ export default function AiBrochure() {
       'data-analytics': "Plus: Excel VLOOKUP/Pivots, SQL Joins, Power BI desktop dashboard reports",
       'cyber-security': "Plus: Kali Linux commands, Nmap port scanning, Metasploit, SIEM tools, Burp Suite",
       'hr-mgmt': "Plus: ATS Screening keywords, KPI calculators, 360 Feedback sheets, Excel CTC models",
-      'machine-learning': "Plus: Jupyter Notebook, Anaconda, XGBoost, Cross Validation, API deployment tools"
+      'machine-learning': "Plus: Jupyter Notebook, Anaconda, XGBoost, Cross Validation, API deployment tools",
+      'cloud-computing': "Plus: Microsoft Azure subscription portal, EC2 nodes, ARM templates, Azure VPNs",
+      'stock-market': "Plus: Technical Candlestick charts, EV Valuations, SEBI compliances, SL Margin checks",
+      'digital-marketing-cert': "Plus: Google ads, Meta Pixel targeting, WordPress design, SEO crawlers, Mailchimp",
+      'full-stack-web': "Plus: Express.js routes, MongoDB Atlas collections, JWT tokens, Vercel deployments"
     };
     
     return db[activeId === 'data-analytics' ? 'data-science' : activeId];
   };
-
   // Render individual pages for the interactive 20-page booklet
   const renderPageContent = (page) => {
     const pageIsDark = isPageDark(page);
@@ -1789,16 +2223,6 @@ export default function AiBrochure() {
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span className="hidden md:inline">Scroll View</span>
-              </button>
-
-              {/* Download Brochure */}
-              <button
-                onClick={handleDownloadBrochure}
-                className="bg-[#2A4BFF] hover:brightness-110 text-white font-mono text-xs px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-all cursor-pointer"
-                title="Download PDF Brochure"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">Download PDF</span>
               </button>
             </div>
           </div>
