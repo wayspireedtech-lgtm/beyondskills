@@ -48,13 +48,27 @@ export default function Courses() {
   }, [searchParams, navigate]);
 
   // Categories list
-  const categories = ['All', 'AI/ML/DS/DA', 'Full Stack Development', 'Digital Marketing', 'HR', 'Stock Market', 'Cyber Security', 'Cloud Computing'];
+  const categories = ['All', 'Tech', 'Marketing', 'HR'];
 
   // Filter logic
   const filteredCourses = COURSES.filter(c => {
     const matchesSearch = c.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           c.overview.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCat = selectedCat === 'All' || c.category === selectedCat;
+    
+    let matchesCat = false;
+    if (selectedCat === 'All') {
+      matchesCat = true;
+    } else if (selectedCat === 'Tech') {
+      matchesCat = ['AI/ML/DS/DA', 'Full Stack Development', 'Cyber Security', 'Cloud Computing'].includes(c.category);
+    } else if (selectedCat === 'Marketing') {
+      matchesCat = ['Digital Marketing', 'Stock Market'].includes(c.category);
+    } else if (selectedCat === 'HR') {
+      matchesCat = c.category === 'HR';
+    } else {
+      // Fallback for direct matches
+      matchesCat = c.category === selectedCat;
+    }
+
     return matchesSearch && matchesCat;
   });
 
