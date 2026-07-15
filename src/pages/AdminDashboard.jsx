@@ -76,7 +76,10 @@ export default function AdminDashboard() {
 
   const fetchWebhookLeads = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/webhook/leads');
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : `${window.location.protocol}//${window.location.hostname}:5000`;
+      const res = await fetch(`${apiHost}/api/webhook/leads`);
       if (res.ok) {
         const webhookLeads = await res.json();
         if (webhookLeads && webhookLeads.length > 0) {
@@ -102,7 +105,7 @@ export default function AdminDashboard() {
         }
       }
     } catch (e) {
-      // Quiet fail to prevent console noise during local offline testing
+      console.error('Real-time sync webhook error:', e);
     }
   };
 
