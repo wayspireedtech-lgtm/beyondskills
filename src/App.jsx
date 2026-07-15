@@ -59,7 +59,7 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   
   // Hide headers/footers on specific onboarding/checkout paths if desired
-  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page'].includes(location.pathname) || location.pathname.includes('/brochure');
+  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/admin'].includes(location.pathname) || location.pathname.includes('/brochure');
   
   return (
     <div id="glow-bg-container" className="flex flex-col min-h-screen bg-white text-slate-900 relative">

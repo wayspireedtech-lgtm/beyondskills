@@ -7,7 +7,7 @@ import {
   FileSpreadsheet, ClipboardList, CheckSquare, BarChart, Settings, 
   UserPlus, RefreshCw, Eye, Edit2, X, Check, CheckCircle2, ChevronRight,
   TrendingUp, Calendar, AlertCircle, Sparkles, Phone, ShieldCheck, LogOut,
-  FileText, BookOpen
+  FileText, BookOpen, Mail, Lock, ArrowRight, ChevronDown
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -19,6 +19,91 @@ export default function AdminDashboard() {
   const [payments, setPayments] = useState([]);
   const [students, setStudents] = useState([]);
   const [crmUsers, setCrmUsers] = useState([]);
+
+  // Custom Login States
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoginError('');
+    setLoginLoading(true);
+
+    const targetEmail = 'beyondskills.ai@gmail.com';
+    const savedPassword = localStorage.getItem('beyondskills_admin_password') || '9953607074';
+    const crmUsers = getDbItem('beyondskills_crm_users', []);
+    const matchingUser = crmUsers.find(u => u.email.trim().toLowerCase() === loginEmail.trim().toLowerCase());
+
+    let authenticatedUser = null;
+
+    if (loginEmail.trim().toLowerCase() === targetEmail.toLowerCase()) {
+      if (loginPassword === savedPassword) {
+        authenticatedUser = {
+          email: targetEmail,
+          name: 'BeyondSkills Administrator',
+          role: 'Admin',
+          studentId: 'DV-ADMIN'
+        };
+      }
+    } else if (matchingUser) {
+      const userPassword = matchingUser.password || 'Gradus@123';
+      if (loginPassword === userPassword) {
+        authenticatedUser = {
+          email: matchingUser.email,
+          name: matchingUser.name,
+          role: matchingUser.role,
+          studentId: matchingUser.role + '-' + Math.floor(1000 + Math.random() * 9000)
+        };
+      }
+    }
+
+    if (!authenticatedUser) {
+      setTimeout(() => {
+        setLoginError('Invalid administrator or BDA credentials.');
+        setLoginLoading(false);
+      }, 500);
+      return;
+    }
+
+    setTimeout(() => {
+      setDbItem('beyondskills_current_user', authenticatedUser);
+      window.dispatchEvent(new Event('auth_change'));
+      setLoginLoading(false);
+      setCurrentUser(authenticatedUser);
+      
+      // Load CRM data on successful login
+      setLeads(getDbItem('beyondskills_leads', []));
+      setPayments(getDbItem('beyondskills_payments', []));
+      setStudents(getDbItem('beyondskills_users', []));
+      setBlogs(getDbItem('beyondskills_blogs', []));
+      setMentors(getDbItem('beyondskills_mentors', []));
+      setLandingPages(getDbItem('beyondskills_landing_pages', []));
+      
+      // Seed default CRM Users if none exist
+      let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
+      if (existingCrmUsers.length === 0) {
+        existingCrmUsers = [
+          { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
+          { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
+          { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: '7982738724' },
+          { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: 'Deepak@123' },
+          { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Shubham@123' },
+          { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
+        ];
+        setDbItem('beyondskills_crm_users', existingCrmUsers);
+      }
+      setCrmUsers(existingCrmUsers);
+      if (existingCrmUsers.length > 0 && !selectedBdaName) {
+        const firstBda = existingCrmUsers.find(u => u.role === 'BDA');
+        if (firstBda) setSelectedBdaName(firstBda.name);
+      }
+      
+      // Start webhook sync
+      fetchWebhookLeads();
+    }, 800);
+  };
 
   // Blogs, Mentors & Landing Page Editor States
   const [blogs, setBlogs] = useState([]);
@@ -133,7 +218,7 @@ export default function AdminDashboard() {
     // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
     if (!loggedInUser) {
-      navigate('/auth');
+      setCurrentUser(null);
       return;
     }
     setCurrentUser(loggedInUser);
@@ -168,12 +253,12 @@ export default function AdminDashboard() {
     fetchWebhookLeads();
     const interval = setInterval(fetchWebhookLeads, 6000);
     return () => clearInterval(interval);
-  }, [navigate]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('beyondskills_current_user');
     window.dispatchEvent(new Event('auth_change'));
-    navigate('/auth');
+    setCurrentUser(null);
   };
 
   // BLOG CRUD Handlers
@@ -763,217 +848,476 @@ export default function AdminDashboard() {
   const statsSuccessfulEnrollments = accessibleLeads.filter(l => l.status === 'Enrolled').length;
   const statsHotLeads = accessibleLeads.filter(l => l.status === 'Follow Up').length;
 
-  return (
-    <div className="text-slate-800 min-h-screen relative pt-24 pb-24 overflow-x-hidden bg-white">
-      
-      {/* Grid Pattern Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 relative">
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-center items-center relative overflow-hidden font-sans select-none px-4">
+        {/* Ambient light gradient background */}
+        <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-blue-500/5 blur-[120px] pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[120px] pointer-events-none"></div>
         
-        {/* Banner Section */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-6 mb-10 gap-4">
-          <div>
-            <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-widest font-mono flex items-center space-x-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{isBdaUser ? 'BDA Sales Panel' : 'Gradus CRM Console'}</span>
-            </span>
-            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 flex items-center space-x-2">
-              <span>Performance Lead Roster</span>
-              {currentUser && (
-                <span className="text-xs font-bold font-mono bg-[#0A0E35] text-[#0EA5E9] px-2.5 py-1 rounded border border-[#2A4BFF]/20 uppercase tracking-widest">
-                  Role: {currentUser.role}
-                </span>
-              )}
-            </h1>
+        {/* Floating tech background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          {/* React */}
+          <div className="absolute top-[10%] left-[8%] animate-float pointer-events-none opacity-40 text-blue-500" style={{ animationDuration: '8s' }}>
+            <svg className="w-16 h-16" viewBox="-11.5 -10.23 23 20.46" fill="none" stroke="currentColor" strokeWidth="1">
+              <circle cx="0" cy="0" r="2.05" fill="currentColor"/>
+              <ellipse rx="11" ry="4.2" />
+              <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+              <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+            </svg>
           </div>
-          
-          <div className="flex items-center space-x-3">
-            {isAdminUser && (
-              <>
-                <button 
-                  onClick={handleSeedDemoData} 
-                  className="bg-[#050718] hover:bg-[#0A0E35] text-white border border-white/10 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 shadow-lg"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Seed Demo Data</span>
-                </button>
-                <button 
-                  onClick={() => {
-                    setLeads([]);
-                    setDbItem('beyondskills_leads', []);
-                    alert('All leads database deleted successfully!');
-                  }}
-                  className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Clear Leads</span>
-                </button>
-              </>
-            )}
-            <button 
-              onClick={handleLogout}
-              className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
-              title="Logout"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Logout</span>
-            </button>
+          {/* Javascript */}
+          <div className="absolute top-[25%] right-[10%] animate-float pointer-events-none opacity-40 text-yellow-500" style={{ animationDuration: '10s', animationDelay: '1s' }}>
+            <div className="w-14 h-14 bg-yellow-550 text-black font-black text-xl rounded-xl flex items-center justify-center shadow-md font-mono">JS</div>
+          </div>
+          {/* Python */}
+          <div className="absolute bottom-[20%] left-[12%] animate-float pointer-events-none opacity-40 text-blue-600" style={{ animationDuration: '9s', animationDelay: '2s' }}>
+            <svg className="w-14 h-14" viewBox="0 0 448 512" fill="currentColor">
+              <path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 60.8-66.8 60.8H185.9c-9.9 0-17.9 8-17.9 17.9v45.7c0 9.9 8 17.9 17.9 17.9h148c30.1 0 53.4-23.3 53.4-53.4v-40.1c31.1 0 54.2-14.6 54.2-45.7-.1-.1-.1-2.9-.2-6.1zm-86.8-12c-12 0-21.6-9.7-21.6-21.7s9.7-21.7 21.6-21.7c12 0 21.7 9.7 21.7 21.7s-9.7 21.7-21.7 21.7zM8.2 311.5c7.7 30.9 22.3 54.2 53.4 54.2h40.1v-47.4c0-36.8 31.2-60.8 66.8-60.8h93.6c9.9 0 17.9-8 17.9-17.9v-45.7c0-9.9-8-17.9-17.9-17.9h-148c-30.1 0-53.4 23.3-53.4 53.4v40.1c-31.1 0-54.2 14.6-54.2 45.7 0 .1 0 2.9.2 6.1zm86.8 12c12 0 21.6 9.7 21.6 21.7s-9.7 21.7-21.6 21.7c-12 0-21.7-9.7-21.7-21.7s9.7-21.7 21.7-21.7z"/>
+            </svg>
+          </div>
+          {/* Node.js */}
+          <div className="absolute bottom-[35%] right-[14%] animate-float pointer-events-none opacity-40 text-green-600" style={{ animationDuration: '11s', animationDelay: '1.5s' }}>
+            <svg className="w-14 h-14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7.7v10.6L12 24l10-5.7V7.7L12 2zm-1 18.5l-6-3.5v-7l6 3.5v7zm1-8.7L6 8.3l6-3.5 6 3.5 6 3.5zm7 5.2l-6 3.5v-7l6-3.5v7z"/>
+            </svg>
+          </div>
+          {/* Cloud/AWS */}
+          <div className="absolute top-[40%] left-[20%] animate-float pointer-events-none opacity-30 text-[#0ea5e9]" style={{ animationDuration: '12s', animationDelay: '0.5s' }}>
+            <div className="w-12 h-12 bg-sky-50 text-sky-600 border border-sky-200/50 rounded-xl flex items-center justify-center shadow-sm">
+              <Globe className="w-6 h-6" />
+            </div>
           </div>
         </div>
 
-        {/* Navigation Sidebar Tabs equivalence */}
-        <div className="flex flex-wrap gap-2 mb-8 bg-[#050718]/5 p-1.5 rounded-2xl max-w-fit border border-slate-100 shadow-inner">
+        {/* Login Form Card */}
+        <div className="max-w-md w-full bg-white border border-slate-200/60 rounded-3xl p-10 shadow-xl z-10 animate-fade-in">
+          <div className="flex flex-col items-center mb-8">
+            {/* Styled Logo */}
+            <div className="flex items-center space-x-1.5 mb-2">
+              <span className="logo-font text-2xl font-black text-[#0A0E35]">Beyond</span>
+              <span className="logo-font text-2xl font-black bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] bg-clip-text text-transparent">Skills</span>
+            </div>
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#2A4BFF] bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full font-mono">
+              CRM Admin Panel
+            </span>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="space-y-6">
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2 font-mono">
+                Email Address
+              </label>
+              <div className="relative">
+                <input 
+                  type="email" 
+                  required 
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  className="w-full bg-slate-55 border border-slate-200/80 rounded-xl pl-11 pr-4 py-3 text-xs text-slate-800 focus:border-[#2a4bff] outline-none transition-all"
+                  placeholder="name@beyondskills.in" 
+                />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2 font-mono">
+                Access Password
+              </label>
+              <div className="relative">
+                <input 
+                  type="password" 
+                  required 
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full bg-slate-55 border border-slate-200/80 rounded-xl pl-11 pr-4 py-3 text-xs text-slate-800 focus:border-[#2a4bff] outline-none transition-all"
+                  placeholder="••••••••" 
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            {loginError && (
+              <div className="bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-xl flex items-center space-x-2 font-semibold animate-fade-in">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
+                <span>{loginError}</span>
+              </div>
+            )}
+
+            <button 
+              type="submit" 
+              disabled={loginLoading}
+              className="w-full bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] hover:opacity-95 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
+            >
+              {loginLoading ? (
+                <span>Verifying credentials...</span>
+              ) : (
+                <>
+                  <span>Sign In To CRM</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+        
+        {/* Footer Info */}
+        <div className="mt-8 text-center text-[10px] text-slate-400 font-mono">
+          🔒 Secure SSL encrypted connection. Authorized personnel only.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-[#030712] text-slate-100 min-h-screen flex font-sans overflow-x-hidden antialiased">
+      {/* Sidebar Navigation */}
+      <aside className="w-64 bg-[#0B0F19] border-r border-white/5 flex flex-col shrink-0">
+        {/* Branding header */}
+        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+          <div className="flex items-center space-x-2.5">
+            <div className="bg-gradient-to-tr from-[#2A4BFF] to-[#0EA5E9] p-2 rounded-xl text-white shadow-md shadow-blue-500/20">
+              <Sparkles className="w-4.5 h-4.5" />
+            </div>
+            <span className="logo-font text-white font-black text-lg tracking-tight">BeyondSkills</span>
+          </div>
+          <button className="text-slate-400 hover:text-white border border-white/10 rounded-lg p-1 bg-white/5 cursor-pointer">
+            <ChevronRight className="w-3.5 h-3.5 rotate-180" />
+          </button>
+        </div>
+        
+        {/* Menu Navigation */}
+        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+          {/* Dashboard menu */}
           <button 
-            onClick={() => setActiveMainTab('analytics')} 
-            className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+            onClick={() => setActiveMainTab('analytics')}
+            className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
               activeMainTab === 'analytics' 
-                ? 'bg-[#2A4BFF] text-white shadow-md' 
-                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
             }`}
           >
             <BarChart className="w-4 h-4" />
             <span>Dashboard</span>
           </button>
+
+          {/* Leads Sub-Menu Header */}
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4.5 pt-4 pb-1.5 font-mono">Leads Pipeline</div>
+          
           <button 
-            onClick={() => setActiveMainTab('leads_manager')} 
-            className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-              activeMainTab === 'leads_manager' 
-                ? 'bg-[#2A4BFF] text-white shadow-md' 
-                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+            onClick={() => { setActiveMainTab('leads_manager'); setLeadsSubTab('list'); }}
+            className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+              activeMainTab === 'leads_manager' && leadsSubTab === 'list'
+                ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <Inbox className="w-4 h-4" />
+            <span>Leads List</span>
+          </button>
+
+          <button 
+            onClick={() => { setActiveMainTab('leads_manager'); setLeadsSubTab('kanban'); }}
+            className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+              activeMainTab === 'leads_manager' && leadsSubTab === 'kanban'
+                ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
             }`}
           >
             <ClipboardList className="w-4 h-4" />
-            <span>Leads Manager</span>
+            <span>Follow-ups Board</span>
           </button>
-          
-          {/* Hide management tabs for standard BDA accounts */}
+
+          <button 
+            onClick={() => { setActiveMainTab('leads_manager'); setLeadsSubTab('tasks'); }}
+            className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+              activeMainTab === 'leads_manager' && leadsSubTab === 'tasks'
+                ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
+          >
+            <CheckSquare className="w-4 h-4" />
+            <span>Tasks</span>
+          </button>
+
           {!isBdaUser && (
             <>
+              {/* Allocation Sub-Menu */}
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4.5 pt-4 pb-1.5 font-mono">Allocation</div>
+
               <button 
-                onClick={() => setActiveMainTab('allocation')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'allocation' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
-                }`}
-              >
-                <CheckSquare className="w-4 h-4" />
-                <span>Assigned & Allocation</span>
-              </button>
-              <button 
-                onClick={() => setActiveMainTab('bda_performance')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'bda_performance' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                onClick={() => { setActiveMainTab('allocation'); setAllocationSubTab('assigned'); }}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'allocation' && allocationSubTab === 'assigned'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <Users className="w-4 h-4" />
-                <span>BDA Performance</span>
+                <span>Assigned Leads</span>
               </button>
+
               <button 
-                onClick={() => setActiveMainTab('blogs_manager')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'blogs_manager' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                onClick={() => { setActiveMainTab('allocation'); setAllocationSubTab('bulk'); }}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'allocation' && allocationSubTab === 'bulk'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Assign Leads</span>
+              </button>
+
+              {/* Management Sub-Menu */}
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4.5 pt-4 pb-1.5 font-mono">Management</div>
+
+              <button 
+                onClick={() => setActiveMainTab('bda_performance')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'bda_performance'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span>BDAs Performance</span>
+              </button>
+
+              <button 
+                onClick={() => setActiveMainTab('blogs_manager')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'blogs_manager'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <FileText className="w-4 h-4" />
-                <span>Manage Blogs</span>
+                <span>Blogs</span>
               </button>
+
               <button 
-                onClick={() => setActiveMainTab('mentors_manager')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'mentors_manager' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                onClick={() => setActiveMainTab('mentors_manager')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'mentors_manager'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
-                <Award className="w-4 h-4" />
-                <span>Manage Mentors</span>
+                <BookOpen className="w-4 h-4" />
+                <span>Mentors</span>
               </button>
+
               <button 
-                onClick={() => setActiveMainTab('landing_pages_manager')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'landing_pages_manager' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
-                }`}
-              >
-                <Globe className="w-4 h-4" />
-                <span>Landing Page Editor</span>
-              </button>
-              <button 
-                onClick={() => setActiveMainTab('users')} 
-                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-                  activeMainTab === 'users' 
-                    ? 'bg-[#2A4BFF] text-white shadow-md' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                onClick={() => setActiveMainTab('landing_pages_manager')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'landing_pages_manager'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`}
               >
                 <Settings className="w-4 h-4" />
-                <span>Manage Users</span>
+                <span>Landing Pages</span>
+              </button>
+
+              <button 
+                onClick={() => setActiveMainTab('users')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'users'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                <span>CRM Users</span>
               </button>
             </>
           )}
+        </nav>
+
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-white/5 space-y-4 font-sans">
+          {/* User profile card */}
+          {currentUser && (
+            <div className="flex items-center space-x-3 bg-white/5 p-3 rounded-xl border border-white/5 animate-fade-in">
+              <div className="w-9 h-9 rounded-lg bg-[#2A4BFF]/20 text-[#0EA5E9] font-bold flex items-center justify-center border border-[#2A4BFF]/25 font-mono text-sm">
+                {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-white truncate leading-tight">{currentUser.name}</p>
+                <span className="text-[9px] font-bold text-red-550 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20 uppercase tracking-widest mt-1 inline-block">
+                  {currentUser.role === 'Admin' ? 'Sales Head' : currentUser.role}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Theme toggler */}
+          <div className="flex bg-[#030712] p-1 rounded-xl border border-white/5 text-xs text-slate-400 font-bold">
+            <button className="flex-1 flex items-center justify-center py-1.5 rounded-lg hover:text-white cursor-pointer transition-all">
+              Light
+            </button>
+            <button className="flex-1 bg-white/5 border border-white/5 flex items-center justify-center py-1.5 rounded-lg text-white cursor-pointer transition-all">
+              Dark
+            </button>
+          </div>
+
+          {/* Logout button */}
+          <button 
+            onClick={handleLogout}
+            className="w-full bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/10 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
         </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-grow flex flex-col min-h-screen bg-[#030712] relative overflow-y-auto">
+        {/* Dynamic spot gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(45,67,184,0.03),transparent_45%)] pointer-events-none z-0"></div>
+        
+        <div className="p-8 max-w-7xl w-full mx-auto space-y-8 z-10 relative">
+          
+          {/* Banner Section */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-6 mb-8 gap-4 border-b border-white/5">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
+                Welcome, {currentUser ? currentUser.name : 'User'}
+                {currentUser && (
+                  <span className="text-xs font-bold font-mono bg-red-500/10 text-red-500 px-2.5 py-1 rounded border border-red-500/20 uppercase tracking-widest">
+                    {currentUser.role === 'Admin' ? 'Sales Head' : currentUser.role}
+                  </span>
+                )}
+              </h1>
+              <p className="text-sm text-slate-400 mt-1.5">Here is your sales and performance dashboard for today.</p>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              {isAdminUser && (
+                <>
+                  <button 
+                    onClick={handleSeedDemoData} 
+                    className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 shadow-lg"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Seed Demo Data</span>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setLeads([]);
+                      setDbItem('beyondskills_leads', []);
+                      alert('All leads database deleted successfully!');
+                    }}
+                    className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Clear Leads</span>
+                  </button>
+                </>
+              )}
+              
+              <button 
+                onClick={() => setShowAddLeadModal(true)}
+                className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] hover:opacity-95 text-white font-bold text-xs uppercase tracking-widest px-5 py-3 rounded-xl transition-all shadow-lg flex items-center space-x-2 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create New Lead</span>
+              </button>
+            </div>
+          </div>
 
         {/* -------------------- MAIN TAB 1: DASHBOARD ANALYTICS -------------------- */}
         {activeMainTab === 'analytics' && (
           <div className="space-y-10 animate-fade-in">
-            {/* KPI statistics */}
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
-                <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">
-                    {isBdaUser ? 'My Assigned Leads' : 'Total CRM Leads'}
-                  </span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsTotalLeads}</p>
+            {/* KPI statistics - Grid Layout matching the screenshot (4 upper cards, 2 lower cards) */}
+            <div className="space-y-6">
+              {/* Upper Grid: 4 Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                {/* TOTAL LEADS */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">
+                      Total Leads
+                    </span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsTotalLeads}</p>
+                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Live - In system pipelines</p>
+                  </div>
+                  <div className="bg-[#2A4BFF]/10 text-[#2A4BFF] p-3 rounded-xl border border-[#2A4BFF]/20">
+                    <Inbox className="w-5 h-5" />
+                  </div>
                 </div>
-                <div className="bg-[#2A4BFF]/15 text-[#2A4BFF] p-2.5 rounded-xl border border-[#2A4BFF]/30">
-                  <Inbox className="w-5 h-5" />
+                
+                {/* MASTERCLASS LEADS */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Masterclass Leads</span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsMasterclassLeads}</p>
+                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Click to assign - Assign leads</p>
+                  </div>
+                  <div className="bg-amber-500/10 text-amber-500 p-3 rounded-xl border border-amber-500/20">
+                    <Star className="w-5 h-5" />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
-                <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Google Form Leads</span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsMasterclassLeads}</p>
+
+                {/* FX LEADS */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">FX Leads</span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">0</p>
+                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Click to assign - Assign leads</p>
+                  </div>
+                  <div className="bg-emerald-500/10 text-emerald-500 p-3 rounded-xl border border-emerald-500/20">
+                    <Users className="w-5 h-5" />
+                  </div>
                 </div>
-                <div className="bg-amber-500/15 text-amber-500 p-2.5 rounded-xl border border-amber-500/30">
-                  <Star className="w-5 h-5" />
+
+                {/* CONVERSION RATE */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Conversion Rate</span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsConversionRate}%</p>
+                    <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      Needs Review
+                    </span>
+                  </div>
+                  <div className="bg-[#e11d48]/10 text-[#f43f5e] p-3 rounded-xl border border-[#e11d48]/20">
+                    <Percent className="w-5 h-5" />
+                  </div>
                 </div>
               </div>
 
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
-                <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Conversion Ratio</span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsConversionRate}%</p>
+              {/* Lower Grid: 2 Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* SUCCESSFUL ENROLMENTS */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Successful Enrolments</span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-[#4ADE80]">{statsSuccessfulEnrollments}</p>
+                    <span className="text-[9px] font-bold text-emerald-500 bg-[#10b981]/15 px-2 py-0.5 rounded border border-[#10b981]/25 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      +{statsSuccessfulEnrollments}
+                    </span>
+                  </div>
+                  <div className="bg-[#4ADE80]/10 text-[#4ADE80] p-3 rounded-xl border border-[#4ADE80]/20">
+                    <CheckCircle2 className="w-5 h-5" />
+                  </div>
                 </div>
-                <div className="bg-[#0EA5E9]/15 text-[#0EA5E9] p-2.5 rounded-xl border border-[#0EA5E9]/30">
-                  <Percent className="w-5 h-5" />
-                </div>
-              </div>
 
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
-                <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Enrolled Students</span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-[#4ADE80]">{statsSuccessfulEnrollments}</p>
-                </div>
-                <div className="bg-[#4ADE80]/15 text-[#4ADE80] p-2.5 rounded-xl border border-[#4ADE80]/30">
-                  <CheckCircle2 className="w-5 h-5" />
-                </div>
-              </div>
-
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white text-right col-span-2 lg:col-span-1">
-                <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Pending Follow-ups</span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-orange-400">{statsHotLeads}</p>
-                </div>
-                <div className="bg-orange-500/15 text-orange-500 p-2.5 rounded-xl border border-orange-500/30">
-                  <Calendar className="w-5 h-5" />
+                {/* ACTIVE HOT LEADS */}
+                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Active Hot Leads</span>
+                    <p className="text-3xl font-extrabold font-mono mt-1 text-orange-400">{statsHotLeads}</p>
+                    <span className="text-[9px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      In Progress
+                    </span>
+                  </div>
+                  <div className="bg-orange-500/10 text-orange-500 p-3 rounded-xl border border-orange-500/20">
+                    <Calendar className="w-5 h-5" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -2345,8 +2689,8 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-
       </div>
+    </div>
 
       {/* -------------------- MODAL: ADD LEAD -------------------- */}
       {showAddLeadModal && (
