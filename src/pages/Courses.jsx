@@ -80,7 +80,7 @@ export default function Courses() {
             BeyondSkills
           </span>
           <h1 className="logo-font text-4xl sm:text-6xl font-extrabold mt-6">
-            Upskilling Course Catalog
+            Upskilling Programs
           </h1>
           <p className="mt-4 text-slate-500 text-sm sm:text-base">
             Recorded learning modules combined with weekly live mentor reviews and digital certificates.
