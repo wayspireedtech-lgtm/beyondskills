@@ -1476,28 +1476,27 @@ export const setDbItem = (key, val) => {
   }
 };
 
-// Initialize DB with sample leads and transactions if empty
+// Initialize DB as empty arrays, forcing a reset for client-side storage
+if (!localStorage.getItem('beyondskills_db_reset_v4')) {
+  localStorage.setItem('beyondskills_users', JSON.stringify([]));
+  localStorage.setItem('beyondskills_leads', JSON.stringify([]));
+  localStorage.setItem('beyondskills_payments', JSON.stringify([]));
+  localStorage.setItem('beyondskills_certificates', JSON.stringify([]));
+  localStorage.setItem('beyondskills_db_reset_v4', 'true');
+}
+
 if (!localStorage.getItem('beyondskills_users')) {
-  setDbItem('beyondskills_users', [
-    { email: 'student@beyondskills.in', phone: '9876543210', password: 'password', name: 'Demo Student', studentId: 'BS-2026-1004', activeCourses: ['full-stack-web'] }
-  ]);
+  setDbItem('beyondskills_users', []);
 }
 
 if (!localStorage.getItem('beyondskills_leads')) {
-  setDbItem('beyondskills_leads', [
-    { type: 'Agency', name: 'Ramesh Patel', email: 'ramesh@startup.in', phone: '9988776655', company: 'Ramesh Tech', service: 'Website Development', budget: '₹1,00,000 - ₹3,00,000', message: 'Looking for a custom React/Node client onboarding platform.', date: new Date(Date.now() - 3600000).toISOString() },
-    { type: 'Academy', name: 'Nikhil Gowda', email: 'nikhil@college.edu', phone: '8877665544', course: 'ai-ml', college: 'RV College of Eng', status: 'Final Year Student', message: 'Interested in AI course recorded lecture models.', date: new Date(Date.now() - 7200000).toISOString() }
-  ]);
+  setDbItem('beyondskills_leads', []);
 }
 
 if (!localStorage.getItem('beyondskills_payments')) {
-  setDbItem('beyondskills_payments', [
-    { orderId: 'pay_mock_12345', amount: 15000, studentId: 'BS-2026-1004', courseId: 'full-stack-web', email: 'student@beyondskills.in', status: 'Success', date: new Date(Date.now() - 3600000).toISOString() }
-  ]);
+  setDbItem('beyondskills_payments', []);
 }
 
 if (!localStorage.getItem('beyondskills_certificates')) {
-  setDbItem('beyondskills_certificates', [
-    { id: 'CERT-BS-FS-9874', studentName: 'Demo Student', studentId: 'BS-2026-1004', courseTitle: 'Full Stack Web Development (MERN)', issueDate: 'June 30, 2026', verificationUrl: window.location.origin + '/verify?certId=CERT-BS-FS-9874' }
-  ]);
+  setDbItem('beyondskills_certificates', []);
 }
