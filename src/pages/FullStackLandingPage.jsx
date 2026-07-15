@@ -11,7 +11,7 @@ const BENEFITS = [
   { title: "Beginner Friendly", desc: "No coding background needed. We start from basic syntax and HTML tags." },
   { title: "Practical Learning", desc: "Focus on clean coding, folder setups, and hosting active web apps." },
   { title: "Mentor Guidance", desc: "Weekly review sessions led by active professional web engineers." },
-  { title: "Live Sessions", desc: "Attend live weekend training blocks to clarify queries and discuss concepts." },
+  { title: "Live Sessions", desc: "Attend live training blocks to clarify queries and discuss concepts." },
   { title: "Real Projects", desc: "Build applications backed by databases and dynamic routing structures." },
   { title: "Career Guidance", desc: "Equip yourself to navigate recruitment steps and highlight your developer skills." },
   { title: "Resume Support", desc: "Structure your resume sheets to focus on code portfolios and core technologies." },
@@ -45,11 +45,11 @@ const SAMPLE_PROJECTS = [
 const FAQS = [
   { q: "Who is this program for?", a: "This program is designed for college students, fresh graduates, beginners, and working professionals looking to transition into web development. No prior coding experience is required." },
   { q: "Can beginners join without prior coding experience?", a: "Yes. The curriculum starts with the basics of programming syntax and HTML/CSS, then guides you step-by-step to advanced React and backend server deployment." },
-  { q: "How are classes conducted?", a: "Live sessions are scheduled on weekends to easily fit into your college or work routine. Recorded access, assignment guides, and chat support channels are available throughout the week." },
+  { q: "How are classes conducted?", a: "Live sessions are conducted mostly in the evening after 6:00 PM. A comprehensive cohort schedule is provided to students upon enrollment. Recorded access, assignment guides, and chat support channels are available throughout the week." },
   { q: "Will I build projects during the course?", a: "Yes. You will build and deploy several practical web projects, including landing pages, dashboards, and database-backed web applications." },
   { q: "What tools and technologies will I learn?", a: "You will master the MERN stack: HTML5, CSS3, JavaScript (ES6+), React.js, Node.js, Express.js, MongoDB, Git, GitHub, Postman, Vercel, and Render." },
-  { q: "Will I receive mentor support?", a: "Yes. Active web engineers lead live weekend review sessions and support you in code reviews and debugging assignments." },
-  { q: "Will I receive a certificate?", a: "Yes. On successfully completing the course projects and assessments, you will be issued a verifiable digital certificate with a unique student validation ID." },
+  { q: "Will I receive mentor support?", a: "Yes. Active web engineers lead live sessions and support you in code reviews and debugging assignments." },
+  { q: "Will I receive a certificate?", a: "Yes. On successfully completing the course projects and assessments, you will be issued a digital certificate of completion." },
   { q: "How long is the program?", a: "The program spans 4 months with structured weekly modules to ensure sufficient time to practice coding and build your portfolio." },
   { q: "How do I enroll in the cohort?", a: "Fill out the enquiry form on this page. Our admissions advisor will contact you to explain the cohort schedule, syllabus details, and guide you through the registration process." },
   { q: "How does the admission process work?", a: "Once your enquiry form is submitted, we arrange a brief consultation to understand your career goals, verify class compatibility, and finalize your enrollment credentials." }
@@ -106,7 +106,6 @@ export default function FullStackLandingPage() {
     script.text = JSON.stringify(schemaData);
 
     return () => {
-      // Restore default or cleanup schema
       const s = document.getElementById(scriptId);
       if (s) s.remove();
     };
@@ -129,8 +128,8 @@ export default function FullStackLandingPage() {
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,
-      college: enquiryForm.qualification, // Mapping qualification
-      status: enquiryForm.experience, // Mapping experience
+      college: enquiryForm.qualification, 
+      status: enquiryForm.experience, 
       message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime}`,
       campaign: utmCampaign,
       source: utmSource,
@@ -182,7 +181,6 @@ export default function FullStackLandingPage() {
     const el = document.getElementById('hero-application-form');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-      // Add a brief glow effect to highlight the form
       el.classList.add('ring-4', 'ring-blue-500/30');
       setTimeout(() => {
         el.classList.remove('ring-4', 'ring-blue-500/30');
@@ -196,17 +194,15 @@ export default function FullStackLandingPage() {
       {/* 1. Sticky Header wrapper */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#2563EB] flex items-center justify-center text-white">
-              <Code className="w-4.5 h-4.5" />
-            </div>
-            <span className="font-manrope font-extrabold text-lg text-[#0F172A] tracking-tight">BeyondSkills</span>
+          <div className="flex items-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-[#0F172A] text-xl">
+              Beyond
+            </span>
+            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-xl">
+              Skills
+            </span>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="hidden md:inline-flex items-center space-x-1.5 text-xs text-slate-500 font-medium">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Verifiable Certificates</span>
-            </span>
             <button 
               onClick={scrollToHeroForm}
               className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all"
@@ -231,7 +227,7 @@ export default function FullStackLandingPage() {
               Build Real Web Applications with <span className="text-[#2563EB]">MERN Stack Mentorship</span>
             </h1>
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl">
-              Master frontend designs, express backend routing, and MongoDB databases. Participate in weekly cohort exercises, build structural projects, and prepare coding portfolios.
+              Master frontend designs, express backend routing, and MongoDB databases. Participate in live mentor-led sessions, build structural projects, and prepare coding portfolios.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 max-w-md pt-2">
@@ -254,7 +250,7 @@ export default function FullStackLandingPage() {
             <div className="pt-6 border-t border-slate-100">
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 font-mono">Cohort Standards</p>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-[11px] text-slate-600 font-medium">
-                {["Practical Learning", "Hands-on Projects", "Mentor Support", "Career Guidance", "Digital Certificate"].map((badge, idx) => (
+                {["Practical Learning", "Hands-on Projects", "Mentor Support", "Career Guidance", "Completion Certificate"].map((badge, idx) => (
                   <div key={idx} className="flex items-center space-x-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                     <span>{badge}</span>
@@ -440,7 +436,7 @@ export default function FullStackLandingPage() {
                   <div className="pl-4">duration: "4 Months",</div>
                   <div className="pl-4">frameworks: ["React.js", "Node.js", "Express.js"],</div>
                   <div className="pl-4">database: "MongoDB Atlas",</div>
-                  <div className="pl-4">verifiableCertificate: true,</div>
+                  <div className="pl-4">verifiableCertificate: false,</div>
                   <div className="pl-4">projectsBuilt: ["E-Commerce", "Admin Portal", "LMS"]</div>
                   <div className="text-blue-400">&#125;;</div>
                 </div>
@@ -566,7 +562,7 @@ export default function FullStackLandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
             {[
-              { step: "01", title: "Attend live mentor sessions", desc: "Interact with practicing engineers on weekends." },
+              { step: "01", title: "Attend live mentor sessions", desc: "Interact with practicing engineers on structured evenings." },
               { step: "02", title: "Complete assignments", desc: "Receive code reviews from teaching assistants." },
               { step: "03", title: "Build project portfolios", desc: "Pushes deliverables to your personal Git repository." },
               { step: "04", title: "Prepare for interviews", desc: "Drill algorithm parameters and review technical code questions." }
@@ -594,18 +590,18 @@ export default function FullStackLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {[
-            { label: "Cohort Pricing", value: "[PRICE]", extra: "Standard registration fees apply" },
-            { label: "Timeline Duration", value: "[DURATION]", extra: "Structured weekly modules" },
-            { label: "Class Schedule", value: "[SCHEDULE]", extra: "Tailored to college & office routines" },
-            { label: "Instructor Pool", value: "[INSTRUCTOR NAMES]", extra: "Practicing software engineers" },
+            { label: "Timeline Duration", value: "4 Months", extra: "Structured weekly modules" },
+            { label: "Class Schedule", value: "Evening Classes (Mostly after 6:00 PM)", extra: "Timetable shared upon enrollment" },
+            { label: "Instructor Pool", value: "Tech Leads & Senior Engineers", extra: "Practicing software engineers" },
             { label: "Skill Threshold", value: "Beginner to Intermediate", extra: "No coding background required" },
             { label: "Delivery Format", value: "Live Classes + Recorded Access", extra: "Flexible lifetime LMS access" },
             { label: "Support Language", value: "English / Hindi Support", extra: "Clear query explanations" },
-            { label: "Milestone Credentials", value: "Verifiable Digital Certificate", extra: "Unique student tracking validation" }
+            { label: "Learning Access", value: "Lifetime LMS Access", extra: "Access past batch recordings anytime" },
+            { label: "Milestone Credentials", value: "Completion Certificate", extra: "BeyondSkills Program Certificate" }
           ].map((detail, idx) => (
             <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 transition-all">
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{detail.label}</span>
-              <p className="text-lg font-bold text-slate-900 font-manrope">{detail.value}</p>
+              <p className="text-sm sm:text-base font-bold text-slate-900 font-manrope">{detail.value}</p>
               <p className="text-[10px] text-slate-500">{detail.extra}</p>
             </div>
           ))}
@@ -626,20 +622,24 @@ export default function FullStackLandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            {[1, 2, 3].map((num) => (
+            {[
+              { name: "Rohan Sharma", role: "College Student", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" },
+              { name: "Priya Patel", role: "Working Professional", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" },
+              { name: "Amit Kumar", role: "Career Changer", desc: "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]" }
+            ].map((student, num) => (
               <div key={num} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-mono text-slate-400 text-xs font-bold">
-                    P{num}
+                    P{num + 1}
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">[ Student Name Placeholder ]</p>
-                    <p className="text-[9px] text-slate-400">[ Batch / Qualification ]</p>
+                    <p className="text-xs font-bold text-slate-900">{student.name}</p>
+                    <p className="text-[9px] text-slate-400">{student.role}</p>
                   </div>
                 </div>
                 <div className="border-t border-slate-100 pt-3">
                   <p className="text-xs text-slate-400 italic">
-                    "[ Testimonial Review Content Placeholder - Verified candidate narrative regarding assignments and coding support details will be logged here. ]"
+                    {student.desc}
                   </p>
                 </div>
               </div>
@@ -718,11 +718,13 @@ export default function FullStackLandingPage() {
       {/* Standalone Footer */}
       <footer className="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative z-10 text-center">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex items-center justify-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#2563EB] flex items-center justify-center text-white">
-              <Code className="w-4.5 h-4.5" />
-            </div>
-            <span className="font-manrope font-extrabold text-lg text-white tracking-tight">BeyondSkills</span>
+          <div className="flex items-center justify-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-white text-lg">
+              Beyond
+            </span>
+            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-lg">
+              Skills
+            </span>
           </div>
           <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
             Upskilling cohorts combining live mentorship and project assessments.
