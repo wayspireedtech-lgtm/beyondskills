@@ -4,7 +4,8 @@ import {
   Brain, Code, CheckCircle, ChevronDown, ChevronUp, Sparkles, 
   TrendingUp, Briefcase, Award, Rocket, ArrowRight, BarChart3, 
   Users, BookOpen, Quote, ShieldCheck, Mail, Calendar, HelpCircle, FileText,
-  ChevronLeft, ArrowLeft, Download, Maximize2, Minimize2, Laptop, GraduationCap, MapPin, Phone, Globe, Eye, BookOpenCheck
+  ChevronLeft, ArrowLeft, Download, Maximize2, Minimize2, Laptop, GraduationCap, MapPin, Phone, Globe, Eye, BookOpenCheck,
+  Clock, RefreshCw, ShieldAlert, Check
 } from 'lucide-react';
 import { COURSES } from '../utils/mockDb';
 import TechIcon from '../components/TechIcon';
@@ -382,11 +383,149 @@ const DEFAULT_METADATA = {
 
 const BOOKLET_COURSES = ['artificial-intelligence', 'data-science', 'data-analytics', 'hr-mgmt', 'cyber-security', 'machine-learning', 'cloud-computing', 'stock-market', 'digital-marketing-cert', 'full-stack-web'];
 
+const curriculumCategories = {
+  field1: {
+    title: "Python, Libraries & EDA",
+    description: "Learn to write clean, PEP-8 compliant scripts, automate data cleanup, and present telemetry metrics.",
+    items: [
+      { name: "Python Setup & Conda", desc: "Manage packages, compile custom scripts, configure terminal workspaces, and install dependencies." },
+      { name: "NumPy & Pandas", desc: "Formulate array vectors, clean missing logs, filter rows, merge CSV directories, and parse unstructured JSON data." },
+      { name: "Data Visualization", desc: "Design publication-ready charts using Matplotlib, compile correlation grids, and map heatplots with Seaborn." }
+    ]
+  },
+  field2: {
+    title: "SQL & Relational Datasets",
+    description: "Master structured querying, schema modeling, relational indexing, and BI dashboard design.",
+    items: [
+      { name: "SQL Query Writing", desc: "Write database statements, apply joins, aggregate data groups, and extract tables with subqueries." },
+      { name: "Power BI & Tableau", desc: "Connect databases, model schema relations, write DAX calculations, and compile dashboard layouts." },
+      { name: "Excel Advanced Logs", desc: "Leverage lookup arrays, configure Pivot reports, write formulas, and clean data tables." }
+    ]
+  },
+  field3: {
+    title: "Core Machine Learning",
+    description: "Train predictive systems using Scikit-Learn. Master regressions, CART decision trees, and ensemble boosting models.",
+    items: [
+      { name: "Supervised Modeling", desc: "Execute Linear and Logistic regressions, compute accuracy matrices, and evaluate ROC curves." },
+      { name: "CART Decision Trees", desc: "Construct decision nodes, tune min-sample leaves, prevent overfitting, and visualize paths." },
+      { name: "Ensemble Algorithms", desc: "Deploy Random Forests, execute bagging logic, tune XGBoost ensembles, and train AdaBoost systems." }
+    ]
+  },
+  field4: {
+    title: "NLP & Generative AI",
+    description: "Build semantic search indices, write custom text classifiers, and integrate LLM prompt architectures.",
+    items: [
+      { name: "Text Preprocessing", desc: "Tokenize strings, filter stop-words, execute lemmatization, and compute TF-IDF matrices." },
+      { name: "Word Vector Semantics", desc: "Deploy spaCy embeddings, train custom word vectors, and perform nearest-neighbor queries." },
+      { name: "Generative AI APIs", desc: "Integrate LLM API endpoints, design RAG semantic systems, write system prompts, and host models on Hugging Face." }
+    ]
+  }
+};
+
+const roadmapSteps = [
+  { name: "Python Essentials", desc: "Conda configuration, terminal commands, basic loops, error handling, lists/dict parsing, and git repo creation." },
+  { name: "Array Calculations", desc: "NumPy matrix arrays, vector arithmetic, mathematical transformations, indexing, and memory allocation." },
+  { name: "Data Cleaning", desc: "Pandas dataframe structures, loading messy CSVs, resolving null columns, indexing datetimes, and grouping logs." },
+  { name: "Telemetry Plotting", desc: "Matplotlib visual grids, customizing chart axes, plotting histograms, and seaborn correlation heatmaps." },
+  { name: "Database Queries", desc: "SQL table creation, primary keys, relational mapping, inner/left joins, group aggregations, and BI dashboards." },
+  { name: "Statistical Modeling", desc: "Mean/median central dispersion, standard dev analysis, outliers detection, IQR limits, and correlation indices." },
+  { name: "Supervised ML", desc: "Linear/Logistic regression models, train/test split partitions, MSE loss curves, and classification reports." },
+  { name: "Decision Trees", desc: "CART algorithms, random forest baggers, boosting estimators, XGBoost tuning, and hyperparameter grids." },
+  { name: "NLP & LLM Systems", desc: "Text tokenizers, spaCy word vectors, Hugging Face transformers, OpenAI completion APIs, and RAG document search." }
+];
+
+const careerOutcomes = [
+  { title: "Junior Data Scientist", desc: "Clean corporate datasets, train validation partitions, evaluate model performance, and present predictive insights to stakeholders." },
+  { title: "Machine Learning Engineer", desc: "Deploy trained neural classifiers to API endpoints, configure MLOps pipelines, and build feature engineering models." },
+  { title: "Business Intelligence Analyst", desc: "Query relational databases with SQL, build Power BI dashboards, and automate Excel log reporting." },
+  { title: "Data Analyst", desc: "Clean CSV inputs, perform exploratory data analysis, and present telemetry results to management." },
+  { title: "Generative AI Integrator", desc: "Configure Retrieval-Augmented Generation (RAG) structures, manage vector databases, and integrate LLM APIs." },
+  { title: "Python Utility Developer", desc: "Script backend automation tools, handle local file directories, and schedule cron pipelines." }
+];
+
+const faqItems = [
+  { q: "Is prior coding experience required?", a: "No. This program is structured to support beginners. We start with basic Conda setups, and progress step-by-step to advanced machine learning and Generative AI modules." },
+  { q: "What hardware do I need?", a: "A standard laptop with at least 4GB RAM is sufficient. For training heavy models, we guide you through utilizing free cloud platforms like Google Colab and Kaggle Kernels." },
+  { q: "Will I get placement support?", a: "Yes. We offer extensive career preparation, including resume audits, portfolio reviews, GitHub profile tuning, and practice mock interviews led by industry professionals." },
+  { q: "Are the projects verifiable?", a: "Yes. All capstone projects are pushed to your personal GitHub repository, providing concrete proof of your coding and implementation skills to hiring teams." }
+];
+
 export default function AiBrochure() {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const [expandedModules, setExpandedModules] = useState({ 0: true });
   const [activeDatasetIdx, setActiveDatasetIdx] = useState(0);
+
+  // Interactive premium SaaS sandbox states
+  const [modelType, setModelType] = useState('nlp');
+  const [isTraining, setIsTraining] = useState(false);
+  const [trainingProgress, setTrainingProgress] = useState(0);
+  const [trainingLogs, setTrainingLogs] = useState([]);
+  const [isTrained, setIsTrained] = useState(false);
+  const [testInput, setTestInput] = useState("I absolutely love this AI program, it changed my career!");
+  const [testResult, setTestResult] = useState(null);
+  const [activeStep, setActiveStep] = useState(0);
+  const [selectedCurriculumTab, setSelectedCurriculumTab] = useState('field1');
+  const [enquiryForm, setEnquiryForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    college: '',
+    status: 'Undergraduate Student',
+    message: ''
+  });
+  const [enquiryStatus, setEnquiryStatus] = useState(null);
+
+  const startSandboxTraining = () => {
+    setIsTraining(true);
+    setTrainingProgress(0);
+    setIsTrained(false);
+    setTestResult(null);
+    setTrainingLogs([
+      "Initializing environment variables...",
+      "Allocating CUDA device gpu:0...",
+      "Epoch 1/5 - loss: 0.6931 - accuracy: 0.5012",
+      "Epoch 2/5 - loss: 0.4502 - accuracy: 0.7891",
+      "Epoch 3/5 - loss: 0.2104 - accuracy: 0.9125",
+      "Epoch 4/5 - loss: 0.0984 - accuracy: 0.9654",
+      "Epoch 5/5 - loss: 0.0432 - accuracy: 0.9912",
+      "Model training complete. Verifying test accuracy..."
+    ]);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 20;
+      setTrainingProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setIsTraining(false);
+        setIsTrained(true);
+      }
+    }, 400);
+  };
+
+  const runInference = () => {
+    if (modelType === 'nlp') {
+      const lower = testInput.toLowerCase();
+      if (lower.includes('good') || lower.includes('love') || lower.includes('great') || lower.includes('excellent') || lower.includes('happy') || lower.includes('like')) {
+        setTestResult({ class: 'POSITIVE', score: '99.4% confidence', action: 'Route to Testimonial Queue' });
+      } else if (lower.includes('bad') || lower.includes('hate') || lower.includes('slow') || lower.includes('poor') || lower.includes('error') || lower.includes('sad')) {
+        setTestResult({ class: 'NEGATIVE', score: '98.7% confidence', action: 'Escalate to Customer Support' });
+      } else {
+        setTestResult({ class: 'NEUTRAL', score: '76.2% confidence', action: 'Standard Response Queue' });
+      }
+    } else {
+      setTestResult({ class: 'RETENTION_CONFIRMED', score: '95.1% probability', action: 'Apply discount coupon code' });
+    }
+  };
+
+  const handleEnquirySubmit = (e) => {
+    e.preventDefault();
+    setEnquiryStatus('success');
+  };
+
+  const downloadSyllabusMock = () => {
+    alert("Syllabus download request simulated! Check your local browser downloads.");
+  };
   
   // Booklet state parameters
   const [isBookletMode, setIsBookletMode] = useState(BOOKLET_COURSES.includes(courseId));
@@ -2297,15 +2436,15 @@ export default function AiBrochure() {
         <>
           {/* View Mode Panel for Web Mode */}
           {BOOKLET_COURSES.includes(course.id) && (
-            <div className="relative z-20 max-w-6xl mx-auto px-4 mt-6">
-              <div className="bg-slate-950/80 border border-white/10 p-3 rounded-xl flex items-center justify-between text-white backdrop-blur-sm">
+            <div className="relative z-20 max-w-7xl mx-auto px-4 mt-6">
+              <div className="bg-[#0B0F19] border border-white/10 p-3 rounded-xl flex items-center justify-between text-white backdrop-blur-sm">
                 <span className="text-xs font-mono font-bold text-[#0EA5E9] flex items-center gap-1.5">
                   <BookOpenCheck className="w-4 h-4" />
                   Try booklet/PDF reader mode for this course
                 </span>
                 <button
                   onClick={() => setIsBookletMode(true)}
-                  className="bg-[#2A4BFF] hover:brightness-110 text-white font-mono text-xs px-4 py-2 rounded-lg flex items-center space-x-1.5 transition-all cursor-pointer"
+                  className="bg-[#2D43B8] hover:brightness-110 text-white font-mono text-xs px-4 py-2 rounded-lg flex items-center space-x-1.5 transition-all cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Switch to Booklet Mode</span>
@@ -2314,505 +2453,633 @@ export default function AiBrochure() {
             </div>
           )}
 
-          {/* 1. Hero Section (Futuristic Dark Theme) */}
-          <section className="relative z-10 pt-16 pb-24 px-4 sm:px-6 lg:px-8 border-b border-slate-900/60 bg-[#060A24] text-white overflow-hidden">
-            {/* Neon Grid Lines overlay inside hero */}
-            <div className="absolute inset-0 opacity-[0.07] pointer-events-none" style={{
-              backgroundImage: `
-                linear-gradient(to right, #2A4BFF 1px, transparent 1px),
-                linear-gradient(to bottom, #2A4BFF 1px, transparent 1px)
-              `,
-              backgroundSize: '24px 24px'
-            }}></div>
-            
-            <div className="max-w-6xl mx-auto relative z-10">
-              <div className="text-center max-w-4xl mx-auto space-y-6">
-                <span className="inline-flex items-center space-x-2 bg-[#2A4BFF]/20 text-[#0EA5E9] font-mono text-xs font-bold tracking-widest px-4 py-1.5 rounded-full border border-[#2A4BFF]/30 uppercase">
-                  <Sparkles className="w-4.5 h-4.5 text-[#0EA5E9] animate-pulse" />
-                  <span>Interactive Digital Brochure</span>
+          {/* Premium Hero Section */}
+          <section className="relative z-10 pt-12 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-transparent">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              {/* Hero Left Content */}
+              <div className="lg:col-span-6 space-y-6 text-left">
+                <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2D43B8] bg-[#2D43B8]/10 border border-[#2D43B8]/20 px-3 py-1.5 rounded-full font-mono">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Premium {course.title} Program</span>
                 </span>
-                
-                <h1 className="logo-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                  Master <span className="bg-gradient-to-r from-[#0EA5E9] to-[#2A4BFF] bg-clip-text text-transparent">{course.title}</span>
+                <h1 className="font-manrope font-extrabold text-slate-900 text-4xl sm:text-6xl tracking-tight leading-[1.08] mt-2">
+                  Build the Future with <span className="text-[#2D43B8]">{course.title}</span>
                 </h1>
-                
-                <p className="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto font-light leading-relaxed font-mono">
+                <p className="text-slate-650 text-sm sm:text-base leading-relaxed max-w-xl font-inter">
                   {course.overview}
                 </p>
-                
-                <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button 
-                    onClick={handleEnrollClick}
-                    className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg shadow-blue-500/20 cursor-pointer"
+                <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                  <a 
+                    href="#enquiry-form-section"
+                    className="bg-[#2D43B8] text-white hover:brightness-110 px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-[#2D43B8]/20 text-center cursor-pointer"
                   >
-                    Register & Enroll Now
+                    Apply Now
+                  </a>
+                  <button 
+                    onClick={downloadSyllabusMock}
+                    className="bg-[#F5F7FA] border border-slate-200 text-[#111111] hover:bg-slate-100 px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all duration-300 text-center flex items-center justify-center space-x-2 cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Syllabus Guide</span>
                   </button>
                   <a 
-                    href="#curriculum"
-                    className="w-full sm:w-auto bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all text-center"
+                    href="#enquiry-form-section"
+                    className="bg-transparent border-b-2 border-slate-300 hover:border-[#2D43B8] text-slate-700 hover:text-slate-900 px-4 py-2 font-bold text-xs uppercase tracking-widest transition-all text-center cursor-pointer"
                   >
-                    Explore Syllabus modules
+                    Talk to Counselor
                   </a>
                 </div>
               </div>
-              
-              {/* Key Program Pillars grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
-                {[
-                  { label: "Duration", value: course.duration },
-                  { label: "Delivery Mode", value: course.delivery },
-                  { label: "Hands-on projects", value: course.mentorLedProjects },
-                  { label: "Rating & Badges", value: `${course.rating} ★ (verifiable)` }
-                ].map((pillar, idx) => (
-                  <div key={idx} className="bg-white/5 border border-white/10 p-5 rounded-2xl text-center backdrop-blur-md">
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block font-mono">{pillar.label}</span>
-                    <span className="text-xs sm:text-sm font-extrabold mt-1 text-white block">{pillar.value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
 
-          {/* 2. Brand Introduction (Beyond Skills Overview) */}
-          <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-5 space-y-5">
-                <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
-                  Beyond Skills Academy
-                </span>
-                <h2 className="logo-font text-3xl font-extrabold text-slate-900 leading-tight">
-                  Bridging Corporate Realities with Expert Pedagogy
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-650 leading-relaxed text-justify font-mono">
-                  At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
-                </p>
-                <p className="text-xs sm:text-sm text-slate-655 leading-relaxed text-justify font-mono">
-                  This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
-                </p>
-              </div>
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  { title: "Active Tech Mentors", desc: "Classes are designed and run by managers from Tietoevry, EY, and Nokia with 5+ years of live experience.", icon: Users },
-                  { title: "Production Workflows", desc: "Skip academic toy tasks. Clean actual raw datasets, handle real CSV files, and deploy developer architectures.", icon: Code },
-                  { title: "Verifiable Badges", desc: "Recipients gain secure cryptographic badges linked to their projects, proving verification directly to HR teams.", icon: Award },
-                  { title: "End-to-End Support", desc: "From technical setup issues to resume construction reviews, our mentors resolve blocks within daily SLAs.", icon: ShieldCheck }
-                ].map((item, idx) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={idx} className="bg-[#0A0E35]/90 border border-[#2A4BFF]/20 hover:border-brand-purple/40 p-5 rounded-2xl transition-all group text-white shadow-xl">
-                      <div className="bg-[#2A4BFF]/20 p-2.5 rounded-xl text-[#0EA5E9] w-fit mb-3 group-hover:scale-105 transition-transform">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <h4 className="font-bold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-1">{item.title}</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-300 leading-normal font-mono">{item.desc}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          {/* 3. Why Learn Section & Dataset Dashboard */}
-          <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Market Intel & Datasets</span>
-                <h2 className="logo-font text-3xl font-bold text-white">Why You Must Master {course.title}</h2>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-                  We compile recent dataset reports demonstrating the massive demand trajectory for {course.techStack ? course.techStack.slice(0, 3).join(', ') : 'modern'} skillsets.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                {/* Left Dataset Navigation Cards */}
-                <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
-                  {datasetsList.map((data, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveDatasetIdx(idx)}
-                      className={`w-full text-left p-5 rounded-2xl border transition-all cursor-pointer ${
-                        activeDatasetIdx === idx 
-                          ? 'bg-[#0F174A]/90 border-[#2A4BFF] shadow-lg ring-1 ring-[#2A4BFF]/40 text-white' 
-                          : 'bg-[#0A0E35]/70 border-[#2A4BFF]/10 text-slate-300 hover:bg-[#0B1240]/80'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className={`font-bold text-xs uppercase tracking-wide font-mono ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-300'}`}>{data.label}</span>
-                        <TrendingUp className={`w-4 h-4 ${activeDatasetIdx === idx ? 'text-[#0EA5E9]' : 'text-slate-400'}`} />
-                      </div>
-                      <div className="flex justify-between items-baseline mt-3">
-                        <span className="text-[10px] text-slate-400 font-mono">{data.current}</span>
-                        <span className={`text-xs font-extrabold font-mono ${activeDatasetIdx === idx ? 'text-white' : 'text-[#2A4BFF]'}`}>{data.projected}</span>
-                      </div>
-                      {/* Dynamic Progress indicator bar */}
-                      <div className="w-full bg-slate-950 h-1.5 rounded-full mt-2.5 overflow-hidden">
-                        <div 
-                          className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-700"
-                          style={{ width: activeDatasetIdx === idx ? `${data.growth}%` : '8%' }}
-                        ></div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Right Interactive Data Details Card */}
-                <div className="lg:col-span-7 bg-[#05092A] text-white p-8 rounded-3xl border border-[#2A4BFF]/20 relative overflow-hidden flex flex-col justify-between shadow-2xl">
-                  {/* Graphic mesh watermark */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-brand-cyan/15 rounded-full blur-2xl z-0"></div>
+              {/* Hero Right: Interactive AI Sandbox */}
+              <div className="lg:col-span-6">
+                <div className="bg-[#0A0E35] border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden text-slate-200">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#2D43B8]/20 rounded-full blur-2xl z-0"></div>
                   
-                  <div className="relative z-10 space-y-6">
-                    <div className="flex items-center space-x-2 text-[#0EA5E9]">
-                      <BarChart3 className="w-5 h-5" />
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Active Data Feed</span>
+                  {/* Header Tab */}
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4 relative z-10">
+                    <div className="flex items-center space-x-2">
+                      <div className="flex space-x-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-400 pl-2">beyondskills_ai_sandbox.py</span>
                     </div>
-                    
-                    <h3 className="text-xl sm:text-2xl font-bold logo-font">
-                      {datasetsList[activeDatasetIdx].label}
-                    </h3>
-                    
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-light font-mono">
-                      {datasetsList[activeDatasetIdx].details}
-                    </p>
-                    
-                    <div className="border-t border-white/10 pt-6 grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Current Index</span>
-                        <span className="text-sm font-bold text-slate-200">{datasetsList[activeDatasetIdx].current}</span>
-                      </div>
-                      <div className="space-y-1">
-                        <span className="text-[9px] text-slate-400 font-mono uppercase tracking-wider block">Projected Capacity</span>
-                        <span className="text-sm font-bold text-[#0EA5E9]">{datasetsList[activeDatasetIdx].projected}</span>
-                      </div>
+                    <div className="flex bg-white/5 p-1 rounded-lg border border-white/5">
+                      <button 
+                        onClick={() => { setModelType('nlp'); setIsTrained(false); setTestResult(null); }}
+                        className={`text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded transition-colors ${modelType === 'nlp' ? 'bg-[#2D43B8] text-white' : 'text-slate-400 hover:text-white'}`}
+                      >
+                        Sentiment classifier
+                      </button>
+                      <button 
+                        onClick={() => { setModelType('mlp'); setIsTrained(false); setTestResult(null); }}
+                        className={`text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded transition-colors ${modelType === 'mlp' ? 'bg-[#2D43B8] text-white' : 'text-slate-400 hover:text-white'}`}
+                      >
+                        MLP Classifier
+                      </button>
                     </div>
                   </div>
 
-                  <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 mt-8 flex items-center space-x-3 text-xs text-slate-300">
-                    <Rocket className="w-5 h-5 text-[#2A4BFF] flex-shrink-0 animate-bounce" />
-                    <p className="font-mono">Learn these exact tools to stay ahead of corporate workflow automation shifts.</p>
+                  {/* Code Screen / Terminal */}
+                  <div className="font-mono text-xs space-y-3 min-h-[170px] bg-slate-950/80 p-4 rounded-xl border border-white/5 relative z-10 max-h-[180px] overflow-y-auto">
+                    <div className="text-emerald-400"># Model: {modelType === 'nlp' ? 'Deep BERT Sentiment Analyzer' : 'Multi-Layer Perceptron (MLP)'}</div>
+                    <div>import tensorflow as tf</div>
+                    <div>model = tf.keras.Sequential([</div>
+                    {modelType === 'nlp' ? (
+                      <>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Embedding(20000, 128),</div>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),</div>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Dense(1, activation='sigmoid')</div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Dense(64, activation='relu'),</div>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Dropout(0.2),</div>
+                        <div className="text-slate-400 pl-4">tf.keras.layers.Dense(1, activation='sigmoid')</div>
+                      </>
+                    )}
+                    <div>])</div>
+                    
+                    {/* Dynamic Logs */}
+                    {trainingLogs.map((log, i) => (
+                      <div key={i} className="text-slate-350 text-[11px] border-t border-white/5 pt-1 mt-1">
+                        {log}
+                      </div>
+                    ))}
                   </div>
+
+                  {/* Controls */}
+                  <div className="mt-4 flex items-center justify-between relative z-10">
+                    <button 
+                      onClick={startSandboxTraining}
+                      disabled={isTraining}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 ${isTraining ? 'bg-white/10 text-slate-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-slate-950 shadow-md shadow-emerald-500/10'}`}
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${isTraining ? 'animate-spin' : ''}`} />
+                      <span>{isTraining ? `Training ${trainingProgress}%` : 'Train Neural Net'}</span>
+                    </button>
+                    <div className="text-[10px] text-slate-400">
+                      Click to simulate live network training
+                    </div>
+                  </div>
+
+                  {/* Inference Box */}
+                  {isTrained && (
+                    <div className="mt-4 pt-4 border-t border-white/10 relative z-10 animate-fade-in space-y-3">
+                      <span className="text-[9px] font-bold text-[#0EA5E9] uppercase tracking-widest block">Live AI Inference Engine:</span>
+                      {modelType === 'nlp' ? (
+                        <input 
+                          type="text"
+                          value={testInput}
+                          onChange={(e) => setTestInput(e.target.value)}
+                          className="w-full bg-slate-950 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-cyan"
+                          placeholder="Type a sentiment message..."
+                        />
+                      ) : (
+                        <div className="text-xs text-slate-300 bg-slate-950 p-2.5 rounded-lg border border-white/5">
+                          Target Customer: ID_88029 • Tenure: 14 Months • Support Tickets: 0
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <button 
+                          onClick={runInference}
+                          className="bg-[#2D43B8] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer"
+                        >
+                          Run Model
+                        </button>
+                        {testResult && (
+                          <div className="text-right">
+                            <div className="text-xs font-bold text-[#0EA5E9]">{testResult.class}</div>
+                            <div className="text-[10px] text-slate-400">{testResult.score} • {testResult.action}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </section>
 
-          {/* 4. Zig-Zag Career Roadmap Section */}
-          <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto z-10 relative">
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-              <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Career Trajectory</span>
-              <h2 className="logo-font text-3xl font-bold text-slate-900">Interactive Career Roadmap</h2>
-              <p className="text-xs sm:text-sm text-slate-555 leading-relaxed font-mono">
-                See the pathways open to you as you progress through the modules. Hover over each step to see salary levels and required tools.
-              </p>
-            </div>
-
-            {/* The Zig-Zag Roadmap Layout */}
-            <div className="relative pt-6">
-              
-              {/* Weaving Glowing Neon Road (md+) */}
-              <svg 
-                className="absolute top-0 bottom-0 left-0 right-0 w-full h-full pointer-events-none hidden md:block z-0" 
-                viewBox="0 0 1000 960" 
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <linearGradient id="road-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#2A4BFF" />
-                    <stop offset="50%" stopColor="#0EA5E9" />
-                    <stop offset="100%" stopColor="#2A4BFF" />
-                  </linearGradient>
-                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="5" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                {/* Elegant glowing snaking road path weaving back and forth between cards */}
-                <path 
-                  d="M 500 0 C 320 120, 320 200, 500 300 C 680 400, 680 480, 500 580 C 320 680, 320 760, 500 860 C 600 910, 600 940, 500 960" 
-                  fill="none" 
-                  stroke="url(#road-grad)" 
-                  strokeWidth="6" 
-                  strokeLinecap="round" 
-                  strokeDasharray="12 8" 
-                  filter="url(#glow)"
-                  className="opacity-70" 
-                />
-              </svg>
-
-              <div className="space-y-8 relative z-10">
-                {roadmapList.map((step, idx) => {
-                  const isEven = idx % 2 === 0;
-                  return (
-                    <div key={idx} className={`flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 ${isEven ? '' : 'md:flex-row-reverse'}`}>
-                      
-                      {/* Content card representing the role (Dark Glassmorphic) */}
-                      <div className="w-full md:w-[45%]">
-                        <div className="bg-[#0A0E35]/95 border border-[#2A4BFF]/25 p-5 rounded-2xl hover:border-[#2A4BFF]/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1 relative text-white">
-                          {/* Decorative subtle dot highlight on card border */}
-                          <div className="absolute top-0 right-0 w-8 h-8 bg-[#2A4BFF]/10 rounded-bl-3xl group-hover:bg-[#2A4BFF]/20 transition-colors z-0"></div>
-                          
-                          <div className="relative z-10 space-y-2.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] text-slate-400 font-mono font-bold uppercase tracking-wide">Milestone {step.step}</span>
-                              <span className="text-xs font-extrabold text-[#0EA5E9] bg-[#2A4BFF]/15 px-2.5 py-0.5 rounded border border-[#2A4BFF]/30 font-mono">
-                                {step.salary}
-                              </span>
-                            </div>
-                            
-                            <h4 className="text-sm sm:text-base font-bold text-white leading-snug group-hover:text-[#0EA5E9] transition-colors">{step.role}</h4>
-                            
-                            <p className="text-[11px] text-slate-300 leading-relaxed font-light font-mono">{step.description}</p>
-                            
-                            {/* Tools tags */}
-                            <div className="flex flex-wrap gap-1.5 pt-1">
-                              {step.tech.map((tag, tIdx) => (
-                                <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Bullet center marker (md+) */}
-                      <div className="w-10 h-10 bg-[#060A24] border-2 border-[#2A4BFF] rounded-full flex items-center justify-center text-white text-xs font-mono font-bold z-10 shadow-lg relative hidden md:flex">
-                        {step.step}
-                        {/* Pulsing indicator ring */}
-                        <div className="absolute -inset-1.5 border border-[#2A4BFF]/40 rounded-full animate-ping opacity-60 pointer-events-none"></div>
-                      </div>
-
-                      {/* Empty space filler for alignment (md+) */}
-                      <div className="w-full md:w-[45%] hidden md:block"></div>
-
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          {/* 5. Company Tie-ups & Hiring Partners */}
-          <section className="py-16 px-4 sm:px-6 lg:px-8 border-t border-b border-slate-900 bg-[#040824]/80 z-10 relative">
-            <div className="max-w-6xl mx-auto text-center space-y-8">
-              <div>
-                <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3 py-1 rounded">Tie-ups & Placements</span>
-                <h3 className="logo-font text-xl sm:text-2xl font-bold text-white mt-3">Where Our Alumni Work & Get Hired</h3>
-              </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 items-center max-w-4xl mx-auto pt-4">
-                {COMPANYS_TIEUPS.map((company, idx) => (
-                  <div 
-                    key={idx} 
-                    className="flex flex-col items-center justify-center space-y-3 group"
-                  >
-                    {/* Clean white round casing for official brand logo to stand out */}
-                    <div className="bg-white p-4.5 rounded-full shadow-lg border border-slate-100 flex items-center justify-center w-16 h-16 group-hover:scale-110 transition-transform duration-300">
-                      <img src={LOGO_IMAGES[company]} alt={company} className="w-9 h-9 object-contain" />
-                    </div>
-                    <span className="text-[10px] text-slate-350 dark:text-slate-300 font-mono font-bold uppercase tracking-wider">{company}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* 6. Detailed Week-by-Week Curriculum */}
-          <section id="curriculum" className="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto z-10 relative scroll-mt-20">
-            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-              <span className="text-[#2A4BFF] text-xs font-bold uppercase tracking-wider font-mono">Detailed Syllabus</span>
-              <h2 className="logo-font text-3xl font-bold text-slate-900">Curriculum Breakdown ({course.curriculum.length} Modules)</h2>
-              <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-mono">
-                Click on each module below to view the complete topic list and learn how each subtopic ties to production pipelines.
-              </p>
-            </div>
-
-            {/* Accordions (Premium Dark Theme boxes) */}
-            <div className="space-y-3.5">
-              {course.curriculum.map((module, idx) => {
-                const isExpanded = expandedModules[idx];
+            {/* Highlights Statistics Grid */}
+            <div className="mt-12 grid grid-cols-2 lg:grid-cols-6 gap-4">
+              {[
+                { metric: course.duration, label: 'Program Duration', icon: Clock },
+                { metric: '40 Hours', label: 'Live Mentor Training', icon: BookOpen },
+                { metric: course.mentorLedProjects, label: 'Hands-on Projects', icon: Code },
+                { metric: 'Live + Recorded', label: 'Delivery Model', icon: Users },
+                { metric: 'Portfolio SLA', label: 'Career Support Prep', icon: Briefcase },
+                { metric: 'Verifiable', label: 'Digital Certificate', icon: Award }
+              ].map((stat, idx) => {
+                const Icon = stat.icon;
                 return (
-                  <div 
-                    key={idx} 
-                    className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
-                      isExpanded 
-                        ? 'border-[#2A4BFF]/50 shadow-lg bg-[#0C153D]/95 text-white' 
-                        : 'border-[#2A4BFF]/15 hover:border-[#2A4BFF]/30 hover:shadow-md bg-[#0A0E35]/90 text-slate-200 hover:bg-[#0E174E]/90'
-                    }`}
-                  >
-                    {/* Header */}
-                    <button
-                      onClick={() => toggleModule(idx)}
-                      className="w-full flex items-center justify-between p-5 text-left transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-center space-x-4">
-                        <span className="bg-[#2A4BFF]/25 border border-[#2A4BFF]/40 text-[#0EA5E9] font-mono text-[10px] sm:text-xs font-bold px-2.5 py-1.5 rounded-lg flex-shrink-0">
-                          Module {idx + 1}
-                        </span>
-                        <h4 className="font-extrabold text-xs sm:text-sm uppercase tracking-wide font-mono leading-relaxed">
-                          {module.title}
-                        </h4>
-                      </div>
-                      <div className="text-slate-400 hover:text-white ml-2 flex-shrink-0">
-                        {isExpanded ? <ChevronUp className="w-5 h-5 text-[#0EA5E9]" /> : <ChevronDown className="w-5 h-5" />}
-                      </div>
-                    </button>
-
-                    {/* Subtopics List */}
-                    {isExpanded && (
-                      <div className="p-5 border-t border-[#2A4BFF]/20 bg-slate-950/40 space-y-3.5 animate-fade-in text-slate-100">
-                        <p className="text-[10px] text-slate-450 dark:text-slate-400 font-mono uppercase tracking-wider font-bold">Topics Covered</p>
-                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {module.topics.map((topic, tIdx) => (
-                            <li key={tIdx} className="flex items-start space-x-2 text-xs leading-relaxed font-light font-mono text-slate-300">
-                              <CheckCircle className="w-4.5 h-4.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
-                              <span>{topic}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                  <div key={idx} className="bg-slate-50 border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2D43B8]/30 transition-all duration-300 group hover:shadow-lg hover:shadow-[#2D43B8]/5">
+                    <div className="w-8 h-8 rounded-lg bg-[#2D43B8]/5 flex items-center justify-center text-[#2D43B8] mb-4 group-hover:bg-[#2D43B8]/10 transition-colors">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-base sm:text-lg font-bold text-slate-900 font-manrope">{stat.metric}</div>
+                      <div className="text-[10px] text-slate-500 font-medium uppercase tracking-wider mt-1">{stat.label}</div>
+                    </div>
                   </div>
                 );
               })}
             </div>
           </section>
 
-          {/* 7. Projects Showcase Section */}
-          <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#040824]/90 border-t border-b border-slate-900 z-10 relative">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-                <span className="text-[#0EA5E9] text-xs font-bold uppercase tracking-wider font-mono">Project Portfolio</span>
-                <h2 className="logo-font text-3xl font-bold text-white">Hands-On Development Tasks</h2>
-                <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-mono">
-                  We believe in building. You will complete dynamic industry project builds during the program duration.
+          {/* SECTION 2: Career Opportunities & Why BeyondSkills (Combined logical layout) */}
+          <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+              {/* Why BeyondSkills Left (5 cols) */}
+              <div className="lg:col-span-5 space-y-6">
+                <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
+                  The BeyondSkills Advantage
+                </span>
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                  A Project-Driven Learning Architecture
+                </h2>
+                <p className="text-slate-500 text-sm leading-relaxed font-inter">
+                  We eliminate traditional classroom theory. Our learning systems are instructed by active industry practitioners, focusing entirely on clean code, vector models, and deployable portfolios.
                 </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {course.projects.map((proj, idx) => (
-                  <div 
-                    key={idx} 
-                    className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 p-6 rounded-2xl flex flex-col justify-between hover:border-[#2A4BFF]/45 hover:shadow-xl transition-all duration-300 group text-white"
-                  >
-                    <div>
-                      <div className="bg-[#2A4BFF]/20 text-[#0EA5E9] border border-[#2A4BFF]/30 px-2 py-1 rounded text-[9px] font-mono font-bold uppercase tracking-widest w-fit mb-4">
-                        Project 0{idx + 1}
+                <div className="space-y-4">
+                  {[
+                    { title: 'Industry Expert Mentors', desc: 'Classes are taught by practicing engineers from Tietoevry, EY, and Shemaroo.' },
+                    { title: 'Weekly Coding Labs', desc: 'Get hands-on support in our community channels to debug Jupyter notebooks.' },
+                    { title: 'Verifiable Portfolios', desc: 'Construct real models and push them to git, providing verifiable proof of skills.' }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex items-start space-x-3">
+                      <div className="w-5 h-5 rounded-full bg-[#2D43B8]/10 text-[#2D43B8] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Check className="w-3 h-3" />
                       </div>
-                      <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
-                      <p className="text-[11px] text-slate-355 dark:text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">{item.title}</h4>
+                        <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
-                      {proj.techUsed && proj.techUsed.map((t, tIdx) => (
-                        <span key={tIdx} className="text-[8px] font-bold text-slate-200 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-mono">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          </section>
 
-          {/* 8. Upskilling Sessions Section */}
-          <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto z-10 relative">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-5 space-y-5">
-                <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-wider font-mono bg-[#2A4BFF]/5 px-3 py-1 rounded border border-[#2A4BFF]/10">
-                  Career Readiness
-                </span>
-                <h2 className="logo-font text-3xl font-bold text-slate-900 leading-tight">
-                  Upskilling & Career Acceleration Suite
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-550 leading-relaxed font-mono">
-                  Acquiring hard technical competencies represents only 70% of candidate value. We dedicate weekly slots to building your personal brand and communication confidence.
-                </p>
-              </div>
-              
+              {/* Market/Career Opportunities Right (7 cols) */}
               <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {[
-                  { 
-                    title: "1-on-1 Resume Builder", 
-                    desc: "We analyze your project statements, audit technical keywords, and re-format structures to pass ATS screening algorithms.",
-                    action: "ATS Optimization Reviews"
-                  },
-                  { 
-                    title: "LinkedIn Branding", 
-                    desc: "Learn to write content showcasing your capstone steps, optimize search banners, and network with active technology managers.",
-                    action: "Creator Mode Optimization"
-                  },
-                  { 
-                    title: "Public Speaking & Pitching", 
-                    desc: "Weekly demo days where students present code architectures, explaining algorithms to peers and building narrative speaking skills.",
-                    action: "Public Technical Explanations"
-                  },
-                  { 
-                    title: "Mock Technical & HR Reviews", 
-                    desc: "Replicate live interview telemetry: solve Python arrays under pressure and answer logic checks from agency managers.",
-                    action: "Simulated Telemetry Rounds"
-                  }
-                ].map((suite, idx) => (
-                  <div key={idx} className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 hover:border-[#2A4BFF]/45 hover:shadow-lg p-6 rounded-2xl transition-all text-white">
-                    <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
-                    <p className="text-[11px] text-slate-355 dark:text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
-                    <span className="text-[9px] text-[#0EA5E9] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/20 px-2 py-0.5 rounded">
-                      {suite.action}
-                    </span>
+                {datasetsList && datasetsList.length > 0 ? (
+                  datasetsList.map((dataset, idx) => (
+                    <div key={idx} className={`p-6 rounded-2xl border ${idx === 0 ? 'bg-[#0B0F19] text-white border-white/5 col-span-1 sm:col-span-2' : 'bg-slate-50 border-slate-200/65 text-slate-800'} space-y-4 hover:shadow-md transition-all duration-300`} >
+                      <span className={`text-[10px] ${idx === 0 ? 'text-[#0EA5E9]' : 'text-[#2D43B8]'} font-bold tracking-widest uppercase block font-mono`}>{dataset.label}</span>
+                      <h3 className={`text-xl sm:text-2xl font-extrabold font-manrope ${idx === 0 ? 'text-white' : 'text-slate-900'}`}>{dataset.projected}</h3>
+                      <p className={`text-xs ${idx === 0 ? 'text-slate-400' : 'text-slate-505'} leading-relaxed font-inter`}>
+                        {dataset.details}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <div className="bg-[#0B0F19] text-white p-6 rounded-2xl border border-white/5 space-y-4">
+                      <span className="text-[10px] text-[#0EA5E9] font-bold tracking-widest uppercase block font-mono">Market Demand</span>
+                      <h3 className="text-xl sm:text-2.5xl font-extrabold font-manrope text-white">36% CAGR Growth</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed font-inter">
+                        The global AI & analytics software market is expanding at a record pace. Traditional roles are transitioning rapidly into automation pipelines, requiring active training.
+                      </p>
+                    </div>
+                    <div className="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl space-y-4">
+                      <span className="text-[10px] text-[#2D43B8] font-bold tracking-widest uppercase block font-mono">Average Packages</span>
+                      <h3 className="text-xl sm:text-2.5xl font-extrabold font-manrope text-slate-900">₹6.5 - 12 LPA</h3>
+                      <p className="text-xs text-slate-505 leading-relaxed font-inter">
+                        Data scientists and neural network developers command some of the highest salaries for entry-level developers in the Indian technology industry.
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 3: Animated Learning Journey Roadmap */}
+          <section className="py-16 bg-[#0B0F19] text-white relative overflow-hidden z-10 border-t border-white/5">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(45,67,184,0.08),transparent_40%)]"></div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              
+              <div className="text-center max-w-3xl mx-auto mb-16">
+                <span className="text-[#0EA5E9] text-[10px] font-extrabold tracking-widest uppercase border border-[#0EA5E9]/20 px-3 py-1 rounded bg-[#0EA5E9]/5 font-mono">
+                  Learning Journey
+                </span>
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-white mt-4 mb-4 tracking-tight">
+                  Your Professional Roadmap
+                </h2>
+                <p className="text-slate-400 text-xs sm:text-sm">
+                  Click through the pipeline phases to preview your training timeline deliverables.
+                </p>
+              </div>
+
+              {/* Interactive Timeline Controls */}
+              <div className="grid grid-cols-3 md:grid-cols-9 gap-2 mb-10">
+                {roadmapSteps.map((step, idx) => (
+                  <button 
+                    key={idx}
+                    onClick={() => setActiveStep(idx)}
+                    className={`py-3 px-2 rounded-xl text-[10px] font-bold uppercase tracking-wider border transition-all cursor-pointer text-center ${activeStep === idx ? 'bg-[#2D43B8] border-[#2D43B8] text-white shadow-lg shadow-[#2D43B8]/20' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'}`}
+                  >
+                    {step.name}
+                  </button>
+                ))}
+              </div>
+
+              {/* Detailed Step Card */}
+              <div className="max-w-3xl mx-auto bg-slate-900 border border-white/10 rounded-2xl p-8 shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#2D43B8]/20 text-white font-extrabold text-[9px] tracking-widest uppercase px-4 py-1.5 rounded-bl-xl font-mono">
+                  Step 0{activeStep + 1} / 09
+                </div>
+                <div className="flex items-start space-x-6">
+                  <div className="w-12 h-12 rounded-xl bg-[#2D43B8] text-white flex items-center justify-center font-extrabold text-lg flex-shrink-0 font-mono shadow-md shadow-[#2D43B8]/25">
+                    0{activeStep + 1}
+                  </div>
+                  <div className="space-y-3">
+                    <h3 className="font-manrope font-extrabold text-white text-xl sm:text-2xl">{roadmapSteps[activeStep].name}</h3>
+                    <p className="text-slate-350 text-sm leading-relaxed font-inter">{roadmapSteps[activeStep].desc}</p>
+                    <div className="flex items-center space-x-2 text-xs text-[#0EA5E9] font-bold font-mono pt-2">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Syllabus Milestone Complete</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 4: Curriculum Overview Grid */}
+          <section id="curriculum" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
+                Curriculum Grid
+              </span>
+              <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-4 tracking-tight">
+                Academic Curriculum Syllabus
+              </h2>
+              <p className="text-slate-505 text-sm">
+                {['artificial-intelligence', 'machine-learning'].includes(course.id)
+                  ? 'Categorized into four core fields of data science and artificial intelligence engineering.'
+                  : 'Detailed learning modules structured to scale your technical knowledge systematically.'}
+              </p>
+            </div>
+
+            {/* Standard Tab Controls for AI / ML */}
+            {['artificial-intelligence', 'machine-learning'].includes(course.id) ? (
+              <>
+                <div className="flex flex-wrap justify-center gap-2 mb-12">
+                  {Object.keys(curriculumCategories).map((key) => (
+                    <button
+                      key={key}
+                      onClick={() => setSelectedCurriculumTab(key)}
+                      className={`px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${selectedCurriculumTab === key ? 'bg-[#2D43B8] text-white border-[#2D43B8] shadow-lg shadow-[#2D43B8]/10' : 'bg-slate-50 text-slate-655 border-slate-200 hover:bg-slate-100 hover:text-slate-900'}`}
+                    >
+                      {curriculumCategories[key].title}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Tab content */}
+                <div className="bg-[#F5F7FA] border border-slate-200/60 rounded-3xl p-8 sm:p-10 shadow-sm animate-fade-in">
+                  <div className="max-w-3xl mb-8">
+                    <h3 className="font-manrope font-extrabold text-[#111111] text-xl sm:text-2.5xl mb-2">
+                      {curriculumCategories[selectedCurriculumTab].title}
+                    </h3>
+                    <p className="text-slate-505 text-xs sm:text-sm leading-relaxed font-inter">
+                      {curriculumCategories[selectedCurriculumTab].description}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {curriculumCategories[selectedCurriculumTab].items.map((item, idx) => (
+                      <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl space-y-2.5 hover:shadow-md transition-shadow animate-fade-in">
+                        <div className="flex items-center space-x-2 text-[#2D43B8]">
+                          <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">{item.name}</h4>
+                        </div>
+                        <p className="text-[11px] text-slate-505 leading-relaxed font-inter pl-6">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              // Reusable module fallback for other courses
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+                {course.curriculum && course.curriculum.map((module, idx) => (
+                  <div key={idx} className="bg-slate-50 border border-slate-200 p-6 rounded-2xl hover:border-[#2D43B8]/20 transition-all group shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[10px] font-bold text-[#2D43B8] uppercase bg-[#2D43B8]/5 border border-[#2D43B8]/10 px-2.5 py-1 rounded-md font-mono">{module.week}</span>
+                    </div>
+                    <h3 className="font-manrope font-bold text-slate-900 text-lg group-hover:text-[#2D43B8] transition-colors">{module.title}</h3>
+                    <ul className="mt-4 space-y-2.5">
+                      {module.topics && module.topics.map((topic, tIdx) => (
+                        <li key={tIdx} className="flex items-start space-x-2 text-xs text-slate-650 leading-relaxed font-inter">
+                          <Check className="w-3.5 h-3.5 text-[#2D43B8] mt-0.5 flex-shrink-0" />
+                          <span>{topic}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* SECTION 5: Projects Showcase */}
+          <section className="py-16 bg-[#0B0F19] text-white relative z-10 border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center max-w-3xl mx-auto mb-16">
+                <span className="text-[#0EA5E9] text-[10px] font-extrabold tracking-widest uppercase border border-white/10 px-3 py-1 rounded font-mono">
+                  Hands-On Projects
+                </span>
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-white mt-4 mb-4 tracking-tight">
+                  Build Production-Grade Portfolios
+                </h2>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
+                  Construct advanced intelligence models, deploy API endpoints, and host them live using GitHub workflows.
+                </p>
+              </div>
+
+              {/* Dynamic Projects Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {course.projects && course.projects.map((project, idx) => (
+                  <div key={idx} className="bg-slate-900 border border-white/10 p-6 rounded-2xl flex flex-col justify-between hover:border-brand-cyan/30 transition-all duration-300 relative group">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-bold text-[#0EA5E9] uppercase border border-[#0EA5E9]/20 px-2.5 py-0.5 rounded bg-[#0EA5E9]/5 font-mono">
+                          Industrial Capstone
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          Verifiable Repo
+                        </span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-bold text-white mb-2 leading-tight group-hover:text-brand-cyan transition-colors">{project.title}</h3>
+                      <p className="text-xs text-slate-400 leading-relaxed font-inter">{project.description}</p>
+                    </div>
+
+                    <div className="border-t border-white/10 pt-4 mt-6">
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.techUsed && project.techUsed.map((t, tIdx) => (
+                          <span key={tIdx} className="text-[10px] bg-white/5 border border-white/10 px-2 py-0.5 rounded text-slate-300 font-mono">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* 9. End CTA Section & Founder's Quote */}
-          <section className="relative z-10 py-24 px-4 sm:px-6 lg:px-8 border-t border-slate-900 bg-[#060A24] text-white text-center overflow-hidden">
-            {/* Glow vector background */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
-            
-            <div className="max-w-4xl mx-auto relative z-10 space-y-10">
-              <div className="max-w-2xl mx-auto space-y-4">
-                <span className="text-[#0EA5E9] text-[10px] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/10 px-3 py-1 rounded">
-                  Ready to Accelerate
+          {/* SECTION 6: Tools Covered Badges */}
+          <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
+                Modern Tech Stack
+              </span>
+              <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-4 tracking-tight">
+                Tools & Engineering Platforms
+              </h2>
+              <p className="text-slate-500 text-sm font-inter">
+                Work with platforms deployed at leading technology organizations.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 max-w-4xl mx-auto">
+              {course.techStack && course.techStack.map((tech, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200/60 px-5 py-3 rounded-xl flex items-center space-x-2.5 hover:border-[#2D43B8]/20 transition-all duration-200 hover:-translate-y-0.5 shadow-sm">
+                  <TechIcon name={tech} className="w-5 h-5" />
+                  <span className="text-xs font-bold text-slate-800 tracking-wide uppercase font-mono">{tech}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* SECTION 7: Career Outcomes Roles Grid */}
+          <section className="py-16 bg-[#F5F7FA] border-t border-[#E5E7EB] px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center max-w-3xl mx-auto mb-16">
+                <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
+                  Target Placement Roles
                 </span>
-                <h2 className="logo-font text-3xl sm:text-4xl font-extrabold leading-tight">
-                  Get Industry Ready with Beyond Skills
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#111111] mt-4 mb-4 tracking-tight">
+                  Placement & Career Paths
                 </h2>
-                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed font-mono">
-                  Skip traditional academic lags. Enroll today to secure direct support access and build working projects.
+                <p className="text-slate-500 text-sm leading-relaxed">
+                  Equip yourself to compete for specialized developer and analytics roles in global technology pipelines.
                 </p>
               </div>
 
-              {/* Founder Quote card */}
-              <div className="bg-[#0A0E35]/90 border border-[#2A4BFF]/25 p-8 rounded-3xl text-left max-w-2xl mx-auto relative shadow-2xl">
-                <Quote className="w-10 h-10 text-[#0EA5E9]/15 absolute top-4 left-4 pointer-events-none" />
-                <div className="relative z-10 pl-6 space-y-4">
-                  <p className="text-slate-200 text-xs sm:text-sm italic leading-relaxed font-light font-mono">
-                    "BeyondSkills was founded to resolve the extreme misalignment between college textbooks and corporate realities. We do not just teach syntax; we construct engineers who can build products and navigate technical issues autonomously."
-                  </p>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-1.5 h-6 bg-[#2A4BFF] rounded-full"></div>
-                    <div>
-                      <h5 className="text-xs font-bold uppercase tracking-wider font-mono text-white">Founder, BeyondSkills</h5>
-                      <span className="text-[10px] text-slate-400 font-mono">Agency & Academy Operations</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {careerOutcomes.map((role, idx) => (
+                  <div key={idx} className="bg-white border border-slate-200 p-6 rounded-2xl space-y-3 hover:border-[#2D43B8]/20 hover:shadow-lg transition-all duration-300 group">
+                    <div className="w-8 h-8 rounded-lg bg-[#2D43B8]/5 flex items-center justify-center text-[#2D43B8] group-hover:bg-[#2D43B8]/10 transition-colors">
+                      <Briefcase className="w-4 h-4" />
                     </div>
+                    <h3 className="font-manrope font-bold text-slate-900 text-base group-hover:text-[#2D43B8] transition-colors">{role.title}</h3>
+                    <p className="text-xs text-slate-505 leading-relaxed font-inter">{role.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* SECTION 8: FAQ Accordion Section */}
+          <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative z-10">
+            <div className="text-center mb-16">
+              <span className="text-[#2D43B8] text-xs font-bold tracking-widest uppercase">
+                Have Questions?
+              </span>
+              <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 tracking-tight">
+                Frequently Asked Queries
+              </h2>
+            </div>
+
+            <div className="space-y-4">
+              {faqItems.map((item, idx) => (
+                <div key={idx} className="bg-slate-50 border border-slate-200/60 rounded-2xl overflow-hidden transition-all duration-200">
+                  <button 
+                    onClick={() => toggleModule(idx)}
+                    className="w-full px-6 py-5 text-left flex items-center justify-between text-slate-900 hover:text-[#2D43B8] transition-colors cursor-pointer focus:outline-none"
+                  >
+                    <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">{item.q}</span>
+                    {expandedModules[idx] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
+                  {expandedModules[idx] && (
+                    <div className="px-6 pb-6 text-xs sm:text-sm text-slate-505 leading-relaxed border-t border-slate-200/40 pt-4 font-inter animate-fade-in">
+                      {item.a}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* SECTION 9: FINAL CTA & ENQUIRY FORM */}
+          <section id="enquiry-form-section" className="relative z-10 py-20 bg-[#F5F7FA] border-t border-[#E5E7EB]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                {/* Left Column: CTA Context */}
+                <div className="space-y-6 text-left">
+                  <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2D43B8] bg-[#2D43B8]/10 border border-[#2D43B8]/20 px-3 py-1 rounded font-mono">
+                    Admissions Open
+                  </span>
+                  <h2 className="font-manrope font-extrabold text-[#111111] text-3xl sm:text-5xl leading-tight">
+                    Build Your Future in <span className="text-[#2D43B8]">{course.title}</span>
+                  </h2>
+                  <p className="text-slate-505 text-xs sm:text-sm leading-relaxed max-w-md font-inter">
+                    Register details to schedule a live training counseling session. Download the syllabus models and receive detailed briefs from academy mentors.
+                  </p>
+                  
+                  {/* Compliance note */}
+                  <div className="flex items-start space-x-3 bg-white border border-slate-200 p-4 rounded-xl max-w-md">
+                    <ShieldAlert className="w-5 h-5 text-[#2D43B8] flex-shrink-0 mt-0.5" />
+                    <p className="text-[10px] text-slate-505 leading-relaxed font-inter">
+                      <strong>Notice:</strong> Program registration fees are final. Class schedules are mapped dynamically to weekends to assist working professionals.
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              <div className="pt-6">
-                <button 
-                  onClick={handleEnrollClick}
-                  className="w-full sm:w-auto bg-[#2A4BFF] hover:brightness-110 text-white font-bold px-10 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-xl shadow-blue-500/20 cursor-pointer"
-                >
-                  Get Started & Enroll Now
-                </button>
-                <div className="mt-4 flex items-center justify-center space-x-2 text-[10px] text-slate-455 dark:text-slate-400 font-mono">
-                  <Mail className="w-3.5 h-3.5 text-[#2A4BFF]" />
-                  <span>Contact: admissions@wayspire.in / support@beyondskills.co</span>
+                {/* Right Column: Admission Enquiry Form */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl max-w-lg mx-auto w-full">
+                  <h3 className="font-manrope font-bold text-[#111111] text-lg sm:text-xl mb-6">Admission Enquiry Form</h3>
+                  
+                  {enquiryStatus === 'success' ? (
+                    <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
+                      <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
+                      <h4 className="font-bold text-sm">Enquiry Submitted Successfully!</h4>
+                      <p className="text-[11px] text-emerald-600 leading-relaxed">
+                        Check your email inbox (and simulated notifications) for advisor briefing schedules.
+                      </p>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleEnquirySubmit} className="space-y-4">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Full Name *</label>
+                        <input 
+                          type="text" 
+                          required 
+                          value={enquiryForm.name}
+                          onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
+                          className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"
+                          placeholder="e.g., Faisal Shah" 
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email Address *</label>
+                        <input 
+                          type="email" 
+                          required 
+                          value={enquiryForm.email}
+                          onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
+                          className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"
+                          placeholder="e.g., faisal@gmail.com" 
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Phone Number *</label>
+                          <input 
+                            type="tel" 
+                            required 
+                            value={enquiryForm.phone}
+                            onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
+                            className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"
+                            placeholder="e.g., +91 99999 99999" 
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">College Name *</label>
+                          <input 
+                            type="text" 
+                            required 
+                            value={enquiryForm.college}
+                            onChange={(e) => setEnquiryForm({...enquiryForm, college: e.target.value})}
+                            className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"
+                            placeholder="e.g., IIT Delhi / NIT Trichy" 
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Current Status *</label>
+                        <select 
+                          value={enquiryForm.status}
+                          onChange={(e) => setEnquiryForm({...enquiryForm, status: e.target.value})}
+                          className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"
+                        >
+                          <option value="Undergraduate Student">Undergraduate Student</option>
+                          <option value="Final Year Student">Final Year Student</option>
+                          <option value="Recent Graduate">Recent Graduate</option>
+                          <option value="Working Professional">Working Professional</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Brief Message</label>
+                        <textarea 
+                          rows="3"
+                          value={enquiryForm.message}
+                          onChange={(e) => setEnquiryForm({...enquiryForm, message: e.target.value})}
+                          className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all resize-none"
+                          placeholder="Tell us about your career goals..."
+                        ></textarea>
+                      </div>
+
+                      <button 
+                        type="submit" 
+                        className="w-full py-3.5 bg-[#2D43B8] text-white hover:brightness-110 rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md shadow-[#2D43B8]/20 cursor-pointer"
+                      >
+                        Submit Enquiry
+                      </button>
+                    </form>
+                  )}
                 </div>
+
               </div>
             </div>
           </section>
