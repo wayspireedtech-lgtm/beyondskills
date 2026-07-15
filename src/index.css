@@ -17,6 +17,14 @@
 
   --font-sans: 'Outfit', sans-serif;
   --font-serif: 'Playfair Display', serif;
+  
+  --font-manrope: 'Manrope', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+  
+  --color-primary-brand: #2D43B8;
+  --color-black-brand: #111111;
+  --color-surface-light: #F5F7FA;
+  --color-border-gray: #E5E7EB;
 }
 
 @layer base {
@@ -25,6 +33,14 @@
     color: #0F172A !important;
     font-family: 'Outfit', sans-serif;
   }
+}
+
+.font-manrope {
+  font-family: 'Manrope', sans-serif;
+}
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
 }
 
 /* Custom Scrollbar styled after upsynk.in */

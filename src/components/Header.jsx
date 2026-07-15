@@ -123,7 +123,7 @@ export default function Header() {
                     <Link to="/courses?cat=AI/ML/DS/DA" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                       Artificial Intelligence & Data Science
                     </Link>
-                    <Link to="/courses?cat=Full Stack Development" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
+                    <Link to="/programs/full-stack-web-development" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">
                       Full Stack Web Dev (MERN)
                     </Link>
                     <Link to="/courses?cat=Digital Marketing" className="block px-3 py-1.5 text-xs text-slate-700 hover:text-brand-purple rounded hover:bg-slate-100">

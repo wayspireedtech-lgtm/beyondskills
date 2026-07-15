@@ -261,11 +261,11 @@ export default function Home() {
         {/* Divider line */}
         <div className="max-w-5xl mx-auto border-t border-slate-200/50 my-2 relative z-10" />
 
-        {/* Row 2: OUR ALUMNI WORK AT - Scrolling Right to Left (forward animation) */}
+        {/* Row 2: OUR ALUMNI & MENTORS WORK AT - Scrolling Right to Left (forward animation) */}
         <div className="mt-8 relative z-10">
           <div className="text-center mb-6">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] font-mono">
-              Our Alumni Work At
+              Our Alumni & Mentors Work At
             </span>
           </div>
 
@@ -309,7 +309,10 @@ export default function Home() {
             return (
               <div 
                 key={course.id} 
-                onClick={() => navigate(`/course/${course.id}`)}
+                onClick={() => {
+                  const targetPath = course.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${course.id}`;
+                  navigate(targetPath);
+                }}
                 className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
               >
                 {/* Background Image with Dark Overlay */}
@@ -366,7 +369,7 @@ export default function Home() {
                       </div>
                       <div className="flex space-x-1.5">
                         <Link 
-                          to={`/course/${course.id}/brochure`}
+                          to={course.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${course.id}/brochure`}
                           onClick={(e) => e.stopPropagation()}
                           className="bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer animate-fade-in"
                         >
@@ -568,6 +571,7 @@ export default function Home() {
             )})}
         </div>
       </section>
+
 
 
 
