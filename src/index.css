@@ -134,22 +134,10 @@
   background-image: 
     linear-gradient(to right, rgba(27, 42, 138, 0.14) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(27, 42, 138, 0.14) 1px, transparent 1px);
-}
-
-.bg-grid-pattern::after {
-  content: '';
-  position: absolute;
-  inset: 0;
   
-  /* Darker interactive blue grid that pops near the cursor */
-  background-size: 26px 26px;
-  background-image: 
-    linear-gradient(to right, rgba(10, 14, 53, 0.35) 1.2px, transparent 1.2px),
-    linear-gradient(to bottom, rgba(10, 14, 53, 0.35) 1.2px, transparent 1.2px);
-  /* Mask it with radial gradient at mouse coordinates */
-  -webkit-mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
-  mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), black 30%, transparent 100%);
-  transition: opacity 0.3s ease;
+  /* Mask it with a radial gradient to fade out grid lines near the cursor, ensuring text clarity */
+  -webkit-mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), transparent 0%, rgba(0, 0, 0, 0.25) 50%, black 100%);
+  mask-image: radial-gradient(circle 180px at var(--mouse-x, -1000px) var(--mouse-y, -1000px), transparent 0%, rgba(0, 0, 0, 0.25) 50%, black 100%);
 }
 
 /* Subtle spotlight glow behind the grid using brand blue/cyan */
