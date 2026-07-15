@@ -6,13 +6,14 @@ import {
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
   FileSpreadsheet, ClipboardList, CheckSquare, BarChart, Settings, 
   UserPlus, RefreshCw, Eye, Edit2, X, Check, CheckCircle2, ChevronRight,
-  TrendingUp, Calendar, AlertCircle, Sparkles
+  TrendingUp, Calendar, AlertCircle, Sparkles, Phone, ShieldCheck, LogOut
 } from 'lucide-react';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   
   // CRM States
+  const [currentUser, setCurrentUser] = useState(null);
   const [leads, setLeads] = useState([]);
   const [payments, setPayments] = useState([]);
   const [students, setStudents] = useState([]);
@@ -31,10 +32,6 @@ export default function AdminDashboard() {
   const [showImportLeadModal, setShowImportLeadModal] = useState(false);
   const [showEditLeadModal, setShowEditLeadModal] = useState(false);
   const [showAddUserModal, setShowAddUserModal] = useState(false);
-  const [showLeadHistoryModal, setShowLeadHistoryModal] = useState(false);
-  
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [selectedLeadIdx, setSelectedLeadIdx] = useState(null);
   
   // Form Bindings
   const [newLeadForm, setNewLeadForm] = useState({
@@ -43,9 +40,13 @@ export default function AdminDashboard() {
   });
   const [importText, setImportText] = useState('');
   const [newUserForm, setNewUserForm] = useState({
-    name: '', email: '', role: 'BDA', reportsTo: ''
+    name: '', email: '', role: 'BDA', reportsTo: '', password: ''
   });
   const [noteText, setNoteText] = useState('');
+
+  // Selected Lead state for Details Modal
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [selectedLeadIdx, setSelectedLeadIdx] = useState(null);
   
   // Filters
   const [leadSearch, setLeadSearch] = useState('');
@@ -64,16 +65,17 @@ export default function AdminDashboard() {
   const [bulkBDA, setBulkBDA] = useState('');
   const [bulkStatus, setBulkStatus] = useState('');
 
-  // Selected BDA for detailed sub-status view
+  // Selected BDA for detailed BDA Performance sub-status view
   const [selectedBdaName, setSelectedBdaName] = useState('');
 
   useEffect(() => {
-    // Check if logged in user is admin
+    // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
-    if (!loggedInUser || loggedInUser.email !== 'beyondskills.ai@gmail.com') {
+    if (!loggedInUser) {
       navigate('/auth');
       return;
     }
+    setCurrentUser(loggedInUser);
 
     setLeads(getDbItem('beyondskills_leads', []));
     setPayments(getDbItem('beyondskills_payments', []));
@@ -83,12 +85,12 @@ export default function AdminDashboard() {
     let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
     if (existingCrmUsers.length === 0) {
       existingCrmUsers = [
-        { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head' },
-        { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head' },
-        { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager' },
-        { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager' },
-        { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager' },
-        { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager' }
+        { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
+        { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
+        { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: '7982738724' },
+        { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: 'Deepak@123' },
+        { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Shubham@123' },
+        { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
       ];
       setDbItem('beyondskills_crm_users', existingCrmUsers);
     }
@@ -99,6 +101,32 @@ export default function AdminDashboard() {
     }
   }, [navigate]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('beyondskills_current_user');
+    window.dispatchEvent(new Event('auth_change'));
+    navigate('/auth');
+  };
+
+  // Check if BDA profile
+  const isBdaUser = currentUser && currentUser.role === 'BDA';
+  const isBdmUser = currentUser && currentUser.role === 'BDM';
+  const isAdminUser = currentUser && (currentUser.role === 'Admin' || currentUser.email === 'beyondskills.ai@gmail.com');
+
+  // Filter leads based on logged in associate name if they are BDA
+  const getAccessibleLeads = () => {
+    if (isBdaUser) {
+      return leads.filter(l => l.assignedBDA === currentUser.name);
+    }
+    if (isBdmUser) {
+      // BDM sees their own leads + leads assigned to BDAs reporting to them
+      const myBdas = crmUsers.filter(u => u.reportsTo === currentUser.name).map(u => u.name);
+      return leads.filter(l => l.assignedBDM === currentUser.name || myBdas.includes(l.assignedBDA));
+    }
+    return leads; // Admin sees all
+  };
+
+  const accessibleLeads = getAccessibleLeads();
+
   // Save changes helper
   const saveLeadsToDb = (updatedLeads) => {
     setLeads(updatedLeads);
@@ -108,11 +136,11 @@ export default function AdminDashboard() {
   // Seed demo data helper
   const handleSeedDemoData = () => {
     const demoLeads = [
-      { id: 'LD001', name: 'Jatin Rawat', email: 'jatin@gmail.com', phone: '9876543210', date: new Date(Date.now() - 3600000 * 2).toISOString(), type: 'High Intent Leads', program: 'full-stack-web-development', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'Follow Up', subStatus: 'CB', message: 'Interested in MERN stack, call at 5 PM', history: [{ note: 'Expressed high intent. Target pricing details sent.', date: new Date().toISOString() }], callAttempts: { s1: true, s2: true, s3: false, s4: false, s5: false, s6: false } },
-      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'SOP Screening', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', message: 'Wants AI course syllabus', history: [], callAttempts: { s1: false, s2: false, s3: false, s4: false, s5: false, s6: false } },
-      { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Duration', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', message: 'No answer', history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }], callAttempts: { s1: true, s2: false, s3: false, s4: false, s5: false, s6: false } },
-      { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'Inbound', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', message: 'Paid via razorpay', history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }], callAttempts: { s1: true, s2: true, s3: true, s4: false, s5: false, s6: false } },
-      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Chat', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', message: 'Chatbot query on payment plans', history: [], callAttempts: { s1: false, s2: false, s3: false, s4: false, s5: false, s6: false } }
+      { id: 'LD001', name: 'Roshan Kumar maharana', email: 'roshan.k@gmail.com', phone: '9776741640', date: '25 Jun 2026', type: 'SOP Screening', program: 'DA FLAGSHIP - UTTAM', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Unspecified', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: 'CB', s3: 'CB', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Status 1 DNP, Status 2 CB: Scheduled call back.', date: new Date().toISOString() }] },
+      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'SOP Screening', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
+      { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Duration', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', profession: 'Working Professional (< 30k) [WP-1]', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }] },
+      { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'Inbound', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: 'QUALIFIED', s2: 'Already Paid', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }] },
+      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Chat', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] }
     ];
     saveLeadsToDb(demoLeads);
     alert('Demo CRM Leads seeded successfully!');
@@ -127,16 +155,18 @@ export default function AdminDashboard() {
       name: newLeadForm.name,
       email: newLeadForm.email,
       phone: newLeadForm.phone,
-      date: new Date().toISOString(),
+      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       type: newLeadForm.type,
       program: newLeadForm.program,
-      assignedBDM: '',
-      assignedBDA: '',
+      assignedBDM: isBdaUser ? currentUser.reportsTo || '' : '',
+      assignedBDA: isBdaUser ? currentUser.name : '',
       status: newLeadForm.status,
       subStatus: newLeadForm.subStatus,
-      message: newLeadForm.message,
-      history: [],
-      callAttempts: { s1: false, s2: false, s3: false, s4: false, s5: false, s6: false }
+      profession: 'Unspecified',
+      mentor: 'None',
+      duration: 'None',
+      callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+      history: []
     };
     saveLeadsToDb([...leads, leadEntry]);
     setShowAddLeadModal(false);
@@ -159,16 +189,18 @@ export default function AdminDashboard() {
             name: cols[0] || 'Unknown Candidate',
             email: cols[1] || 'no-email@beyondskills.com',
             phone: cols[2] || '0000000000',
-            date: new Date().toISOString(),
+            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
             type: cols[3] || 'Inbound',
             program: cols[4] || 'ai-data-science',
-            assignedBDM: '',
-            assignedBDA: '',
+            assignedBDM: isBdaUser ? currentUser.reportsTo || '' : '',
+            assignedBDA: isBdaUser ? currentUser.name : '',
             status: 'New',
             subStatus: 'QUALIFIED',
-            message: cols[5] || 'Bulk imported record',
-            history: [],
-            callAttempts: { s1: false, s2: false, s3: false, s4: false, s5: false, s6: false }
+            profession: 'Unspecified',
+            mentor: 'None',
+            duration: 'None',
+            callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+            history: cols[5] ? [{ note: cols[5], date: new Date().toISOString() }] : []
           });
         }
       });
@@ -187,20 +219,25 @@ export default function AdminDashboard() {
     saveLeadsToDb(updated);
   };
 
-  // Edit lead action trigger
+  // Edit lead action trigger (Opens detailed Lead Details Panel)
   const handleStartEditLead = (lead, idx) => {
-    setSelectedLead(lead);
+    setSelectedLead({
+      ...lead,
+      profession: lead.profession || 'Unspecified',
+      callAttempts: lead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }
+    });
     setSelectedLeadIdx(idx);
     setShowEditLeadModal(true);
   };
 
   const handleSaveEditLead = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     const updated = [...leads];
     updated[selectedLeadIdx] = selectedLead;
     saveLeadsToDb(updated);
     setShowEditLeadModal(false);
     setSelectedLead(null);
+    alert('Lead details saved successfully!');
   };
 
   // Bulk assignment confirms
@@ -230,7 +267,7 @@ export default function AdminDashboard() {
     setCrmUsers(updated);
     setDbItem('beyondskills_crm_users', updated);
     setShowAddUserModal(false);
-    setNewUserForm({ name: '', email: '', role: 'BDA', reportsTo: '' });
+    setNewUserForm({ name: '', email: '', role: 'BDA', reportsTo: '', password: '' });
   };
 
   const handleRemoveUser = (idx) => {
@@ -239,39 +276,27 @@ export default function AdminDashboard() {
     setDbItem('beyondskills_crm_users', updated);
   };
 
-  // Call history and attempts logs
-  const handleOpenCallLogs = (lead, idx) => {
-    setSelectedLead(lead);
-    setSelectedLeadIdx(idx);
-    setShowLeadHistoryModal(true);
-  };
-
+  // Call history and attempts logs inside details panel
   const handleAddHistoryNote = () => {
     if (!noteText.trim()) return;
-    const updated = [...leads];
-    if (!updated[selectedLeadIdx].history) updated[selectedLeadIdx].history = [];
-    updated[selectedLeadIdx].history.unshift({
+    const updatedHistory = [...(selectedLead.history || [])];
+    updatedHistory.unshift({
       note: noteText,
       date: new Date().toISOString()
     });
-    saveLeadsToDb(updated);
-    setSelectedLead(updated[selectedLeadIdx]);
+    const updatedLead = { ...selectedLead, history: updatedHistory };
+    
+    // Save to local states and db directly
+    setSelectedLead(updatedLead);
+    const updatedLeads = [...leads];
+    updatedLeads[selectedLeadIdx] = updatedLead;
+    saveLeadsToDb(updatedLeads);
     setNoteText('');
-  };
-
-  const toggleCallAttempt = (attemptKey) => {
-    const updated = [...leads];
-    if (!updated[selectedLeadIdx].callAttempts) {
-      updated[selectedLeadIdx].callAttempts = { s1: false, s2: false, s3: false, s4: false, s5: false, s6: false };
-    }
-    updated[selectedLeadIdx].callAttempts[attemptKey] = !updated[selectedLeadIdx].callAttempts[attemptKey];
-    saveLeadsToDb(updated);
-    setSelectedLead(updated[selectedLeadIdx]);
   };
 
   // Filtering leads calculation
   const getFilteredLeads = () => {
-    return leads.filter((lead, idx) => {
+    return accessibleLeads.filter((lead) => {
       const matchSearch = lead.name.toLowerCase().includes(leadSearch.toLowerCase()) || 
                           lead.phone.includes(leadSearch) ||
                           lead.id.toLowerCase().includes(leadSearch.toLowerCase());
@@ -306,7 +331,7 @@ export default function AdminDashboard() {
     const dayAfter = new Date(tomorrow);
     dayAfter.setDate(dayAfter.getDate() + 1);
 
-    return leads.filter(l => {
+    return accessibleLeads.filter(l => {
       if (l.status !== 'Follow Up') return false;
       const date = l.date ? new Date(l.date) : new Date();
       if (col === 'overdue') return date < today;
@@ -317,12 +342,12 @@ export default function AdminDashboard() {
     });
   };
 
-  // CRM Statistics calculations
-  const statsTotalLeads = leads.length;
-  const statsMasterclassLeads = leads.filter(l => l.type === 'Masterclass Leads' || l.type === 'SOP Screening').length;
-  const statsConversionRate = statsTotalLeads > 0 ? ((leads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 100).toFixed(1) : 0;
-  const statsSuccessfulEnrollments = leads.filter(l => l.status === 'Enrolled').length;
-  const statsHotLeads = leads.filter(l => l.status === 'Follow Up').length;
+  // CRM Statistics calculations (Filtered for BDA if BDA is logged in)
+  const statsTotalLeads = accessibleLeads.length;
+  const statsMasterclassLeads = accessibleLeads.filter(l => l.type === 'Masterclass Leads' || l.type === 'SOP Screening').length;
+  const statsConversionRate = statsTotalLeads > 0 ? ((accessibleLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 100).toFixed(1) : 0;
+  const statsSuccessfulEnrollments = accessibleLeads.filter(l => l.status === 'Enrolled').length;
+  const statsHotLeads = accessibleLeads.filter(l => l.status === 'Follow Up').length;
 
   return (
     <div className="text-slate-800 min-h-screen relative pt-24 pb-24 overflow-x-hidden bg-white">
@@ -337,31 +362,48 @@ export default function AdminDashboard() {
           <div>
             <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-widest font-mono flex items-center space-x-1.5">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Gradus CRM Console</span>
+              <span>{isBdaUser ? 'BDA Sales Panel' : 'Gradus CRM Console'}</span>
             </span>
-            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
-              Lead Management & Performance Roster
+            <h1 className="logo-font text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1 flex items-center space-x-2">
+              <span>Performance Lead Roster</span>
+              {currentUser && (
+                <span className="text-xs font-bold font-mono bg-[#0A0E35] text-[#0EA5E9] px-2.5 py-1 rounded border border-[#2A4BFF]/20 uppercase tracking-widest">
+                  Role: {currentUser.role}
+                </span>
+              )}
             </h1>
           </div>
           
           <div className="flex items-center space-x-3">
+            {isAdminUser && (
+              <>
+                <button 
+                  onClick={handleSeedDemoData} 
+                  className="bg-[#050718] hover:bg-[#0A0E35] text-white border border-white/10 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 shadow-lg"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                  <span>Seed Demo Data</span>
+                </button>
+                <button 
+                  onClick={() => {
+                    setLeads([]);
+                    setDbItem('beyondskills_leads', []);
+                    alert('All leads database deleted successfully!');
+                  }}
+                  className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Clear Leads</span>
+                </button>
+              </>
+            )}
             <button 
-              onClick={handleSeedDemoData} 
-              className="bg-[#050718] hover:bg-[#0A0E35] text-white border border-white/10 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 shadow-lg"
-            >
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>Seed Demo Data</span>
-            </button>
-            <button 
-              onClick={() => {
-                setLeads([]);
-                setDbItem('beyondskills_leads', []);
-                alert('All leads database deleted successfully!');
-              }}
+              onClick={handleLogout}
               className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4.5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+              title="Logout"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Clear Leads</span>
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
             </button>
           </div>
         </div>
@@ -390,39 +432,45 @@ export default function AdminDashboard() {
             <ClipboardList className="w-4 h-4" />
             <span>Leads Manager</span>
           </button>
-          <button 
-            onClick={() => setActiveMainTab('allocation')} 
-            className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-              activeMainTab === 'allocation' 
-                ? 'bg-[#2A4BFF] text-white shadow-md' 
-                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
-            }`}
-          >
-            <CheckSquare className="w-4 h-4" />
-            <span>Assigned & Allocation</span>
-          </button>
-          <button 
-            onClick={() => setActiveMainTab('bda_performance')} 
-            className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-              activeMainTab === 'bda_performance' 
-                ? 'bg-[#2A4BFF] text-white shadow-md' 
-                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>BDA Performance</span>
-          </button>
-          <button 
-            onClick={() => setActiveMainTab('users')} 
-            className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
-              activeMainTab === 'users' 
-                ? 'bg-[#2A4BFF] text-white shadow-md' 
-                : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
-            }`}
-          >
-            <Settings className="w-4 h-4" />
-            <span>Manage Users</span>
-          </button>
+          
+          {/* Hide management tabs for standard BDA accounts */}
+          {!isBdaUser && (
+            <>
+              <button 
+                onClick={() => setActiveMainTab('allocation')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'allocation' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <CheckSquare className="w-4 h-4" />
+                <span>Assigned & Allocation</span>
+              </button>
+              <button 
+                onClick={() => setActiveMainTab('bda_performance')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'bda_performance' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                <span>BDA Performance</span>
+              </button>
+              <button 
+                onClick={() => setActiveMainTab('users')} 
+                className={`px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 ${
+                  activeMainTab === 'users' 
+                    ? 'bg-[#2A4BFF] text-white shadow-md' 
+                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-200/50'
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                <span>Manage Users</span>
+              </button>
+            </>
+          )}
         </div>
 
         {/* -------------------- MAIN TAB 1: DASHBOARD ANALYTICS -------------------- */}
@@ -432,7 +480,9 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Total CRM Leads</span>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">
+                    {isBdaUser ? 'My Assigned Leads' : 'Total CRM Leads'}
+                  </span>
                   <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsTotalLeads}</p>
                 </div>
                 <div className="bg-[#2A4BFF]/15 text-[#2A4BFF] p-2.5 rounded-xl border border-[#2A4BFF]/30">
@@ -452,7 +502,7 @@ export default function AdminDashboard() {
 
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Conversion Ratio</span>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Conversion Ratio</span>
                   <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsConversionRate}%</p>
                 </div>
                 <div className="bg-[#0EA5E9]/15 text-[#0EA5E9] p-2.5 rounded-xl border border-[#0EA5E9]/30">
@@ -462,8 +512,8 @@ export default function AdminDashboard() {
 
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Enrolled Students</span>
-                  <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsSuccessfulEnrollments}</p>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Enrolled Students</span>
+                  <p className="text-3xl font-extrabold font-mono mt-1 text-[#4ADE80]">{statsSuccessfulEnrollments}</p>
                 </div>
                 <div className="bg-[#4ADE80]/15 text-[#4ADE80] p-2.5 rounded-xl border border-[#4ADE80]/30">
                   <CheckCircle2 className="w-5 h-5" />
@@ -472,11 +522,11 @@ export default function AdminDashboard() {
 
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white text-right col-span-2 lg:col-span-1">
                 <div>
-                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">Active Hot Leads</span>
+                  <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider font-mono">My Pending Follow-ups</span>
                   <p className="text-3xl font-extrabold font-mono mt-1 text-orange-400">{statsHotLeads}</p>
                 </div>
                 <div className="bg-orange-500/15 text-orange-500 p-2.5 rounded-xl border border-orange-500/30">
-                  <TrendingUp className="w-5 h-5" />
+                  <Calendar className="w-5 h-5" />
                 </div>
               </div>
             </div>
@@ -488,19 +538,19 @@ export default function AdminDashboard() {
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white">
                 <h3 className="text-sm font-bold uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-4 mb-4">
                   <LineChart className="w-4.5 h-4.5 text-brand-cyan" />
-                  <span>Conversion Pipeline progression</span>
+                  <span>My Pipeline Funnel Stage View</span>
                 </h3>
                 
                 <div className="space-y-4 pt-2">
                   {[
-                    { name: 'New Leads', count: leads.filter(l => l.status === 'New').length },
-                    { name: 'Connected / Contacted', count: leads.filter(l => l.status === 'Contacted').length },
-                    { name: 'Follow Up (Pending Dial)', count: leads.filter(l => l.status === 'Follow Up').length },
-                    { name: 'Not Connected (DNP/SO)', count: leads.filter(l => l.status === 'Not Connected').length },
-                    { name: 'Enrolled (Closed Success)', count: leads.filter(l => l.status === 'Enrolled').length },
-                    { name: 'Not Interested (Closed Lost)', count: leads.filter(l => l.status === 'Not Interested').length }
+                    { name: 'New Leads', count: accessibleLeads.filter(l => l.status === 'New').length },
+                    { name: 'Connected / Contacted', count: accessibleLeads.filter(l => l.status === 'Contacted').length },
+                    { name: 'Follow Up (Pending Dial)', count: accessibleLeads.filter(l => l.status === 'Follow Up').length },
+                    { name: 'Not Connected (DNP/SO)', count: accessibleLeads.filter(l => l.status === 'Not Connected').length },
+                    { name: 'Enrolled (Closed Success)', count: accessibleLeads.filter(l => l.status === 'Enrolled').length },
+                    { name: 'Not Interested (Closed Lost)', count: accessibleLeads.filter(l => l.status === 'Not Interested').length }
                   ].map((step, idx) => {
-                    const percentage = leads.length > 0 ? ((step.count / leads.length) * 100).toFixed(1) : 0;
+                    const percentage = statsTotalLeads > 0 ? ((step.count / statsTotalLeads) * 100).toFixed(1) : 0;
                     return (
                       <div key={idx} className="relative">
                         <div className="flex justify-between items-center text-xs mb-1.5 font-mono">
@@ -516,39 +566,39 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Marketing Lead Source Breakdown */}
+              {/* Lead Profile Analysis Demographics */}
               <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white flex flex-col justify-between">
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-4 mb-4">
                     <PieChart className="w-4.5 h-4.5 text-[#2A4BFF]" />
-                    <span>Lead Campaign Categories</span>
+                    <span>Lead Profile Analysis (Demographics)</span>
                   </h3>
                   
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
-                      { name: 'High Intent Leads', count: leads.filter(l => l.type === 'High Intent Leads').length },
-                      { name: 'SOP Screening Candidates', count: leads.filter(l => l.type === 'SOP Screening').length },
-                      { name: 'Inbound Campaigns', count: leads.filter(l => l.type === 'Inbound').length },
-                      { name: 'Duration Tracking Leads', count: leads.filter(l => l.type === 'Duration').length },
-                      { name: 'Consultation Chat logs', count: leads.filter(l => l.type === 'Chat').length }
+                      { name: 'Student Profiles', label: 'Student', count: accessibleLeads.filter(l => l.profession === 'Student').length },
+                      { name: 'Working Professional (< 30k) [WP-1]', label: 'WP-1', count: accessibleLeads.filter(l => l.profession === 'Working Professional (< 30k) [WP-1]').length },
+                      { name: 'Working Professional (>= 30k) [WP-2]', label: 'WP-2', count: accessibleLeads.filter(l => l.profession === 'Working Professional (>= 30k) [WP-2]').length },
+                      { name: 'Unemployed Candidates', label: 'Unemployed', count: accessibleLeads.filter(l => l.profession === 'Unemployed').length },
+                      { name: 'Unspecified Profiles', label: 'Unspecified', count: accessibleLeads.filter(l => !l.profession || l.profession === 'Unspecified').length }
                     ].map((src, idx) => {
-                      const pct = leads.length > 0 ? ((src.count / leads.length) * 100).toFixed(1) : 0;
+                      const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
                       return (
-                        <div key={idx} className="flex items-center justify-between border-b border-white/5 pb-2">
-                          <span className="text-slate-400 flex items-center">
-                            <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
-                            {src.name}
-                          </span>
-                          <span className="text-white font-bold">{src.count} ({pct}%)</span>
+                        <div key={idx} className="relative space-y-1 pb-1">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-400 flex items-center">
+                              <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
+                              {src.name}
+                            </span>
+                            <span className="text-white font-bold">{src.count} ({pct}%)</span>
+                          </div>
+                          <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-[#2A4BFF] h-full" style={{ width: `${pct}%` }}></div>
+                          </div>
                         </div>
                       );
                     })}
                   </div>
-                </div>
-                
-                <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5 text-[10px] text-slate-400 font-mono mt-4 leading-relaxed">
-                  <AlertCircle className="w-4 h-4 text-brand-cyan inline-block mr-1.5 align-text-bottom" />
-                  Real-time pipeline calculations tracking active allocation splits among registered BDMs and BDAs.
                 </div>
               </div>
 
@@ -680,32 +730,37 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs border-t border-white/10 pt-4">
-                    <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assigned BDM</label>
-                      <select 
-                        value={filterBDM}
-                        onChange={(e) => setFilterBDM(e.target.value)}
-                        className="w-full bg-[#050718] border border-white/15 rounded-lg px-3 py-2 text-white outline-none focus:border-brand-cyan cursor-pointer"
-                      >
-                        <option value="">All BDMs</option>
-                        {crmUsers.filter(u => u.role === 'BDM').map((bdm, i) => (
-                          <option key={i} value={bdm.name}>{bdm.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assigned BDA</label>
-                      <select 
-                        value={filterBDA}
-                        onChange={(e) => setFilterBDA(e.target.value)}
-                        className="w-full bg-[#050718] border border-white/15 rounded-lg px-3 py-2 text-white outline-none focus:border-brand-cyan cursor-pointer"
-                      >
-                        <option value="">All BDAs</option>
-                        {crmUsers.filter(u => u.role === 'BDA').map((bda, i) => (
-                          <option key={i} value={bda.name}>{bda.name}</option>
-                        ))}
-                      </select>
-                    </div>
+                    {!isBdaUser && (
+                      <>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assigned BDM</label>
+                          <select 
+                            value={filterBDM}
+                            onChange={(e) => setFilterBDM(e.target.value)}
+                            className="w-full bg-[#050718] border border-white/15 rounded-lg px-3 py-2 text-white outline-none focus:border-brand-cyan cursor-pointer"
+                          >
+                            <option value="">All BDMs</option>
+                            {crmUsers.filter(u => u.role === 'BDM').map((bdm, i) => (
+                              <option key={i} value={bdm.name}>{bdm.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assigned BDA</label>
+                          <select 
+                            value={filterBDA}
+                            onChange={(e) => setFilterBDA(e.target.value)}
+                            className="w-full bg-[#050718] border border-white/15 rounded-lg px-3 py-2 text-white outline-none focus:border-brand-cyan cursor-pointer"
+                          >
+                            <option value="">All BDAs</option>
+                            {crmUsers.filter(u => u.role === 'BDA').map((bda, i) => (
+                              <option key={i} value={bda.name}>{bda.name}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </>
+                    )}
+                    
                     <div className="sm:col-span-2 flex items-end justify-between gap-4">
                       <div className="flex-grow">
                         <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Timeline Date Filters</label>
@@ -747,7 +802,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Bulk Actions Console */}
-                {selectedLeadIndexes.length > 0 && (
+                {!isBdaUser && selectedLeadIndexes.length > 0 && (
                   <div className="bg-[#2A4BFF]/10 border border-[#2A4BFF]/30 p-4 rounded-xl flex flex-wrap items-center justify-between gap-4 animate-fade-in">
                     <span className="text-xs font-bold text-[#2A4BFF] font-mono">
                       {selectedLeadIndexes.length} leads selected for processing:
@@ -860,7 +915,7 @@ export default function AdminDashboard() {
                             <td className="py-3.5 px-4">
                               <p className="font-semibold text-white">{lead.name}</p>
                               <span className="text-[9px] text-slate-500 font-mono">
-                                Date: {new Date(lead.date).toLocaleDateString()}
+                                Date: {lead.date}
                               </span>
                             </td>
                             <td className="py-3.5 px-4 font-mono text-xs">
@@ -905,26 +960,21 @@ export default function AdminDashboard() {
                             <td className="py-3.5 px-4 text-right">
                               <div className="flex items-center justify-end space-x-1.5">
                                 <button 
-                                  onClick={() => handleOpenCallLogs(lead, idx)}
-                                  className="p-1.5 bg-white/5 hover:bg-[#2A4BFF]/20 text-slate-300 hover:text-white rounded border border-white/10 transition-all cursor-pointer"
-                                  title="View Comments & Dial History"
+                                  onClick={() => handleStartEditLead(lead, leads.findIndex(l => l.id === lead.id))}
+                                  className="px-3.5 py-1.5 bg-[#2A4BFF] hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center space-x-1"
                                 >
-                                  <Eye className="w-3.5 h-3.5" />
+                                  <Edit2 className="w-3 h-3" />
+                                  <span>Edit details</span>
                                 </button>
-                                <button 
-                                  onClick={() => handleStartEditLead(lead, idx)}
-                                  className="p-1.5 bg-white/5 hover:bg-[#0EA5E9]/20 text-slate-300 hover:text-white rounded border border-white/10 transition-all cursor-pointer"
-                                  title="Edit Lead Details"
-                                >
-                                  <Edit2 className="w-3.5 h-3.5" />
-                                </button>
-                                <button 
-                                  onClick={() => handleDeleteLeadEntry(idx)}
-                                  className="p-1.5 bg-white/5 hover:bg-red-500/20 text-slate-300 hover:text-red-400 rounded border border-white/10 transition-all cursor-pointer"
-                                  title="Delete Lead"
-                                >
-                                  <Trash2 className="w-3.5 h-3.5" />
-                                </button>
+                                {!isBdaUser && (
+                                  <button 
+                                    onClick={() => handleDeleteLeadEntry(leads.findIndex(l => l.id === lead.id))}
+                                    className="p-1.5 bg-white/5 hover:bg-red-500/20 text-slate-300 hover:text-red-400 rounded border border-white/10 transition-all cursor-pointer"
+                                    title="Delete Lead"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
                               </div>
                             </td>
                           </tr>
@@ -987,7 +1037,7 @@ export default function AdminDashboard() {
                                   <button 
                                     onClick={() => handleStartEditLead(lead, leads.findIndex(l => l.id === lead.id))}
                                     className="text-brand-cyan hover:text-white"
-                                    title="Edit Lead Date/Status"
+                                    title="Edit Details Panel"
                                   >
                                     <Edit2 className="w-3.5 h-3.5" />
                                   </button>
@@ -1012,7 +1062,7 @@ export default function AdminDashboard() {
                   <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Pending Tasks</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-white">{leads.filter(l => l.status === 'Follow Up').length}</p>
+                      <p className="text-2xl font-bold font-mono mt-1 text-white">{accessibleLeads.filter(l => l.status === 'Follow Up').length}</p>
                     </div>
                     <ClipboardList className="w-5 h-5 text-[#2A4BFF]" />
                   </div>
@@ -1020,7 +1070,7 @@ export default function AdminDashboard() {
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Overdue Alerts</span>
                       <p className="text-2xl font-bold font-mono mt-1 text-red-500">
-                        {leads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date) < new Date().setHours(0,0,0,0)).length}
+                        {accessibleLeads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date) < new Date().setHours(0,0,0,0)).length}
                       </p>
                     </div>
                     <ShieldAlert className="w-5 h-5 text-red-500" />
@@ -1029,7 +1079,7 @@ export default function AdminDashboard() {
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Due Today</span>
                       <p className="text-2xl font-bold font-mono mt-1 text-brand-cyan">
-                        {leads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date).toDateString() === new Date().toDateString()).length}
+                        {accessibleLeads.filter(l => l.status === 'Follow Up' && l.date && new Date(l.date).toDateString() === new Date().toDateString()).length}
                       </p>
                     </div>
                     <Calendar className="w-5 h-5 text-brand-cyan" />
@@ -1037,7 +1087,7 @@ export default function AdminDashboard() {
                   <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex items-center justify-between">
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-mono tracking-widest">Completed Actions</span>
-                      <p className="text-2xl font-bold font-mono mt-1 text-[#4ADE80]">{leads.filter(l => l.status === 'Enrolled').length}</p>
+                      <p className="text-2xl font-bold font-mono mt-1 text-[#4ADE80]">{accessibleLeads.filter(l => l.status === 'Enrolled').length}</p>
                     </div>
                     <CheckCircle2 className="w-5 h-5 text-[#4ADE80]" />
                   </div>
@@ -1047,7 +1097,7 @@ export default function AdminDashboard() {
                 <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl">
                   <h3 className="text-sm font-bold uppercase tracking-wider mb-4 border-b border-white/10 pb-4">Required BDA Action Items</h3>
                   
-                  {leads.filter(l => l.status === 'Follow Up').length === 0 ? (
+                  {accessibleLeads.filter(l => l.status === 'Follow Up').length === 0 ? (
                     <div className="text-center py-10 text-slate-500 text-xs italic font-mono">
                       No pending tasks found. All follow-up actions completed!
                     </div>
@@ -1064,12 +1114,12 @@ export default function AdminDashboard() {
                           </tr>
                         </thead>
                         <tbody>
-                          {leads.filter(l => l.status === 'Follow Up').map((lead, idx) => (
+                          {accessibleLeads.filter(l => l.status === 'Follow Up').map((lead, idx) => (
                             <tr key={idx} className="border-b border-white/5 text-slate-300">
                               <td className="py-2.5 px-3 font-semibold text-white">{lead.name}</td>
                               <td className="py-2.5 px-3 font-mono text-slate-400">{lead.assignedBDA || 'Unassigned'}</td>
                               <td className="py-2.5 px-3 text-brand-cyan">Call Candidate (Substatus: {lead.subStatus})</td>
-                              <td className="py-2.5 px-3 font-mono text-slate-400">{lead.date ? new Date(lead.date).toLocaleDateString() : 'N/A'}</td>
+                              <td className="py-2.5 px-3 font-mono text-slate-400">{lead.date}</td>
                               <td className="py-2.5 px-3 text-right font-mono text-xs">
                                 <span className="text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded tracking-wide font-bold">PENDING</span>
                               </td>
@@ -1088,7 +1138,7 @@ export default function AdminDashboard() {
         )}
 
         {/* -------------------- MAIN TAB 3: ASSIGNED & ALLOCATION -------------------- */}
-        {activeMainTab === 'allocation' && (
+        {activeMainTab === 'allocation' && !isBdaUser && (
           <div className="space-y-6 animate-fade-in text-white">
             
             {/* Allocation Sub-tabs */}
@@ -1262,7 +1312,7 @@ export default function AdminDashboard() {
                     <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Allocation Board</h3>
                     
                     <div className="space-y-4 pt-4 text-xs">
-                      <div className="bg-slate-950/40 border border-white/5 p-3 rounded-lg">
+                      <div className="bg-slate-955/40 border border-white/5 p-3 rounded-lg">
                         <p className="text-[10px] text-slate-400 uppercase font-mono font-bold tracking-widest">Active queue summary</p>
                         <p className="text-xl font-bold mt-1 text-white">{selectedLeadIndexes.length} leads selected</p>
                       </div>
@@ -1452,7 +1502,7 @@ export default function AdminDashboard() {
         )}
 
         {/* -------------------- MAIN TAB 4: BDA PERFORMANCE -------------------- */}
-        {activeMainTab === 'bda_performance' && (
+        {activeMainTab === 'bda_performance' && !isBdaUser && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in text-white">
             
             {/* Associates Roster sidebar */}
@@ -1548,7 +1598,8 @@ export default function AdminDashboard() {
                         { label: 'Status 6 Attempt', key: 's6' }
                       ].map((status, i) => {
                         const totalLeadsForBda = leads.filter(l => l.assignedBDA === selectedBdaName);
-                        const filledCalls = totalLeadsForBda.filter(l => l.callAttempts && l.callAttempts[status.key]).length;
+                        // Count attempts that are not empty '-'
+                        const filledCalls = totalLeadsForBda.filter(l => l.callAttempts && l.callAttempts[status.key] && l.callAttempts[status.key] !== '-').length;
                         const pct = totalLeadsForBda.length > 0 ? ((filledCalls / totalLeadsForBda.length) * 100).toFixed(0) : 0;
                         return (
                           <div key={i} className="bg-[#050718] border border-white/5 p-3 rounded-lg flex items-center justify-between">
@@ -1603,14 +1654,14 @@ export default function AdminDashboard() {
         )}
 
         {/* -------------------- MAIN TAB 5: MANAGE USERS -------------------- */}
-        {activeMainTab === 'users' && (
+        {activeMainTab === 'users' && !isBdaUser && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in text-white">
             
             {/* Context manual setup */}
             <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
               <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">CRM Organizational Roster</h3>
               <p className="text-slate-400 leading-normal">
-                Build your team hierarchy here. Accounts of type <strong>BDM</strong> serve as managers, and <strong>BDA</strong> as sales executives.
+                Build BDA credentials here. When created, BDAs will login using their custom email and password.
               </p>
               
               <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3 font-mono text-[11px] text-slate-300">
@@ -1629,7 +1680,7 @@ export default function AdminDashboard() {
                 className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
               >
                 <UserPlus className="w-4 h-4" />
-                <span>Add Team Associate</span>
+                <span>Create BDA Account</span>
               </button>
             </div>
 
@@ -1644,6 +1695,7 @@ export default function AdminDashboard() {
                       <th className="py-2 px-3">Name</th>
                       <th className="py-2 px-3">Email Address</th>
                       <th className="py-2 px-3">Role</th>
+                      <th className="py-2 px-3">Password</th>
                       <th className="py-2 px-3">Reports To (Manager)</th>
                       <th className="py-2 px-3 text-right">Actions</th>
                     </tr>
@@ -1661,6 +1713,7 @@ export default function AdminDashboard() {
                             {user.role}
                           </span>
                         </td>
+                        <td className="py-2.5 px-3 font-mono text-[#4ADE80] font-bold">{user.password || 'Gradus@123'}</td>
                         <td className="py-2.5 px-3 font-mono text-slate-400">{user.reportsTo || 'N/A'}</td>
                         <td className="py-2.5 px-3 text-right">
                           <button 
@@ -1703,7 +1756,7 @@ export default function AdminDashboard() {
                     type="text" required
                     value={newLeadForm.name}
                     onChange={(e) => setNewLeadForm({ ...newLeadForm, name: e.target.value })}
-                    placeholder="e.g. Jatin Rawat"
+                    placeholder="e.g. Roshan Kumar"
                     className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
                   />
                 </div>
@@ -1725,7 +1778,7 @@ export default function AdminDashboard() {
                   type="email" required
                   value={newLeadForm.email}
                   onChange={(e) => setNewLeadForm({ ...newLeadForm, email: e.target.value })}
-                  placeholder="e.g. jatin@gmail.com"
+                  placeholder="e.g. roshan@gmail.com"
                   className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
                 />
               </div>
@@ -1821,57 +1874,58 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* -------------------- MODAL: EDIT LEAD -------------------- */}
+      {/* -------------------- MODAL: EDIT LEAD (DETAILED LEAD DETAILS PANEL CLONE) -------------------- */}
       {showEditLeadModal && selectedLead && (
-        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 text-white relative">
+        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-3xl p-6 shadow-2xl text-white relative my-8 space-y-6">
+            
+            {/* Close Button */}
             <button 
-              onClick={() => setShowEditLeadModal(false)}
+              onClick={() => {
+                setShowEditLeadModal(false);
+                setSelectedLead(null);
+              }}
               className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Edit Lead Details</h3>
             
-            <form onSubmit={handleSaveEditLead} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Prospect Name</label>
-                  <input 
-                    type="text" required
-                    value={selectedLead.name}
-                    onChange={(e) => setSelectedLead({ ...selectedLead, name: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Phone</label>
-                  <input 
-                    type="text" required
-                    value={selectedLead.phone}
-                    onChange={(e) => setSelectedLead({ ...selectedLead, phone: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
-                  />
-                </div>
-              </div>
-
+            {/* Header: Name, Profession Dropdown & Status Dropdown */}
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between border-b border-white/10 pb-5 gap-4">
               <div>
-                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Email Address</label>
-                <input 
-                  type="email" required
-                  value={selectedLead.email}
-                  onChange={(e) => setSelectedLead({ ...selectedLead, email: e.target.value })}
-                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
-                />
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono flex items-center space-x-1.5">
+                  <ClipboardList className="w-4.5 h-4.5 text-brand-cyan" />
+                  <span>Lead Details Panel</span>
+                </span>
+                <h3 className="text-2xl font-extrabold text-white mt-1 leading-tight tracking-tight max-w-md">
+                  {selectedLead.name}
+                </h3>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Profession Dropdown */}
                 <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Sales Pipeline Status</label>
+                  <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Profession</span>
+                  <select 
+                    value={selectedLead.profession}
+                    onChange={(e) => setSelectedLead({ ...selectedLead, profession: e.target.value })}
+                    className="bg-[#05092A] border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-semibold cursor-pointer"
+                  >
+                    <option value="Unspecified">Unspecified</option>
+                    <option value="Student">Student</option>
+                    <option value="Working Professional (< 30k) [WP-1]">Working Professional (&lt; 30k) [WP-1]</option>
+                    <option value="Working Professional (>= 30k) [WP-2]">Working Professional (&gt;= 30k) [WP-2]</option>
+                    <option value="Unemployed">Unemployed</option>
+                  </select>
+                </div>
+
+                {/* Pipeline Status Dropdown */}
+                <div>
+                  <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Pipeline Status</span>
                   <select 
                     value={selectedLead.status}
                     onChange={(e) => setSelectedLead({ ...selectedLead, status: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                    className="bg-[#05092A] border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-semibold cursor-pointer"
                   >
                     <option value="New">New</option>
                     <option value="Contacted">Contacted</option>
@@ -1881,61 +1935,161 @@ export default function AdminDashboard() {
                     <option value="Not Interested">Not Interested</option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Sub-Status Outcome</label>
-                  <select 
-                    value={selectedLead.subStatus}
-                    onChange={(e) => setSelectedLead({ ...selectedLead, subStatus: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+              </div>
+            </div>
+
+            {/* Contact details metadata grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono py-2 border-b border-white/5">
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-slate-400" />
+                <span>{selectedLead.phone}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 uppercase text-[9px] block">Lead Date</span>
+                <span className="text-slate-200 font-semibold">{selectedLead.date}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 uppercase text-[9px] block">Campaign Type</span>
+                <span className="text-[#0EA5E9] font-bold">{selectedLead.type}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 uppercase text-[9px] block">Program Enrolled</span>
+                <span className="text-white uppercase truncate block font-bold max-w-[120px]" title={selectedLead.program}>
+                  {selectedLead.program?.replace(/-/g, ' ')}
+                </span>
+              </div>
+            </div>
+
+            {/* Course, Mentor, Duration detail tags */}
+            <div className="flex flex-wrap gap-2 text-[10px] py-1 border-b border-white/5">
+              <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-slate-300 font-mono">
+                Mentor: <strong className="text-white">None</strong>
+              </span>
+              <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded text-slate-300 font-mono">
+                Duration: <strong className="text-white">None</strong>
+              </span>
+            </div>
+
+            {/* Owner BDM & Handler BDA details banner */}
+            <div className="bg-[#050718] border border-white/5 p-4 rounded-xl flex items-center justify-between text-xs font-mono">
+              <div>
+                <span className="text-[8px] text-slate-500 uppercase tracking-widest block mb-0.5">Owner (BDM)</span>
+                <span className="text-brand-cyan font-bold">{selectedLead.assignedBDM || 'Unassigned'}</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-600" />
+              <div className="text-right">
+                <span className="text-[8px] text-slate-500 uppercase tracking-widest block mb-0.5">Handler (BDA)</span>
+                <span className="text-white font-bold">{selectedLead.assignedBDA || 'Unassigned'}</span>
+              </div>
+            </div>
+
+            {/* SUB-STATUS FUNNELS SECTION */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-b border-white/5 pb-2">Sub-Status Funnels</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                {[
+                  { label: 'Status 1', key: 's1' },
+                  { label: 'Status 2', key: 's2' },
+                  { label: 'Status 3', key: 's3' },
+                  { label: 'Status 4', key: 's4' },
+                  { label: 'Status 5', key: 's5' },
+                  { label: 'Status 6', key: 's6' }
+                ].map((status) => (
+                  <div key={status.key} className="space-y-1">
+                    <span className="block text-[8px] font-bold text-slate-550 uppercase tracking-widest font-mono">{status.label}</span>
+                    <select 
+                      value={selectedLead.callAttempts ? selectedLead.callAttempts[status.key] : '-'}
+                      onChange={(e) => {
+                        const attempts = selectedLead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' };
+                        setSelectedLead({
+                          ...selectedLead,
+                          callAttempts: { ...attempts, [status.key]: e.target.value }
+                        });
+                      }}
+                      className="w-full bg-[#05092A] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-mono cursor-pointer"
+                    >
+                      <option value="-">-</option>
+                      <option value="DNP">DNP</option>
+                      <option value="CB">CB</option>
+                      <option value="NI">NI</option>
+                      <option value="QUALIFIED">QUALIFIED</option>
+                      <option value="CNC">CNC</option>
+                      <option value="Already Paid">Already Paid</option>
+                      <option value="Switched Off">Switched Off</option>
+                    </select>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* VIDEO CALL (VC) FEEDBACK LOGS & HISTORIES */}
+            <div className="space-y-4 pt-2">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-b border-white/5 pb-2">Video Call (VC) Feedback Logs</h4>
+              
+              <div className="space-y-3">
+                <textarea 
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  placeholder="Record summary of VC discussions, student profiles, and batch matches..."
+                  rows="3.5"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] leading-relaxed"
+                ></textarea>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] text-slate-500 font-mono italic">
+                    Press Log Note to permanently capture dial call history timeline update tags.
+                  </span>
+                  <button 
+                    type="button"
+                    onClick={handleAddHistoryNote}
+                    className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2 rounded-lg transition-colors cursor-pointer"
                   >
-                    <option value="QUALIFIED">QUALIFIED</option>
-                    <option value="DNP">DNP (Did Not Pick)</option>
-                    <option value="NI">NI (Not Interested)</option>
-                    <option value="CB">CB (Call Back)</option>
-                    <option value="SO">SO (Switched Off)</option>
-                    <option value="WFC">WFC (Waiting Confirmation)</option>
-                    <option value="NQ">NQ (Not Qualified)</option>
-                    <option value="Already Paid">Already Paid</option>
-                  </select>
+                    Log VC Summary
+                  </button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assign BDM Manager</label>
-                  <select 
-                    value={selectedLead.assignedBDM || ''}
-                    onChange={(e) => setSelectedLead({ ...selectedLead, assignedBDM: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
-                  >
-                    <option value="">Unassigned</option>
-                    {crmUsers.filter(u => u.role === 'BDM').map((bdm, i) => (
-                      <option key={i} value={bdm.name}>{bdm.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Assign BDA Associate</label>
-                  <select 
-                    value={selectedLead.assignedBDA || ''}
-                    onChange={(e) => setSelectedLead({ ...selectedLead, assignedBDA: e.target.value })}
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
-                  >
-                    <option value="">Unassigned</option>
-                    {crmUsers.filter(u => u.role === 'BDA').map((bda, i) => (
-                      <option key={i} value={bda.name}>{bda.name}</option>
-                    ))}
-                  </select>
-                </div>
+              {/* Feed History logs list */}
+              <div className="space-y-3 max-h-[160px] overflow-y-auto pr-1">
+                {selectedLead.history && selectedLead.history.length > 0 ? (
+                  selectedLead.history.map((log, i) => (
+                    <div key={i} className="bg-white/5 p-3 rounded-lg border border-white/5 text-xs relative font-mono">
+                      <p className="text-slate-300 italic">"{log.note}"</p>
+                      <span className="text-[10px] text-slate-550 mt-1 block">
+                        Logged date: {new Date(log.date).toLocaleString()}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-slate-500 text-xs italic font-mono">
+                    No VC discussions or history log comments configured for this lead candidate.
+                  </div>
+                )}
               </div>
+            </div>
 
+            {/* Save All Details action button */}
+            <div className="flex space-x-3 pt-3 border-t border-white/10">
               <button 
-                type="submit"
-                className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg"
+                type="button"
+                onClick={handleSaveEditLead}
+                className="flex-grow bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center space-x-2"
               >
-                Save Details
+                <Check className="w-4 h-4" />
+                <span>Confirm All Details</span>
               </button>
-            </form>
+              <button 
+                type="button"
+                onClick={() => {
+                  setShowEditLeadModal(false);
+                  setSelectedLead(null);
+                }}
+                className="px-6 bg-white/10 hover:bg-white/15 text-slate-300 font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+
           </div>
         </div>
       )}
@@ -1950,7 +2104,7 @@ export default function AdminDashboard() {
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Add Team Associate</h3>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create BDA Associate Account</h3>
             
             <form onSubmit={handleAddUser} className="space-y-4 text-xs">
               <div>
@@ -1972,6 +2126,17 @@ export default function AdminDashboard() {
                   onChange={(e) => setNewUserForm({ ...newUserForm, email: e.target.value })}
                   placeholder="e.g. muskan.g@gradus.live"
                   className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Login Password</label>
+                <input 
+                  type="text" required
+                  value={newUserForm.password}
+                  onChange={(e) => setNewUserForm({ ...newUserForm, password: e.target.value })}
+                  placeholder="e.g. Muskan@123"
+                  className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono font-bold text-[#4ADE80]"
                 />
               </div>
 
@@ -2005,109 +2170,11 @@ export default function AdminDashboard() {
 
               <button 
                 type="submit"
-                className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg"
+                className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
               >
                 Confirm Add Associate
               </button>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* -------------------- MODAL: LEAD HISTORY / COMMENT LOGS -------------------- */}
-      {showLeadHistoryModal && selectedLead && (
-        <div className="fixed inset-0 z-50 bg-[#050718]/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#0A0E35] border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-6 text-white relative max-h-[85vh] overflow-y-auto">
-            <button 
-              onClick={() => {
-                setShowLeadHistoryModal(false);
-                setSelectedLead(null);
-              }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            
-            <div>
-              <span className="text-[10px] font-bold text-brand-cyan uppercase tracking-widest font-mono">Dial history & updates log</span>
-              <h3 className="text-base font-extrabold text-white mt-1">{selectedLead.name} ({selectedLead.phone})</h3>
-            </div>
-
-            {/* Status Dial checklist */}
-            <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-3">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">Call Attempt Checklist</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-                {[
-                  { label: 'Status 1 Attempt', key: 's1' },
-                  { label: 'Status 2 Attempt', key: 's2' },
-                  { label: 'Status 3 Attempt', key: 's3' },
-                  { label: 'Status 4 Attempt', key: 's4' },
-                  { label: 'Status 5 Attempt', key: 's5' },
-                  { label: 'Status 6 Attempt', key: 's6' }
-                ].map((s) => (
-                  <button 
-                    key={s.key}
-                    type="button"
-                    onClick={() => toggleCallAttempt(s.key)}
-                    className={`p-2 rounded-lg border text-left font-mono transition-all flex items-center justify-between cursor-pointer ${
-                      selectedLead.callAttempts && selectedLead.callAttempts[s.key]
-                        ? 'bg-[#4ADE80]/10 border-[#4ADE80]/30 text-[#4ADE80]'
-                        : 'bg-white/5 border-white/10 text-slate-400'
-                    }`}
-                  >
-                    <span>{s.label}</span>
-                    {selectedLead.callAttempts && selectedLead.callAttempts[s.key] ? (
-                      <Check className="w-3.5 h-3.5 text-[#4ADE80]" />
-                    ) : (
-                      <X className="w-3.5 h-3.5 text-slate-500" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Activity History Logs */}
-            <div className="space-y-4">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">History Log Notes</h4>
-              
-              {/* Add Note form */}
-              <div className="flex gap-3 items-end text-xs">
-                <div className="flex-grow">
-                  <input 
-                    type="text" 
-                    value={noteText}
-                    onChange={(e) => setNoteText(e.target.value)}
-                    placeholder="Enter call outcome summary..."
-                    className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF]"
-                  />
-                </div>
-                <button 
-                  type="button"
-                  onClick={handleAddHistoryNote}
-                  className="bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider px-5 py-2 rounded-lg transition-colors cursor-pointer"
-                >
-                  Log Note
-                </button>
-              </div>
-
-              {/* Feed list */}
-              <div className="space-y-3 max-h-[200px] overflow-y-auto pr-1">
-                {selectedLead.history && selectedLead.history.length > 0 ? (
-                  selectedLead.history.map((log, i) => (
-                    <div key={i} className="bg-white/5 p-3 rounded-lg border border-white/5 text-xs">
-                      <p className="text-slate-200">"{log.note}"</p>
-                      <span className="text-[10px] text-slate-500 font-mono mt-1 block">
-                        Logged on: {new Date(log.date).toLocaleString()}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-6 text-slate-550 text-xs italic font-mono">
-                    No timeline notes logged yet for this candidate.
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       )}

@@ -322,24 +322,47 @@ export default function Auth() {
 
     const targetEmail = 'beyondskills.ai@gmail.com';
     const savedPassword = localStorage.getItem('beyondskills_admin_password') || '9953607074';
+    
+    // Fetch registered CRM users (BDAs/BDMs)
+    const crmUsers = getDbItem('beyondskills_crm_users', []);
+    const matchingUser = crmUsers.find(u => u.email.trim().toLowerCase() === adminLoginForm.email.trim().toLowerCase());
 
-    if (adminLoginForm.email.trim() !== targetEmail || adminLoginForm.password !== savedPassword) {
-      setError('Invalid administrator email or password.');
+    let authenticatedUser = null;
+
+    if (adminLoginForm.email.trim().toLowerCase() === targetEmail.toLowerCase()) {
+      if (adminLoginForm.password === savedPassword) {
+        authenticatedUser = {
+          email: targetEmail,
+          name: 'BeyondSkills Administrator',
+          role: 'Admin',
+          studentId: 'DV-ADMIN'
+        };
+      }
+    } else if (matchingUser) {
+      // Check custom BDA/BDM password (defaulting to BDA email name + '123' if not set)
+      const userPassword = matchingUser.password || 'Gradus@123';
+      if (adminLoginForm.password === userPassword) {
+        authenticatedUser = {
+          email: matchingUser.email,
+          name: matchingUser.name,
+          role: matchingUser.role,
+          studentId: matchingUser.role + '-' + Math.floor(1000 + Math.random() * 9000)
+        };
+      }
+    }
+
+    if (!authenticatedUser) {
+      setError('Invalid administrator or BDA credentials.');
       return;
     }
 
     setLoading(true);
 
     setTimeout(() => {
-      const adminSession = {
-        email: targetEmail,
-        name: 'BeyondSkills Administrator',
-        studentId: 'DV-ADMIN'
-      };
-      setDbItem('beyondskills_current_user', adminSession);
+      setDbItem('beyondskills_current_user', authenticatedUser);
       window.dispatchEvent(new Event('auth_change'));
       setLoading(false);
-      setInfo('Admin Authentication Successful! Redirecting to Console...');
+      setInfo(`${authenticatedUser.role} Authentication Successful! Redirecting to Console...`);
       setTimeout(() => {
         navigate('/admin');
       }, 1500);
