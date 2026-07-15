@@ -50,13 +50,13 @@ export default function Header() {
   }, [location.pathname]);
 
   return (
-    <header className={`z-50 transition-all duration-500 ease-in-out ${
-      isScrolled 
-        ? 'fixed top-3 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl rounded-full bg-white/95 border border-slate-200/80 shadow-2xl shadow-slate-200/30 backdrop-blur-lg px-2' 
-        : 'sticky top-0 w-full bg-white border-b border-slate-100 px-0'
-    }`}>
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14 px-4' : 'h-20'}`}>
+    <header className="sticky top-0 z-50 w-full bg-transparent pointer-events-none flex flex-col items-center">
+      <div className={`transition-all duration-500 ease-in-out pointer-events-auto mx-auto ${
+        isScrolled 
+          ? `max-w-6xl w-[92%] mt-3 ${isOpen ? 'rounded-3xl' : 'rounded-full'} bg-white/95 border border-slate-200/80 shadow-2xl shadow-slate-200/30 backdrop-blur-lg px-6` 
+          : 'max-w-[1440px] w-full mt-0 rounded-none bg-white border-b border-slate-100 px-4 sm:px-6 lg:px-8'
+      }`}>
+        <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
           {/* Logo */}
           <div className="lg:flex-1 lg:flex lg:justify-start flex-shrink-0">
             <Link to="/" className="flex flex-col items-start leading-none group">
@@ -222,11 +222,10 @@ export default function Header() {
             </button>
           </div>
         </div>
-      </div>
 
       {/* Mobile Drawer menu */}
       {isOpen && (
-        <div className="lg:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-6 space-y-3 shadow-lg rounded-b-2xl">
+        <div className="lg:hidden border-t border-slate-150 pt-2 pb-6 space-y-3">
           <Link to="/" className="block px-3 py-2 text-base font-semibold text-slate-800 hover:text-brand-purple border-b border-slate-100">
             Home
           </Link>
@@ -293,6 +292,7 @@ export default function Header() {
           )}
         </div>
       )}
+      </div>
     </header>
   );
 }
