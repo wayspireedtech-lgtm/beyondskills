@@ -105,7 +105,7 @@ function LayoutWrapper({ children }) {
       </div>
 
       {!isPortal && <Header />}
-      <main className="flex-grow z-10 relative bg-transparent">
+      <main className="flex-grow z-30 relative bg-transparent">
         {children}
       </main>
       {!isPortal && <Footer />}
