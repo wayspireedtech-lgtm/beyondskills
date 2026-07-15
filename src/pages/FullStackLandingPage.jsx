@@ -178,9 +178,16 @@ export default function FullStackLandingPage() {
     }));
   };
 
-  const scrollToForm = () => {
-    const el = document.getElementById('application-form');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  const scrollToHeroForm = () => {
+    const el = document.getElementById('hero-application-form');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      // Add a brief glow effect to highlight the form
+      el.classList.add('ring-4', 'ring-blue-500/30');
+      setTimeout(() => {
+        el.classList.remove('ring-4', 'ring-blue-500/30');
+      }, 1500);
+    }
   };
 
   return (
@@ -201,7 +208,7 @@ export default function FullStackLandingPage() {
               <span>Verifiable Certificates</span>
             </span>
             <button 
-              onClick={scrollToForm}
+              onClick={scrollToHeroForm}
               className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all"
             >
               Apply Now
@@ -210,11 +217,11 @@ export default function FullStackLandingPage() {
         </div>
       </header>
 
-      {/* 2. HERO SECTION */}
-      <section className="relative pt-12 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* 2. HERO SECTION WITH ENQUIRY FORM AT THE TOP (ABOVE THE FOLD) */}
+      <section className="relative pt-12 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-slate-100">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* Left Text */}
+          {/* Left Text Information Column */}
           <div className="lg:col-span-7 space-y-6 text-left">
             <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full font-mono">
               <Sparkles className="w-3.5 h-3.5" />
@@ -229,7 +236,7 @@ export default function FullStackLandingPage() {
             
             <div className="flex flex-col sm:flex-row gap-4 max-w-md pt-2">
               <button 
-                onClick={scrollToForm}
+                onClick={scrollToHeroForm}
                 className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/10 text-center cursor-pointer"
               >
                 Apply Now
@@ -257,73 +264,188 @@ export default function FullStackLandingPage() {
             </div>
           </div>
 
-          {/* Right Visual mockup */}
+          {/* Right Lead Capture Form Column (Above the fold) */}
           <div className="lg:col-span-5">
-            <div className="bg-[#0A0E29] border border-white/10 rounded-2xl p-5 shadow-2xl relative text-slate-350">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/15 rounded-full blur-xl z-0"></div>
+            <div 
+              id="hero-application-form" 
+              className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xl w-full transition-all duration-300"
+            >
+              <h3 className="font-manrope font-bold text-[#0F172A] text-base sm:text-lg mb-4 text-left border-b border-slate-100 pb-2">
+                Admission Enquiry Form
+              </h3>
               
-              <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4 relative z-10">
-                <div className="flex space-x-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+              {status === 'success' ? (
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
+                  <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
+                  <h4 className="font-bold text-xs">Enquiry Registered Successfully!</h4>
+                  <p className="text-[11px] text-emerald-600 leading-relaxed">
+                    Your details have been logged in the admissions queue. An advisor will reach out during your preferred contact window.
+                  </p>
                 </div>
-                <span className="text-[9px] font-mono text-slate-500">beyondskills_web_developer.js</span>
-              </div>
+              ) : (
+                <form onSubmit={handleApplySubmit} className="space-y-3.5 text-left">
+                  <div>
+                    <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Full Name *</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={enquiryForm.name}
+                      onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      placeholder="e.g., Faisal Shah" 
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Email *</label>
+                      <input 
+                        type="email" 
+                        required 
+                        value={enquiryForm.email}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        placeholder="faisal@gmail.com" 
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Mobile *</label>
+                      <input 
+                        type="tel" 
+                        required 
+                        value={enquiryForm.phone}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        placeholder="+91 99999 99999" 
+                      />
+                    </div>
+                  </div>
 
-              <div className="font-mono text-xs text-slate-300 space-y-2 bg-slate-950 p-4 rounded-xl border border-white/5 text-left overflow-x-auto">
-                <div className="text-blue-400">const developerProfile = &#123;</div>
-                <div className="pl-4">name: "BeyondSkills Student",</div>
-                <div className="pl-4">duration: "4 Months",</div>
-                <div className="pl-4">frameworks: ["React.js", "Node.js", "Express.js"],</div>
-                <div className="pl-4">database: "MongoDB Atlas",</div>
-                <div className="pl-4">verifiableCertificate: true,</div>
-                <div className="pl-4">projectsBuilt: ["E-Commerce", "Admin Portal", "LMS"]</div>
-                <div className="text-blue-400">&#125;;</div>
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Qualification *</label>
+                      <select 
+                        value={enquiryForm.qualification}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      >
+                        <option value="Undergraduate">Undergraduate</option>
+                        <option value="Postgraduate">Postgraduate</option>
+                        <option value="Fresh Graduate">Fresh Graduate</option>
+                        <option value="Working Professional">Working Prof.</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Coding Exp *</label>
+                      <select 
+                        value={enquiryForm.experience}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      >
+                        <option value="Beginner - No Coding">Beginner</option>
+                        <option value="Basic - Little Coding">Basic</option>
+                        <option value="Intermediate - Code Daily">Intermediate</option>
+                      </select>
+                    </div>
+                  </div>
 
-              {/* Dev stats metrics floating */}
-              <div className="mt-4 bg-white/5 border border-white/10 p-3.5 rounded-xl flex items-center space-x-3 text-left relative z-10">
-                <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
-                  <Layout className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">MERN Frameworks</span>
-                  <span className="text-xs font-semibold text-white">Interactive Client UI & Server Architecture</span>
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Career Goal *</label>
+                      <select 
+                        value={enquiryForm.goal}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, goal: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      >
+                        <option value="Land a Tech Job">Land a Tech Job</option>
+                        <option value="Freelancing/Independent">Freelancing</option>
+                        <option value="Build a Startup">Build Startup</option>
+                        <option value="General Upskilling">Upskilling</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Preferred Call Time *</label>
+                      <select 
+                        value={enquiryForm.contactTime}
+                        onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      >
+                        <option value="Morning 9 AM - 12 PM">9 AM - 12 PM</option>
+                        <option value="Afternoon 12 PM - 4 PM">12 PM - 4 PM</option>
+                        <option value="Evening 4 PM - 8 PM">4 PM - 8 PM</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    className="w-full mt-2 py-3 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer"
+                  >
+                    Apply Now
+                  </button>
+                  
+                  <p className="text-[8px] text-slate-400 leading-normal text-center mt-2 font-mono">
+                    *By submitting this form you agree to be contacted regarding this program.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
+
         </div>
       </section>
 
       {/* 3. WHY LEARN FULL STACK WEB DEVELOPMENT */}
-      <section className="py-16 bg-slate-50 border-t border-b border-slate-100">
+      <section className="py-16 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Target Landscape</span>
-            <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] mt-2 tracking-tight">
-              Why Learn Full Stack Web Development
-            </h2>
-            <p className="text-slate-500 text-sm mt-3">
-              Full Stack Web Development is a highly sought-after technology career path in the modern software industry.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            {[
-              { title: "High Hiring Demand", desc: "Startups, SaaS platforms, and product companies seek developers who can manage both interface experiences and backend database schemas." },
-              { title: "Remote & Freelance Freedom", desc: "Build custom directories, deliver client portals, and work independently with companies worldwide." },
-              { title: "Unified JavaScript", desc: "Build complete end-to-end web applications quickly using a single language (JavaScript) across the entire stack." }
-            ].map((opp, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-sm space-y-3 hover:shadow-md transition-shadow">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2563EB] flex items-center justify-center font-extrabold font-mono">
-                  0{idx + 1}
-                </div>
-                <h3 className="font-manrope font-bold text-slate-900 text-base">{opp.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-inter">{opp.desc}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center text-left">
+            <div className="lg:col-span-7 space-y-6">
+              <span className="text-[#2563EB] text-xs font-bold tracking-widest uppercase">Target Landscape</span>
+              <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight">
+                Why Learn Full Stack Web Development
+              </h2>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Full Stack Web Development is a highly sought-after technology career path. Product companies, fast-growing SaaS startups, and digital solution agencies look for developers capable of handling user-facing visuals as well as backend REST APIs and database models.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {[
+                  "Companies seek developers who can manage both interface experiences and backend engines.",
+                  "Enables you to build and launch complete web applications quickly as a single developer.",
+                  "Offers remote freelance opportunities and high-paying professional career roles.",
+                  "Gives you the foundational skills to build custom prototypes for startup ideas."
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-start space-x-2 text-xs text-slate-600">
+                    <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Developer visual profile snippet placed here as graphic support */}
+            <div className="lg:col-span-5">
+              <div className="bg-[#0A0E29] border border-white/10 rounded-2xl p-5 shadow-2xl relative text-slate-350">
+                <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+                  <div className="flex space-x-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                  </div>
+                  <span className="text-[9px] font-mono text-slate-500">developer_environment.js</span>
+                </div>
+                <div className="font-mono text-xs text-slate-300 space-y-2 bg-slate-950 p-4 rounded-xl border border-white/5 overflow-x-auto">
+                  <div className="text-blue-400">const developerProfile = &#123;</div>
+                  <div className="pl-4">name: "BeyondSkills Student",</div>
+                  <div className="pl-4">duration: "4 Months",</div>
+                  <div className="pl-4">frameworks: ["React.js", "Node.js", "Express.js"],</div>
+                  <div className="pl-4">database: "MongoDB Atlas",</div>
+                  <div className="pl-4">verifiableCertificate: true,</div>
+                  <div className="pl-4">projectsBuilt: ["E-Commerce", "Admin Portal", "LMS"]</div>
+                  <div className="text-blue-400">&#125;;</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -567,157 +689,29 @@ export default function FullStackLandingPage() {
         </div>
       </section>
 
-      {/* 11. FINAL CTA & APPLICATION FORM SECTION */}
-      <section id="application-form" className="py-20 bg-slate-50 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* CTA Context */}
-            <div className="lg:col-span-5 space-y-6 text-left">
-              <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1 rounded font-mono">
-                Admissions Open
-              </span>
-              <h2 className="font-manrope font-extrabold text-[#0F172A] text-3xl sm:text-5xl leading-tight">
-                Start Building Real Software with <span className="text-[#2563EB]">BeyondSkills</span>
-              </h2>
-              <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-md">
-                Register details to schedule a live training counseling session. Download the syllabus models and receive detailed briefs from academy mentors.
-              </p>
-              
-              <div className="flex items-start space-x-3 bg-white border border-slate-200 p-4 rounded-xl max-w-md">
-                <ShieldAlert className="w-5 h-5 text-[#2563EB] flex-shrink-0 mt-0.5" />
-                <p className="text-[10px] text-slate-500 leading-relaxed">
-                  <strong>Notice:</strong> Program registration fees are final. Class schedules are mapped dynamically to weekends to assist working professionals.
-                </p>
-              </div>
-            </div>
-
-            {/* Application Enquiry Form */}
-            <div className="lg:col-span-7">
-              <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl max-w-xl mx-auto w-full">
-                <h3 className="font-manrope font-bold text-[#0F172A] text-lg sm:text-xl mb-6 text-left">Admission Enquiry Form</h3>
-                
-                {status === 'success' ? (
-                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
-                    <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
-                    <h4 className="font-bold text-sm">Enquiry Registered Successfully!</h4>
-                    <p className="text-[11px] text-emerald-600 leading-relaxed">
-                      Your details have been logged in the admissions queue. An advisor will reach out during your preferred contact window.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Full Name *</label>
-                        <input 
-                          type="text" 
-                          required 
-                          value={enquiryForm.name}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                          placeholder="e.g., Faisal Shah" 
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Email Address *</label>
-                        <input 
-                          type="email" 
-                          required 
-                          value={enquiryForm.email}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                          placeholder="e.g., faisal@gmail.com" 
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Mobile Number *</label>
-                        <input 
-                          type="tel" 
-                          required 
-                          value={enquiryForm.phone}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                          placeholder="e.g., +91 99999 99999" 
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Current Qualification *</label>
-                        <select 
-                          value={enquiryForm.qualification}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                        >
-                          <option value="Undergraduate">Undergraduate Student</option>
-                          <option value="Postgraduate">Postgraduate Student</option>
-                          <option value="Fresh Graduate">Fresh Graduate</option>
-                          <option value="Working Professional">Working Professional</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Coding Experience *</label>
-                        <select 
-                          value={enquiryForm.experience}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                        >
-                          <option value="Beginner - No Coding">Beginner - No Coding</option>
-                          <option value="Basic - Little Coding">Basic - Little Coding</option>
-                          <option value="Intermediate - Code Daily">Intermediate - Code Daily</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Career Goal *</label>
-                        <select 
-                          value={enquiryForm.goal}
-                          onChange={(e) => setEnquiryForm({...enquiryForm, goal: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                        >
-                          <option value="Land a Tech Job">Land a Tech Job</option>
-                          <option value="Freelancing/Independent">Freelancing / Independent</option>
-                          <option value="Build a Startup">Build a Startup</option>
-                          <option value="General Upskilling">General Upskilling</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Preferred Contact Time *</label>
-                      <select 
-                        value={enquiryForm.contactTime}
-                        onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
-                      >
-                        <option value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
-                        <option value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
-                        <option value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
-                      </select>
-                    </div>
-
-                    <button 
-                      type="submit" 
-                      className="w-full py-3.5 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md shadow-blue-500/10 cursor-pointer"
-                    >
-                      Apply Now
-                    </button>
-                    
-                    <p className="text-[9px] text-slate-400 leading-normal text-center mt-3 font-mono">
-                      *By submitting this form you agree to be contacted regarding this program.
-                    </p>
-                  </form>
-                )}
-              </div>
-            </div>
-
+      {/* 11. FINAL CTA SECTION (SCROLLS TO TOP) */}
+      <section className="py-20 bg-slate-50 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1 rounded font-mono">
+            Start Today
+          </span>
+          <h2 className="font-manrope font-extrabold text-[#0F172A] text-3xl sm:text-4xl">
+            Start Building Real Software with BeyondSkills
+          </h2>
+          <p className="text-slate-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+            Register details at the top of the page to schedule a live training counseling session. Download the syllabus models and receive detailed briefs from academy mentors.
+          </p>
+          <div className="pt-4">
+            <button 
+              onClick={scrollToHeroForm}
+              className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/10 cursor-pointer"
+            >
+              Apply Now
+            </button>
           </div>
+          <p className="text-[10px] text-slate-400 leading-normal max-w-sm mx-auto">
+            Our team will contact you to explain the program, curriculum, fee structure and answer all your questions.
+          </p>
         </div>
       </section>
 
@@ -759,7 +753,7 @@ export default function FullStackLandingPage() {
           <span className="text-xs font-bold text-slate-900 font-manrope">Full Stack Web Dev</span>
         </div>
         <button 
-          onClick={scrollToForm}
+          onClick={scrollToHeroForm}
           className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase px-5 py-2.5 rounded-lg transition-all cursor-pointer"
         >
           Apply Now
