@@ -328,7 +328,7 @@ export default function AiMlDataScienceLandingPage() {
               <span>Upskilling Certificate Program</span>
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-tight text-left">
-              Master Practical <span className="bg-gradient-to-r from-[#2563EB] via-[#F97316] to-[#0EA5E9] bg-clip-text text-transparent underline decoration-amber-400 decoration-wavy underline-offset-8 font-black">Artificial Intelligence, Machine Learning, Data Science & Data Analytics</span>
+              Master Practical <span className="bg-gradient-to-r from-[#2563EB] via-[#F97316] to-[#0EA5E9] bg-clip-text text-transparent font-black">Artificial Intelligence, Machine Learning, Data Science & Data Analytics</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed">
               No programming background required. Build statistical algorithms, design recommendation engines, and deploy neural network models with direct mentor audits and live support.
