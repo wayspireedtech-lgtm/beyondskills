@@ -310,7 +310,7 @@ export default function Home() {
               <div 
                 key={course.id} 
                 onClick={() => {
-                  const targetPath = course.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${course.id}`;
+                  const targetPath = `/course/${course.id}`;
                   navigate(targetPath);
                 }}
                 className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[360px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
@@ -369,7 +369,7 @@ export default function Home() {
                       </div>
                       <div className="flex space-x-1.5">
                         <Link 
-                          to={course.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${course.id}/brochure`}
+                          to={`/course/${course.id}/brochure`}
                           onClick={(e) => e.stopPropagation()}
                           className="bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer animate-fade-in"
                         >

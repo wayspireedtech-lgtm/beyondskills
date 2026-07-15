@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -15,7 +15,6 @@ import Dashboard from './pages/Dashboard';
 import Verification from './pages/Verification';
 import AdminDashboard from './pages/AdminDashboard';
 import CourseDetails from './pages/CourseDetails';
-import FullStackProgram from './pages/FullStackProgram';
 import CampusAmbassador from './pages/CampusAmbassador';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions';
@@ -158,7 +157,8 @@ export default function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/course/:courseId" element={<CourseDetails />} />
           <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
-          <Route path="/programs/full-stack-web-development" element={<FullStackProgram />} />
+          <Route path="/programs/full-stack-web-development" element={<Navigate to="/course/full-stack-web/brochure" replace />} />
+          <Route path="/programs/ai-data-science" element={<Navigate to="/course/artificial-intelligence/brochure" replace />} />
           <Route path="/ambassador" element={<CampusAmbassador />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />

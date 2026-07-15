@@ -42,7 +42,7 @@ export default function Courses() {
 
     // Redirect /courses?id=ai-ml to /course/ai-ml
     if (idParam) {
-      const targetPath = idParam === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${idParam}`;
+      const targetPath = `/course/${idParam}`;
       navigate(targetPath, { replace: true });
     }
   }, [searchParams, navigate]);
@@ -115,7 +115,7 @@ export default function Courses() {
               <div 
                 key={c.id} 
                 onClick={() => {
-                  const targetPath = c.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${c.id}`;
+                  const targetPath = `/course/${c.id}`;
                   navigate(targetPath);
                 }}
                 className="relative overflow-hidden p-6 rounded-2xl flex flex-col justify-between transition-all cursor-pointer min-h-[350px] group border border-slate-200/60 hover:border-brand-purple/30 hover:scale-[1.01]"
@@ -174,7 +174,7 @@ export default function Courses() {
                       </div>
                       <div className="flex space-x-1.5 mt-4">
                         <Link 
-                          to={c.id === 'full-stack-web' ? '/programs/full-stack-web-development' : `/course/${c.id}/brochure`}
+                          to={`/course/${c.id}/brochure`}
                           onClick={(e) => e.stopPropagation()}
                           className="flex-1 bg-[#2A4BFF] hover:brightness-110 text-white font-bold text-[10px] uppercase px-2.5 py-2 rounded-lg transition-colors text-center inline-block cursor-pointer"
                         >

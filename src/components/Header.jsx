@@ -140,10 +140,10 @@ export default function Header() {
                           <p className="text-[11px] text-slate-400">Browse upskilling programs</p>
                         </div>
                       </Link>
-                      <Link to="/programs/ai-data-science" className="block px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded hover:bg-white/5">
+                      <Link to="/course/artificial-intelligence/brochure" className="block px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded hover:bg-white/5">
                         Artificial Intelligence & Data Science
                       </Link>
-                      <Link to="/programs/full-stack-web-development" className="block px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded hover:bg-white/5">
+                      <Link to="/course/full-stack-web/brochure" className="block px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded hover:bg-white/5">
                         Full Stack Web Dev (MERN)
                       </Link>
                       <Link to="/courses?cat=Digital Marketing" className="block px-3 py-1.5 text-xs text-slate-300 hover:text-white rounded hover:bg-white/5">
