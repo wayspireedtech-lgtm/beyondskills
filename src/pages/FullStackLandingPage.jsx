@@ -17,7 +17,7 @@ const BENEFITS = [
   { title: "Resume Support", desc: "Structure your resume sheets to focus on code portfolios and core technologies." },
   { title: "Interview Preparation", desc: "Practice coding algorithms, DOM manipulations, and Express server questions." },
   { title: "Learning Community", desc: "Collaborate and share code directories with cohort members in chat channels." },
-  { title: "LMS Access", desc: "Watch recorded lectures and access code libraries at your convenience." },
+  { title: "LMS Access", desc: "Watch recorded lectures and access code libraries for 1-year from the batch start date." },
   { title: "Assignments", desc: "Tackle weekly milestone checks to validate your database and API models." },
   { title: "Portfolio Development", desc: "Host 3 core projects on GitHub as concrete proof of your capabilities." }
 ];
@@ -594,9 +594,10 @@ export default function FullStackLandingPage() {
             { label: "Class Schedule", value: "Evening Classes (Mostly after 6:00 PM)", extra: "Timetable shared upon enrollment" },
             { label: "Instructor Pool", value: "Tech Leads & Senior Engineers", extra: "Practicing software engineers" },
             { label: "Skill Threshold", value: "Beginner to Intermediate", extra: "No coding background required" },
-            { label: "Delivery Format", value: "Live Classes + Recorded Access", extra: "Flexible lifetime LMS access" },
+            { label: "Delivery Format", value: "Live Classes + Recorded Access", extra: "Flexible 1-year LMS access" },
             { label: "Support Language", value: "English / Hindi Support", extra: "Clear query explanations" },
-            { label: "Learning Access", value: "Lifetime LMS Access", extra: "Access past batch recordings anytime" },
+            { label: "Learning Access", value: "1 Year LMS Access", extra: "Access recordings for 1 year from start" },
+            { label: "Cohort Cycles", value: "New Batches Start Every Month", extra: "Regular monthly intake tracks" },
             { label: "Milestone Credentials", value: "Completion Certificate", extra: "BeyondSkills Program Certificate" }
           ].map((detail, idx) => (
             <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 transition-all">
