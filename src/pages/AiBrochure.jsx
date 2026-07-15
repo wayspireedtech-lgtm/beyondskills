@@ -389,8 +389,12 @@ export default function AiBrochure() {
   // Booklet state parameters
   const [isBookletMode, setIsBookletMode] = useState(courseId === 'artificial-intelligence');
   const [currentPage, setCurrentPage] = useState(1);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const totalPages = 20;
+
+  const isPageDark = (page) => {
+    // Pages 1 (Cover), 3 (Why AI/DS), 6 (Highlights), 7 (Roadmap), 13 (Projects), 18 (Success), 20 (Contact) are dark.
+    return [1, 3, 6, 7, 13, 18, 20].includes(page);
+  };
 
   // Retrieve course content dynamically from the COURSES mock database
   const course = COURSES.find(c => c.id === courseId) || COURSES.find(c => c.id === 'artificial-intelligence');
@@ -453,34 +457,34 @@ export default function AiBrochure() {
     document.body.removeChild(link);
   };
 
-  // Dynamic Theme Styling Variables
-  const textPrimary = isDarkMode ? 'text-white' : 'text-slate-800';
-  const textMuted = isDarkMode ? 'text-slate-300' : 'text-slate-500';
-  const cardBg = isDarkMode ? 'bg-[#1E293B]/40 border-white/5' : 'bg-slate-50 border-slate-200/80';
-  const badgeBg = isDarkMode ? 'bg-[#2A4BFF]/20 border-[#2A4BFF]/30 text-[#0EA5E9]' : 'bg-brand-purple/10 border-brand-purple/20 text-brand-purple';
-
   // Render individual pages for the interactive 20-page booklet
   const renderPageContent = (page) => {
+    const pageIsDark = isPageDark(page);
+    const textPrimary = pageIsDark ? 'text-white' : 'text-slate-800';
+    const textMuted = pageIsDark ? 'text-slate-350' : 'text-slate-500';
+    const cardBg = pageIsDark ? 'bg-[#1E293B]/40 border-white/5' : 'bg-slate-50 border-slate-200';
+    const badgeBg = pageIsDark ? 'bg-[#2A4BFF]/20 border-[#2A4BFF]/30 text-[#0EA5E9]' : 'bg-brand-purple/10 border-brand-purple/20 text-brand-purple';
+
     switch (page) {
       case 1:
         return (
           <div className="flex flex-col justify-between h-full text-center relative overflow-hidden">
             {/* Ambient Background Grid for cover */}
-            {isDarkMode && (
+            {pageIsDark && (
               <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{
                 backgroundImage: `linear-gradient(to right, #2A4BFF 1px, transparent 1px), linear-gradient(to bottom, #2A4BFF 1px, transparent 1px)`,
                 backgroundSize: '20px 20px'
               }}></div>
             )}
-            <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#2A4BFF]/20' : 'bg-[#2A4BFF]/5'}`}></div>
-            <div className={`absolute -bottom-24 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#0EA5E9]/15' : 'bg-[#0EA5E9]/5'}`}></div>
+            <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${pageIsDark ? 'bg-[#2A4BFF]/20' : 'bg-[#2A4BFF]/5'}`}></div>
+            <div className={`absolute -bottom-24 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${pageIsDark ? 'bg-[#0EA5E9]/15' : 'bg-[#0EA5E9]/5'}`}></div>
 
             <div className="flex justify-between items-center z-10">
               <span className={`logo-font text-xl font-bold tracking-tight ${textPrimary} flex items-center gap-2`}>
                 <Brain className="w-5 h-5 text-[#0EA5E9] animate-pulse" />
                 BeyondSkills
               </span>
-              <span className={`text-[10px] font-mono bg-white/5 border border-white/10 px-3 py-1 rounded-full uppercase tracking-wider ${isDarkMode ? 'text-slate-400' : 'text-slate-655 bg-slate-100'}`}>
+              <span className={`text-[10px] font-mono bg-white/5 border border-white/10 px-3 py-1 rounded-full uppercase tracking-wider ${pageIsDark ? 'text-slate-400' : 'text-slate-600 bg-slate-100'}`}>
                 Interactive Edition
               </span>
             </div>
@@ -576,7 +580,7 @@ export default function AiBrochure() {
                     <span className={textPrimary}>{item.label}</span>
                     <span className="text-[#0EA5E9]">{item.percent}% Increase</span>
                   </div>
-                  <div className="w-full bg-slate-200 dark:bg-slate-900 h-2 rounded-full overflow-hidden border border-white/5">
+                  <div className={`w-full ${pageIsDark ? 'bg-slate-900 border-white/5' : 'bg-slate-200 border-slate-350'} h-2 rounded-full overflow-hidden border`}>
                     <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: `${item.percent}%` }}></div>
                   </div>
                   <p className="text-[9px] text-[#2A4BFF] dark:text-[#0EA5E9] font-mono leading-none">{item.detail}</p>
@@ -676,7 +680,7 @@ export default function AiBrochure() {
                 <div key={idx} className={`p-4 rounded-xl text-center flex flex-col justify-between border ${cardBg}`}>
                   <span className="text-sm font-extrabold text-[#2A4BFF] dark:text-[#0EA5E9] block font-mono">{item.value}</span>
                   <span className={`text-[9px] font-bold uppercase tracking-wider block font-mono mt-1 ${textPrimary}`}>{item.label}</span>
-                  <span className="text-[8px] text-slate-450 dark:text-slate-405 font-mono mt-0.5 block">{item.desc}</span>
+                  <span className="text-[8px] text-slate-450 dark:text-slate-400 font-mono mt-0.5 block">{item.desc}</span>
                 </div>
               ))}
             </div>
@@ -722,7 +726,7 @@ export default function AiBrochure() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 1</span>
-                <span className="text-[10px] font-mono text-slate-400">Weeks 1-2 • Python Internals & Architecture</span>
+                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 1-2 • Python Internals & Architecture</span>
               </div>
               <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Python Fundamentals & Basic Structures</h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
@@ -732,22 +736,22 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">1. Setup & Environment</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Setup & Environment</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Installation and setup of Anaconda environment</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Jupyter Notebook modern usage practices</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Essential shortcuts and productivity tips in Jupyter Notebook</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Understanding Python data types with real-world applications</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Installation and setup of Anaconda environment</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Jupyter Notebook modern usage practices</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Essential shortcuts and productivity tips in Jupyter Notebook</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Understanding Python data types with real-world applications</span></li>
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">2. Structures & File Logic</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Structures & File Logic</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Variable naming best practices (PEP 8 standards)</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Lists, Tuples, Sets, and Dictionaries with practical use cases</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Introduction to files and directories in modern dev environments</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>File I/O and context managers (with Statement)</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Variable naming best practices (PEP 8 standards)</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Lists, Tuples, Sets, and Dictionaries with practical use cases</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to files and directories in modern dev environments</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>File I/O and context managers (with Statement)</span></li>
                 </ul>
               </div>
 
@@ -756,10 +760,10 @@ export default function AiBrochure() {
                   <Code className="w-5 h-5 text-brand-purple" />
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. CLI & Loops Control Flow</h4>
-                    <p className="text-[9px] text-slate-400 font-mono">Looping constructs (for/while loops), conditional statements (if/elif/else), and terminal navigation.</p>
+                    <p className="text-[9px] text-slate-500 font-mono">Looping constructs (for/while loops), conditional statements (if/elif/else), and terminal navigation.</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active coding</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active coding</span>
               </div>
             </div>
           </div>
@@ -771,7 +775,7 @@ export default function AiBrochure() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 2</span>
-                <span className="text-[10px] font-mono text-slate-400">Weeks 3-5 • Data Analysis & Visualization</span>
+                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 3-5 • Data Analysis & Visualization</span>
               </div>
               <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Scientific Libraries & EDA</h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
@@ -781,21 +785,21 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">1. NumPy Computation</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. NumPy Computation</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Introduction to machine learning scientific libraries</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>NumPy hands-on implementation & array operations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Matrix transformations and array vector calculations</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to machine learning scientific libraries</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>NumPy hands-on implementation & array operations</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Matrix transformations and array vector calculations</span></li>
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">2. Pandas Wrangling & Visuals</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Pandas Wrangling & Visuals</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Pandas: real-world data analysis and cleaning</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Data transformation, grouping, and merging datasets</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Exploratory analysis (EDA) using Matplotlib</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Seaborn visualization for advanced insights</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Pandas: real-world data analysis and cleaning</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Data transformation, grouping, and merging datasets</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Exploratory analysis (EDA) using Matplotlib</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Seaborn visualization for advanced insights</span></li>
                 </ul>
               </div>
 
@@ -804,10 +808,10 @@ export default function AiBrochure() {
                   <BarChart3 className="w-5 h-5 text-brand-purple" />
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Concept Strengthening & Doubt resolution</h4>
-                    <p className="text-[9px] text-slate-400 font-mono">Dedicated interactive discussion sessions to resolve course-related queries and reinforce core logic.</p>
+                    <p className="text-[9px] text-slate-500 font-mono">Dedicated interactive discussion sessions to resolve course-related queries and reinforce core logic.</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active Q&A</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Active Q&A</span>
               </div>
             </div>
           </div>
@@ -819,7 +823,7 @@ export default function AiBrochure() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 3</span>
-                <span className="text-[10px] font-mono text-slate-400">Weeks 6-7 • Relational SQL & Linear Modeling</span>
+                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 6-7 • Relational SQL & Linear Modeling</span>
               </div>
               <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>SQL Databases & Statistical Modeling</h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
@@ -829,22 +833,22 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">1. Databases & SQL</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Databases & SQL</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Excel: dashboard visual layouts and calculations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>SQL Joins, data aggregations, and query writing</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Relational database design & schema connections</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Power BI: DAX queries & model charts</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Excel: dashboard visual layouts and calculations</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>SQL Joins, data aggregations, and query writing</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Relational database design & schema connections</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Power BI: DAX queries & model charts</span></li>
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">2. Stats & Machine Learning</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Stats & Machine Learning</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Statistical thinking: central tendencies & dispersion</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>IQR statistics & dispersion calculations</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Supervised & unsupervised model fine-tuning</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Linear & Logistic Regression concept checks</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Statistical thinking: central tendencies & dispersion</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>IQR statistics & dispersion calculations</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Supervised & unsupervised model fine-tuning</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Linear & Logistic Regression concept checks</span></li>
                 </ul>
               </div>
 
@@ -853,10 +857,10 @@ export default function AiBrochure() {
                   <Award className="w-5 h-5 text-brand-purple" />
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Regression Evaluations & Predictions</h4>
-                    <p className="text-[9px] text-slate-400 font-mono">Hands-on practice mapping regression performance, evaluating metrics, and auditing classifications.</p>
+                    <p className="text-[9px] text-slate-500 font-mono">Hands-on practice mapping regression performance, evaluating metrics, and auditing classifications.</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Theory + Code</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Theory + Code</span>
               </div>
             </div>
           </div>
@@ -868,7 +872,7 @@ export default function AiBrochure() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 4</span>
-                <span className="text-[10px] font-mono text-slate-400">Weeks 8-10 • Data Processing & Ensembles</span>
+                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 8-10 • Data Processing & Ensembles</span>
               </div>
               <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>Data Preprocessing & Tree Models</h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
@@ -878,22 +882,22 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">1. Data Standardization</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Data Standardization</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Standardization, normalization, scaling</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Outlier detection and missing value treatment</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Feature scaling and selection techniques</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Introduction to data preprocessing techniques</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Standardization, normalization, scaling</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Outlier detection and missing value treatment</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Feature scaling and selection techniques</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Introduction to data preprocessing techniques</span></li>
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">2. Trees & Deep Learning</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Trees & Deep Learning</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Decision Trees: CART concepts & algorithms</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Bagging, Boosting, and Random Forest methods</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Neural Networks: activation parameters & layers</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Fundamentals of Deep Learning models</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Decision Trees: CART concepts & algorithms</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Bagging, Boosting, and Random Forest methods</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Neural Networks: activation parameters & layers</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Fundamentals of Deep Learning models</span></li>
                 </ul>
               </div>
 
@@ -902,10 +906,10 @@ export default function AiBrochure() {
                   <Rocket className="w-5 h-5 text-brand-purple" />
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Capstone Real-world Implementation</h4>
-                    <p className="text-[9px] text-slate-400 font-mono">Utilize Data Science libraries to execute data analysis, visualization, model building, and data extraction.</p>
+                    <p className="text-[9px] text-slate-500 font-mono">Utilize Data Science libraries to execute data analysis, visualization, model building, and data extraction.</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Production Build</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Production Build</span>
               </div>
             </div>
           </div>
@@ -917,7 +921,7 @@ export default function AiBrochure() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Module 5</span>
-                <span className="text-[10px] font-mono text-slate-400">Weeks 11-12 • Text Intelligence & API Pipelines</span>
+                <span className="text-[10px] font-mono text-slate-450 dark:text-slate-400">Weeks 11-12 • Text Intelligence & API Pipelines</span>
               </div>
               <h2 className={`logo-font text-2xl font-bold ${textPrimary}`}>NLP & Generative AI Specialization</h2>
               <p className={`text-xs font-mono leading-relaxed ${textMuted}`}>
@@ -927,22 +931,22 @@ export default function AiBrochure() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-auto pt-2">
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">1. Natural Language Processing</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">1. Natural Language Processing</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>NLTK text parsing, tokenization, linguistics</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>spaCy: Named Entity Recognition (NER) & apps</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Gensim topic modeling & semantic analysis</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>FastText: word representations & Deep Learning NLP</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>NLTK text parsing, tokenization, linguistics</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>spaCy: Named Entity Recognition (NER) & apps</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Gensim topic modeling & semantic analysis</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>FastText: word representations & Deep Learning NLP</span></li>
                 </ul>
               </div>
 
               <div className={`p-4 rounded-xl border ${cardBg}`}>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF] dark:text-[#0EA5E9]">2. Generative AI & LLMs</h3>
+                <h3 className="text-xs font-bold font-mono uppercase tracking-wider mb-2 text-[#2A4BFF]">2. Generative AI & LLMs</h3>
                 <ul className="space-y-1.5 text-[10px] font-mono">
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Hugging Face ecosystem & pre-trained transformers</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Working of GenAI: GANs, VAEs, and LLMs</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Overview of DALL-E, ChatGPT, and Gemini APIs</span></li>
-                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] dark:text-[#0EA5E9] flex-shrink-0 mt-0.5" /> <span>Prompt Engineering & building custom agents</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Hugging Face ecosystem & pre-trained transformers</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Working of GenAI: GANs, VAEs, and LLMs</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Overview of DALL-E, ChatGPT, and Gemini APIs</span></li>
+                  <li className="flex items-start gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2A4BFF] flex-shrink-0 mt-0.5" /> <span>Prompt Engineering & building custom agents</span></li>
                 </ul>
               </div>
 
@@ -951,10 +955,10 @@ export default function AiBrochure() {
                   <Brain className="w-5 h-5 text-brand-purple animate-pulse" />
                   <div>
                     <h4 className={`font-bold text-xs font-mono uppercase ${textPrimary}`}>3. Real-World AI Applications</h4>
-                    <p className="text-[9px] text-slate-400 font-mono">Apply GenAI models to content generation, workflow automations, and RAG support portals.</p>
+                    <p className="text-[9px] text-slate-550 font-mono">Apply GenAI models to content generation, workflow automations, and RAG support portals.</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Future Ready</span>
+                <span className="text-[8px] font-mono font-bold text-[#2A4BFF] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20">Future Ready</span>
               </div>
             </div>
           </div>
@@ -980,8 +984,8 @@ export default function AiBrochure() {
               ].map((item, idx) => (
                 <div key={idx} className={`p-3 rounded-xl flex flex-col justify-between border ${cardBg}`}>
                   <div>
-                    <h4 className={`font-bold text-white text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
-                    <p className="text-[9px] text-slate-400 font-mono mt-1 leading-snug">{item.desc}</p>
+                    <h4 className={`font-bold text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
+                    <p className={`text-[9px] font-mono mt-1 leading-snug ${textMuted}`}>{item.desc}</p>
                   </div>
                   <span className="text-[8px] font-mono text-[#2A4BFF] dark:text-[#0EA5E9] bg-[#2A4BFF]/10 px-2 py-0.5 rounded border border-[#2A4BFF]/20 w-fit mt-2">
                     {item.tech}
@@ -1007,14 +1011,14 @@ export default function AiBrochure() {
               {[
                 "python", "sql", "pandas", "numpy", "scikit-learn", "tensorflow", "react", "node.js"
               ].map((tool, idx) => (
-                <div key={idx} className={`p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-white/10 transition-colors border ${cardBg}`}>
+                <div key={idx} className={`p-4 rounded-xl flex flex-col items-center justify-center space-y-2 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border ${cardBg}`}>
                   <TechIcon name={tool} className="w-8 h-8" />
                   <span className={`text-[8px] font-mono font-bold uppercase tracking-wider block text-center truncate w-full ${textPrimary}`}>{tool}</span>
                 </div>
               ))}
             </div>
             
-            <div className="text-[10px] font-mono text-slate-450 dark:text-slate-400 text-center border-t border-slate-200 dark:border-white/10 pt-4">
+            <div className={`text-[10px] font-mono text-center border-t pt-4 ${pageIsDark ? 'border-white/10 text-slate-400' : 'border-slate-200 text-slate-500'}`}>
               Plus: Jupyter Notebooks, Hugging Face Transformers, Git Version Control, OpenAI API tokens
             </div>
           </div>
@@ -1040,7 +1044,7 @@ export default function AiBrochure() {
               ].map((item, idx) => (
                 <div key={idx} className={`p-4 rounded-xl space-y-1.5 flex flex-col justify-between border ${cardBg}`}>
                   <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
-                  <p className="text-[10px] text-slate-450 dark:text-slate-400 font-mono mt-0.5 leading-snug">{item.desc}</p>
+                  <p className={`text-[10px] font-mono mt-0.5 leading-snug ${textMuted}`}>{item.desc}</p>
                   <span className="text-[8px] font-mono text-[#2A4BFF] dark:text-[#0EA5E9] uppercase font-bold tracking-wider">{item.tag}</span>
                 </div>
               ))}
@@ -1064,11 +1068,11 @@ export default function AiBrochure() {
                 <div>
                   <span className="text-[#0EA5E9] font-mono text-[9px] font-bold uppercase tracking-wider block">Recorded Track</span>
                   <h4 className={`font-extrabold text-sm font-mono mt-1 ${textPrimary}`}>Essential Track</h4>
-                  <p className="text-[10px] text-slate-400 font-mono mt-2 leading-relaxed">
+                  <p className={`text-[10px] font-mono mt-2 leading-relaxed ${textMuted}`}>
                     Access our full database library of pre-recorded lectures and download templates to learn independently.
                   </p>
                 </div>
-                <div className="border-t border-white/10 pt-3 mt-4 text-[9px] font-mono text-slate-400">
+                <div className={`border-t pt-3 mt-4 text-[9px] font-mono ${pageIsDark ? 'border-white/10 text-slate-450' : 'border-slate-200 text-slate-500'}`}>
                   Includes certification and code support.
                 </div>
               </div>
@@ -1076,12 +1080,12 @@ export default function AiBrochure() {
               <div className="bg-[#2A4BFF]/10 border border-[#2A4BFF]/30 p-5 rounded-xl flex flex-col justify-between">
                 <div>
                   <span className="text-[#0EA5E9] font-mono text-[9px] font-bold uppercase tracking-wider block">Live Cohort Track</span>
-                  <h4 className="font-extrabold text-white text-sm font-mono mt-1">Professional Track</h4>
-                  <p className="text-[10px] text-slate-350 dark:text-slate-300 mt-2 leading-relaxed">
+                  <h4 className={`font-extrabold text-sm font-mono mt-1 ${textPrimary}`}>Professional Track</h4>
+                  <p className={`text-[10px] font-mono mt-2 leading-relaxed ${textMuted}`}>
                     Participate in weekend cohort workshops directed by EY/Nokia engineers. Backed by Slack support SLA channels.
                   </p>
                 </div>
-                <div className="border-t border-[#2A4BFF]/30 pt-3 mt-4 text-[9px] font-mono text-[#0EA5E9] font-bold">
+                <div className={`border-t pt-3 mt-4 text-[9px] font-mono ${pageIsDark ? 'border-white/10 text-[#0EA5E9]' : 'border-slate-200 text-brand-purple'} font-bold`}>
                   Includes mock reviews & resume analysis.
                 </div>
               </div>
@@ -1109,9 +1113,9 @@ export default function AiBrochure() {
                   <div className="space-y-2">
                     <span className="text-[9px] text-[#0EA5E9] font-mono font-bold uppercase tracking-wider bg-[#2A4BFF]/25 px-2 py-0.5 rounded border border-[#2A4BFF]/30 w-fit block">{mentor.exp} Exp</span>
                     <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide mt-1 ${textPrimary}`}>{mentor.name}</h4>
-                    <p className="text-[9px] text-slate-400 font-mono leading-none">{mentor.role}</p>
+                    <p className={`text-[9px] font-mono leading-none ${textMuted}`}>{mentor.role}</p>
                   </div>
-                  <p className="text-[10px] text-slate-450 dark:text-slate-400 font-mono mt-3 leading-relaxed border-t border-slate-200 dark:border-white/5 pt-2">{mentor.details}</p>
+                  <p className={`text-[10px] font-mono mt-3 leading-relaxed border-t pt-2 ${pageIsDark ? 'border-white/5 text-slate-300' : 'border-slate-200 text-slate-600'}`}>{mentor.details}</p>
                 </div>
               ))}
             </div>
@@ -1170,13 +1174,13 @@ export default function AiBrochure() {
               ].map((item, idx) => (
                 <div key={idx} className={`p-4 rounded-xl flex flex-col justify-between text-center border ${cardBg}`}>
                   <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide leading-tight ${textPrimary}`}>{item.title}</h4>
-                  <p className="text-[9px] text-slate-450 dark:text-slate-400 font-mono mt-1 leading-snug">{item.detail}</p>
+                  <p className={`text-[9px] font-mono mt-1 leading-snug ${textMuted}`}>{item.detail}</p>
                   <span className="text-[8px] font-mono text-[#2A4BFF] dark:text-[#0EA5E9] mt-3 font-bold block">{item.badge}</span>
                 </div>
               ))}
             </div>
 
-            <div className="text-center text-[10px] font-mono text-slate-450 dark:text-slate-400">
+            <div className={`text-center text-[10px] font-mono ${pageIsDark ? 'text-slate-400' : 'text-slate-500'}`}>
               Certificates carry unique tracking hashes to prevent credential forging.
             </div>
           </div>
@@ -1229,7 +1233,7 @@ export default function AiBrochure() {
               >
                 Enroll Now
               </button>
-              <span className="text-[9px] text-slate-450 dark:text-slate-400 font-mono">
+              <span className={`text-[9px] font-mono ${pageIsDark ? 'text-slate-400' : 'text-slate-500'}`}>
                 BeyondSkills © 2026. All rights reserved.
               </span>
             </div>
@@ -1241,42 +1245,37 @@ export default function AiBrochure() {
     }
   };
 
-  // Outer solid background to cover any parent layout spill gaps
+  // Outer solid background is forced to white as requested by the user
   const pageBgClass = isBookletMode && course.id === 'artificial-intelligence'
-    ? (isDarkMode ? 'bg-[#020412] text-white' : 'bg-slate-50 text-slate-900')
+    ? 'bg-white text-slate-900'
     : 'bg-transparent text-slate-900';
 
+  // Prevent vertical scrolling on desktop viewports in booklet mode
+  const containerHeightClass = isBookletMode && course.id === 'artificial-intelligence'
+    ? 'md:h-screen md:max-h-screen md:overflow-hidden'
+    : 'min-h-screen';
+
   return (
-    <div className={`min-h-screen relative overflow-x-hidden ${pageBgClass}`}>
-      {/* Background spotlights to layer with the global interactive grid */}
-      {isDarkMode && (
-        <>
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[140px] pointer-events-none z-0"></div>
-          <div className="absolute top-[1200px] left-[-300px] w-[600px] h-[600px] bg-brand-cyan/8 rounded-full blur-[140px] pointer-events-none z-0"></div>
-        </>
-      )}
-      
+    <div className={`relative overflow-x-hidden ${containerHeightClass} ${pageBgClass}`}>
       {/* Conditionally Render Booklet/PDF Reader or Standard Scrolling Web View */}
       {isBookletMode && course.id === 'artificial-intelligence' ? (
-        <div className="relative z-10 pt-6 pb-16 px-4 max-w-6xl mx-auto flex flex-col justify-between min-h-screen">
+        <div className="relative z-10 pt-4 pb-4 px-4 max-w-6xl mx-auto flex flex-col justify-between h-full md:h-[calc(100vh-20px)] md:max-h-[calc(100vh-20px)]">
           {/* Header Controls Bar */}
-          <div className={`flex flex-wrap items-center justify-between gap-4 border p-4 rounded-2xl backdrop-blur-md mb-6 ${
-            isDarkMode ? 'bg-slate-950/85 border-white/10 text-white' : 'bg-white/95 border-slate-200 text-slate-800 shadow-sm'
-          }`}>
+          <div className="flex flex-wrap items-center justify-between gap-4 border p-4 rounded-2xl backdrop-blur-md mb-4 bg-white/95 border-slate-200 text-slate-800 shadow-sm">
             <div className="flex items-center space-x-3">
               <Link
                 to={`/course/${course.id}`}
-                className="text-slate-400 hover:text-brand-purple mr-2 flex items-center gap-1 font-mono text-xs cursor-pointer"
+                className="text-slate-500 hover:text-brand-purple mr-2 flex items-center gap-1 font-mono text-xs cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
               </Link>
-              <span className="logo-font text-lg font-bold tracking-tight flex items-center gap-1.5">
-                <Brain className="w-5 h-5 text-[#2A4BFF] dark:text-[#0EA5E9]" />
+              <span className="logo-font text-lg font-bold tracking-tight flex items-center gap-1.5 text-slate-900">
+                <Brain className="w-5 h-5 text-[#2A4BFF]" />
                 BeyondSkills
               </span>
               <span className="hidden sm:inline-block w-1.5 h-6 bg-brand-purple rounded-full"></span>
-              <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-400 dark:text-slate-300">
+              <span className="hidden sm:inline-block text-xs font-mono font-bold text-slate-600">
                 AI & DS Booklet
               </span>
             </div>
@@ -1286,9 +1285,7 @@ export default function AiBrochure() {
               <select
                 value={currentPage}
                 onChange={(e) => setCurrentPage(Number(e.target.value))}
-                className={`border font-mono text-xs px-3 py-1.5 rounded-lg outline-none ${
-                  isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-slate-550 border-slate-200 text-slate-800'
-                }`}
+                className="border font-mono text-xs px-3 py-1.5 rounded-lg outline-none bg-slate-50 border-slate-200 text-slate-800"
               >
                 <option value={1}>Page 1: Cover</option>
                 <option value={2}>Page 2: Who We Are</option>
@@ -1312,27 +1309,10 @@ export default function AiBrochure() {
                 <option value={20}>Page 20: Contact Admissions</option>
               </select>
 
-              {/* Theme Toggle Button */}
-              <button
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className={`border text-xs font-mono px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer ${
-                  isDarkMode 
-                    ? 'bg-white/10 border-white/10 text-white hover:bg-white/15' 
-                    : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200/80'
-                }`}
-                title="Toggle Theme"
-              >
-                {isDarkMode ? <span>☀️ Light</span> : <span>🌙 Dark</span>}
-              </button>
-
               {/* Toggle to change view back to scrolling landing page */}
               <button
                 onClick={() => setIsBookletMode(false)}
-                className={`border text-xs font-mono px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer ${
-                  isDarkMode 
-                    ? 'bg-white/10 border-white/10 text-white hover:bg-white/15' 
-                    : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200/80'
-                }`}
+                className="border text-xs font-mono px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200/80"
                 title="Switch to Scrolling Web Mode"
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -1352,24 +1332,22 @@ export default function AiBrochure() {
           </div>
 
           {/* Centered Booklet Canvas Layout */}
-          <div className="flex-grow flex items-center justify-center relative my-4">
+          <div className="flex-grow flex items-center justify-center relative my-2">
             
             {/* Previous Page Floating Button Overlay */}
             <button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={currentPage === 1}
-              className={`absolute left-0 md:-left-6 z-20 w-10 h-10 md:w-12 md:h-12 border rounded-full flex items-center justify-center backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none ${
-                isDarkMode ? 'bg-slate-950/80 border-white/10 text-white hover:border-brand-cyan/50' : 'bg-white/95 border-slate-200 text-slate-800 hover:border-brand-purple/50'
-              }`}
+              className="absolute left-0 md:-left-6 z-20 w-10 h-10 md:w-12 md:h-12 border rounded-full flex items-center justify-center backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none bg-white/95 border-slate-200 text-slate-800 hover:border-brand-purple/50"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
 
-            {/* Main Page Slide Box */}
-            <div className={`w-full md:max-w-4xl md:h-[600px] md:aspect-[1.414] p-6 md:p-10 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${
-              isDarkMode 
-                ? 'bg-slate-900 border-white/10 text-white shadow-[0_20px_50px_rgba(42,75,255,0.15)]' 
-                : 'bg-white border-slate-200/80 text-slate-800 shadow-[0_20px_40px_rgba(15,23,42,0.06)]'
+            {/* Main Page Slide Box (Responsive Height scaling with viewport) */}
+            <div className={`w-full md:max-w-4xl md:h-[calc(100vh-230px)] md:max-h-[580px] md:aspect-[1.414] p-5 md:p-7 rounded-3xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${
+              isPageDark(currentPage)
+                ? 'bg-[#060A24] border-white/10 text-white shadow-[0_20px_50px_rgba(42,75,255,0.15)]' 
+                : 'bg-white border-slate-200 text-slate-800 shadow-[0_20px_40px_rgba(15,23,42,0.06)]'
             }`}>
               {renderPageContent(currentPage)}
             </div>
@@ -1378,50 +1356,44 @@ export default function AiBrochure() {
             <button
               onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
               disabled={currentPage === totalPages}
-              className={`absolute right-0 md:-right-6 z-20 w-10 h-10 md:w-12 md:h-12 border rounded-full flex items-center justify-center backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none ${
-                isDarkMode ? 'bg-slate-950/80 border-white/10 text-white hover:border-brand-cyan/50' : 'bg-white/95 border-slate-250 text-slate-800 hover:border-brand-purple/50'
-              }`}
+              className="absolute right-0 md:-right-6 z-20 w-10 h-10 md:w-12 md:h-12 border rounded-full flex items-center justify-center backdrop-blur-sm shadow-xl transition-all cursor-pointer hover:scale-105 disabled:opacity-30 disabled:pointer-events-none bg-white/95 border-slate-200 text-slate-800 hover:border-brand-purple/50"
             >
               <ArrowRight className="w-6 h-6" />
             </button>
           </div>
 
           {/* Bottom Pagination & Progress Controls */}
-          <div className={`flex flex-col items-center space-y-3.5 mt-6 border p-4 rounded-2xl backdrop-blur-sm ${
-            isDarkMode ? 'bg-slate-950/40 border-white/5 text-white' : 'bg-white/80 border-slate-200 text-slate-800 shadow-sm'
-          }`}>
+          <div className="flex flex-col items-center space-y-2 mt-4 border p-4 rounded-2xl backdrop-blur-sm bg-white/80 border-slate-200 text-slate-800 shadow-sm">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="text-slate-400 hover:text-brand-purple font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                className="text-slate-500 hover:text-brand-purple font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
               >
                 Previous
               </button>
-              <span className={`font-mono text-xs font-bold border px-3 py-1 rounded-lg ${
-                isDarkMode ? 'bg-[#2A4BFF]/20 border-[#2A4BFF]/30 text-white' : 'bg-brand-purple/10 border-brand-purple/20 text-brand-purple'
-              }`}>
+              <span className="font-mono text-xs font-bold border px-3 py-1 rounded-lg bg-brand-purple/10 border-brand-purple/20 text-brand-purple">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="text-slate-400 hover:text-brand-purple font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                className="text-slate-500 hover:text-brand-purple font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-30 disabled:pointer-events-none"
               >
                 Next
               </button>
             </div>
             
             {/* Completion Progress Bar */}
-            <div className="w-full max-w-md bg-slate-200 dark:bg-slate-900 h-1.5 rounded-full overflow-hidden border border-white/5">
+            <div className="w-full max-w-md bg-slate-200 h-1 rounded-full overflow-hidden border border-slate-200">
               <div 
                 className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full transition-all duration-300"
                 style={{ width: `${(currentPage / totalPages) * 100}%` }}
               ></div>
             </div>
 
-            <div className="text-[10px] font-mono text-slate-450 dark:text-slate-400">
-              💡 Hint: You can use your keyboard's <kbd className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1 py-0.5 rounded border border-slate-200 dark:border-white/10 font-bold">Left</kbd> and <kbd className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1 py-0.5 rounded border border-slate-200 dark:border-white/10 font-bold">Right</kbd> arrow keys to turn pages.
+            <div className="text-[10px] font-mono text-slate-500">
+              💡 Hint: You can use your keyboard's <kbd className="bg-slate-100 text-slate-650 px-1 py-0.5 rounded border border-slate-200 font-bold">Left</kbd> and <kbd className="bg-slate-100 text-slate-650 px-1 py-0.5 rounded border border-slate-200 font-bold">Right</kbd> arrow keys to turn pages.
             </div>
           </div>
         </div>
@@ -1515,10 +1487,10 @@ export default function AiBrochure() {
                 <h2 className="logo-font text-3xl font-extrabold text-slate-900 leading-tight">
                   Bridging Corporate Realities with Expert Pedagogy
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
+                <p className="text-xs sm:text-sm text-slate-650 leading-relaxed text-justify font-mono">
                   At BeyondSkills, we operate a hybrid platform: a technology agency delivering high-end custom code solutions to international enterprises, and a training academy mentoring student programmers.
                 </p>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify font-mono">
+                <p className="text-xs sm:text-sm text-slate-650 leading-relaxed text-justify font-mono">
                   This double vertical architecture means our syllabus doesn't stay static. The modules taught represent precisely what our agency developers use in production environments.
                 </p>
               </div>
@@ -1834,7 +1806,7 @@ export default function AiBrochure() {
                         Project 0{idx + 1}
                       </div>
                       <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2 group-hover:text-[#0EA5E9] transition-colors">{proj.title}</h4>
-                      <p className="text-[11px] text-slate-350 dark:text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
+                      <p className="text-[11px] text-slate-355 dark:text-slate-300 leading-relaxed font-light mb-6 font-mono">{proj.description}</p>
                     </div>
                     <div className="flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
                       {proj.techUsed && proj.techUsed.map((t, tIdx) => (
@@ -1889,7 +1861,7 @@ export default function AiBrochure() {
                 ].map((suite, idx) => (
                   <div key={idx} className="bg-[#0A0E35]/95 border border-[#2A4BFF]/20 hover:border-[#2A4BFF]/45 hover:shadow-lg p-6 rounded-2xl transition-all text-white">
                     <h4 className="font-extrabold text-white text-xs sm:text-sm uppercase tracking-wide font-mono mb-2">{suite.title}</h4>
-                    <p className="text-[11px] text-slate-350 dark:text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
+                    <p className="text-[11px] text-slate-355 dark:text-slate-300 leading-relaxed mb-4 font-mono">{suite.desc}</p>
                     <span className="text-[9px] text-[#0EA5E9] font-bold font-mono uppercase tracking-widest border border-[#2A4BFF]/30 bg-[#2A4BFF]/20 px-2 py-0.5 rounded">
                       {suite.action}
                     </span>
@@ -1941,7 +1913,7 @@ export default function AiBrochure() {
                 >
                   Get Started & Enroll Now
                 </button>
-                <div className="mt-4 flex items-center justify-center space-x-2 text-[10px] text-slate-450 dark:text-slate-400 font-mono">
+                <div className="mt-4 flex items-center justify-center space-x-2 text-[10px] text-slate-455 dark:text-slate-400 font-mono">
                   <Mail className="w-3.5 h-3.5 text-[#2A4BFF]" />
                   <span>Contact: admissions@wayspire.in / support@beyondskills.co</span>
                 </div>
