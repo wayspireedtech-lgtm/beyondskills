@@ -1476,6 +1476,25 @@ export const setDbItem = (key, val) => {
   }
 };
 
+export const logUserAccess = (email, name, action) => {
+  try {
+    const logs = getDbItem('beyondskills_access_logs', []);
+    const newLog = {
+      id: `LOG-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
+      email: email || 'Unknown',
+      name: name || 'Guest',
+      action: action,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent
+    };
+    logs.unshift(newLog);
+    if (logs.length > 200) logs.pop();
+    setDbItem('beyondskills_access_logs', logs);
+  } catch (e) {
+    console.error('Failed to log user access:', e);
+  }
+};
+
 // Initialize DB as empty arrays, forcing a reset for client-side storage
 if (!localStorage.getItem('beyondskills_db_reset_v4')) {
   localStorage.setItem('beyondskills_users', JSON.stringify([]));

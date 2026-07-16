@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem, logUserAccess } from '../utils/mockDb';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
@@ -91,6 +91,7 @@ export default function AdminDashboard() {
       setBlogs(getDbItem('beyondskills_blogs', []));
       setMentors(getDbItem('beyondskills_mentors', []));
       setLandingPages(getDbItem('beyondskills_landing_pages', []));
+      setLogs(getDbItem('beyondskills_access_logs', []));
       
       // Seed default CRM Users if none exist
       const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
@@ -171,6 +172,7 @@ export default function AdminDashboard() {
   // Selected Lead state for Details Modal
   const [selectedLead, setSelectedLead] = useState(null);
   const [selectedLeadIdx, setSelectedLeadIdx] = useState(null);
+  const [logs, setLogs] = useState([]);
   
   // Filters
   const [leadSearch, setLeadSearch] = useState('');
@@ -242,6 +244,7 @@ export default function AdminDashboard() {
     setBlogs(getDbItem('beyondskills_blogs', []));
     setMentors(getDbItem('beyondskills_mentors', []));
     setLandingPages(getDbItem('beyondskills_landing_pages', []));
+    setLogs(getDbItem('beyondskills_access_logs', []));
     
     // Seed default CRM Users if none exist
     const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
@@ -780,14 +783,19 @@ export default function AdminDashboard() {
     const updated = [...crmUsers, newUserForm];
     setCrmUsers(updated);
     setDbItem('beyondskills_crm_users', updated);
+    logUserAccess(newUserForm.email, newUserForm.name, `CRM User Created: ${newUserForm.role}`);
     setShowAddUserModal(false);
     setNewUserForm({ name: '', email: '', role: 'BDA', reportsTo: '', password: '' });
   };
 
   const handleRemoveUser = (idx) => {
+    const targetUser = crmUsers[idx];
     const updated = crmUsers.filter((_, i) => i !== idx);
     setCrmUsers(updated);
     setDbItem('beyondskills_crm_users', updated);
+    if (targetUser) {
+      logUserAccess(targetUser.email, targetUser.name, `CRM User Revoked: ${targetUser.role}`);
+    }
   };
 
   // Call history and attempts logs inside details panel
@@ -1135,6 +1143,20 @@ export default function AdminDashboard() {
                 <Users className="w-4 h-4" />
                 <span>CRM Users</span>
               </button>
+
+              {currentUser && currentUser.email === 'beyondskills.ai@gmail.com' && (
+                <button 
+                  onClick={() => setActiveMainTab('access_logs')}
+                  className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                    activeMainTab === 'access_logs'
+                      ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                      : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <ClipboardList className="w-4 h-4" />
+                  <span>Access Logs</span>
+                </button>
+              )}
             </>
           )}
         </nav>
@@ -2390,84 +2412,250 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* -------------------- MAIN TAB 5: MANAGE USERS -------------------- */}
         {activeMainTab === 'users' && !isBdaUser && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in text-white">
-            
-            {/* Context manual setup */}
-            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
-              <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">CRM Organizational Roster</h3>
-              <p className="text-slate-400 leading-normal">
-                Build BDA credentials here. When created, BDAs will login using their custom email and password.
-              </p>
-              
-              <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3 font-mono text-[11px] text-slate-300">
-                <p className="font-bold text-brand-cyan border-b border-white/10 pb-1">Gradus CRM Tree Setup</p>
-                <div className="flex items-center">
-                  <span>Sales Head</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
-                  <span className="text-brand-cyan font-bold">BDM Manager</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
-                  <span>BDA Associate</span>
+          <div className="space-y-8 animate-fade-in text-white">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Context manual setup */}
+              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
+                <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">CRM Organizational Roster</h3>
+                <p className="text-slate-400 leading-normal">
+                  Build BDA and Administrator credentials here. When created, they will log in using their custom email and password.
+                </p>
+                
+                <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3 font-mono text-[11px] text-slate-300">
+                  <p className="font-bold text-brand-cyan border-b border-white/10 pb-1">Gradus CRM Tree Setup</p>
+                  <div className="flex items-center">
+                    <span>Sales Head</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
+                    <span className="text-brand-cyan font-bold">BDM Manager</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
+                    <span>BDA Associate</span>
+                  </div>
                 </div>
+
+                <button 
+                  onClick={() => setShowAddUserModal(true)}
+                  className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Create Account / Role</span>
+                </button>
               </div>
 
-              <button 
-                onClick={() => setShowAddUserModal(true)}
-                className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4" />
-                <span>Create BDA Account</span>
-              </button>
+              {/* Users Roster Table */}
+              <div className="lg:col-span-2 bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
+                <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Team Associate Roster</h3>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs text-slate-300">
+                    <thead>
+                      <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                        <th className="py-2 px-3">Name</th>
+                        <th className="py-2 px-3">Email Address</th>
+                        <th className="py-2 px-3">Role</th>
+                        <th className="py-2 px-3">Password</th>
+                        <th className="py-2 px-3">Reports To (Manager)</th>
+                        <th className="py-2 px-3 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {crmUsers.map((user, idx) => (
+                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                          <td className="py-2.5 px-3 font-semibold text-white">{user.name}</td>
+                          <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{user.email}</td>
+                          <td className="py-2.5 px-3">
+                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide ${
+                              user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30' :
+                              user.role === 'BDM' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
+                              'bg-[#2A4BFF]/10 text-slate-200 border border-white/10'
+                            }`}>
+                              {user.role}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-3 font-mono text-[#4ADE80] font-bold">{user.password || 'Gradus@123'}</td>
+                          <td className="py-2.5 px-3 font-mono text-slate-400">{user.reportsTo || 'N/A'}</td>
+                          <td className="py-2.5 px-3 text-right">
+                            <button 
+                              onClick={() => handleRemoveUser(idx)}
+                              className="p-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded border border-red-500/20 transition-all cursor-pointer"
+                              title="Remove Associate"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
 
-            {/* Users Roster Table */}
-            <div className="lg:col-span-2 bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Team Associate Roster</h3>
+            {/* Registered Student Accounts (For Promotion) */}
+            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">Registered Student Accounts</h3>
+                <p className="text-[11px] text-slate-400 mt-1">List of all registered students. Promote them to BDA/BDM/Admin roles to grant them console access.</p>
+              </div>
               
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs text-slate-300">
                   <thead>
                     <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                      <th className="py-2 px-3">Avatar</th>
+                      <th className="py-2 px-3">Student ID</th>
                       <th className="py-2 px-3">Name</th>
                       <th className="py-2 px-3">Email Address</th>
-                      <th className="py-2 px-3">Role</th>
-                      <th className="py-2 px-3">Password</th>
-                      <th className="py-2 px-3">Reports To (Manager)</th>
-                      <th className="py-2 px-3 text-right">Actions</th>
+                      <th className="py-2 px-3">Phone</th>
+                      <th className="py-2 px-3">Status</th>
+                      <th className="py-2 px-3">College / University</th>
+                      <th className="py-2 px-3">Enrolled Courses</th>
+                      <th className="py-2 px-3 text-right">Promote / Assign Role</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {crmUsers.map((user, idx) => (
-                      <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
-                        <td className="py-2.5 px-3 font-semibold text-white">{user.name}</td>
-                        <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{user.email}</td>
-                        <td className="py-2.5 px-3">
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide ${
-                            user.role === 'BDM' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
-                            'bg-[#2A4BFF]/10 text-slate-200 border border-white/10'
-                          }`}>
-                            {user.role}
-                          </span>
-                        </td>
-                        <td className="py-2.5 px-3 font-mono text-[#4ADE80] font-bold">{user.password || 'Gradus@123'}</td>
-                        <td className="py-2.5 px-3 font-mono text-slate-400">{user.reportsTo || 'N/A'}</td>
-                        <td className="py-2.5 px-3 text-right">
-                          <button 
-                            onClick={() => handleRemoveUser(idx)}
-                            className="p-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded border border-red-500/20 transition-all cursor-pointer"
-                            title="Remove Associate"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
+                    {students.length === 0 ? (
+                      <tr>
+                        <td colSpan="9" className="text-center py-10 text-slate-500 italic font-mono">
+                          No student accounts found in database.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      students.map((student, idx) => {
+                        const isAlreadyCrm = crmUsers.some(u => u.email.trim().toLowerCase() === student.email.trim().toLowerCase());
+                        return (
+                          <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                            <td className="py-2.5 px-3">
+                              {student.avatar ? (
+                                <img src={student.avatar} alt={student.name} className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full bg-[#2A4BFF]/20 text-[#0EA5E9] font-bold flex items-center justify-center border border-[#2A4BFF]/25 font-mono text-[10px]">
+                                  {student.name ? student.name[0].toUpperCase() : 'S'}
+                                </div>
+                              )}
+                            </td>
+                            <td className="py-2.5 px-3 font-mono text-[10px] text-slate-400">{student.studentId || 'N/A'}</td>
+                            <td className="py-2.5 px-3 font-semibold text-white">{student.name}</td>
+                            <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{student.email}</td>
+                            <td className="py-2.5 px-3 font-mono text-slate-400">{student.phone || student.contact || 'N/A'}</td>
+                            <td className="py-2.5 px-3">
+                              <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide ${
+                                student.status === 'Graduate' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
+                                'bg-purple-500/10 text-purple-400 border border-purple-500/30'
+                              }`}>
+                                {student.status || 'Student'}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3 text-slate-400 max-w-[150px] truncate" title={student.college || 'N/A'}>
+                              {student.college || 'N/A'}
+                            </td>
+                            <td className="py-2.5 px-3 font-mono text-[10px] text-[#4ADE80]">
+                              {student.activeCourses && student.activeCourses.length > 0 
+                                ? student.activeCourses.join(', ')
+                                : 'None'}
+                            </td>
+                            <td className="py-2.5 px-3 text-right">
+                              {isAlreadyCrm ? (
+                                <span className="text-[10px] font-bold text-slate-500 bg-white/5 border border-white/5 px-2.5 py-1 rounded">
+                                  Already CRM User
+                                </span>
+                              ) : (
+                                <button 
+                                  onClick={() => {
+                                    setNewUserForm({
+                                      name: student.name,
+                                      email: student.email,
+                                      password: student.password || 'Gradus@123',
+                                      role: 'Admin',
+                                      reportsTo: ''
+                                    });
+                                    setShowAddUserModal(true);
+                                  }}
+                                  className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-[10px] uppercase tracking-wide px-3 py-1.5 rounded transition-all cursor-pointer"
+                                >
+                                  Make Admin/BDA
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
                   </tbody>
                 </table>
               </div>
             </div>
+          </div>
+        )}
 
+        {/* -------------------- MAIN TAB: ACCESS LOGS -------------------- */}
+        {activeMainTab === 'access_logs' && currentUser.email === 'beyondskills.ai@gmail.com' && (
+          <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6 text-white animate-fade-in">
+            <div className="flex justify-between items-center border-b border-white/10 pb-4">
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">System Access & Audit Logs</h3>
+                <p className="text-[11px] text-slate-400">Security audit history of user logins, registrations, and profile updates.</p>
+              </div>
+              <button 
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to clear all access logs?")) {
+                    setDbItem('beyondskills_access_logs', []);
+                    setLogs([]);
+                  }
+                }}
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-bold uppercase tracking-wider px-3.5 py-2 rounded-xl transition-all cursor-pointer"
+              >
+                Clear Audit Trail
+              </button>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-300">
+                <thead>
+                  <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                    <th className="py-2 px-3">Log ID</th>
+                    <th className="py-2 px-3">Timestamp</th>
+                    <th className="py-2 px-3">Name</th>
+                    <th className="py-2 px-3">Email Address</th>
+                    <th className="py-2 px-3">Event Action</th>
+                    <th className="py-2 px-3">Browser Agent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" className="text-center py-10 text-slate-500 italic font-mono">
+                        No security logs recorded yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    logs.map((log, idx) => (
+                      <tr key={log.id || idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                        <td className="py-2.5 px-3 font-mono text-[10px] text-slate-400">{log.id}</td>
+                        <td className="py-2.5 px-3 font-mono text-[10px] text-[#0EA5E9]">
+                          {new Date(log.timestamp).toLocaleString()}
+                        </td>
+                        <td className="py-2.5 px-3 font-semibold text-white">{log.name}</td>
+                        <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{log.email}</td>
+                        <td className="py-2.5 px-3">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded tracking-wide ${
+                            log.action.includes('Logged In') ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/30' :
+                            log.action.includes('Logged Out') ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' :
+                            log.action.includes('Profile Updated') ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30' :
+                            'bg-purple-500/10 text-purple-400 border border-purple-500/30'
+                          }`}>
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 text-[10px] text-slate-400 max-w-[200px] truncate" title={log.userAgent}>
+                          {log.userAgent}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -3696,7 +3884,7 @@ export default function AdminDashboard() {
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create BDA Associate Account</h3>
+            <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create Console Role Account</h3>
             
             <form onSubmit={handleAddUser} className="space-y-4 text-xs">
               <div>
@@ -3742,6 +3930,7 @@ export default function AdminDashboard() {
                   >
                     <option value="BDA">BDA (Associate)</option>
                     <option value="BDM">BDM (Manager)</option>
+                    <option value="Admin">Admin (Full Access)</option>
                     <option value="Sales Head">Sales Head</option>
                   </select>
                 </div>

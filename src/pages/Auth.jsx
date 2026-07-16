@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem, logUserAccess } from '../utils/mockDb';
 import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 
 export default function Auth() {
@@ -90,6 +90,7 @@ export default function Auth() {
                 }
                 
                 setDbItem('beyondskills_current_user', targetUser);
+                logUserAccess(targetUser.email, targetUser.name, 'Student Logged In (Google)');
                 window.dispatchEvent(new Event('auth_change'));
                 
                 // Clear URL hash securely
@@ -278,6 +279,7 @@ export default function Auth() {
       }
 
       setDbItem('beyondskills_current_user', loggedInRecord);
+      logUserAccess(loggedInRecord.email, loggedInRecord.name, 'Student Logged In (OTP)');
       window.dispatchEvent(new Event('auth_change'));
 
       setInfo('Authentication Successful! Redirecting to workspace...');
@@ -334,6 +336,7 @@ export default function Auth() {
       }
 
       setDbItem('beyondskills_current_user', targetUser);
+      logUserAccess(targetUser.email, targetUser.name, 'Student Logged In (Mock Google)');
       window.dispatchEvent(new Event('auth_change'));
 
       setInfo(`Simulated Google Sign-in as ${emailLower} successful! Redirecting...`);
@@ -375,6 +378,7 @@ export default function Auth() {
       }
 
       setDbItem('beyondskills_current_user', targetUser);
+      logUserAccess(targetUser.email, targetUser.name, 'Student Logged In (Mock Student)');
       window.dispatchEvent(new Event('auth_change'));
 
       setInfo('Logged in via Mock Google Student successfully! Redirecting...');
@@ -434,6 +438,7 @@ export default function Auth() {
 
     setTimeout(() => {
       setDbItem('beyondskills_current_user', authenticatedUser);
+      logUserAccess(authenticatedUser.email, authenticatedUser.name, `${authenticatedUser.role} Logged In`);
       window.dispatchEvent(new Event('auth_change'));
       setLoading(false);
       setInfo(`${authenticatedUser.role} Authentication Successful! Redirecting to Console...`);
