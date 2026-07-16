@@ -180,7 +180,7 @@ export default function Header() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:space-x-4">
             {currentUser ? (
               <div className="flex items-center space-x-3">
-                {currentUser.email === 'beyondskills.ai@gmail.com' ? (
+                {currentUser.email === 'beyondskills.ai@gmail.com' || ['Admin', 'BDA', 'BDM', 'Sales Head'].includes(currentUser.role) ? (
                   <Link to="/admin" target="_blank" rel="noopener noreferrer" className={`text-xs font-semibold uppercase tracking-wider text-brand-cyan hover:bg-brand-cyan hover:text-white bg-brand-cyan/10 border border-brand-cyan/25 rounded-full transition-all ${isScrolled ? 'px-3 py-1.5' : 'px-4 py-2'}`}>
                     Admin Portal
                   </Link>
@@ -256,7 +256,7 @@ export default function Header() {
           </Link>
           {currentUser ? (
             <div className="pt-4 px-3 flex flex-col space-y-3">
-              {currentUser.email === 'beyondskills.ai@gmail.com' ? (
+              {currentUser.email === 'beyondskills.ai@gmail.com' || ['Admin', 'BDA', 'BDM', 'Sales Head'].includes(currentUser.role) ? (
                 <Link to="/admin" target="_blank" rel="noopener noreferrer" className="text-center bg-[#0EA5E9]/10 text-[#0EA5E9] hover:bg-[#0EA5E9] hover:text-white border border-[#0EA5E9]/20 text-center font-bold py-2 rounded-lg">
                   Admin Panel
                 </Link>
