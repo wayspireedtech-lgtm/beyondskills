@@ -10,7 +10,7 @@ export default function Dashboard() {
   useEffect(() => {
     const loggedInUser = getDbItem('beyondskills_current_user', null);
     if (!loggedInUser) {
-      navigate('/auth');
+      navigate('/register/signin');
       return;
     }
     
@@ -52,7 +52,7 @@ export default function Dashboard() {
             onClick={() => {
               localStorage.removeItem('beyondskills_current_user');
               window.dispatchEvent(new Event('auth_change'));
-              navigate('/auth');
+              navigate('/register/signin');
             }}
             className="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wide transition-all"
           >

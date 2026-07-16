@@ -512,7 +512,7 @@ export default function Auth() {
   const isAdminStep = step.startsWith('admin-');
 
   return (
-    <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 bg-[#F8FAFC] relative">
+    <div className="text-slate-900 min-h-[80vh] flex items-center justify-center p-6 bg-transparent relative">
       {/* Background decoration */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] z-0"></div>
 

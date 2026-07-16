@@ -196,6 +196,8 @@ export default function App() {
             <Route path="/ambassador" element={<CampusAmbassador />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/register/signin" element={<Auth />} />
+            <Route path="/regsiter/signin" element={<Auth />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/onboarding" element={<Onboarding />} />

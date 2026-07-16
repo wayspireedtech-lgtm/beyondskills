@@ -199,7 +199,7 @@ export default function Header() {
                 <Link to="/verify" className="text-xs font-bold uppercase tracking-wider text-slate-300 hover:text-white transition-colors">
                   Verify
                 </Link>
-                <Link to="/auth" className={`bg-[#2A4BFF] text-white hover:brightness-110 shadow-md shadow-blue-500/20 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 transform hover:scale-105 ${isScrolled ? 'px-4 py-1.5' : 'px-6 py-3'}`}>
+                <Link to="/register/signin" className={`bg-[#2A4BFF] text-white hover:brightness-110 shadow-md shadow-blue-500/20 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 transform hover:scale-105 ${isScrolled ? 'px-4 py-1.5' : 'px-6 py-3'}`}>
                   Login
                 </Link>
               </div>
@@ -272,7 +272,7 @@ export default function Header() {
             </div>
           ) : (
             <div className="pt-4 px-3">
-              <Link to="/auth" className="block text-center bg-[#2A4BFF] text-white font-bold py-2.5 rounded-full uppercase tracking-wider text-xs text-center hover:brightness-110 shadow-lg shadow-blue-500/20">
+              <Link to="/register/signin" className="block text-center bg-[#2A4BFF] text-white font-bold py-2.5 rounded-full uppercase tracking-wider text-xs text-center hover:brightness-110 shadow-lg shadow-blue-500/20">
                 Login
               </Link>
             </div>
