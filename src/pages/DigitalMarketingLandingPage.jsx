@@ -468,125 +468,125 @@ export default function DigitalMarketingLandingPage() {
 
           {/* Hero right Form */}
           <div className="lg:col-span-5 w-full z-10" id="enquiry-form-section">
-            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl relative">
+            <div className="bg-[#0F172A] border border-white/10 text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative">
               {/* Form header details */}
               
               <div className="space-y-1.5 mb-6 text-left">
-                <h3 className="text-lg font-black text-[#0F172A] tracking-tight">Request Program Info</h3>
-                <p className="text-[11px] text-slate-450 leading-relaxed">
+                <h3 className="text-lg font-black text-white tracking-tight">Request Program Info</h3>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
                   Fill in your details below. Our marketing advisors will contact you to answer your curriculum and admission questions.
                 </p>
               </div>
 
               {submitStatus === 'success' && (
-                <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-2xl text-xs font-medium space-y-2 text-left animate-fade-in mb-6">
-                  <p className="font-bold flex items-center space-x-1.5 text-emerald-800">
+                <div className="bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 p-4 rounded-2xl text-xs font-medium space-y-2 text-left animate-fade-in mb-6">
+                  <p className="font-bold flex items-center space-x-1.5 text-emerald-255">
                     <CheckCircle className="w-4 h-4 flex-shrink-0" />
                     <span>Application Submitted!</span>
                   </p>
-                  <p className="text-[11px] text-emerald-600 leading-normal">
+                  <p className="text-[11px] text-emerald-400 leading-normal">
                     We received your contact details. A team representative will dial you back at your preferred contact slot.
                   </p>
                 </div>
               )}
 
               {submitStatus === 'error' && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-2xl text-xs font-medium text-left animate-pulse mb-6">
+                <div className="bg-rose-500/10 border border-rose-500/25 text-rose-300 p-4 rounded-2xl text-xs font-medium text-left animate-pulse mb-6">
                   Please enter a valid 10-digit mobile number to verify details.
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Full Name</label>
                   <input 
                     type="text" 
                     required 
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Roshan Kumar"
-                    className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="roshan@gmail.com"
-                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
                     />
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Mobile Number</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Mobile Number</label>
                     <input 
                       type="tel" 
                       required 
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="10-digit mobile number"
-                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Current Qualification</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Current Qualification</label>
                   <select 
                     value={formData.qualification}
                     onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
-                    className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer shadow-sm"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all cursor-pointer"
                   >
-                    <option>Undergraduate Student</option>
-                    <option>Postgraduate Student</option>
-                    <option>Recent Graduate</option>
-                    <option>Working Professional</option>
-                    <option>Other / Freelancer</option>
+                    <option className="bg-[#0F172A] text-white">Undergraduate Student</option>
+                    <option className="bg-[#0F172A] text-white">Postgraduate Student</option>
+                    <option className="bg-[#0F172A] text-white">Recent Graduate</option>
+                    <option className="bg-[#0F172A] text-white">Working Professional</option>
+                    <option className="bg-[#0F172A] text-white">Other / Freelancer</option>
                   </select>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Marketing Experience</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Marketing Experience</label>
                     <select 
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer shadow-sm"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all cursor-pointer"
                     >
-                      <option>Beginner (No Experience)</option>
-                      <option>Intermediate (Basic Knowledge)</option>
-                      <option>Professional (Wants to Upskill)</option>
+                      <option className="bg-[#0F172A] text-white">Beginner (No Experience)</option>
+                      <option className="bg-[#0F172A] text-white">Intermediate (Basic Knowledge)</option>
+                      <option className="bg-[#0F172A] text-white">Professional (Wants to Upskill)</option>
                     </select>
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
                     <select 
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer shadow-sm"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all cursor-pointer"
                     >
-                      <option>Morning (10 AM - 1 PM)</option>
-                      <option>Afternoon (2 PM - 5 PM)</option>
-                      <option>Evening (6 PM - 9 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Morning (10 AM - 1 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Afternoon (2 PM - 5 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Evening (6 PM - 9 PM)</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">Primary Career Goal</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Primary Career Goal</label>
                   <select 
                     value={formData.goal}
                     onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
-                    className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer shadow-sm"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all cursor-pointer"
                   >
-                    <option>Start a Career in Digital Marketing</option>
-                    <option>Grow a Business or Startup</option>
-                    <option>Become a Freelancer</option>
-                    <option>Upskill / Get a Promotion</option>
+                    <option className="bg-[#0F172A] text-white">Start a Career in Digital Marketing</option>
+                    <option className="bg-[#0F172A] text-white">Grow a Business or Startup</option>
+                    <option className="bg-[#0F172A] text-white">Become a Freelancer</option>
+                    <option className="bg-[#0F172A] text-white">Upskill / Get a Promotion</option>
                   </select>
                 </div>
 
@@ -598,7 +598,7 @@ export default function DigitalMarketingLandingPage() {
                   {isSubmitting ? <span>Logging Application...</span> : <span>Apply Now</span>}
                 </button>
 
-                <p className="text-[9px] text-slate-400 text-center leading-normal pt-1">
+                <p className="text-[9px] text-slate-500 text-center leading-normal pt-1">
                   By submitting this form you agree to be contacted regarding this certification program. 
                   We strictly respect your privacy.
                 </p>

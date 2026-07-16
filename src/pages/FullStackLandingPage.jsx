@@ -434,17 +434,17 @@ export default function FullStackLandingPage() {
           <div className="lg:col-span-5">
             <div 
               id="hero-application-form" 
-              className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xl w-full transition-all duration-300"
+              className="bg-[#0F172A] border border-white/10 text-white rounded-3xl p-6 shadow-2xl w-full transition-all duration-300 relative overflow-hidden"
             >
-              <h3 className="font-manrope font-bold text-[#0F172A] text-base sm:text-lg mb-4 text-left border-b border-slate-100 pb-2">
+              <h3 className="font-manrope font-bold text-white text-base sm:text-lg mb-4 text-left border-b border-white/10 pb-2">
                 Cohort Admission Enquiry
               </h3>
               
               {status === 'success' ? (
-                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
-                  <CheckCircle className="w-10 h-10 text-emerald-500 mx-auto" />
-                  <h4 className="font-bold text-xs">Enquiry Registered Successfully!</h4>
-                  <p className="text-[11px] text-emerald-600 leading-relaxed">
+                <div className="bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
+                  <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto" />
+                  <h4 className="font-bold text-xs text-white">Enquiry Registered Successfully!</h4>
+                  <p className="text-[11px] text-emerald-400 leading-relaxed">
                     Your details have been logged in the admissions queue. An advisor will reach out to you shortly.
                   </p>
                 </div>
@@ -457,7 +457,7 @@ export default function FullStackLandingPage() {
                       required 
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
                       placeholder="e.g., Rohan Sharma" 
                     />
                   </div>
@@ -470,7 +470,7 @@ export default function FullStackLandingPage() {
                         required 
                         value={enquiryForm.email}
                         onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
                         placeholder="e.g., rohan@gmail.com" 
                       />
                     </div>
@@ -481,7 +481,7 @@ export default function FullStackLandingPage() {
                         required 
                         value={enquiryForm.phone}
                         onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
                         placeholder="e.g., 99999 99999" 
                       />
                     </div>
@@ -493,13 +493,13 @@ export default function FullStackLandingPage() {
                       <select 
                         value={enquiryForm.qualification}
                         onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
                       >
-                        <option value="Undergraduate">Undergraduate Student</option>
-                        <option value="Postgraduate">Postgraduate Student</option>
-                        <option value="Fresh Graduate">Fresh Graduate</option>
-                        <option value="Working Professional">Working Professional</option>
-                        <option value="Other">Other</option>
+                        <option className="bg-[#0F172A] text-white" value="Undergraduate">Undergraduate Student</option>
+                        <option className="bg-[#0F172A] text-white" value="Postgraduate">Postgraduate Student</option>
+                        <option className="bg-[#0F172A] text-white" value="Fresh Graduate">Fresh Graduate</option>
+                        <option className="bg-[#0F172A] text-white" value="Working Professional">Working Professional</option>
+                        <option className="bg-[#0F172A] text-white" value="Other">Other</option>
                       </select>
                     </div>
                     <div>
@@ -507,11 +507,11 @@ export default function FullStackLandingPage() {
                       <select 
                         value={enquiryForm.experience}
                         onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
                       >
-                        <option value="Beginner - No Coding">Beginner - No Coding</option>
-                        <option value="Basic - Little Coding">Basic - Little Coding</option>
-                        <option value="Intermediate - Code Daily">Intermediate - Code Daily</option>
+                        <option className="bg-[#0F172A] text-white" value="Beginner - No Coding">Beginner - No Coding</option>
+                        <option className="bg-[#0F172A] text-white" value="Basic - Little Coding">Basic - Little Coding</option>
+                        <option className="bg-[#0F172A] text-white" value="Intermediate - Code Daily">Intermediate - Code Daily</option>
                       </select>
                     </div>
                   </div>
@@ -522,12 +522,12 @@ export default function FullStackLandingPage() {
                       <select 
                         value={enquiryForm.goal}
                         onChange={(e) => setEnquiryForm({...enquiryForm, goal: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
                       >
-                        <option value="Land a Tech Job">Land a Tech Job</option>
-                        <option value="Freelancing/Independent">Freelancing</option>
-                        <option value="Build a Startup">Build a Startup</option>
-                        <option value="General Upskilling">General Upskilling</option>
+                        <option className="bg-[#0F172A] text-white" value="Land a Tech Job">Land a Tech Job</option>
+                        <option className="bg-[#0F172A] text-white" value="Freelancing/Independent">Freelancing</option>
+                        <option className="bg-[#0F172A] text-white" value="Build a Startup">Build a Startup</option>
+                        <option className="bg-[#0F172A] text-white" value="General Upskilling">General Upskilling</option>
                       </select>
                     </div>
                     <div>
@@ -535,12 +535,12 @@ export default function FullStackLandingPage() {
                       <select 
                         value={enquiryForm.contactTime}
                         onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-[#2563EB] transition-all"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
                       >
-                        <option value="">Select time...</option>
-                        <option value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
-                        <option value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
-                        <option value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
+                        <option className="bg-[#0F172A] text-white" value="">Select time...</option>
+                        <option className="bg-[#0F172A] text-white" value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
+                        <option className="bg-[#0F172A] text-white" value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
+                        <option className="bg-[#0F172A] text-white" value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
                       </select>
                     </div>
                   </div>
@@ -552,14 +552,13 @@ export default function FullStackLandingPage() {
                     Apply Now
                   </button>
                   
-                  <p className="text-[8px] text-slate-400 leading-normal text-center mt-2 font-mono">
+                  <p className="text-[8px] text-slate-500 leading-normal text-center mt-2 font-mono">
                     *By submitting this form you agree to be contacted regarding this program.
                   </p>
                 </form>
               )}
             </div>
           </div>
-
         </div>
       </section>
 

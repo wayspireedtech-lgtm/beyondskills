@@ -456,41 +456,41 @@ export default function CloudComputingLandingPage() {
             </div>
 
             {/* Sticky Lead Form Right column */}
-            <div id="enquiry-form-section" className="lg:col-span-5 bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xl shadow-slate-100/50 relative">
+            <div id="enquiry-form-section" className="lg:col-span-5 bg-[#0F172A] border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl relative">
               <div className="absolute -top-3.5 right-6 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider py-1 px-3.5 rounded-full shadow-md shadow-blue-500/20">
                 Admissions Open
               </div>
               
-              <h3 className="text-xl font-black text-slate-900 mb-1">Apply For Cohort</h3>
-              <p className="text-xs text-slate-550 mb-6">Enter your details to receive syllabus access, scheduling guidelines, and call advisor support.</p>
+              <h3 className="text-xl font-black text-white mb-1">Apply For Cohort</h3>
+              <p className="text-xs text-slate-400 mb-6">Enter your details to receive syllabus access, scheduling guidelines, and call advisor support.</p>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <input 
                     type="text" 
                     required 
                     placeholder="Enter your name" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       placeholder="name@email.com" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">WhatsApp Phone</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
                     <input 
                       type="tel" 
                       required 
@@ -498,61 +498,61 @@ export default function CloudComputingLandingPage() {
                       placeholder="10-digit number" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Current Qualification</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                   <select 
                     value={formData.qualification}
                     onChange={(e) => setFormData({...formData, qualification: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
                   >
-                    <option>Undergraduate Student</option>
-                    <option>Postgraduate Student</option>
-                    <option>Working Professional</option>
-                    <option>Fresh Graduate (Job Seeking)</option>
+                    <option className="bg-[#0F172A] text-white">Undergraduate Student</option>
+                    <option className="bg-[#0F172A] text-white">Postgraduate Student</option>
+                    <option className="bg-[#0F172A] text-white">Working Professional</option>
+                    <option className="bg-[#0F172A] text-white">Fresh Graduate (Job Seeking)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Prior Cloud / Systems Experience</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Prior Cloud / Systems Experience</label>
                   <select 
                     value={formData.experience}
                     onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
                   >
-                    <option>Beginner (No Experience)</option>
-                    <option>Basic Concepts (Some Knowledge)</option>
-                    <option>Experienced (Looking to Upskill)</option>
+                    <option className="bg-[#0F172A] text-white">Beginner (No Experience)</option>
+                    <option className="bg-[#0F172A] text-white">Basic Concepts (Some Knowledge)</option>
+                    <option className="bg-[#0F172A] text-white">Experienced (Looking to Upskill)</option>
                   </select>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Career Goal</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                     <select 
                       value={formData.goal}
                       onChange={(e) => setFormData({...formData, goal: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
                     >
-                      <option>Start a Career in Cloud & DevOps</option>
-                      <option>Transition roles within IT</option>
-                      <option>Prepare for AWS/Azure Certificates</option>
+                      <option className="bg-[#0F172A] text-white">Start a Career in Cloud & DevOps</option>
+                      <option className="bg-[#0F172A] text-white">Transition roles within IT</option>
+                      <option className="bg-[#0F172A] text-white">Prepare for AWS/Azure Certificates</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Callback Slot</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
                     <select 
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({...formData, preferredTime: e.target.value})}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-900"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
                     >
-                      <option>Morning (10 AM - 1 PM)</option>
-                      <option>Afternoon (2 PM - 5 PM)</option>
-                      <option>Evening (6 PM - 9 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Morning (10 AM - 1 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Afternoon (2 PM - 5 PM)</option>
+                      <option className="bg-[#0F172A] text-white">Evening (6 PM - 9 PM)</option>
                     </select>
                   </div>
                 </div>
@@ -560,7 +560,7 @@ export default function CloudComputingLandingPage() {
                 <button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-4 rounded-lg shadow-lg shadow-blue-500/10 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.01] mt-2 active:scale-95 disabled:opacity-50"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg shadow-blue-500/10 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.01] mt-2 active:scale-95 disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span>Submitting Application...</span>
@@ -573,12 +573,12 @@ export default function CloudComputingLandingPage() {
                 </button>
 
                 {submitStatus === 'success' && (
-                  <div className="bg-emerald-50 border border-emerald-250 text-emerald-800 text-xs py-3 px-4 rounded-lg mt-3 text-center font-semibold">
+                  <div className="bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-xs py-3 px-4 rounded-xl mt-3 text-center font-semibold">
                     🎉 Application submitted successfully! Our advisor will call you shortly.
                   </div>
                 )}
                 {submitStatus === 'error' && (
-                  <div className="bg-rose-50 border border-rose-250 text-rose-800 text-xs py-3 px-4 rounded-lg mt-3 text-center font-semibold">
+                  <div className="bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs py-3 px-4 rounded-xl mt-3 text-center font-semibold">
                     ❌ Invalid 10-digit WhatsApp number. Please check and try again.
                   </div>
                 )}
