@@ -174,6 +174,138 @@ app.post('/api/webhook/leads', (req, res) => {
   }
 });
 
+// Temporary in-memory store for SMS OTPs
+const otpStore = new Map();
+
+/**
+ * Endpoint: POST /api/send-otp
+ * Request body: { phone }
+ * Response: { success, message, otp }
+ */
+app.post('/api/send-otp', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone number is required.' });
+    }
+
+    // Generate random 4-digit OTP
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    
+    // Store in-memory with 5 minutes expiry
+    otpStore.set(phone, {
+      otp,
+      expiresAt: Date.now() + 5 * 60 * 1000
+    });
+
+    console.log(`[SMS OTP DEBUG] Phone: ${phone} -> Generated OTP: ${otp}`);
+
+    const fast2smsKey = process.env.FAST2SMS_API_KEY;
+    const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+    const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+    const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
+
+    let smsSent = false;
+
+    if (fast2smsKey) {
+      try {
+        const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+          method: 'POST',
+          headers: {
+            'authorization': fast2smsKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            route: 'otp',
+            variables_values: otp,
+            numbers: phone
+          })
+        });
+        const result = await response.json();
+        if (result && result.return === true) {
+          smsSent = true;
+          console.log(`[Fast2SMS] SMS OTP sent successfully to ${phone}`);
+        } else {
+          console.error('[Fast2SMS] Send failure response:', result);
+        }
+      } catch (err) {
+        console.error('[Fast2SMS] Fetch error:', err);
+      }
+    } else if (twilioSid && twilioToken && twilioPhone) {
+      try {
+        const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString('base64');
+        const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Basic ${auth}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            Body: `Your BeyondSkills verification code is: ${otp}`,
+            To: phone.startsWith('+') ? phone : `+91${phone}`,
+            From: twilioPhone
+          })
+        });
+        const result = await response.json();
+        if (response.ok) {
+          smsSent = true;
+          console.log(`[Twilio] SMS OTP sent successfully to ${phone}`);
+        } else {
+          console.error('[Twilio] Send failure response:', result);
+        }
+      } catch (err) {
+        console.error('[Twilio] Fetch error:', err);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: smsSent ? 'OTP sent successfully.' : 'OTP sent (Demo Mode). Please check server terminal logs.',
+      otp: smsSent ? undefined : otp // Only return OTP to client if real SMS gateways are not configured
+    });
+
+  } catch (error) {
+    console.error('Send OTP error:', error);
+    res.status(500).json({ error: 'Internal server error while sending OTP.' });
+  }
+});
+
+/**
+ * Endpoint: POST /api/verify-otp
+ * Request body: { phone, otp }
+ * Response: { success, message }
+ */
+app.post('/api/verify-otp', (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    if (!phone || !otp) {
+      return res.status(400).json({ error: 'Phone and OTP code are required.' });
+    }
+
+    const record = otpStore.get(phone);
+    if (!record) {
+      return res.status(400).json({ error: 'No OTP requested for this phone number.' });
+    }
+
+    if (Date.now() > record.expiresAt) {
+      otpStore.delete(phone);
+      return res.status(400).json({ error: 'OTP has expired. Please request a new one.' });
+    }
+
+    if (record.otp !== otp.toString().trim()) {
+      return res.status(400).json({ error: 'Invalid OTP code.' });
+    }
+
+    // Success -> clear OTP
+    otpStore.delete(phone);
+    res.status(200).json({ success: true, message: 'OTP verified successfully.' });
+
+  } catch (error) {
+    console.error('Verify OTP error:', error);
+    res.status(500).json({ error: 'Internal server error while verifying OTP.' });
+  }
+});
+
 // Start listening
 app.listen(port, () => {
   console.log(`Backend server running on port ${port}`);

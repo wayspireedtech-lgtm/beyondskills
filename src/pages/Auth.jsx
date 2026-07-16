@@ -185,20 +185,41 @@ export default function Auth() {
 
     setLoading(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const users = getDbItem('beyondskills_users', []);
       const matchedUser = users.find(u => u.phone === cleanPhone);
-
-      // Generate random 4-digit OTP
-      const code = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(code);
 
       if (matchedUser) {
         // User exists -> trigger OTP directly
         setCurrentUserData(matchedUser);
-        triggerOtpEmail(matchedUser.email, matchedUser.name, code);
-        setStep('otp-verify');
-        setInfo(`OTP verification code dispatched to ${matchedUser.email}.`);
+        try {
+          const res = await fetch('/api/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: cleanPhone })
+          });
+          const result = await res.json();
+          if (res.ok && result.success) {
+            setStep('otp-verify');
+            if (result.otp) {
+              setGeneratedOtp(result.otp);
+              window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+                detail: {
+                  subject: `Verification Code Dispatched (Demo Mode)`,
+                  body: `Hi ${matchedUser.name},\n\nBecause no SMS gateway API keys (Twilio/Fast2SMS) are configured, here is your OTP code: ${result.otp}\n(For production, configure your keys in .env or settings).`,
+                }
+              }));
+            } else {
+              setGeneratedOtp('');
+              setInfo(`OTP verification code sent to your mobile number +91 ${cleanPhone}.`);
+            }
+          } else {
+            setError(result.error || 'Failed to dispatch verification OTP.');
+          }
+        } catch (err) {
+          console.error(err);
+          setError('Backend connection error while dispatching OTP.');
+        }
       } else {
         // New User -> collect name and email first
         setStep('register-collect');
@@ -227,35 +248,90 @@ export default function Auth() {
 
     setLoading(true);
 
-    setTimeout(() => {
-      const code = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(code);
-
-      // Cache details for verification
+    setTimeout(async () => {
+      const cleanPhone = phoneNumber.replace(/\D/g, '');
       const tempUser = {
         name: registerForm.name,
         email: registerForm.email,
-        phone: phoneNumber.replace(/\D/g, ''),
+        phone: cleanPhone,
         password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
         studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
         activeCourses: []
       };
 
       setCurrentUserData(tempUser);
-      triggerOtpEmail(tempUser.email, tempUser.name, code);
-      setStep('otp-verify');
-      setInfo(`OTP verification code dispatched to ${tempUser.email}.`);
+
+      try {
+        const res = await fetch('/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: cleanPhone })
+        });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          setStep('otp-verify');
+          if (result.otp) {
+            setGeneratedOtp(result.otp);
+            window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+              detail: {
+                subject: `Verification Code Dispatched (Demo Mode)`,
+                body: `Hi ${tempUser.name},\n\nBecause no SMS gateway API keys (Twilio/Fast2SMS) are configured, here is your OTP code: ${result.otp}\n(For production, configure your keys in .env or settings).`,
+              }
+            }));
+          } else {
+            setGeneratedOtp('');
+            setInfo(`OTP verification code sent to your mobile number +91 ${cleanPhone}.`);
+          }
+        } else {
+          setError(result.error || 'Failed to dispatch verification OTP.');
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Backend connection error while dispatching OTP.');
+      }
       setLoading(false);
     }, 800);
   };
 
   // Handle OTP verification
-  const handleVerifyOtpSubmit = (e) => {
+  const handleVerifyOtpSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    if (enteredOtp !== generatedOtp) {
-      setError('Invalid OTP code. Please check the code sent or check the toast popup notification.');
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+    let isOtpValid = false;
+
+    if (generatedOtp) {
+      // Demo fallback mode (client-side verification)
+      isOtpValid = (enteredOtp === generatedOtp);
+    } else {
+      // Real SMS flow: Verify against backend server
+      setLoading(true);
+      try {
+        const res = await fetch('/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: cleanPhone, otp: enteredOtp })
+        });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          isOtpValid = true;
+        } else {
+          setError(result.error || 'Invalid OTP code.');
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+        setError('Failed to contact verification server.');
+        setLoading(false);
+        return;
+      }
+    }
+
+    if (!isOtpValid) {
+      setError('Invalid OTP code. Please check the code sent.');
+      setLoading(false);
       return;
     }
 
