@@ -1558,6 +1558,42 @@ const INITIAL_LANDING_PAGES = [
       { q: 'Who is this program for?', a: 'Perfect for students, freshers, business owners, and career switchers looking to build conversion-driven skills.' },
       { q: 'Will I learn about budget spend settings?', a: 'Yes, we cover bidding strategies, budget allocations, and ROAS calculations.' }
     ]
+  },
+  {
+    slug: 'cloud-computing',
+    courseId: 'cloud-computing',
+    heroHeadline: 'Become an AWS & Azure Solutions Architect. Live.',
+    heroSubheadline: 'Master virtualization, network routing, Auto Scaling, Kubernetes clusters, and IAM policies.',
+    ctaText: 'Apply For Cohort',
+    highlights: [
+      'Beginner Friendly',
+      'AWS & Azure Cloud Console Labs',
+      'Deploy Load Balancers & VM Pools',
+      'Managed Relational Databases RDS',
+      '1 Year LMS Access'
+    ],
+    faqs: [
+      { q: 'Who is this program for?', a: 'Undergraduate and postgraduate students, fresh IT graduates, and system engineers looking to transition to Cloud and DevOps roles.' },
+      { q: 'Will I learn about security and identity controls?', a: 'Yes, we cover Active Directory, IAM policies, and Key Vault secret encryptions.' }
+    ]
+  },
+  {
+    slug: 'cybersecurity',
+    courseId: 'cyber-security',
+    heroHeadline: 'Master Ethical Hacking & Cybersecurity. Live.',
+    heroSubheadline: 'Master Kali Linux, Wireshark packet capture logs, Nmap network scanning, Burp Suite, and OWASP Top 10 vulnerabilities.',
+    ctaText: 'Apply For Cohort',
+    highlights: [
+      'Beginner Friendly',
+      'Local Sandbox Labs',
+      'Identify Web App OWASP Vulnerabilities',
+      'SOC & SIEM Incident Monitoring Logs',
+      '1 Year LMS Access'
+    ],
+    faqs: [
+      { q: 'Who is this program for?', a: 'Perfect for students, fresh graduates, software engineers, and IT specialists looking to build security auditing expertise.' },
+      { q: 'Is CompTIA Security+ or CEH covered?', a: 'Our curriculum covers the foundational knowledge required for these credentials.' }
+    ]
   }
 ];
 
