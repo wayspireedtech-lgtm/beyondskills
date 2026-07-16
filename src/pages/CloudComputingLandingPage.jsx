@@ -386,7 +386,7 @@ export default function CloudComputingLandingPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-3.5 py-1 rounded-full text-xs font-semibold tracking-wide border border-blue-100/50">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>Next Cohort Starts: Sunday, 26th July 2026</span>
+                <span>Next Cohort Starts: July 2026</span>
               </div>
               
               <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-[1.1] tracking-tight">
@@ -708,21 +708,21 @@ export default function CloudComputingLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SAMPLE_PROJECTS.map((proj, idx) => (
-              <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between min-h-[280px]">
+              <div key={idx} className="bg-slate-950 text-white border border-slate-800 rounded-2xl p-6 hover:shadow-xl hover:shadow-slate-100/10 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between min-h-[280px]">
                 <div>
                   <div className="flex gap-1.5 flex-wrap mb-4">
                     {proj.tech.map((tag, tIdx) => (
-                      <span key={tIdx} className="bg-slate-50 border border-slate-200/70 text-slate-600 font-mono text-[9px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded">
+                      <span key={tIdx} className="bg-slate-900 border border-slate-800 text-slate-300 font-mono text-[9px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <h4 className="text-base font-bold text-slate-900 mb-2 leading-snug">{proj.title}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4">{proj.desc}</p>
+                  <h4 className="text-base font-bold text-white mb-2 leading-snug">{proj.title}</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">{proj.desc}</p>
                 </div>
-                <div className="pt-4 border-t border-slate-50">
+                <div className="pt-4 border-t border-slate-900">
                   <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">What you will learn:</div>
-                  <div className="text-xs font-semibold text-slate-800 mt-1 italic leading-relaxed">{proj.learn}</div>
+                  <div className="text-xs font-semibold text-blue-400 mt-1 italic leading-relaxed">{proj.learn}</div>
                 </div>
               </div>
             ))}

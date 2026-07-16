@@ -411,7 +411,7 @@ export default function DigitalMarketingLandingPage() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <div className="inline-flex items-center space-x-1.5 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold text-blue-600 font-mono tracking-wider uppercase">
               <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-              <span>Upskilling Certificate Program</span>
+              <span>Next Cohort Starts: July 2026</span>
             </div>
             
             <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-black text-[#0F172A] leading-tight tracking-tight">
@@ -469,9 +469,7 @@ export default function DigitalMarketingLandingPage() {
           {/* Hero right Form */}
           <div className="lg:col-span-5 w-full z-10" id="enquiry-form-section">
             <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xl relative">
-              <div className="absolute top-[-10px] right-[20px] bg-orange-500 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-xs">
-                Free Syllabus Call
-              </div>
+              {/* Form header details */}
               
               <div className="space-y-1.5 mb-6 text-left">
                 <h3 className="text-lg font-black text-[#0F172A] tracking-tight">Request Program Info</h3>
@@ -790,21 +788,22 @@ export default function DigitalMarketingLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SAMPLE_PROJECTS.map((project, idx) => (
-              <div key={idx} className="bg-white border border-slate-200/80 p-6 rounded-2xl text-left space-y-4 hover:shadow-md transition-all flex flex-col justify-between">
+              <div key={idx} className="bg-slate-950 text-white border border-slate-800 p-6 rounded-2xl text-left space-y-4 hover:shadow-xl hover:shadow-slate-100/10 transition-all flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="flex flex-wrap gap-1.5">
                     {project.tech.map((t, tIdx) => (
-                      <span key={tIdx} className="bg-slate-100 text-slate-650 px-2.5 py-0.5 rounded text-[10px] font-bold font-mono">
+                      <span key={tIdx} className="bg-slate-900 border border-slate-800 text-slate-350 px-2.5 py-0.5 rounded text-[10px] font-bold font-mono">
                         {t}
                       </span>
                     ))}
                   </div>
-                  <h4 className="text-sm font-bold text-[#0F172A]">{project.title}</h4>
-                  <p className="text-xs text-slate-500 leading-relaxed">{project.desc}</p>
+                  <h4 className="text-sm font-bold text-white">{project.title}</h4>
+                  <p className="text-xs text-slate-400 leading-relaxed">{project.desc}</p>
                 </div>
-                <div className="pt-4 border-t border-slate-100 mt-2">
+                <div className="pt-4 border-t border-slate-900 mt-2">
                   <p className="text-[10px] text-slate-450 font-semibold leading-relaxed">
-                    <span className="font-bold text-slate-600 block">Skills Learned:</span> {project.learn}
+                    <span className="font-bold text-slate-500 block">Skills Learned:</span>
+                    <span className="text-orange-400 font-semibold mt-1 block italic">{project.learn}</span>
                   </p>
                 </div>
               </div>

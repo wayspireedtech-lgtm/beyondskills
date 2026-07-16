@@ -325,7 +325,7 @@ export default function AiMlDataScienceLandingPage() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <span className="inline-flex items-center space-x-1.5 bg-[#2563EB]/10 text-[#2563EB] px-3 py-1 rounded-full text-xs font-bold font-mono uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Upskilling Certificate Program</span>
+              <span>Next Cohort Starts: July 2026</span>
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-tight text-left">
               Master Practical <span className="bg-gradient-to-r from-[#2563EB] via-[#F97316] to-[#0EA5E9] bg-clip-text text-transparent font-black">Artificial Intelligence, Machine Learning, Data Science & Data Analytics</span>
@@ -634,29 +634,29 @@ export default function AiMlDataScienceLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SAMPLE_PROJECTS.map((proj, idx) => (
-              <div key={idx} className="bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between space-y-5">
+              <div key={idx} className="bg-slate-950 border border-slate-800 text-white rounded-2xl shadow-sm hover:shadow-xl hover:shadow-slate-100/10 transition-all p-5 flex flex-col justify-between space-y-5">
                 
                 {/* Dynamic Interactive Code Preview Mockup */}
                 <div className="space-y-4">
                   {renderProjectMock(proj.mockType)}
                   
                   <div className="space-y-2 text-left">
-                    <h3 className="text-[#0F172A] font-extrabold text-base leading-snug">{proj.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed">{proj.desc}</p>
+                    <h3 className="text-white font-extrabold text-base leading-snug">{proj.title}</h3>
+                    <p className="text-xs text-slate-400 leading-relaxed">{proj.desc}</p>
                   </div>
                 </div>
 
-                <div className="space-y-3 border-t border-slate-100 pt-4 text-xs text-left">
+                <div className="space-y-3 border-t border-slate-900 pt-4 text-xs text-left">
                   <div className="flex flex-wrap gap-1.5">
                     {proj.tech.map((t, i) => (
-                      <span key={i} className="text-[#2563EB] bg-[#2563EB]/10 font-bold px-2 py-0.5 rounded text-[10px] uppercase font-mono">
+                      <span key={i} className="text-blue-400 bg-blue-950 border border-blue-900/60 font-bold px-2 py-0.5 rounded text-[10px] uppercase font-mono">
                         {t}
                       </span>
                     ))}
                   </div>
                   <div className="space-y-1">
-                    <p className="text-slate-400 text-[10px] uppercase font-mono tracking-wider">Key Learnings:</p>
-                    <p className="text-slate-600 font-medium">{proj.learn}</p>
+                    <p className="text-slate-500 text-[10px] uppercase font-mono tracking-wider">Key Learnings:</p>
+                    <p className="text-blue-400 font-medium italic">{proj.learn}</p>
                   </div>
                 </div>
               </div>

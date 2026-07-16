@@ -392,7 +392,7 @@ export default function FullStackLandingPage() {
           <div className="lg:col-span-7 space-y-6 text-left">
             <span className="inline-flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB] bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full font-mono">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Become a Full Stack Developer</span>
+              <span>Next Cohort Starts: July 2026</span>
             </span>
             <h1 className="font-manrope font-extrabold text-[#0F172A] text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.08]">
               Build Production-Ready Web Applications with <span className="text-[#2563EB]">Industry Mentorship</span>
@@ -810,33 +810,33 @@ export default function FullStackLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
           {SAMPLE_PROJECTS.map((project, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl flex flex-col justify-between hover:shadow-md transition-shadow relative">
+            <div key={idx} className="bg-slate-950 text-white border border-slate-800 p-6 rounded-2xl flex flex-col justify-between hover:shadow-xl hover:shadow-slate-100/10 transition-shadow relative">
               <div className="space-y-4">
                 
                 {/* Responsive, premium CSS browser mock */}
                 {renderProjectMock(project.mockType, project.title)}
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-bold text-[#2563EB] uppercase border border-blue-100 px-2 py-0.5 rounded bg-blue-50 font-mono">
+                  <span className="text-[9px] font-bold text-blue-450 uppercase border border-blue-900/60 px-2 py-0.5 rounded bg-blue-950 font-mono">
                     Portfolio Module
                   </span>
-                  <span className="text-[10px] text-slate-400 font-mono">Project {idx + 1}</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Project {idx + 1}</span>
                 </div>
                 
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">{project.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{project.desc}</p>
+                <h3 className="text-base sm:text-lg font-bold text-white leading-tight">{project.title}</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">{project.desc}</p>
                 
-                <div className="bg-slate-50 border border-slate-200/60 p-3.5 rounded-xl space-y-2 text-[11px] text-slate-650 leading-normal">
-                  <p><strong>What You Will Learn:</strong> {project.learn}</p>
-                  <p><strong>Skills Gained:</strong> {project.skills}</p>
-                  <p className="text-blue-600 font-semibold"><strong>Outcome:</strong> {project.outcome}</p>
+                <div className="bg-slate-900 border border-slate-850 p-3.5 rounded-xl space-y-2 text-[11px] text-slate-300 leading-normal">
+                  <p><strong className="text-slate-400">What You Will Learn:</strong> {project.learn}</p>
+                  <p><strong className="text-slate-400">Skills Gained:</strong> {project.skills}</p>
+                  <p className="text-blue-400 font-semibold"><strong className="text-slate-400">Outcome:</strong> {project.outcome}</p>
                 </div>
               </div>
 
-              <div className="border-t border-slate-100 pt-4 mt-6">
+              <div className="border-t border-slate-900 pt-4 mt-6">
                 <div className="flex flex-wrap gap-1.5">
                   {project.tech.map((t, tIdx) => (
-                    <span key={tIdx} className="text-[9px] bg-slate-50 border border-slate-200 px-2 py-0.5 rounded text-slate-600 font-mono">
+                    <span key={tIdx} className="text-[9px] bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-slate-350 font-mono">
                       {t}
                     </span>
                   ))}
