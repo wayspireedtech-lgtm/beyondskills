@@ -85,7 +85,7 @@ const FAQS = [
   { q: "What tools and libraries will I learn?", a: "You will master Python, SQL databases, Pandas, NumPy, Matplotlib, Seaborn, Scikit-Learn, TensorFlow, Flask, Git, GitHub, and cloud hosting clients." },
   { q: "Will I receive mentor support during the cohort?", a: "Yes. Active data practitioners and engineers lead live doubt-solving sessions, provide feedback on assignments, and audit your project code scripts." },
   { q: "Will I receive a certificate of completion?", a: "Yes. On successfully completing the milestone assessments and capstone projects, you will be issued a digital certificate of completion from BeyondSkills." },
-  { q: "How long is the program?", a: "The program spans 4 months with structured weekly modules to ensure you have enough time to practice coding, build models, and compile your portfolio." },
+  { q: "How long is the program?", a: "The program spans 3 months with structured weekly modules to ensure you have enough time to practice coding, build models, and compile your portfolio." },
   { q: "How do I enroll in the cohort?", a: "Simply fill out the enquiry form on this landing page. Our academic admissions advisor will contact you to explain the cohort schedule, fee options, and guide you through registration." },
   { q: "How does the admission process work?", a: "Once your enquiry is logged, we host a brief evaluation call to check batch alignment, verify prerequisites, and process your cohort onboarding details." }
 ];
@@ -689,8 +689,8 @@ export default function AiMlDataScienceLandingPage() {
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
         <div className="text-center space-y-3 mb-12">
           <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Program Specs</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Cohort Information & Fees</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Clear, transparent cohort parameters. Find program schedules, details, and access modules below.</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Cohort Information</h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Clear cohort parameters. Find program schedules, details, and access modules below.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch text-left">
@@ -698,11 +698,11 @@ export default function AiMlDataScienceLandingPage() {
           <div className="lg:col-span-8 bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col justify-between">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs sm:text-sm">
               {[
-                { label: "Program Duration", value: "4 Months", detail: "16 Weeks (4 Months)" },
+                { label: "Program Duration", value: "3 Months", detail: "12 Weeks (3 Months)" },
                 { label: "Class Schedule", value: "3 Lectures / Week", detail: "3 Live Classes/Week (Evening)" },
                 { label: "Lead Instructor", value: "Industry Mentors", detail: "Active Data Scientists" },
                 { label: "Learning Mode", value: "Online Live Lectures", detail: "LMS recordings & codes provided" },
-                { label: "Cohort Level", value: "Beginner to Advanced", detail: "No coding history prerequisites" },
+                { label: "Cohort Demographics", value: "95% College Students", detail: "5% Graduates & Working Professionals" },
                 { label: "Course language", value: "English / Hindi support", detail: "Practical industry terms" }
               ].map((spec, idx) => (
                 <div key={idx} className="space-y-1.5 border-b border-slate-100 pb-4">
@@ -719,19 +719,19 @@ export default function AiMlDataScienceLandingPage() {
             </div>
           </div>
 
-          {/* Pricing Card */}
+          {/* Cohort Inclusions Card */}
           <div className="lg:col-span-4 bg-[#0F172A] text-white p-6 sm:p-8 rounded-3xl shadow-lg flex flex-col justify-between text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/10 rounded-full blur-[30px] pointer-events-none"></div>
             
             <div className="space-y-6">
               <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest font-mono bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full inline-block">
-                Paid Enrollment Program
+                Batch Open
               </span>
               
               <div className="space-y-1">
-                <p className="text-xs text-slate-400 uppercase font-mono tracking-wider">Tuition Fee Amount</p>
-                <p className="text-4xl font-black font-mono">₹18,000</p>
-                <p className="text-[10px] text-slate-400">Easy monthly installment options available</p>
+                <p className="text-xs text-slate-400 uppercase font-mono tracking-wider">Cohort Access</p>
+                <p className="text-3xl font-black font-mono">Live Batch</p>
+                <p className="text-[10px] text-slate-450">Join our cohort of data practitioners</p>
               </div>
 
               <div className="space-y-3.5 text-left text-xs text-slate-350 border-t border-white/5 pt-6">
@@ -787,7 +787,7 @@ export default function AiMlDataScienceLandingPage() {
         <div className="text-center space-y-3 mb-12">
           <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Success Stories</span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Student Success & Hiring Partners</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">We connect upskilled candidates with digital workspaces. Read career logs below.</p>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Our cohort consists of 95% college students and 5% graduates, interns, or working professionals. Read their learning logs below.</p>
         </div>
 
         {/* Real Student Success Reviews */}
@@ -795,24 +795,24 @@ export default function AiMlDataScienceLandingPage() {
           {[
             { 
               name: "Ankita Patel", 
-              role: "Data Analyst Intern",
-              company: "EY India",
+              role: "B.Tech CSE Student (3rd Year)",
+              company: "VIT Vellore",
               avatarColor: "bg-blue-600/10 text-blue-600",
-              review: "This program completely changed my outlook on data analytics. Starting from zero coding, the Python fundamentals and SQL module built my base. By module 5, I was building predictive Random Forest models. The mentor reviewed my GitHub files weekly, which gave me immense confidence. Highly recommended!"
-            },
-            { 
-              name: "Vikram Malhotra", 
-              role: "Machine Learning Engineer",
-              company: "Samsung R&D",
-              avatarColor: "bg-orange-500/10 text-orange-500",
-              review: "The hands-on aspect of the cohort is top-notch. Building a Customer Churn Predictor API and deploying it to the cloud helped me clear my technical interviews. The mentor sessions were interactive, allowing us to debug code real-time. It's the best structured AI program I've found."
+              review: "As a B.Tech student, our college lectures were too theoretical. This cohort gave me the practical coding side. Starting from Python foundations to building custom machine learning models, the hands-on project approach was perfect. I completed my college capstone project here under mentor guidance!"
             },
             { 
               name: "Rahul Sen", 
-              role: "Junior AI Associate",
-              company: "Infosys Labs",
+              role: "BCA Student (3rd Year)",
+              company: "Delhi University",
               avatarColor: "bg-emerald-500/10 text-emerald-500",
-              review: "Transitioning from a mechanical background, I was worried about the math and stats behind ML models. But the statistics modules explained everything from hypothesis testing to regression metrics so easily. Building the sentiment classifier capstone project gave me a stellar portfolio."
+              review: "Being a BCA student, I wanted to build a strong portfolio for placement drives. The cohort statistics and data visualization modules helped me understand real data workflows. Building the customer churn predictor and deploying it live on the cloud gave me projects that stood out in college reviews."
+            },
+            { 
+              name: "Vikram Malhotra", 
+              role: "Data Analyst Intern (Graduate Track)",
+              company: "EY India",
+              avatarColor: "bg-orange-500/10 text-orange-500",
+              review: "Although the cohort is majorly composed of college students, the 5% seats allocated for graduates and interns like me are extremely valuable. The advanced Flask API deployment and database normalization lessons helped me directly in my internship tasks at EY. The code reviews were super clean!"
             }
           ].map((item, idx) => (
             <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl space-y-4 hover:shadow-md transition-shadow">
