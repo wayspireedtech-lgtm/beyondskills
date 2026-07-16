@@ -623,9 +623,20 @@ export default function Auth() {
                   </form>
                 )}
 
-                {authType === 'google' && (
+                 {authType === 'google' && (
                   /* GOOGLE SIGN IN TAB CONTENT */
                   <div className="space-y-4 py-2 text-center">
+                    {clientId.includes('mockclientid') && (
+                      <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-1">
+                        <div>
+                          <strong>Real Google Sign-In is not configured:</strong>
+                        </div>
+                        <div className="text-slate-600">
+                          A real Google Client ID is missing. Please use <strong>Demo Sign In (Simulated)</strong> below to authenticate, or add a <code className="bg-amber-100/60 px-1 py-0.5 rounded font-mono">VITE_GOOGLE_CLIENT_ID</code> env variable.
+                        </div>
+                      </div>
+                    )}
+
                     <button
                       type="button"
                       onClick={handleRealGoogleLogin}
