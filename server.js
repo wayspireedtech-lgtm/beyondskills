@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 
 // Load environment variables from .env
 dotenv.config();
@@ -303,6 +304,82 @@ app.post('/api/verify-otp', (req, res) => {
   } catch (error) {
     console.error('Verify OTP error:', error);
     res.status(500).json({ error: 'Internal server error while verifying OTP.' });
+  }
+});
+
+const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+const smtpPort = parseInt(process.env.SMTP_PORT || '465', 10);
+const smtpUser = process.env.SMTP_USER || '';
+const smtpPass = process.env.SMTP_PASS || '';
+
+// Transporter configuration
+const transporter = nodemailer.createTransport({
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpPort === 465, // true for 465, false for 587
+  auth: {
+    user: smtpUser,
+    pass: smtpPass
+  }
+});
+
+/**
+ * Endpoint: POST /api/send-email-otp
+ * Request body: { email, name, otp }
+ * Response: { success, message, isDemo, otp }
+ */
+app.post('/api/send-email-otp', async (req, res) => {
+  try {
+    const { email, name, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ error: 'Email and OTP are required parameters.' });
+    }
+
+    // Fallback to Demo Mode if credentials are not configured yet
+    if (!smtpUser || !smtpPass) {
+      console.warn('[SMTP WARNING] SMTP_USER or SMTP_PASS is not configured. Falling back to Demo Mode.');
+      return res.status(200).json({
+        success: true,
+        message: 'OTP sent (Demo Mode). Please check console logs.',
+        isDemo: true,
+        otp
+      });
+    }
+
+    const mailOptions = {
+      from: `"BeyondSkills Support" <${smtpUser}>`,
+      to: email,
+      subject: `Your BeyondSkills Verification Code: ${otp}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px;">
+          <h2 style="color: #0f5cfc; text-align: center; margin-bottom: 5px;">BeyondSkills</h2>
+          <p style="text-align: center; color: #718096; font-size: 14px; margin-top: 0;">Empowering Learning & Skills</p>
+          <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 25px;" />
+          <p style="font-size: 15px; color: #2d3748; line-height: 1.6;">Hi <strong>${name || 'User'}</strong>,</p>
+          <p style="font-size: 15px; color: #2d3748; line-height: 1.6;">We received a request to log in to your BeyondSkills account. Use the following security verification code to proceed:</p>
+          <div style="background-color: #f7fafc; border: 1px dashed #cbd5e0; padding: 15px; border-radius: 8px; text-align: center; margin: 25px 0;">
+            <p style="font-size: 11px; color: #718096; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Security OTP Code</p>
+            <span style="font-size: 32px; font-weight: bold; color: #0f5cfc; letter-spacing: 5px; font-family: monospace;">${otp}</span>
+          </div>
+          <p style="color: #718096; font-size: 13px; line-height: 1.6;">This code is valid for 5 minutes. If you did not make this request, please ignore this email or contact support.</p>
+          <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 25px 0;" />
+          <p style="font-size: 11px; color: #a0aec0; text-align: center;">&copy; 2026 BeyondSkills Platform. All rights reserved.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[SMTP] Verification email sent successfully to ${email}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Verification OTP sent to your email address successfully.',
+      isDemo: false
+    });
+
+  } catch (error) {
+    console.error('SMTP Email sending error:', error);
+    res.status(500).json({ error: 'Failed to send verification email. Please check server SMTP configuration.' });
   }
 });
 
