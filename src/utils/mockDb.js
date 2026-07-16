@@ -1522,6 +1522,42 @@ const INITIAL_LANDING_PAGES = [
       { q: 'How are classes conducted?', a: 'Live sessions are conducted mostly in the evening after 6:00 PM. A comprehensive cohort schedule is provided to students upon enrollment. Recorded access, assignment guides, and chat support channels are available throughout the week.' },
       { q: 'Will I build projects during the course?', a: 'Yes. You will build and deploy several practical web projects, including landing pages, dashboards, and database-backed web applications.' }
     ]
+  },
+  {
+    slug: 'ai-ml-data-science',
+    courseId: 'artificial-intelligence',
+    heroHeadline: 'Master Artificial Intelligence & Data Science. Live.',
+    heroSubheadline: 'Learn Python, Neural Networks, Natural Language Processing (NLP), and Generative AI under mentor guidance.',
+    ctaText: 'Apply For Cohort',
+    highlights: [
+      'Beginner Friendly',
+      'Neural Networks & Deep Learning Foundations',
+      'Natural Language Processing (NLP)',
+      'Generative AI & LLM APIs',
+      '1 Year LMS Access'
+    ],
+    faqs: [
+      { q: 'Who is this program for?', a: 'Undergraduate and postgraduate students, graduates, and professionals wanting to transition into AI and NLP engineering.' },
+      { q: 'What certificates will I receive?', a: 'You will receive 2 certificates: a course completion certificate and a project completion certificate.' }
+    ]
+  },
+  {
+    slug: 'digital-marketing',
+    courseId: 'digital-marketing-cert',
+    heroHeadline: 'Grow Brands. Drive Sales. Master Digital Marketing. Live.',
+    heroSubheadline: 'Master paid PPC ads inside Google & Meta manager, optimize SEO rankings, and track conversion rates using GA4 analytics dashboards.',
+    ctaText: 'Apply For Cohort',
+    highlights: [
+      'Beginner Friendly',
+      'Paid Ads Campaign Creation',
+      'SEO & Keyword Mapping',
+      'GA4 Analytics Dashboard Setup',
+      'Email Marketing Automations'
+    ],
+    faqs: [
+      { q: 'Who is this program for?', a: 'Perfect for students, freshers, business owners, and career switchers looking to build conversion-driven skills.' },
+      { q: 'Will I learn about budget spend settings?', a: 'Yes, we cover bidding strategies, budget allocations, and ROAS calculations.' }
+    ]
   }
 ];
 
@@ -1535,5 +1571,18 @@ if (!localStorage.getItem('beyondskills_mentors')) {
 
 if (!localStorage.getItem('beyondskills_landing_pages')) {
   setDbItem('beyondskills_landing_pages', INITIAL_LANDING_PAGES);
+} else {
+  const currentLandingPages = getDbItem('beyondskills_landing_pages', []);
+  let updated = [...currentLandingPages];
+  let changed = false;
+  INITIAL_LANDING_PAGES.forEach(lp => {
+    if (!updated.some(item => item.slug === lp.slug)) {
+      updated.push(lp);
+      changed = true;
+    }
+  });
+  if (changed) {
+    setDbItem('beyondskills_landing_pages', updated);
+  }
 }
 
