@@ -30,6 +30,14 @@ export default function Auth() {
   // Google Client ID Configuration states (loaded from env with safe fallback)
   const [clientId, setClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('beyondskills_google_client_id') || '102874635294-mockclientid.apps.googleusercontent.com');
 
+  // Simulated Google Login & Client ID Configuration states
+  const [showGoogleSimulatedModal, setShowGoogleSimulatedModal] = useState(false);
+  const [simulatedEmail, setSimulatedEmail] = useState('');
+  const [simulatedName, setSimulatedName] = useState('');
+  const [simulatedStep, setSimulatedStep] = useState(1); // 1 = chooser, 2 = custom form
+  const [isConfiguringClient, setIsConfiguringClient] = useState(false);
+  const [customClientIdInput, setCustomClientIdInput] = useState(clientId.includes('mockclientid') ? '' : clientId);
+
   // Handle Google OAuth redirect callback on component mount
   useEffect(() => {
     const handleCallback = async () => {
@@ -269,9 +277,58 @@ export default function Auth() {
 
   // Real Google Login Redirect Flow
   const handleRealGoogleLogin = () => {
-    const redirectUri = encodeURIComponent(window.location.origin + '/auth');
-    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20profile`;
-    window.location.href = oauthUrl;
+    const isMock = clientId.includes('mockclientid');
+    const isValidFormat = clientId && clientId.endsWith('.apps.googleusercontent.com') && !isMock;
+
+    if (isValidFormat) {
+      const redirectUri = encodeURIComponent(window.location.origin + '/auth');
+      const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=email%20profile`;
+      window.location.href = oauthUrl;
+    } else {
+      setShowGoogleSimulatedModal(true);
+      setSimulatedStep(1);
+    }
+  };
+
+  // Handle Simulated Google Login submission
+  const handleSimulatedLoginSubmit = (email, name) => {
+    setShowGoogleSimulatedModal(false);
+    setLoading(true);
+    setError(null);
+    setInfo(null);
+
+    setTimeout(() => {
+      const emailLower = email.toLowerCase().trim();
+      const users = getDbItem('beyondskills_users', []);
+      let targetUser = users.find(u => u.email.toLowerCase() === emailLower);
+
+      if (!targetUser) {
+        // Register new user from simulated Google profile
+        targetUser = {
+          name: name || 'Google Student',
+          email: emailLower,
+          phone: '',
+          password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
+          studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+          activeCourses: []
+        };
+        users.push(targetUser);
+        setDbItem('beyondskills_users', users);
+      }
+
+      setDbItem('beyondskills_current_user', targetUser);
+      window.dispatchEvent(new Event('auth_change'));
+
+      setInfo(`Simulated Google Sign-in as ${emailLower} successful! Redirecting...`);
+      
+      setTimeout(() => {
+        if (targetUser.activeCourses && targetUser.activeCourses.length > 0) {
+          navigate('/dashboard');
+        } else {
+          navigate('/courses');
+        }
+      }, 1500);
+    }, 1000);
   };
 
   // Mock Google Login Fallback
@@ -626,13 +683,156 @@ export default function Auth() {
                  {authType === 'google' && (
                   /* GOOGLE SIGN IN TAB CONTENT */
                   <div className="space-y-4 py-2 text-center">
-                    {clientId.includes('mockclientid') && (
-                      <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-1">
+                    {clientId.includes('mockclientid') ? (
+                      <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-2">
                         <div>
                           <strong>Real Google Sign-In is not configured:</strong>
                         </div>
-                        <div className="text-slate-600">
-                          A real Google Client ID is missing. Please use <strong>Demo Sign In (Simulated)</strong> below to authenticate, or add a <code className="bg-amber-100/60 px-1 py-0.5 rounded font-mono">VITE_GOOGLE_CLIENT_ID</code> env variable.
+                        <div className="text-slate-650">
+                          A real Google Client ID is missing. Clicking <strong>Continue with Google</strong> will launch a <strong>Simulated Google Sign-In</strong> modal where you can sign in as any user.
+                        </div>
+                        {!isConfiguringClient ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsConfiguringClient(true);
+                              setCustomClientIdInput('');
+                            }}
+                            className="text-amber-950 font-bold hover:underline flex items-center space-x-1 uppercase text-[10px] tracking-wider cursor-pointer"
+                          >
+                            Configure Client ID
+                          </button>
+                        ) : (
+                          <div className="space-y-1.5 pt-1">
+                            <input
+                              type="text"
+                              value={customClientIdInput}
+                              onChange={(e) => setCustomClientIdInput(e.target.value)}
+                              placeholder="Paste Google Client ID here"
+                              className="w-full bg-white border border-amber-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-800 outline-none focus:border-amber-500"
+                            />
+                            <div className="flex space-x-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (customClientIdInput.trim()) {
+                                    localStorage.setItem('beyondskills_google_client_id', customClientIdInput.trim());
+                                    setClientId(customClientIdInput.trim());
+                                    setIsConfiguringClient(false);
+                                    setInfo('Google Client ID updated successfully.');
+                                  } else {
+                                    setError('Please enter a valid Client ID.');
+                                  }
+                                }}
+                                className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-2.5 py-1 rounded text-[10px] cursor-pointer"
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setIsConfiguringClient(false)}
+                                className="bg-slate-200 hover:bg-slate-355 text-slate-700 font-bold px-2.5 py-1 rounded text-[10px] cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : !clientId.endsWith('.apps.googleusercontent.com') ? (
+                      <div className="bg-rose-50 border border-rose-200 text-rose-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <strong>Invalid Google Client ID format:</strong>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              localStorage.removeItem('beyondskills_google_client_id');
+                              setClientId('102874635294-mockclientid.apps.googleusercontent.com');
+                              setCustomClientIdInput('');
+                              setInfo('Google Client ID reset to default mock.');
+                            }}
+                            className="text-rose-600 font-bold hover:underline uppercase text-[9px] cursor-pointer"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                        <div className="text-slate-650">
+                          The active Client ID (<code className="bg-rose-100/60 px-1 py-0.5 rounded font-mono break-all">{clientId}</code>) does not appear to be a valid Google Client ID. It must end with <code className="font-mono bg-rose-100/60 px-1 py-0.5 rounded">.apps.googleusercontent.com</code>.
+                        </div>
+                        <div className="text-slate-650 font-semibold pt-1">
+                          Clicking <strong>Continue with Google</strong> will fallback to a <strong>Simulated Google Sign-In</strong> modal to prevent OAuth errors.
+                        </div>
+                        {!isConfiguringClient ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsConfiguringClient(true);
+                              setCustomClientIdInput(clientId);
+                            }}
+                            className="text-rose-955 font-bold hover:underline flex items-center space-x-1 uppercase text-[10px] tracking-wider cursor-pointer"
+                          >
+                            Reconfigure Client ID
+                          </button>
+                        ) : (
+                          <div className="space-y-1.5 pt-1">
+                            <input
+                              type="text"
+                              value={customClientIdInput}
+                              onChange={(e) => setCustomClientIdInput(e.target.value)}
+                              placeholder="Paste Google Client ID here"
+                              className="w-full bg-white border border-rose-300 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-800 outline-none focus:border-rose-500"
+                            />
+                            <div className="flex space-x-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (customClientIdInput.trim()) {
+                                    localStorage.setItem('beyondskills_google_client_id', customClientIdInput.trim());
+                                    setClientId(customClientIdInput.trim());
+                                    setIsConfiguringClient(false);
+                                    setInfo('Google Client ID updated successfully.');
+                                  } else {
+                                    setError('Please enter a valid Client ID.');
+                                  }
+                                }}
+                                className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1 rounded text-[10px] cursor-pointer"
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setIsConfiguringClient(false)}
+                                className="bg-slate-200 hover:bg-slate-355 text-slate-700 font-bold px-2.5 py-1 rounded text-[10px] cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-2">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <strong>Google Sign-In is configured!</strong>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              localStorage.removeItem('beyondskills_google_client_id');
+                              setClientId('102874635294-mockclientid.apps.googleusercontent.com');
+                              setCustomClientIdInput('');
+                              setInfo('Google Client ID reset to default mock.');
+                            }}
+                            className="text-rose-600 font-bold hover:underline uppercase text-[9px] cursor-pointer"
+                          >
+                            Reset
+                          </button>
+                        </div>
+                        <div className="text-slate-650 truncate">
+                          Client ID: <code className="bg-emerald-100/60 px-1 py-0.5 rounded font-mono">{clientId}</code>
                         </div>
                       </div>
                     )}
@@ -640,7 +840,7 @@ export default function Auth() {
                     <button
                       type="button"
                       onClick={handleRealGoogleLogin}
-                      className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs"
+                      className="w-full flex items-center justify-center space-x-3 border border-slate-200 shadow-sm rounded-xl py-3.5 text-slate-800 font-bold hover:bg-slate-50 transition-all text-xs cursor-pointer"
                     >
                       <svg className="w-4 h-4" viewBox="0 0 24 24">
                         <path
@@ -655,7 +855,7 @@ export default function Auth() {
                       <button
                         type="button"
                         onClick={handleMockGoogleLogin}
-                        className="text-[10px] text-slate-400 hover:text-slate-650 hover:underline uppercase tracking-wider font-semibold"
+                        className="text-[10px] text-slate-400 hover:text-slate-650 hover:underline uppercase tracking-wider font-semibold cursor-pointer"
                       >
                         Demo Sign In (Simulated)
                       </button>
@@ -862,6 +1062,163 @@ export default function Auth() {
         </div>
 
       </div>
+
+      {/* Simulated Google Sign-In Modal */}
+      {showGoogleSimulatedModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-[380px] rounded-2xl shadow-2xl border border-slate-100 p-8 space-y-6 text-slate-800 animate-fade-in">
+            {/* Google Logo */}
+            <div className="flex justify-center">
+              <svg className="w-8 h-8" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+            </div>
+
+            {simulatedStep === 1 ? (
+              <div className="space-y-4">
+                <div className="text-center space-y-1.5">
+                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">Choose an account</h3>
+                  <p className="text-xs text-slate-500">to continue to <span className="font-semibold text-slate-700">BeyondSkills</span></p>
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  {/* Account 1 */}
+                  <button
+                    type="button"
+                    onClick={() => handleSimulatedLoginSubmit('google.student@gmail.com', 'Google Student')}
+                    className="w-full flex items-center space-x-3 p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50 transition-all text-left cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
+                      GS
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold text-slate-800 truncate">Google Student</div>
+                      <div className="text-[10px] text-slate-500 truncate">google.student@gmail.com</div>
+                    </div>
+                  </button>
+
+                  {/* Account 2 */}
+                  <button
+                    type="button"
+                    onClick={() => handleSimulatedLoginSubmit('vishal.beyondskills@gmail.com', 'Vishal Dev')}
+                    className="w-full flex items-center space-x-3 p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50 transition-all text-left cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs">
+                      VD
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold text-slate-800 truncate">Vishal Dev</div>
+                      <div className="text-[10px] text-slate-500 truncate">vishal.beyondskills@gmail.com</div>
+                    </div>
+                  </button>
+
+                  {/* Use another account option */}
+                  <button
+                    type="button"
+                    onClick={() => setSimulatedStep(2)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-xl border border-dashed border-slate-250 hover:bg-slate-50 transition-all text-left cursor-pointer"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-550 font-bold text-sm">
+                      +
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs font-bold text-slate-700">Use another account</div>
+                      <div className="text-[10px] text-slate-450">Sign in with a custom Google email</div>
+                    </div>
+                  </button>
+                </div>
+
+                <div className="pt-4 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowGoogleSimulatedModal(false);
+                      setSimulatedStep(1);
+                      setSimulatedEmail('');
+                      setSimulatedName('');
+                    }}
+                    className="text-xs font-bold text-slate-500 hover:text-slate-700 py-2 px-4 rounded-xl hover:bg-slate-50 transition-all uppercase tracking-wider cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (simulatedEmail.trim() && simulatedName.trim()) {
+                    handleSimulatedLoginSubmit(simulatedEmail.trim(), simulatedName.trim());
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div className="text-center space-y-1.5">
+                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">Sign in with Google</h3>
+                  <p className="text-xs text-slate-550">Enter details to simulate Google authentication</p>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      value={simulatedEmail}
+                      onChange={(e) => setSimulatedEmail(e.target.value)}
+                      placeholder="e.g. user@gmail.com"
+                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={simulatedName}
+                      onChange={(e) => setSimulatedName(e.target.value)}
+                      placeholder="e.g. Jane Doe"
+                      className="w-full bg-[#FAFAFA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex space-x-2 pt-4 justify-end text-xs uppercase font-bold tracking-wider">
+                  <button
+                    type="button"
+                    onClick={() => setSimulatedStep(1)}
+                    className="text-slate-500 hover:text-slate-700 py-2 px-4 rounded-xl hover:bg-slate-50 transition-all cursor-pointer"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-[#0F5CFC] hover:bg-blue-700 text-white py-2.5 px-5 rounded-xl transition-all shadow-md shadow-blue-500/10 cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
