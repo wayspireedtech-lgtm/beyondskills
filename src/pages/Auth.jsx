@@ -7,12 +7,12 @@ export default function Auth() {
   const navigate = useNavigate();
 
   // Navigation / Mode states
-  const [authType, setAuthType] = useState('mobile'); // 'mobile' or 'google'
-  const [step, setStep] = useState('mobile-input'); // 'mobile-input', 'register-collect', 'otp-verify', 'admin-login', 'admin-forgot', 'admin-otp-verify', 'admin-new-password'
+  const [authType, setAuthType] = useState('email'); // 'email' or 'google'
+  const [step, setStep] = useState('email-input'); // 'email-input', 'register-collect', 'otp-verify', 'admin-login', 'admin-forgot', 'admin-otp-verify', 'admin-new-password'
 
   // Input states (Students)
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [registerForm, setRegisterForm] = useState({ name: '', email: '' });
+  const [email, setEmail] = useState('');
+  const [registerForm, setRegisterForm] = useState({ name: '', email: '', phone: '' });
   const [enteredOtp, setEnteredOtp] = useState('');
 
   // Input states (Admin)
@@ -170,58 +170,39 @@ export default function Auth() {
     }
   };
 
-  // Handle mobile form submission (Next)
-  const handleMobileSubmit = (e) => {
+  // Handle email form submission (Next)
+  const handleEmailSubmit = (e) => {
     e.preventDefault();
     setError(null);
     setInfo(null);
 
-    // Validate 10-digit number
-    const cleanPhone = phoneNumber.replace(/\D/g, '');
-    if (cleanPhone.length !== 10) {
-      setError('Please enter a valid 10-digit mobile number.');
+    // Validate email format
+    const cleanEmail = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanEmail)) {
+      setError('Please enter a valid email address.');
       return;
     }
 
     setLoading(true);
 
-    setTimeout(async () => {
+    setTimeout(() => {
       const users = getDbItem('beyondskills_users', []);
-      const matchedUser = users.find(u => u.phone === cleanPhone);
+      const matchedUser = users.find(u => u.email === cleanEmail);
+
+      // Generate random 4-digit OTP
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
 
       if (matchedUser) {
-        // User exists -> trigger OTP directly
+        // User exists -> trigger OTP directly to email
         setCurrentUserData(matchedUser);
-        try {
-          const res = await fetch('/api/send-otp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: cleanPhone })
-          });
-          const result = await res.json();
-          if (res.ok && result.success) {
-            setStep('otp-verify');
-            if (result.otp) {
-              setGeneratedOtp(result.otp);
-              window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-                detail: {
-                  subject: `Verification Code Dispatched (Demo Mode)`,
-                  body: `Hi ${matchedUser.name},\n\nBecause no SMS gateway API keys (Twilio/Fast2SMS) are configured, here is your OTP code: ${result.otp}\n(For production, configure your keys in .env or settings).`,
-                }
-              }));
-            } else {
-              setGeneratedOtp('');
-              setInfo(`OTP verification code sent to your mobile number +91 ${cleanPhone}.`);
-            }
-          } else {
-            setError(result.error || 'Failed to dispatch verification OTP.');
-          }
-        } catch (err) {
-          console.error(err);
-          setError('Backend connection error while dispatching OTP.');
-        }
+        triggerOtpEmail(matchedUser.email, matchedUser.name, code);
+        setStep('otp-verify');
+        setInfo(`OTP verification code sent to your email address: ${matchedUser.email}.`);
       } else {
-        // New User -> collect name and email first
+        // New User -> collect name and phone number
+        setRegisterForm({ name: '', email: cleanEmail, phone: '' });
         setStep('register-collect');
       }
       setLoading(false);
@@ -234,25 +215,34 @@ export default function Auth() {
     setError(null);
     setInfo(null);
 
-    if (!registerForm.name.trim() || !registerForm.email.trim()) {
+    if (!registerForm.name.trim() || !registerForm.phone.trim()) {
       setError('Please fill in all registration fields.');
       return;
     }
 
+    const cleanPhone = registerForm.phone.replace(/\D/g, '');
+    if (cleanPhone.length !== 10) {
+      setError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+
     const users = getDbItem('beyondskills_users', []);
-    const emailExists = users.some(u => u.email === registerForm.email.trim());
-    if (emailExists) {
-      setError('An account with this email address already exists. Please use another.');
+    const phoneExists = users.some(u => u.phone === cleanPhone);
+    if (phoneExists) {
+      setError('An account with this phone number already exists. Please use another.');
       return;
     }
 
     setLoading(true);
 
-    setTimeout(async () => {
-      const cleanPhone = phoneNumber.replace(/\D/g, '');
+    setTimeout(() => {
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(code);
+
+      // Cache details for verification
       const tempUser = {
-        name: registerForm.name,
-        email: registerForm.email,
+        name: registerForm.name.trim(),
+        email: registerForm.email.trim().toLowerCase(),
         phone: cleanPhone,
         password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
         studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -260,78 +250,20 @@ export default function Auth() {
       };
 
       setCurrentUserData(tempUser);
-
-      try {
-        const res = await fetch('/api/send-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: cleanPhone })
-        });
-        const result = await res.json();
-        if (res.ok && result.success) {
-          setStep('otp-verify');
-          if (result.otp) {
-            setGeneratedOtp(result.otp);
-            window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-              detail: {
-                subject: `Verification Code Dispatched (Demo Mode)`,
-                body: `Hi ${tempUser.name},\n\nBecause no SMS gateway API keys (Twilio/Fast2SMS) are configured, here is your OTP code: ${result.otp}\n(For production, configure your keys in .env or settings).`,
-              }
-            }));
-          } else {
-            setGeneratedOtp('');
-            setInfo(`OTP verification code sent to your mobile number +91 ${cleanPhone}.`);
-          }
-        } else {
-          setError(result.error || 'Failed to dispatch verification OTP.');
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Backend connection error while dispatching OTP.');
-      }
+      triggerOtpEmail(tempUser.email, tempUser.name, code);
+      setStep('otp-verify');
+      setInfo(`OTP verification code sent to your email address: ${tempUser.email}.`);
       setLoading(false);
     }, 800);
   };
 
   // Handle OTP verification
-  const handleVerifyOtpSubmit = async (e) => {
+  const handleVerifyOtpSubmit = (e) => {
     e.preventDefault();
     setError(null);
 
-    const cleanPhone = phoneNumber.replace(/\D/g, '');
-    let isOtpValid = false;
-
-    if (generatedOtp) {
-      // Demo fallback mode (client-side verification)
-      isOtpValid = (enteredOtp === generatedOtp);
-    } else {
-      // Real SMS flow: Verify against backend server
-      setLoading(true);
-      try {
-        const res = await fetch('/api/verify-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: cleanPhone, otp: enteredOtp })
-        });
-        const result = await res.json();
-        if (res.ok && result.success) {
-          isOtpValid = true;
-        } else {
-          setError(result.error || 'Invalid OTP code.');
-          setLoading(false);
-          return;
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Failed to contact verification server.');
-        setLoading(false);
-        return;
-      }
-    }
-
-    if (!isOtpValid) {
-      setError('Invalid OTP code. Please check the code sent.');
-      setLoading(false);
+    if (enteredOtp !== generatedOtp) {
+      setError('Invalid OTP code. Please check the code sent to your email.');
       return;
     }
 
@@ -609,15 +541,15 @@ export default function Auth() {
           </p>
         </div>
 
-        {/* Segmented Pill Selector (Mobile vs Google) - Student Only */}
+        {/* Segmented Pill Selector (Email vs Google) - Student Only */}
         {!isAdminStep && step !== 'otp-verify' && step !== 'register-collect' && (
           <div className="bg-slate-100 p-1 rounded-xl flex space-x-1 border border-slate-200/30">
             <button
               type="button"
-              onClick={() => setAuthType('mobile')}
-              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center ${authType === 'mobile' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+              onClick={() => setAuthType('email')}
+              className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center ${authType === 'email' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
             >
-              Mobile
+              Email
             </button>
             <button
               type="button"
@@ -656,17 +588,17 @@ export default function Auth() {
             {/* STUDENT FLOWS */}
             {!isAdminStep && (
               <>
-                {authType === 'mobile' && step === 'mobile-input' && (
-                  /* MOBILE NUMBER INPUT FORM */
-                  <form onSubmit={handleMobileSubmit} className="space-y-4">
+                {authType === 'email' && step === 'email-input' && (
+                  /* EMAIL ADDRESS INPUT FORM */
+                  <form onSubmit={handleEmailSubmit} className="space-y-4">
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Mobile Number</label>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
                       <input
-                        type="tel"
+                        type="email"
                         required
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="Enter your 10-digit number"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email address"
                         className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
                       />
                     </div>
@@ -680,12 +612,12 @@ export default function Auth() {
                   </form>
                 )}
 
-                {authType === 'mobile' && step === 'register-collect' && (
+                {authType === 'email' && step === 'register-collect' && (
                   /* REGISTRATION INFO COLLECTION FORM */
                   <form onSubmit={handleRegisterDetailsSubmit} className="space-y-4 animate-fade-in">
                     <div className="bg-blue-50/50 border border-blue-100 p-3.5 rounded-xl">
                       <p className="text-[11px] text-blue-700 font-medium leading-relaxed">
-                        Account not found for <strong>{phoneNumber}</strong>. Fill in the details below to initialize profile registration.
+                        Account not found for <strong>{email}</strong>. Fill in the details below to initialize profile registration.
                       </p>
                     </div>
 
@@ -702,13 +634,13 @@ export default function Auth() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Email Address</label>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">Mobile Number</label>
                       <input
-                        type="email"
+                        type="tel"
                         required
-                        value={registerForm.email}
-                        onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
-                        placeholder="e.g. jatin@gmail.com"
+                        value={registerForm.phone}
+                        onChange={(e) => setRegisterForm({ ...registerForm, phone: e.target.value })}
+                        placeholder="Enter your 10-digit mobile number"
                         className="w-full bg-[#FAFAFA] border border-slate-200/80 rounded-xl px-4 py-3 text-xs text-slate-900 focus:border-blue-600 focus:bg-white outline-none transition-all shadow-sm"
                       />
                     </div>
@@ -716,7 +648,7 @@ export default function Auth() {
                     <div className="flex space-x-2 pt-2">
                       <button
                         type="button"
-                        onClick={() => setStep('mobile-input')}
+                        onClick={() => setStep('email-input')}
                         className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
                       >
                         Back
@@ -731,7 +663,7 @@ export default function Auth() {
                   </form>
                 )}
 
-                {authType === 'mobile' && step === 'otp-verify' && (
+                {authType === 'email' && step === 'otp-verify' && (
                   /* OTP CODE ENTRY FORM */
                   <form onSubmit={handleVerifyOtpSubmit} className="space-y-5 animate-fade-in">
                     <div className="text-center">
@@ -759,7 +691,7 @@ export default function Auth() {
                     <div className="flex space-x-2 pt-2">
                       <button
                         type="button"
-                        onClick={() => setStep(currentUserData?.activeCourses ? 'mobile-input' : 'register-collect')}
+                        onClick={() => setStep(currentUserData?.activeCourses ? 'email-input' : 'register-collect')}
                         className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-xs uppercase"
                       >
                         Back
@@ -1121,7 +1053,7 @@ export default function Auth() {
               setError(null);
               setInfo(null);
               if (isAdminStep) {
-                setStep('mobile-input');
+                setStep('email-input');
               } else {
                 setStep('admin-login');
               }
