@@ -398,7 +398,7 @@ export default function DigitalMarketingLandingPage() {
   };
 
   return (
-    <div className="bg-white text-[#0F172A] font-sans antialiased min-h-screen relative selection:bg-blue-600/10 selection:text-blue-600">
+    <div className="bg-white text-[#0F172A] font-sans antialiased min-h-screen relative selection:bg-blue-600/10 selection:text-blue-600 bg-grid-light">
       
       {/* Sticky Header wrapper */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
@@ -722,7 +722,7 @@ export default function DigitalMarketingLandingPage() {
       </section>
 
       {/* 4. Curriculum Timeline Roadmap */}
-      <section className="py-20 border-b border-slate-900 bg-slate-950 text-white">
+      <section className="py-20 border-b border-slate-900 bg-slate-950 text-white bg-grid-dark">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
             <span className="text-xs font-bold text-blue-500 bg-blue-950 border border-blue-900/60 px-3 py-1 rounded-full uppercase tracking-wider font-mono">Syllabus Details</span>

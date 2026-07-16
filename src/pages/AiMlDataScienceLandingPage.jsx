@@ -298,7 +298,7 @@ export default function AiMlDataScienceLandingPage() {
   };
 
   return (
-    <div className="text-slate-900 min-h-screen relative bg-[#FFFFFF] font-sans">
+    <div className="text-slate-900 min-h-screen relative bg-[#FFFFFF] font-sans bg-grid-light">
       
       {/* Sticky Header wrapper */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
@@ -592,7 +592,7 @@ export default function AiMlDataScienceLandingPage() {
       </section>
 
       {/* Curriculum Section */}
-      <section className="py-16 bg-slate-950 text-white border-b border-slate-900">
+      <section className="py-16 bg-slate-950 text-white border-b border-slate-900 bg-grid-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-12">
             <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Structured Roadmap</span>

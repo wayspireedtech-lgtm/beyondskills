@@ -360,7 +360,7 @@ export default function FullStackLandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#0F172A] font-inter antialiased selection:bg-[#2563EB]/10 selection:text-[#2563EB]">
+    <div className="min-h-screen bg-white text-[#0F172A] font-inter antialiased selection:bg-[#2563EB]/10 selection:text-[#2563EB] bg-grid-light">
       
       {/* 1. Sticky Header wrapper */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
@@ -757,7 +757,7 @@ export default function FullStackLandingPage() {
       </section>
 
       {/* 8. CURRICULUM ROADMAP TIMELINE */}
-      <section id="curriculum-roadmap-section" className="py-16 bg-slate-900 text-white relative overflow-hidden">
+      <section id="curriculum-roadmap-section" className="py-16 bg-slate-900 text-white relative overflow-hidden bg-grid-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-[#F97316] text-[10px] font-extrabold tracking-widest uppercase border border-[#F97316]/30 px-3 py-1 rounded bg-[#F97316]/5 font-mono">

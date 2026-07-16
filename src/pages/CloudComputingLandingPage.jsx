@@ -352,7 +352,7 @@ export default function CloudComputingLandingPage() {
   };
 
   return (
-    <div className="bg-white text-slate-900 min-h-screen font-sans selection:bg-blue-500 selection:text-white antialiased">
+    <div className="bg-white text-slate-900 min-h-screen font-sans selection:bg-blue-500 selection:text-white antialiased bg-grid-light">
       {/* Sticky Header wrapper */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -622,7 +622,7 @@ export default function CloudComputingLandingPage() {
         </div>
       </section>
       {/* Interactive Curriculum Section */}
-      <section className="py-16 md:py-24 bg-slate-950 text-white border-b border-slate-900">
+      <section className="py-16 md:py-24 bg-slate-950 text-white border-b border-slate-900 bg-grid-dark">
         <div className="max-w-7xl mx-auto px-4">
           
           <div className="max-w-2xl mx-auto text-center mb-16 space-y-3">
