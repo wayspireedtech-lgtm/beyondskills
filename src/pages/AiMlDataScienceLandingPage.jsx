@@ -376,17 +376,19 @@ export default function AiMlDataScienceLandingPage() {
 
           {/* Right Lead Capture Form Card */}
           <div className="lg:col-span-5 relative">
-            <div id="hero-application-form" className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl transition-all">
-              <h3 className="text-[#0F172A] font-extrabold text-lg sm:text-xl mb-1.5 text-left">Request Program Info</h3>
-              <p className="text-xs text-slate-500 mb-6 text-left">Fill in details. Our admissions advisor will contact you soon.</p>
+            <div id="hero-application-form" className="bg-[#0F172A] border border-white/10 text-white rounded-3xl p-6 sm:p-8 shadow-2xl transition-all relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/10 rounded-full blur-[30px] pointer-events-none"></div>
+              
+              <h3 className="text-white font-extrabold text-lg sm:text-xl mb-1.5 text-left">Request Program Info</h3>
+              <p className="text-xs text-slate-400 mb-6 text-left">Fill in details. Our admissions advisor will contact you soon.</p>
               
               <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <div className="relative">
                     <input 
                       type="text" required 
-                      className="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. Rahul Sharma"
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
@@ -396,11 +398,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                   <div className="relative">
                     <input 
                       type="email" required 
-                      className="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. rahul@example.com"
                       value={enquiryForm.email}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
@@ -410,11 +412,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
                   <div className="relative">
                     <input 
                       type="tel" required 
-                      className="w-full bg-slate-50 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. +91 98765 43210"
                       value={enquiryForm.phone}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
@@ -425,71 +427,71 @@ export default function AiMlDataScienceLandingPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                     <select 
-                      className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none cursor-pointer"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                       value={enquiryForm.qualification}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, qualification: e.target.value })}
                     >
-                      <option value="Undergraduate">Undergraduate</option>
-                      <option value="Postgraduate">Postgraduate</option>
-                      <option value="College Student">College Student</option>
-                      <option value="Working Professional">Working Professional</option>
+                      <option className="bg-[#0F172A] text-white" value="Undergraduate">Undergraduate</option>
+                      <option className="bg-[#0F172A] text-white" value="Postgraduate">Postgraduate</option>
+                      <option className="bg-[#0F172A] text-white" value="College Student">College Student</option>
+                      <option className="bg-[#0F172A] text-white" value="Working Professional">Working Professional</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
                     <select 
-                      className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none cursor-pointer"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                       value={enquiryForm.experience}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, experience: e.target.value })}
                     >
-                      <option value="Beginner - No Coding">Beginner (No Coding)</option>
-                      <option value="Basic Knowledge">Basic Knowledge</option>
-                      <option value="Experienced Developer">Experienced Developer</option>
+                      <option className="bg-[#0F172A] text-white" value="Beginner - No Coding">Beginner (No Coding)</option>
+                      <option className="bg-[#0F172A] text-white" value="Basic Knowledge">Basic Knowledge</option>
+                      <option className="bg-[#0F172A] text-white" value="Experienced Developer">Experienced Developer</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                   <select 
-                    className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none cursor-pointer"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                     value={enquiryForm.goal}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, goal: e.target.value })}
                   >
-                    <option value="Land a Tech Job">Get a Tech Job</option>
-                    <option value="Career Transition">Switch Careers</option>
-                    <option value="Freelancing / Projects">Freelance Work</option>
-                    <option value="Build an AI Startup">Build an AI Startup</option>
+                    <option className="bg-[#0F172A] text-white" value="Land a Tech Job">Get a Tech Job</option>
+                    <option className="bg-[#0F172A] text-white" value="Career Transition">Switch Careers</option>
+                    <option className="bg-[#0F172A] text-white" value="Freelancing / Projects">Freelance Work</option>
+                    <option className="bg-[#0F172A] text-white" value="Build an AI Startup">Build an AI Startup</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
                   <select 
-                    className="w-full bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] outline-none cursor-pointer"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                     value={enquiryForm.contactTime}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, contactTime: e.target.value })}
                   >
-                    <option value="">Any Time</option>
-                    <option value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                    <option value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
-                    <option value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+                    <option className="bg-[#0F172A] text-white" value="">Any Time</option>
+                    <option className="bg-[#0F172A] text-white" value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                    <option className="bg-[#0F172A] text-white" value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
+                    <option className="bg-[#0F172A] text-white" value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
                   </select>
                 </div>
 
                 <button 
                   type="submit" 
-                  className="w-full bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
+                  className="w-full bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg flex items-center justify-center space-x-1.5 cursor-pointer"
                 >
                   <span>Apply Now</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
                 {status === 'success' && (
-                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center space-x-1.5 animate-fade-in">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <div className="bg-emerald-955/40 border border-emerald-500/20 text-emerald-400 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center space-x-1.5 animate-fade-in">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     <span>Application logged! Our counselor will call you shortly.</span>
                   </div>
                 )}
@@ -618,44 +620,50 @@ export default function AiMlDataScienceLandingPage() {
       </section>
 
       {/* Projects Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
-        <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Hands-on Experience</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Construct Deployed Data Projects</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Compile a powerful coding repository showcasing real statistical applications. Below are sample projects constructed during the batch.</p>
-        </div>
+      <div className="relative bg-gradient-to-b from-[#2563EB]/5 via-white to-transparent py-16 border-b border-slate-100">
+        {/* Soft glowing blue spots behind the grid */}
+        <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] rounded-full bg-[#2563EB]/5 blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-[#2563EB]/5 blur-[80px] pointer-events-none"></div>
+        
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-3 mb-12">
+            <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Hands-on Experience</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Construct Deployed Data Projects</h2>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Compile a powerful coding repository showcasing real statistical applications. Below are sample projects constructed during the batch.</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SAMPLE_PROJECTS.map((proj, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between space-y-5">
-              
-              {/* Dynamic Interactive Code Preview Mockup */}
-              <div className="space-y-4">
-                {renderProjectMock(proj.mockType)}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SAMPLE_PROJECTS.map((proj, idx) => (
+              <div key={idx} className="bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between space-y-5">
                 
-                <div className="space-y-2 text-left">
-                  <h3 className="text-[#0F172A] font-extrabold text-base leading-snug">{proj.title}</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">{proj.desc}</p>
+                {/* Dynamic Interactive Code Preview Mockup */}
+                <div className="space-y-4">
+                  {renderProjectMock(proj.mockType)}
+                  
+                  <div className="space-y-2 text-left">
+                    <h3 className="text-[#0F172A] font-extrabold text-base leading-snug">{proj.title}</h3>
+                    <p className="text-xs text-slate-500 leading-relaxed">{proj.desc}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-3 border-t border-slate-100 pt-4 text-xs text-left">
-                <div className="flex flex-wrap gap-1.5">
-                  {proj.tech.map((t, i) => (
-                    <span key={i} className="text-[#2563EB] bg-[#2563EB]/10 font-bold px-2 py-0.5 rounded text-[10px] uppercase font-mono">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <div className="space-y-1">
-                  <p className="text-slate-400 text-[10px] uppercase font-mono tracking-wider">Key Learnings:</p>
-                  <p className="text-slate-600 font-medium">{proj.learn}</p>
+                <div className="space-y-3 border-t border-slate-100 pt-4 text-xs text-left">
+                  <div className="flex flex-wrap gap-1.5">
+                    {proj.tech.map((t, i) => (
+                      <span key={i} className="text-[#2563EB] bg-[#2563EB]/10 font-bold px-2 py-0.5 rounded text-[10px] uppercase font-mono">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-slate-400 text-[10px] uppercase font-mono tracking-wider">Key Learnings:</p>
+                    <p className="text-slate-600 font-medium">{proj.learn}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      </div>
 
       {/* Learning Experience Section */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
