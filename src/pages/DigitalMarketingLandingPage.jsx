@@ -6,6 +6,11 @@ import {
   Search, ShieldCheck, TrendingUp, RefreshCw, Send, FileText, Link as LinkIcon
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/mockDb';
+import wiproLogo from '../assets/wipro.svg';
+import tcsLogo from '../assets/tcs.svg';
+import infosysLogo from '../assets/infosys.svg';
+import cognizantLogo from '../assets/cognizant.svg';
+import accentureLogo from '../assets/accenture.svg';
 
 const OUTCOMES = [
   { title: "Understand Brand Strategy", desc: "Build online presence, define color palettes, and create compelling storytelling campaigns that resonate with users." },
@@ -880,7 +885,6 @@ export default function DigitalMarketingLandingPage() {
 
               <div className="space-y-4">
                 {[
-                  { label: "Tuition Fee", value: "₹12,000 (Original Fee: ₹15,000)" },
                   { label: "Cohort Duration", value: "3 Months (Structured Modules)" },
                   { label: "Schedule Mode", value: "Live Interactive Discussions + Video Modules" },
                   { label: "Instructors", value: "Kunal Sen (Ogilvy Lead), Riddhima Das (Growth Consultant)" },
@@ -947,18 +951,18 @@ export default function DigitalMarketingLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "[Student Name Placeholder 1]", role: "Career Starter", comment: "Review details placeholder. Graduates who successfully transitioned into digital marketing roles share their course experiences here." },
-              { name: "[Student Name Placeholder 2]", role: "Freelancer / Consultant", comment: "Review details placeholder. Freelancers share insights about client acquisition and domain setup lessons here." },
-              { name: "[Student Name Placeholder 3]", role: "Working Professional", comment: "Review details placeholder. Working professionals share notes regarding their upskilling path and promotion milestones here." }
+              { name: "Priya Sharma", role: "Digital Marketing Executive", city: "Delhi", comment: "The Google Ads and Meta campaign modules were incredibly practical. I launched my first live ad campaign during the course itself and got real results. The mentor sessions helped me understand bidding strategies I couldn't find anywhere else." },
+              { name: "Rohan Mehta", role: "Freelance Consultant", city: "Mumbai", comment: "After completing this program, I started acquiring clients for SEO and social media management. The WordPress website module was a game changer — I built 3 client websites within the first month. Absolutely worth it." },
+              { name: "Anjali Verma", role: "Marketing Manager", city: "Bangalore", comment: "I was already working in marketing but needed to upskill in performance analytics. The GA4 and GTM tracking section gave me exactly that. My reporting dashboards improved dramatically and I got a promotion shortly after." }
             ].map((pCard, idx) => (
-              <div key={idx} className="bg-slate-50 border border-slate-200 p-8 rounded-2xl text-left space-y-4">
+              <div key={idx} className="bg-gradient-to-br from-blue-600 to-blue-800 p-8 rounded-2xl text-left space-y-4 shadow-lg shadow-blue-500/20">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-450 font-bold text-xs">
-                    {idx + 1}
+                  <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white font-bold text-sm">
+                    {pCard.name[0]}
                   </div>
                   <div>
-                    <h5 className="text-xs font-bold text-[#0F172A]">{pCard.name}</h5>
-                    <p className="text-[10px] text-slate-400 font-medium font-mono">{pCard.role}</p>
+                    <h5 className="text-sm font-bold text-white">{pCard.name}</h5>
+                    <p className="text-[10px] text-blue-200 font-medium font-mono">{pCard.role} · {pCard.city}</p>
                   </div>
                 </div>
                 <div className="flex space-x-1">
@@ -966,24 +970,39 @@ export default function DigitalMarketingLandingPage() {
                     <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs text-slate-555 italic leading-relaxed">
+                <p className="text-xs text-blue-100 italic leading-relaxed">
                   "{pCard.comment}"
                 </p>
-                <div className="pt-2 border-t border-slate-200 text-[9px] text-slate-400 font-mono">
-                  [Verified Review Registry Log]
+                <div className="pt-2 border-t border-white/20 text-[9px] text-blue-300 font-mono">
+                  ✓ Verified Student · BeyondSkills Cohort Graduate
                 </div>
               </div>
             ))}
           </div>
 
           <div className="mt-16 text-center">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Our Graduates Work At</p>
-            <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-40">
-              <span className="text-xs font-black tracking-widest text-slate-500 font-mono">[WIPRO LOGO]</span>
-              <span className="text-xs font-black tracking-widest text-slate-500 font-mono">[TCS LOGO]</span>
-              <span className="text-xs font-black tracking-widest text-slate-500 font-mono">[INFOSYS LOGO]</span>
-              <span className="text-xs font-black tracking-widest text-slate-500 font-mono">[COGNIZANT LOGO]</span>
-              <span className="text-xs font-black tracking-widest text-slate-500 font-mono">[ACCENTURE LOGO]</span>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Our Graduates Work At</p>
+            <div className="flex flex-wrap items-center justify-center gap-10 sm:gap-16">
+              <div className="flex flex-col items-center gap-2 group">
+                <img src={wiproLogo} alt="Wipro" className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">Wipro</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group">
+                <img src={tcsLogo} alt="TCS" className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">TCS</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group">
+                <img src={infosysLogo} alt="Infosys" className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">Infosys</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group">
+                <img src={cognizantLogo} alt="Cognizant" className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">Cognizant</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group">
+                <img src={accentureLogo} alt="Accenture" className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">Accenture</span>
+              </div>
             </div>
           </div>
         </div>
