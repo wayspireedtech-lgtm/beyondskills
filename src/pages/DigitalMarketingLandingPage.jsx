@@ -700,19 +700,19 @@ export default function DigitalMarketingLandingPage() {
       </section>
 
       {/* 4. Curriculum Timeline Roadmap */}
-      <section className="py-20 border-b border-slate-100 bg-white">
+      <section className="py-20 border-b border-slate-900 bg-slate-950 text-white">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-16">
-            <span className="text-xs font-bold text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-full uppercase tracking-wider font-mono">Syllabus Details</span>
-            <h2 className="text-3xl font-black text-[#0F172A] tracking-tight">Structured Course Timeline</h2>
-            <p className="text-sm text-slate-550 leading-relaxed">
+            <span className="text-xs font-bold text-blue-500 bg-blue-950 border border-blue-900/60 px-3 py-1 rounded-full uppercase tracking-wider font-mono">Syllabus Details</span>
+            <h2 className="text-3xl font-black text-white tracking-tight">Structured Course Timeline</h2>
+            <p className="text-sm text-slate-400 leading-relaxed">
               Explore the 15 comprehensive modules. You will build and test marketing campaign elements throughout the curriculum.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left side list */}
-            <div className="lg:col-span-5 space-y-2 max-h-[500px] overflow-y-auto pr-2 border-r border-slate-150">
+            <div className="lg:col-span-5 space-y-2 max-h-[500px] overflow-y-auto pr-2 border-r border-slate-900">
               {CURRICULUM.map((item, idx) => (
                 <button
                   key={idx}
@@ -720,11 +720,11 @@ export default function DigitalMarketingLandingPage() {
                   className={`w-full text-left p-3.5 rounded-xl border transition-all text-xs font-bold flex items-center justify-between cursor-pointer ${
                     activeModuleIdx === idx
                       ? 'bg-blue-600 border-blue-600 text-white shadow-md'
-                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                      : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-850 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3 truncate">
-                    <span className={`font-mono text-[10px] px-2 py-0.5 rounded ${activeModuleIdx === idx ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-550'}`}>
+                    <span className={`font-mono text-[10px] px-2 py-0.5 rounded ${activeModuleIdx === idx ? 'bg-blue-700/60 text-white' : 'bg-slate-800 text-slate-400'}`}>
                       {item.week}
                     </span>
                     <span className="truncate">{item.title}</span>
@@ -735,36 +735,36 @@ export default function DigitalMarketingLandingPage() {
             </div>
 
             {/* Right side details card */}
-            <div className="lg:col-span-7 bg-slate-50/50 border border-slate-200 p-6 sm:p-8 rounded-3xl text-left min-h-[420px] flex flex-col justify-between">
+            <div className="lg:col-span-7 bg-[#0F172A] border border-white/5 p-6 sm:p-8 rounded-3xl text-left min-h-[420px] flex flex-col justify-between">
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-[10px] font-bold font-mono text-orange-500 bg-orange-50 border border-orange-200/50 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  <span className="text-[10px] font-bold font-mono text-orange-400 bg-orange-950 border border-orange-900/60 px-2.5 py-1 rounded-full uppercase tracking-wider">
                     {CURRICULUM[activeModuleIdx].week}
                   </span>
-                  <h3 className="text-lg font-black text-[#0F172A]">{CURRICULUM[activeModuleIdx].title}</h3>
+                  <h3 className="text-lg font-black text-white">{CURRICULUM[activeModuleIdx].title}</h3>
                 </div>
                 
-                <p className="text-xs font-bold text-slate-500 border-b border-slate-200 pb-3 font-mono">
+                <p className="text-xs font-bold text-slate-400 border-b border-slate-900 pb-3 font-mono">
                   Focus: {CURRICULUM[activeModuleIdx].subtopic}
                 </p>
 
                 <ul className="space-y-3 pt-2">
                   {CURRICULUM[activeModuleIdx].details.map((detail, dIdx) => (
                     <li key={dIdx} className="flex items-start space-x-3">
-                      <div className="bg-blue-600/10 p-0.5 rounded-full mt-0.5">
-                        <Check className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                      <div className="bg-blue-500/10 p-0.5 rounded-full mt-0.5">
+                        <Check className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                       </div>
-                      <span className="text-xs text-slate-650 leading-relaxed font-medium">{detail}</span>
+                      <span className="text-xs text-slate-300 leading-relaxed font-medium">{detail}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="pt-6 border-t border-slate-200 mt-6 flex justify-between items-center">
-                <span className="text-[10px] font-mono text-slate-400">Total 15 Modules Included</span>
+              <div className="pt-6 border-t border-slate-900 mt-6 flex justify-between items-center">
+                <span className="text-[10px] font-mono text-slate-500">Total 15 Modules Included</span>
                 <button 
                   onClick={handleScrollToForm}
-                  className="text-xs text-blue-600 hover:text-blue-700 font-extrabold flex items-center space-x-1 cursor-pointer"
+                  className="text-xs text-blue-400 hover:text-blue-500 font-extrabold flex items-center space-x-1 cursor-pointer"
                 >
                   <span>Inquire About Batch Dates</span>
                   <ArrowRight className="w-3.5 h-3.5" />

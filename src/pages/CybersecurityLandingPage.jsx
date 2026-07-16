@@ -602,35 +602,34 @@ export default function CybersecurityLandingPage() {
           </div>
         </div>
       </section>
-
       {/* Interactive Curriculum Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-slate-950 text-white border-b border-slate-900">
         <div className="max-w-7xl mx-auto px-4">
           
           <div className="max-w-2xl mx-auto text-center mb-16 space-y-3">
-            <span className="text-blue-600 font-extrabold uppercase text-xs tracking-wider font-mono">13 Modules Curriculum</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Step-by-Step Pathway</h2>
-            <p className="text-sm text-slate-650">Hands-on virtualization labs and vulnerability audits aligned directly to cybersecurity analyst paths.</p>
+            <span className="text-blue-500 font-extrabold uppercase text-xs tracking-wider font-mono">13 Modules Curriculum</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">Step-by-Step Pathway</h2>
+            <p className="text-sm text-slate-400">Hands-on virtualization labs and vulnerability audits aligned directly to cybersecurity analyst paths.</p>
           </div>
 
           {/* Interactive tabs on big screens, grid on smaller screens */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Module Names List Left Column */}
-            <div className="lg:col-span-4 space-y-2 max-h-[550px] overflow-y-auto pr-2 border-r border-slate-100 custom-scrollbar">
+            <div className="lg:col-span-4 space-y-2 max-h-[550px] overflow-y-auto pr-2 border-r border-slate-900 custom-scrollbar">
               {CURRICULUM.map((mod, idx) => (
                 <button 
                   key={idx}
                   onClick={() => setActiveModuleIdx(idx)}
-                  className={`w-full text-left py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 border flex items-center justify-between group ${
+                  className={`w-full text-left py-3 px-4 rounded-xl text-xs font-bold transition-all duration-200 border flex items-center justify-between group cursor-pointer ${
                     activeModuleIdx === idx 
                       ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/10' 
-                      : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200/60'
+                      : 'bg-slate-900 text-slate-300 hover:bg-slate-850 hover:text-white border-slate-800'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className={`font-mono text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded ${
-                      activeModuleIdx === idx ? 'bg-blue-700/60 text-white' : 'bg-slate-200 text-slate-600'
+                      activeModuleIdx === idx ? 'bg-blue-700/60 text-white' : 'bg-slate-800 text-slate-400'
                     }`}>
                       {mod.week}
                     </span>
@@ -644,15 +643,15 @@ export default function CybersecurityLandingPage() {
             </div>
 
             {/* Selected Module Details Panel Right Column */}
-            <div className="lg:col-span-8 bg-slate-50 border border-slate-200/60 rounded-2xl p-6 sm:p-8 min-h-[420px] flex flex-col justify-between">
+            <div className="lg:col-span-8 bg-[#0F172A] border border-white/5 rounded-2xl p-6 sm:p-8 min-h-[420px] flex flex-col justify-between">
               <div>
-                <span className="text-blue-600 font-mono text-[10px] tracking-wider uppercase font-bold">
+                <span className="text-blue-400 font-mono text-[10px] tracking-wider uppercase font-bold">
                   {CURRICULUM[activeModuleIdx].week} Curriculum Detail
                 </span>
-                <h3 className="text-xl font-black text-slate-900 mt-1 mb-2">
+                <h3 className="text-xl font-black text-white mt-1 mb-2">
                   {CURRICULUM[activeModuleIdx].title}
                 </h3>
-                <p className="text-xs text-slate-550 mb-6 italic">
+                <p className="text-xs text-slate-400 mb-6 italic">
                   {CURRICULUM[activeModuleIdx].subtopic}
                 </p>
 
@@ -660,20 +659,20 @@ export default function CybersecurityLandingPage() {
                   <h5 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Key Topics & Labs Covered:</h5>
                   <div className="grid grid-cols-1 gap-3">
                     {CURRICULUM[activeModuleIdx].details.map((topic, tIdx) => (
-                      <div key={tIdx} className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-slate-200/50">
+                      <div key={tIdx} className="flex items-start gap-3 bg-slate-900 p-3.5 rounded-xl border border-slate-850">
                         <CheckCircle className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                        <span className="text-xs text-slate-655 font-medium leading-relaxed">{topic}</span>
+                        <span className="text-xs text-slate-300 font-medium leading-relaxed">{topic}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-200/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <span className="text-[10px] font-mono text-slate-400 uppercase">Virtual Lab environment & security check checklists provided</span>
+              <div className="mt-8 pt-6 border-t border-slate-900 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <span className="text-[10px] font-mono text-slate-500 uppercase">Virtual Lab environment & security check checklists provided</span>
                 <button 
                   onClick={handleScrollToForm}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs py-2.5 px-5 rounded-lg shadow-md shadow-blue-500/10 transition-all flex items-center gap-2"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs py-2.5 px-5 rounded-lg shadow-md shadow-blue-500/10 transition-all flex items-center gap-2 cursor-pointer"
                 >
                   <span>Request Full Syllabus PDF</span>
                   <Download className="w-3.5 h-3.5" />

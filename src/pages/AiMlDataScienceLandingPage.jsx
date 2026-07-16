@@ -586,36 +586,38 @@ export default function AiMlDataScienceLandingPage() {
       </section>
 
       {/* Curriculum Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
-        <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Structured Roadmap</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Our AI & Data Science Cohort Path</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">A comprehensive timeline engineered to take you from foundational Python syntax to live model deployment.</p>
-        </div>
+      <section className="py-16 bg-slate-950 text-white border-b border-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-3 mb-12">
+            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Structured Roadmap</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Our AI & Data Science Cohort Path</h2>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">A comprehensive timeline engineered to take you from foundational Python syntax to live model deployment.</p>
+          </div>
 
-        <div className="max-w-3xl mx-auto relative border-l border-slate-200 pl-6 sm:pl-8 space-y-10 py-2 text-left">
-          {CURRICULUM.map((mod, idx) => (
-            <div key={idx} className="relative">
-              {/* Dot indicator */}
-              <span className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-[#2563EB] flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
-              </span>
-              
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest font-mono font-bold">Module {idx + 1}</span>
-                <h3 className="text-[#0F172A] font-extrabold text-sm sm:text-base leading-tight">{mod.phase}</h3>
+          <div className="max-w-3xl mx-auto relative border-l border-slate-800 pl-6 sm:pl-8 space-y-10 py-2 text-left">
+            {CURRICULUM.map((mod, idx) => (
+              <div key={idx} className="relative">
+                {/* Dot indicator */}
+                <span className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-blue-500 flex items-center justify-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                </span>
                 
-                {/* Topic tags */}
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {mod.topics.map((t, i) => (
-                    <span key={i} className="text-slate-600 bg-slate-50 border border-slate-200/50 rounded-lg px-2.5 py-1 text-xs font-medium">
-                      {t}
-                    </span>
-                  ))}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest font-mono">Module {idx + 1}</span>
+                  <h3 className="text-white font-extrabold text-sm sm:text-base leading-tight">{mod.phase}</h3>
+                  
+                  {/* Topic tags */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {mod.topics.map((t, i) => (
+                      <span key={i} className="text-slate-300 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs font-medium">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
