@@ -125,19 +125,22 @@ export default function Auth() {
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+    const isDemoMode = !serviceId || !templateId || !publicKey;
 
-    // Trigger custom toast notification letting user know email was sent without exposing code
+    // Trigger custom toast notification letting user know email was sent
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
-        subject: `Verification Code Dispatched`,
-        body: `Hi ${name},\n\nWe sent a 4-digit verification code to your email address: ${email}.\nPlease check your inbox/spam folder.`,
+        subject: isDemoMode ? `Verification Code Dispatched (Demo Mode)` : `Verification Code Dispatched`,
+        body: isDemoMode 
+          ? `Hi ${name},\n\nBecause EmailJS keys are not configured yet, here is your security OTP code: ${otp}\n(For production, configure your EmailJS credentials in the admin settings or env).`
+          : `Hi ${name},\n\nWe sent a 4-digit verification code to your email address: ${email}.\nPlease check your inbox/spam folder.`,
       }
     }));
 
     // Log to console for development debug purposes only
     console.log(`[BeyondSkills Debug] Generated OTP: ${otp}`);
 
-    if (!serviceId || !templateId || !publicKey) {
+    if (isDemoMode) {
       console.warn("EmailJS environment keys not defined in environment variables. Logged OTP to console for debugging.");
       return false;
     }
