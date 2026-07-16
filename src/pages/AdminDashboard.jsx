@@ -2599,7 +2599,7 @@ export default function AdminDashboard() {
                 <Sparkles className="w-4 h-4 text-amber-400 animate-pulse" />
                 <span>Dedicated Production-Ready Landing Pages</span>
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-white/5 border border-white/5 p-3 rounded-lg flex justify-between items-center">
                   <div>
                     <p className="font-bold text-white text-[11px]">Full Stack Web Development (MERN)</p>
@@ -2615,6 +2615,16 @@ export default function AdminDashboard() {
                     <p className="font-bold text-white text-[11px]">AI, ML, Data Science & Analytics</p>
                     <a href="/ai-ml-data-science-landing-page" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:underline font-mono text-[10px]">
                       /ai-ml-data-science-landing-page
+                    </a>
+                  </div>
+                  <ArrowUpRight className="w-4 h-4 text-slate-455" />
+                </div>
+
+                <div className="bg-white/5 border border-white/5 p-3 rounded-lg flex justify-between items-center">
+                  <div>
+                    <p className="font-bold text-white text-[11px]">Paid Digital Marketing</p>
+                    <a href="/digital-marketing-landing-page" target="_blank" rel="noopener noreferrer" className="text-[#0EA5E9] hover:underline font-mono text-[10px]">
+                      /digital-marketing-landing-page
                     </a>
                   </div>
                   <ArrowUpRight className="w-4 h-4 text-slate-455" />
