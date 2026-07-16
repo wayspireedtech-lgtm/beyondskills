@@ -27,8 +27,23 @@ export default function Auth() {
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Google Client ID Configuration states (loaded from env with safe fallback)
-  const [clientId, setClientId] = useState(import.meta.env.VITE_GOOGLE_CLIENT_ID || localStorage.getItem('beyondskills_google_client_id') || '102874635294-mockclientid.apps.googleusercontent.com');
+  // Google Client ID Configuration states (loaded from env with self-healing fallback)
+  const [clientId, setClientId] = useState(() => {
+    const envId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (envId && envId.endsWith('.apps.googleusercontent.com') && !envId.includes('mockclientid')) {
+      return envId;
+    }
+    const cachedId = localStorage.getItem('beyondskills_google_client_id');
+    if (cachedId) {
+      const isValid = cachedId.endsWith('.apps.googleusercontent.com') && !cachedId.includes('mockclientid');
+      if (isValid) {
+        return cachedId;
+      } else {
+        localStorage.removeItem('beyondskills_google_client_id');
+      }
+    }
+    return '819274581670-not9uh8t1e2af0m720pgbiigs09jp3ec.apps.googleusercontent.com';
+  });
 
   // Simulated Google Login & Client ID Configuration states
   const [showGoogleSimulatedModal, setShowGoogleSimulatedModal] = useState(false);
@@ -749,9 +764,9 @@ export default function Auth() {
                             type="button"
                             onClick={() => {
                               localStorage.removeItem('beyondskills_google_client_id');
-                              setClientId('102874635294-mockclientid.apps.googleusercontent.com');
+                              setClientId('819274581670-not9uh8t1e2af0m720pgbiigs09jp3ec.apps.googleusercontent.com');
                               setCustomClientIdInput('');
-                              setInfo('Google Client ID reset to default mock.');
+                              setInfo('Google Client ID reset to default.');
                             }}
                             className="text-rose-600 font-bold hover:underline uppercase text-[9px] cursor-pointer"
                           >
@@ -812,30 +827,7 @@ export default function Auth() {
                           </div>
                         )}
                       </div>
-                    ) : (
-                      <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3.5 rounded-xl text-left text-[11px] leading-relaxed space-y-2">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <strong>Google Sign-In is configured!</strong>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              localStorage.removeItem('beyondskills_google_client_id');
-                              setClientId('102874635294-mockclientid.apps.googleusercontent.com');
-                              setCustomClientIdInput('');
-                              setInfo('Google Client ID reset to default mock.');
-                            }}
-                            className="text-rose-600 font-bold hover:underline uppercase text-[9px] cursor-pointer"
-                          >
-                            Reset
-                          </button>
-                        </div>
-                        <div className="text-slate-650 truncate">
-                          Client ID: <code className="bg-emerald-100/60 px-1 py-0.5 rounded font-mono">{clientId}</code>
-                        </div>
-                      </div>
-                    )}
+                    ) : null}
 
                     <button
                       type="button"
