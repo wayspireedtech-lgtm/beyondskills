@@ -15,19 +15,20 @@ app.use(express.json());
 
 const port = process.env.PORT || 5000;
 
-const keyId = process.env.RAZORPAY_KEY_ID;
-const keySecret = process.env.RAZORPAY_KEY_SECRET;
+const keyId = process.env.RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID;
+const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.VITE_RAZORPAY_KEY_SECRET;
 
-if (!keyId || !keySecret) {
-  console.error('Error: RAZORPAY_KEY_ID or RAZORPAY_KEY_SECRET is not defined in environment variables.');
-  process.exit(1);
+let razorpayInstance = null;
+
+if (keyId && keySecret) {
+  // Initialize Razorpay SDK instance
+  razorpayInstance = new Razorpay({
+    key_id: keyId,
+    key_secret: keySecret,
+  });
+} else {
+  console.warn('[WARNING] Razorpay is disabled because keyId or keySecret are not configured in environment variables.');
 }
-
-// Initialize Razorpay SDK instance
-const razorpayInstance = new Razorpay({
-  key_id: keyId,
-  key_secret: keySecret,
-});
 
 /**
  * STEP 1: Create Order
@@ -37,6 +38,9 @@ const razorpayInstance = new Razorpay({
  */
 app.post('/api/create-order', async (req, res) => {
   try {
+    if (!razorpayInstance) {
+      return res.status(500).json({ error: 'Razorpay keys are not configured on this server.' });
+    }
     const { amount, receipt } = req.body;
 
     if (amount === undefined || isNaN(amount)) {
@@ -81,6 +85,9 @@ app.post('/api/create-order', async (req, res) => {
  */
 app.post('/api/verify-payment', (req, res) => {
   try {
+    if (!keySecret) {
+      return res.status(500).json({ error: 'Razorpay secret key is not configured on this server.' });
+    }
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
     // Missing fields: return 400
