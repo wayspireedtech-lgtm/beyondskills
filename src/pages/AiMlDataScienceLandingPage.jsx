@@ -7,6 +7,9 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/mockDb';
 import confetti from 'canvas-confetti';
+import microsoftLogo from '../assets/microsoft.svg';
+import adobeLogo from '../assets/adobe.svg';
+import ibmLogo from '../assets/ibm.svg';
 
 
 const CURRICULUM = [
@@ -858,20 +861,20 @@ export default function AiMlDataScienceLandingPage() {
               {[
                 { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
                 { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
-                { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft/7FBA00' },
+                { name: 'Microsoft', url: microsoftLogo },
                 { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
-                { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/FF0000' },
-                { name: 'IBM', url: 'https://cdn.simpleicons.org/ibm/052FAD' },
+                { name: 'Adobe', url: adobeLogo },
+                { name: 'IBM', url: ibmLogo },
                 { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
                 { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
                 { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
               ].concat([
                 { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
                 { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
-                { name: 'Microsoft', url: 'https://cdn.simpleicons.org/microsoft/7FBA00' },
+                { name: 'Microsoft', url: microsoftLogo },
                 { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
-                { name: 'Adobe', url: 'https://cdn.simpleicons.org/adobe/FF0000' },
-                { name: 'IBM', url: 'https://cdn.simpleicons.org/ibm/052FAD' },
+                { name: 'Adobe', url: adobeLogo },
+                { name: 'IBM', url: ibmLogo },
                 { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
                 { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
                 { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
