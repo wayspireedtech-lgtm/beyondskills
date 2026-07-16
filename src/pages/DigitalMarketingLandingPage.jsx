@@ -400,6 +400,28 @@ export default function DigitalMarketingLandingPage() {
   return (
     <div className="bg-white text-[#0F172A] font-sans antialiased min-h-screen relative selection:bg-blue-600/10 selection:text-blue-600">
       
+      {/* Sticky Header wrapper */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-[#0F172A] text-xl">
+              Beyond
+            </span>
+            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-xl">
+              Skills
+            </span>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={handleScrollToForm}
+              className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer"
+            >
+              APPLY NOW
+            </button>
+          </div>
+        </div>
+      </header>
+
       {/* 1. Hero Section */}
       <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28 border-b border-slate-100 bg-slate-50/30">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-[120px] pointer-events-none"></div>

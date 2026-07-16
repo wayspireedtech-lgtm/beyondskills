@@ -342,19 +342,27 @@ export default function CybersecurityLandingPage() {
 
   return (
     <div className="bg-white text-slate-900 min-h-screen font-sans selection:bg-blue-500 selection:text-white antialiased">
-      {/* Dynamic Header Trust Indicator */}
-      <div className="bg-slate-950 text-white text-[11px] font-medium py-2 px-4 border-b border-white/5 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-          <div className="flex items-center gap-2">
-            <span className="bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] font-bold tracking-wider font-mono">GOVT APPROVED</span>
-            <span className="text-slate-400">BeyondSkills is registered under MSME, Startup India, ISO 9001:2015</span>
+      {/* Sticky Header wrapper */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-[#0F172A] text-xl">
+              Beyond
+            </span>
+            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-xl">
+              Skills
+            </span>
           </div>
-          <div className="flex items-center gap-4 text-slate-350">
-            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-blue-500" /> Live Labs Mentorship</span>
-            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-blue-500" /> Certified CEH Topics</span>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={handleScrollToForm}
+              className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer"
+            >
+              APPLY NOW
+            </button>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Trust Badges Banner */}
       <div className="bg-slate-50 border-b border-slate-100 py-3.5">

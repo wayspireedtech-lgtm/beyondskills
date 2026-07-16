@@ -300,19 +300,25 @@ export default function AiMlDataScienceLandingPage() {
   return (
     <div className="text-slate-900 min-h-screen relative bg-[#FFFFFF] font-sans">
       
-      {/* Dynamic Navigation Header */}
-      <header className="sticky top-0 bg-[#FFFFFF]/90 backdrop-blur-md border-b border-slate-100 z-50 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-1.5">
-            <span className="logo-font text-2xl font-black text-[#0F172A]">Beyond</span>
-            <span className="logo-font text-2xl font-black bg-gradient-to-r from-[#2563EB] to-[#0EA5E9] bg-clip-text text-transparent">Skills</span>
+      {/* Sticky Header wrapper */}
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-[#0F172A] text-xl">
+              Beyond
+            </span>
+            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-xl">
+              Skills
+            </span>
           </div>
-          <button 
-            onClick={scrollToHeroForm}
-            className="bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold text-xs uppercase tracking-widest px-4 py-2.5 rounded-lg transition-all shadow-md cursor-pointer"
-          >
-            Apply Now
-          </button>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={scrollToHeroForm}
+              className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer"
+            >
+              APPLY NOW
+            </button>
+          </div>
         </div>
       </header>
 
