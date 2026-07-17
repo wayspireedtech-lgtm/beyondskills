@@ -846,6 +846,10 @@ export default function AdminDashboard() {
           matchProgram = lead.program === 'cloud-computing';
         } else if (leadAdsSubTab === 'cyber') {
           matchProgram = lead.program === 'cyber-security';
+        } else if (leadAdsSubTab === 'fullstack') {
+          matchProgram = lead.program === 'full-stack-web';
+        } else if (leadAdsSubTab === 'digimar') {
+          matchProgram = lead.program === 'digital-marketing-cert';
         }
       }
 
@@ -1658,6 +1662,32 @@ export default function AdminDashboard() {
                       }`}
                     >
                       Cyber security Sheet
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('fullstack');
+                        setFilterProgram('full-stack-web');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'fullstack'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Full Stack Sheet
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('digimar');
+                        setFilterProgram('digital-marketing-cert');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'digimar'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Digital Marketing Sheet
                     </button>
                   </div>
                 )}
