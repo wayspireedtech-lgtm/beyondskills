@@ -464,7 +464,7 @@ export default function CloudComputingLandingPage() {
                     <Network className="w-4.5 h-4.5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 text-sm">6+ Practical Projects</h4>
+                    <h4 className="font-bold text-slate-800 text-sm">Industrial Practical Projects</h4>
                     <p className="text-xs text-slate-500">VPC routing, elastic load scaling, Docker builds.</p>
                   </div>
                 </div>
