@@ -437,6 +437,40 @@ export default function AdminDashboard() {
 
   const accessibleLeads = getAccessibleLeads();
 
+  // Helper to filter leads and navigate to list view
+  const filterLeadsAndNavigate = (filterName, filterValue) => {
+    // Reset all filters first
+    setLeadSearch('');
+    setFilterStatus('');
+    setFilterType('');
+    setFilterProgram('');
+    setFilterBDA('');
+    setFilterBDM('');
+    setFilterSubStatus('');
+    setFilterDateFrom('');
+    setFilterDateTo('');
+    setLeadChannelTab('all');
+    setLeadAdsSubTab('all');
+
+    // Apply specific filter
+    if (filterName === 'status') {
+      setFilterStatus(filterValue);
+    } else if (filterName === 'type') {
+      setFilterType(filterValue);
+      if (filterValue === 'Google Form Leads') {
+        setLeadChannelTab('google');
+      } else if (filterValue === 'Ads Leads') {
+        setLeadChannelTab('ads');
+      } else if (filterValue === 'WhatsApp Marketing Leads') {
+        setLeadChannelTab('whatsapp');
+      }
+    }
+
+    // Switch view to Leads List
+    setActiveMainTab('leads_manager');
+    setLeadsSubTab('list');
+  };
+
   // Save changes helper
   const saveLeadsToDb = (updatedLeads) => {
     setLeads(updatedLeads);
@@ -1369,7 +1403,10 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 
                 {/* TOTAL LEADS */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('all', '')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-[#2A4BFF]/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">
                       Total Leads
@@ -1383,7 +1420,10 @@ export default function AdminDashboard() {
                 </div>
                 
                 {/* MASTERCLASS LEADS */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('type', 'Google Form Leads')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-amber-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Masterclass Leads</span>
                     <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsMasterclassLeads}</p>
@@ -1395,7 +1435,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* FX LEADS */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('type', 'FX Leads')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">FX Leads</span>
                     <p className="text-3xl font-extrabold font-mono mt-1 text-white">0</p>
@@ -1407,7 +1450,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* CONVERSION RATE */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-rose-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Conversion Rate</span>
                     <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsConversionRate}%</p>
@@ -1424,7 +1470,10 @@ export default function AdminDashboard() {
               {/* Lower Grid: 2 Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* SUCCESSFUL ENROLMENTS */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 hover:scale-[1.005] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Successful Enrolments</span>
                     <p className="text-3xl font-extrabold font-mono mt-1 text-[#4ADE80]">{statsSuccessfulEnrollments}</p>
@@ -1438,7 +1487,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* ACTIVE HOT LEADS */}
-                <div className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white">
+                <div 
+                  onClick={() => filterLeadsAndNavigate('status', 'Follow Up')}
+                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-orange-500/40 hover:bg-white/10 hover:scale-[1.005] transition-all duration-300"
+                >
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Active Hot Leads</span>
                     <p className="text-3xl font-extrabold font-mono mt-1 text-orange-400">{statsHotLeads}</p>
@@ -1465,21 +1517,25 @@ export default function AdminDashboard() {
                 
                 <div className="space-y-4 pt-2">
                   {[
-                    { name: 'New Leads', count: accessibleLeads.filter(l => l.status === 'New').length },
-                    { name: 'Connected / Contacted', count: accessibleLeads.filter(l => l.status === 'Contacted').length },
-                    { name: 'Follow Up (Pending Dial)', count: accessibleLeads.filter(l => l.status === 'Follow Up').length },
-                    { name: 'Not Connected (DNP/SO)', count: accessibleLeads.filter(l => l.status === 'Not Connected').length },
-                    { name: 'Enrolled (Closed Success)', count: accessibleLeads.filter(l => l.status === 'Enrolled').length },
-                    { name: 'Not Interested (Closed Lost)', count: accessibleLeads.filter(l => l.status === 'Not Interested').length }
+                    { name: 'New Leads', status: 'New', count: accessibleLeads.filter(l => l.status === 'New').length },
+                    { name: 'Connected / Contacted', status: 'Contacted', count: accessibleLeads.filter(l => l.status === 'Contacted').length },
+                    { name: 'Follow Up (Pending Dial)', status: 'Follow Up', count: accessibleLeads.filter(l => l.status === 'Follow Up').length },
+                    { name: 'Not Connected (DNP/SO)', status: 'Not Connected', count: accessibleLeads.filter(l => l.status === 'Not Connected').length },
+                    { name: 'Enrolled (Closed Success)', status: 'Enrolled', count: accessibleLeads.filter(l => l.status === 'Enrolled').length },
+                    { name: 'Not Interested (Closed Lost)', status: 'Not Interested', count: accessibleLeads.filter(l => l.status === 'Not Interested').length }
                   ].map((step, idx) => {
                     const percentage = statsTotalLeads > 0 ? ((step.count / statsTotalLeads) * 100).toFixed(1) : 0;
                     return (
-                      <div key={idx} className="relative">
+                      <div 
+                        key={idx} 
+                        onClick={() => filterLeadsAndNavigate('status', step.status)}
+                        className="relative cursor-pointer group p-1.5 rounded-xl hover:bg-white/5 transition-all duration-200"
+                      >
                         <div className="flex justify-between items-center text-xs mb-1.5 font-mono">
-                          <span className="text-slate-300">{step.name}</span>
+                          <span className="text-slate-300 group-hover:text-brand-cyan transition-colors">{step.name}</span>
                           <span className="text-white font-bold">{step.count} ({percentage}%)</span>
                         </div>
-                        <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden border border-white/5">
+                        <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden border border-white/5 group-hover:border-brand-cyan/25 transition-all">
                           <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: `${percentage}%` }}></div>
                         </div>
                       </div>
@@ -1498,14 +1554,18 @@ export default function AdminDashboard() {
                   
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
-                      { name: 'Ads Campaign Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads').length },
-                      { name: 'Google Form Leads', count: accessibleLeads.filter(l => l.type === 'Google Form Leads').length },
-                      { name: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length }
+                      { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads').length },
+                      { name: 'Google Form Leads', type: 'Google Form Leads', count: accessibleLeads.filter(l => l.type === 'Google Form Leads').length },
+                      { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length }
                     ].map((src, idx) => {
                       const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
                       return (
-                        <div key={idx} className="flex items-center justify-between border-b border-white/5 pb-2">
-                          <span className="text-slate-400 flex items-center">
+                        <div 
+                          key={idx} 
+                          onClick={() => filterLeadsAndNavigate('type', src.type)}
+                          className="flex items-center justify-between border-b border-white/5 pb-2.5 pt-1 cursor-pointer group hover:bg-white/5 px-2 rounded-lg transition-all duration-205"
+                        >
+                          <span className="text-slate-400 flex items-center group-hover:text-blue-400 transition-colors">
                             <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
                             {src.name}
                           </span>
