@@ -23,7 +23,8 @@ const STUDENT_TESTIMONIALS = [
   { name: 'Srinidhi Gowda', course: 'AI/ML/DS', text: 'Awesome mentor sessions! The Capstone project gave me hands-on practice. The onboarding is instant and certificate PDF download is direct.', rating: 5, company: 'Cognizant' }
 ];
 import PartnerLogo from '../components/PartnerLogo';
-import BrochureModal from '../components/BrochureModal';
+const BrochureModal = React.lazy(() => import('../components/BrochureModal'));
+
 
 const COURSE_IMAGES = {
   'artificial-intelligence': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80',
@@ -877,12 +878,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Lead Capture Brochure Download Modal */}
-      <BrochureModal 
-        isOpen={isBrochureOpen} 
-        onClose={() => setIsBrochureOpen(false)} 
-        course={brochureCourse} 
-      />
+      {/* Lead Capture Brochure Download Modal - lazy loaded only when needed */}
+      {isBrochureOpen && (
+        <React.Suspense fallback={null}>
+          <BrochureModal 
+            isOpen={isBrochureOpen} 
+            onClose={() => setIsBrochureOpen(false)} 
+            course={brochureCourse} 
+          />
+        </React.Suspense>
+      )}
 
     </div>
   );
