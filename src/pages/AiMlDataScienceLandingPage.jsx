@@ -158,7 +158,7 @@ export default function AiMlDataScienceLandingPage() {
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
       id: `LD${String(leads.length + 101).padStart(3, '0')}`,
-      type: 'Academy',
+      type: 'Ads Leads',
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,

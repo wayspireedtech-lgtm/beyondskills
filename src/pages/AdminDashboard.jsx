@@ -2616,10 +2616,10 @@ export default function AdminDashboard() {
               <div className="flex justify-between items-center border-b border-white/10 pb-4">
                 <div>
                   <h2 className="text-xl font-bold uppercase tracking-wider text-brand-cyan">Lead Source & Page Analytics</h2>
-                  <p className="text-xs text-slate-400 mt-1">Cross-referencing campaign channels, landing pages, and BDA allocation performance.</p>
+                  <p className="text-xs text-slate-400 mt-1 font-mono">Cross-referencing campaign channels, landing pages, and BDA allocation performance.</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="bg-[#2A4BFF]/20 text-[#2A4BFF] border border-[#2A4BFF]/30 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase">
+                  <span className="bg-[#2A4BFF]/20 text-[#2A4BFF] border border-[#2A4BFF]/30 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase">
                     Total Captured: {accessibleLeads.length}
                   </span>
                 </div>
@@ -2627,57 +2627,102 @@ export default function AdminDashboard() {
 
               {/* Lead Channels Summary Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Meta & Google Ads</span>
-                  <div className="flex items-baseline space-x-2">
-                    <p className="text-3xl font-black text-white">
-                      {accessibleLeads.filter(l => l.type === 'Ads Leads').length}
-                    </p>
-                    <span className="text-[11px] text-slate-500 font-bold font-mono">
-                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
-                    </span>
+                {/* Meta & Google Ads */}
+                <div 
+                  onClick={() => {
+                    setActiveMainTab('leads_manager');
+                    setLeadsSubTab('list');
+                    setLeadChannelTab('ads');
+                    setFilterType('Ads Leads');
+                    setFilterProgram('');
+                  }}
+                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-brand-cyan/40 transition-all duration-305 flex flex-col justify-between"
+                >
+                  <div className="space-y-1">
+                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Meta & Google Ads</span>
+                    <div className="flex items-baseline space-x-2">
+                      <p className="text-4xl font-black text-white">
+                        {accessibleLeads.filter(l => l.type === 'Ads Leads').length}
+                      </p>
+                      <span className="text-xs text-slate-400 font-bold font-mono">
+                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-brand-cyan h-full rounded-full" 
-                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100 : 0}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Google Sheets Forms</span>
-                  <div className="flex items-baseline space-x-2">
-                    <p className="text-3xl font-black text-[#0EA5E9]">
-                      {accessibleLeads.filter(l => l.type === 'Google Form Leads').length}
-                    </p>
-                    <span className="text-[11px] text-slate-500 font-bold font-mono">
-                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
-                    </span>
-                  </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-[#0EA5E9] h-full rounded-full" 
-                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100 : 0}%` }}
-                    ></div>
+                  <div className="space-y-2">
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-brand-cyan h-full rounded-full" 
+                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-[10px] text-brand-cyan uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
                   </div>
                 </div>
 
-                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
-                  <div className="flex items-baseline space-x-2">
-                    <p className="text-3xl font-black text-[#4ADE80]">
-                      {accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
-                    </p>
-                    <span className="text-[11px] text-slate-500 font-bold font-mono">
-                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
-                    </span>
+                {/* Google Sheets Forms */}
+                <div 
+                  onClick={() => {
+                    setActiveMainTab('leads_manager');
+                    setLeadsSubTab('list');
+                    setLeadChannelTab('google');
+                    setFilterType('Google Form Leads');
+                    setFilterProgram('');
+                  }}
+                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#0EA5E9]/40 transition-all duration-305 flex flex-col justify-between"
+                >
+                  <div className="space-y-1">
+                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Google Sheets Forms</span>
+                    <div className="flex items-baseline space-x-2">
+                      <p className="text-4xl font-black text-[#0EA5E9]">
+                        {accessibleLeads.filter(l => l.type === 'Google Form Leads').length}
+                      </p>
+                      <span className="text-xs text-slate-400 font-bold font-mono">
+                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                      </span>
+                    </div>
                   </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-[#4ADE80] h-full rounded-full" 
-                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100 : 0}%` }}
-                    ></div>
+                  <div className="space-y-2">
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-[#0EA5E9] h-full rounded-full" 
+                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-[10px] text-[#0EA5E9] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
+                  </div>
+                </div>
+
+                {/* WhatsApp Campaigns */}
+                <div 
+                  onClick={() => {
+                    setActiveMainTab('leads_manager');
+                    setLeadsSubTab('list');
+                    setLeadChannelTab('whatsapp');
+                    setFilterType('WhatsApp Marketing Leads');
+                    setFilterProgram('');
+                  }}
+                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#4ADE80]/40 transition-all duration-305 flex flex-col justify-between"
+                >
+                  <div className="space-y-1">
+                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
+                    <div className="flex items-baseline space-x-2">
+                      <p className="text-4xl font-black text-[#4ADE80]">
+                        {accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
+                      </p>
+                      <span className="text-xs text-slate-400 font-bold font-mono">
+                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-[#4ADE80] h-full rounded-full" 
+                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-[10px] text-[#4ADE80] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
                   </div>
                 </div>
               </div>
@@ -2690,15 +2735,15 @@ export default function AdminDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-white/10 text-slate-400 text-[10px] uppercase font-bold tracking-wider">
-                      <th className="py-3.5 px-4">Landing Page Program</th>
-                      <th className="py-3.5 px-4 text-center">Total Leads</th>
-                      <th className="py-3.5 px-4 text-center">Ads Campaign</th>
-                      <th className="py-3.5 px-4 text-center">Google Form</th>
-                      <th className="py-3.5 px-4 text-center">WhatsApp</th>
-                      <th className="py-3.5 px-4 text-center">Enrolled</th>
-                      <th className="py-3.5 px-4 text-center">Conversion</th>
-                      <th className="py-3.5 px-4 text-right">Lead Share</th>
+                    <tr className="border-b border-white/10 text-slate-300 text-[11px] sm:text-xs uppercase font-bold tracking-wider">
+                      <th className="py-4 px-4">Landing Page Program</th>
+                      <th className="py-4 px-4 text-center">Total Leads</th>
+                      <th className="py-4 px-4 text-center">Ads Campaign</th>
+                      <th className="py-4 px-4 text-center">Google Form</th>
+                      <th className="py-4 px-4 text-center">WhatsApp</th>
+                      <th className="py-4 px-4 text-center">Enrolled</th>
+                      <th className="py-4 px-4 text-center">Conversion</th>
+                      <th className="py-4 px-4 text-right">Lead Share</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -2723,17 +2768,90 @@ export default function AdminDashboard() {
                       const percentageShare = accessibleLeads.length > 0 ? ((progLeads.length / accessibleLeads.length) * 100).toFixed(1) : 0;
 
                       return (
-                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
-                          <td className="py-4 px-4 font-bold text-white font-mono">{prog.name}</td>
-                          <td className="py-4 px-4 text-center font-bold text-white font-mono">{progLeads.length}</td>
-                          <td className="py-4 px-4 text-center font-mono text-slate-400">{adsCount}</td>
-                          <td className="py-4 px-4 text-center font-mono text-slate-400">{formCount}</td>
-                          <td className="py-4 px-4 text-center font-mono text-slate-400">{waCount}</td>
-                          <td className="py-4 px-4 text-center font-mono text-[#4ADE80] font-bold">{enrolledCount}</td>
-                          <td className="py-4 px-4 text-center font-mono font-bold text-brand-cyan">{conv}%</td>
+                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-350 transition-colors">
+                          {/* Program Name click filters program */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('all');
+                              setFilterType('');
+                              setFilterProgram(prog.id);
+                            }}
+                            className="py-4 px-4 font-bold text-white hover:text-brand-cyan cursor-pointer transition-colors text-xs sm:text-sm font-mono"
+                          >
+                            {prog.name}
+                          </td>
+                          {/* Total Leads click filters program */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('all');
+                              setFilterType('');
+                              setFilterProgram(prog.id);
+                            }}
+                            className="py-4 px-4 text-center font-bold text-white hover:text-[#2A4BFF] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-mono"
+                          >
+                            {progLeads.length}
+                          </td>
+                          {/* Ads click filters program and Ads type */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('ads');
+                              setFilterType('Ads Leads');
+                              setFilterProgram(prog.id);
+                            }}
+                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-brand-cyan hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
+                          >
+                            {adsCount}
+                          </td>
+                          {/* Google click filters program and Google type */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('google');
+                              setFilterType('Google Form Leads');
+                              setFilterProgram(prog.id);
+                            }}
+                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-[#0EA5E9] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
+                          >
+                            {formCount}
+                          </td>
+                          {/* WhatsApp click filters program and WhatsApp type */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('whatsapp');
+                              setFilterType('WhatsApp Marketing Leads');
+                              setFilterProgram(prog.id);
+                            }}
+                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-[#4ADE80] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
+                          >
+                            {waCount}
+                          </td>
+                          {/* Enrolled click filters program and Enrolled status */}
+                          <td 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setLeadChannelTab('all');
+                              setFilterType('');
+                              setFilterProgram(prog.id);
+                              setFilterStatus('Enrolled');
+                            }}
+                            className="py-4 px-4 text-center font-mono text-[#4ADE80] font-bold hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm"
+                          >
+                            {enrolledCount}
+                          </td>
+                          <td className="py-4 px-4 text-center font-mono font-bold text-brand-cyan text-xs sm:text-sm">{conv}%</td>
                           <td className="py-4 px-4 text-right">
                             <div className="flex items-center justify-end space-x-2">
-                              <span className="font-mono text-slate-400 font-bold">{percentageShare}%</span>
+                              <span className="font-mono text-slate-300 font-bold text-xs sm:text-sm">{percentageShare}%</span>
                               <div className="w-16 bg-white/10 h-1.5 rounded-full overflow-hidden">
                                 <div 
                                   className="bg-brand-cyan h-full rounded-full" 

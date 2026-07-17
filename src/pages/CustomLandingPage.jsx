@@ -67,7 +67,7 @@ export default function CustomLandingPage() {
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
       id: `LD${String(leads.length + 101).padStart(3, '0')}`,
-      type: 'Academy',
+      type: 'Ads Leads',
       name: enquiryForm.name,
       email: enquiryForm.email || 'no-email@beyondskills.com',
       phone: enquiryForm.phone,
