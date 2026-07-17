@@ -654,14 +654,14 @@ export default function FullStackLandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           {[
-            { role: "Frontend Developer", desc: "Specialize in building interactive client-side interfaces, responsive visual grids, and dynamic state-driven layouts using React.js." },
-            { role: "Backend Developer", desc: "Build Express API microservices, configure middleware routes, implement JWT tokens, and coordinate MongoDB database actions." },
-            { role: "Full Stack Developer", desc: "Combine client-side React code with backend Express routing to develop complete, database-backed web portals." },
-            { role: "React.js Developer", desc: "Focus specifically on component design systems, state context trees, dynamic custom hooks, and route parameters." },
-            { role: "Node.js API Engineer", desc: "Optimize server execution scripts, handle file uploads, and configure CORS parameters to support external applications." },
-            { role: "Software Engineer", desc: "Apply software engineering basics, maintain Git commit logs, and write clean code scripts to solve data problems." }
+            { role: "Frontend Developer", desc: <span>Specialize in building <span className="text-[#2563EB] font-semibold">interactive client-side</span> interfaces, responsive visual grids, and dynamic state-driven layouts using <span className="text-[#2563EB] font-semibold">React.js</span>.</span> },
+            { role: "Backend Developer", desc: <span>Build <span className="text-[#2563EB] font-semibold">Express API</span> microservices, configure middleware routes, implement <span className="text-[#2563EB] font-semibold">JWT tokens</span>, and coordinate MongoDB database actions.</span> },
+            { role: "Full Stack Developer", desc: <span>Combine <span className="text-[#2563EB] font-semibold">client-side React</span> code with backend Express routing to develop complete, <span className="text-[#2563EB] font-semibold">database-backed</span> web portals.</span> },
+            { role: "React.js Developer", desc: <span>Focus specifically on <span className="text-[#2563EB] font-semibold">component design systems</span>, state context trees, dynamic custom hooks, and route parameters.</span> },
+            { role: "Node.js API Engineer", desc: <span>Optimize <span className="text-[#2563EB] font-semibold">server execution scripts</span>, handle file uploads, and configure CORS parameters to support external applications.</span> },
+            { role: "Software Engineer", desc: <span>Apply software engineering basics, maintain <span className="text-[#2563EB] font-semibold">Git commit</span> logs, and write <span className="text-[#2563EB] font-semibold">clean code</span> scripts to solve data problems.</span> }
           ].map((job, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 transition-all">
+            <div key={idx} className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-2 hover:border-[#2563EB]/25 hover:shadow-sm transition-all">
               <h3 className="font-manrope font-bold text-[#0F172A] text-base">{job.role}</h3>
               <p className="text-xs text-slate-550 leading-relaxed">{job.desc}</p>
             </div>
@@ -681,10 +681,10 @@ export default function FullStackLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 text-left">
             {OUTCOMES.map((item, idx) => (
-              <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/20 transition-all group">
+              <div key={idx} className="bg-white border border-slate-200/60 p-5 rounded-2xl flex flex-col justify-between hover:border-[#2563EB]/40 hover:shadow-md transition-all group">
                 <div className="space-y-3">
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white transition-all">
-                    <Check className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-lg bg-[#2563EB] text-white flex items-center justify-center shadow-md shadow-blue-500/30 group-hover:bg-[#1d4ed8] transition-all">
+                    <Check className="w-5 h-5 stroke-[2.5]" />
                   </div>
                   <h4 className="font-manrope font-bold text-slate-800 text-xs uppercase tracking-wide leading-tight">{item.title}</h4>
                   <p className="text-[11px] text-slate-500 leading-normal">{item.desc}</p>
@@ -737,19 +737,19 @@ export default function FullStackLandingPage() {
             <ul className="space-y-4 text-xs text-slate-700">
               <li className="flex items-start space-x-3">
                 <span className="text-emerald-500 font-bold mt-0.5">✓</span>
-                <span><strong>Hands-on Projects:</strong> Learn by coding, folder configurations, and hosting live React and Node applications.</span>
+                <span><strong>Hands-on Projects:</strong> Learn by coding, folder configurations, and hosting <span className="text-[#2563EB] font-semibold">live React</span> and Node applications.</span>
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-emerald-500 font-bold mt-0.5">✓</span>
-                <span><strong>Live Interactive Reviews:</strong> Share code directories with cohort mentors and resolve programming doubts.</span>
+                <span><strong>Live Interactive Reviews:</strong> Share <span className="text-[#2563EB] font-semibold">code directories</span> with cohort mentors and resolve programming doubts.</span>
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-emerald-500 font-bold mt-0.5">✓</span>
-                <span><strong>Git Portfolio Integration:</strong> Document your development progress by maintaining active GitHub repositories.</span>
+                <span><strong>Git Portfolio Integration:</strong> Document your development progress by <span className="text-[#2563EB] font-semibold">maintaining active GitHub</span> repositories.</span>
               </li>
               <li className="flex items-start space-x-3">
                 <span className="text-emerald-500 font-bold mt-0.5">✓</span>
-                <span><strong>Structured Projects:</strong> Practice data manipulation, DOM operations, and Express server APIs in production environments.</span>
+                <span><strong>Structured Projects:</strong> Practice data manipulation, <span className="text-[#2563EB] font-semibold">DOM operations</span>, and Express server APIs in production environments.</span>
               </li>
             </ul>
           </div>
@@ -1002,75 +1002,75 @@ export default function FullStackLandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
             {/* Rohan Sharma */}
-            <div className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="bg-[#0F172A] border border-slate-700/60 p-6 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-700 pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-xs">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                     RS
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Rohan Sharma</p>
+                    <p className="text-xs font-bold text-white">Rohan Sharma</p>
                     <p className="text-[9px] text-slate-400">College Student Track</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded font-bold">
+                <span className="text-[8px] font-mono text-emerald-400 bg-emerald-900/30 border border-emerald-800/50 px-2 py-0.5 rounded font-bold">
                   Enrolled
                 </span>
               </div>
-              <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
-                <p><strong>Affiliation:</strong> Delhi Technological University (DTU)</p>
-                <p><strong>Current Role:</strong> Frontend Intern at Hashedin by Deloitte (6.5 LPA)</p>
-                <p className="italic text-slate-500 pt-2 border-t border-slate-100">
+              <div className="space-y-2 text-xs text-slate-300 leading-relaxed">
+                <p><strong className="text-white">Affiliation:</strong> Delhi Technological University (DTU)</p>
+                <p><strong className="text-white">Current Role:</strong> Frontend Intern at Hashedin by Deloitte (6.5 LPA)</p>
+                <p className="italic text-slate-400 pt-2 border-t border-slate-700">
                   "The project reviews were extremely critical. Siddharth mentored me on organizing my React context trees and building clean portfolio directories. That helped me qualify for the internship interview."
                 </p>
               </div>
             </div>
 
             {/* Priya Patel */}
-            <div className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="bg-[#0F172A] border border-slate-700/60 p-6 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-700 pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-xs">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                     PP
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Priya Patel</p>
+                    <p className="text-xs font-bold text-white">Priya Patel</p>
                     <p className="text-[9px] text-slate-400">Working Professional Track</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded font-bold">
+                <span className="text-[8px] font-mono text-emerald-400 bg-emerald-900/30 border border-emerald-800/50 px-2 py-0.5 rounded font-bold">
                   Enrolled
                 </span>
               </div>
-              <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
-                <p><strong>Affiliation:</strong> ex-Operations Associate</p>
-                <p><strong>Current Role:</strong> Backend Analyst at Paytm (8.2 LPA)</p>
-                <p className="italic text-slate-500 pt-2 border-t border-slate-100">
+              <div className="space-y-2 text-xs text-slate-300 leading-relaxed">
+                <p><strong className="text-white">Affiliation:</strong> ex-Operations Associate</p>
+                <p><strong className="text-white">Current Role:</strong> Backend Analyst at Paytm (8.2 LPA)</p>
+                <p className="italic text-slate-400 pt-2 border-t border-slate-700">
                   "Being from a non-developer Operations background, transitioning was tough. Dr. Aris guided me through Express routers, MongoDB aggregations, and REST protocols. The 1 year LMS recorded videos let me revise after shifts."
                 </p>
               </div>
             </div>
 
             {/* Amit Kumar */}
-            <div className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="bg-[#0F172A] border border-slate-700/60 p-6 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-700 pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-xs">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
                     AK
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Amit Kumar</p>
+                    <p className="text-xs font-bold text-white">Amit Kumar</p>
                     <p className="text-[9px] text-slate-400">Career Switcher Track</p>
                   </div>
                 </div>
-                <span className="text-[8px] font-mono text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded font-bold">
+                <span className="text-[8px] font-mono text-emerald-400 bg-emerald-900/30 border border-emerald-800/50 px-2 py-0.5 rounded font-bold">
                   Enrolled
                 </span>
               </div>
-              <div className="space-y-2 text-xs text-slate-650 leading-relaxed">
-                <p><strong>Affiliation:</strong> Mechanical Stream Graduate</p>
-                <p><strong>Current Role:</strong> Junior Developer at Cognizant (5.8 LPA)</p>
-                <p className="italic text-slate-500 pt-2 border-t border-slate-100">
+              <div className="space-y-2 text-xs text-slate-300 leading-relaxed">
+                <p><strong className="text-white">Affiliation:</strong> Mechanical Stream Graduate</p>
+                <p><strong className="text-white">Current Role:</strong> Junior Developer at Cognizant (5.8 LPA)</p>
+                <p className="italic text-slate-400 pt-2 border-t border-slate-700">
                   "I had zero coding background. The cohort journey layout (starting with basic HTML layouts and JS parameters) kept the learning curve manageable. The live project reviews and mentor feedback helped build real confidence going into interviews."
                 </p>
               </div>
