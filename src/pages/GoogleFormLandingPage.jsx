@@ -139,7 +139,7 @@ Submitted via Google Form Campaign page
         }
       }));
 
-      setSubmitStatus('success');
+      window.location.href = '/thank-you';
     } catch (error) {
       console.error('Error submitting form:', error);
       setErrorMessage('Failed to connect to the server. Please try again.');
@@ -240,7 +240,7 @@ Submitted via Google Form Campaign page
             {/* Required Group Name, Email, Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <User className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Full Name <span className="text-red-500 ml-1">*</span>
                 </label>
@@ -251,12 +251,12 @@ Submitted via Google Form Campaign page
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Enter your name"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-600"
+                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
                 />
               </div>
               
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Phone className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Phone Number <span className="text-red-500 ml-1">*</span>
                 </label>
@@ -267,14 +267,14 @@ Submitted via Google Form Campaign page
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="e.g. +91 9876543210"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-600"
+                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Mail className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Email Address <span className="text-red-500 ml-1">*</span>
                 </label>
@@ -285,12 +285,12 @@ Submitted via Google Form Campaign page
                   value={form.email}
                   onChange={handleChange}
                   placeholder="e.g. john@gmail.com"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-600"
+                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   College / Institute
                 </label>
@@ -300,7 +300,7 @@ Submitted via Google Form Campaign page
                   value={form.college}
                   onChange={handleChange}
                   placeholder="Enter your college name"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-600"
+                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
                 />
               </div>
             </div>
@@ -308,7 +308,7 @@ Submitted via Google Form Campaign page
             {/* Year & Student/Working Professional */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Academic Year
                 </label>
@@ -327,7 +327,7 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Briefcase className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Current Profile
                 </label>
@@ -346,7 +346,7 @@ Submitted via Google Form Campaign page
             {/* Upskilling (Dropdown of all courses) & Batch (July/August) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <BookOpen className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Upskilling Goal (Course)
                 </label>
@@ -365,7 +365,7 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                   Preferred Batch
                 </label>
@@ -383,7 +383,7 @@ Submitted via Google Form Campaign page
 
             {/* Project Work Experience */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+              <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                 <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                 Project / Work Experience
               </label>
@@ -393,13 +393,13 @@ Submitted via Google Form Campaign page
                 value={form.projectExp}
                 onChange={handleChange}
                 placeholder="Briefly describe your project/work experience (e.g. None, Basic HTML site, Python script)"
-                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-600"
+                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
               />
             </div>
 
             {/* Why Interested */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest font-mono mb-2 flex items-center">
+              <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
                 <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                 Why are you interested in this program?
               </label>
@@ -409,7 +409,7 @@ Submitted via Google Form Campaign page
                 value={form.whyInterested}
                 onChange={handleChange}
                 placeholder="What is your learning goal or target outcome from this course..."
-                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all placeholder-slate-600"
+                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all placeholder-slate-400"
               />
             </div>
 

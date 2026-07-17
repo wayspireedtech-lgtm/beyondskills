@@ -378,7 +378,7 @@ export default function DigitalMarketingLandingPage() {
       }));
 
       // Success
-      setSubmitStatus('success');
+      window.location.href = '/thank-you';
       setFormData({
         name: '',
         email: '',
@@ -525,44 +525,44 @@ export default function DigitalMarketingLandingPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Full Name</label>
                   <input 
                     type="text" 
                     required 
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Roshan Kumar"
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all placeholder:text-slate-400"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="roshan@gmail.com"
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all placeholder:text-slate-400"
                     />
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Mobile Number</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Mobile Number</label>
                     <input 
                       type="tel" 
                       required 
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="10-digit mobile number"
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:border-blue-600 focus:bg-slate-900 outline-none transition-all placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Current Qualification</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Current Qualification</label>
                   <select 
                     value={formData.qualification}
                     onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
@@ -578,7 +578,7 @@ export default function DigitalMarketingLandingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Marketing Experience</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Marketing Experience</label>
                     <select 
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
@@ -590,7 +590,7 @@ export default function DigitalMarketingLandingPage() {
                     </select>
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
                     <select 
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
@@ -604,7 +604,7 @@ export default function DigitalMarketingLandingPage() {
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Primary Career Goal</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider font-mono">Primary Career Goal</label>
                   <select 
                     value={formData.goal}
                     onChange={(e) => setFormData({ ...formData, goal: e.target.value })}

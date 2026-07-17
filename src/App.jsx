@@ -30,6 +30,8 @@ const DigitalMarketingLandingPage = React.lazy(() => import('./pages/DigitalMark
 const CloudComputingLandingPage = React.lazy(() => import('./pages/CloudComputingLandingPage'));
 const CybersecurityLandingPage = React.lazy(() => import('./pages/CybersecurityLandingPage'));
 const GoogleFormLandingPage = React.lazy(() => import('./pages/GoogleFormLandingPage'));
+const ThankYou = React.lazy(() => import('./pages/ThankYou'));
+
 
 
 // Premium, theme-matching loading fallback
@@ -208,6 +210,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/verify" element={<Verification />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />

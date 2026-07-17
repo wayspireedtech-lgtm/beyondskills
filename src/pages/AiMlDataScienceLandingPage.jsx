@@ -196,7 +196,7 @@ export default function AiMlDataScienceLandingPage() {
       origin: { y: 0.6 }
     });
 
-    setStatus('success');
+    window.location.href = '/thank-you';
     setEnquiryForm({
       name: '',
       email: '',
@@ -206,7 +206,6 @@ export default function AiMlDataScienceLandingPage() {
       goal: 'Land a Tech Job',
       contactTime: ''
     });
-    setTimeout(() => setStatus(null), 6000);
   };
 
   const scrollToHeroForm = () => {
@@ -399,11 +398,11 @@ export default function AiMlDataScienceLandingPage() {
               
               <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <div className="relative">
                     <input 
                       type="text" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. Rahul Sharma"
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
@@ -413,11 +412,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                   <div className="relative">
                     <input 
                       type="email" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. rahul@example.com"
                       value={enquiryForm.email}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
@@ -427,11 +426,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
                   <div className="relative">
                     <input 
                       type="tel" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
                       placeholder="e.g. +91 98765 43210"
                       value={enquiryForm.phone}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
@@ -442,7 +441,7 @@ export default function AiMlDataScienceLandingPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                     <select 
                       className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                       value={enquiryForm.qualification}
@@ -455,7 +454,7 @@ export default function AiMlDataScienceLandingPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
                     <select 
                       className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                       value={enquiryForm.experience}
@@ -469,7 +468,7 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                   <select 
                     className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                     value={enquiryForm.goal}
@@ -483,7 +482,7 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
                   <select 
                     className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
                     value={enquiryForm.contactTime}

@@ -107,7 +107,7 @@ export default function CustomLandingPage() {
       }
     }));
 
-    setStatus('success');
+    window.location.href = '/thank-you';
     setEnquiryForm({
       name: '',
       email: '',
@@ -117,7 +117,6 @@ export default function CustomLandingPage() {
       goal: 'Land a Tech Job',
       contactTime: ''
     });
-    setTimeout(() => setStatus(null), 6000);
   };
 
   const scrollToHeroForm = () => {

@@ -367,7 +367,7 @@ export default function CloudComputingLandingPage() {
       }));
 
       // Success
-      setSubmitStatus('success');
+      window.location.href = '/thank-you';
       setFormData({
         name: '',
         email: '',
@@ -514,31 +514,31 @@ export default function CloudComputingLandingPage() {
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <input 
                     type="text" 
                     required 
                     placeholder="Enter your name" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
+                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       placeholder="name@email.com" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
                     <input 
                       type="tel" 
                       required 
@@ -546,13 +546,13 @@ export default function CloudComputingLandingPage() {
                       placeholder="10-digit number" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-500"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                   <select 
                     value={formData.qualification}
                     onChange={(e) => setFormData({...formData, qualification: e.target.value})}
@@ -566,7 +566,7 @@ export default function CloudComputingLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Prior Cloud / Systems Experience</label>
+                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Prior Cloud / Systems Experience</label>
                   <select 
                     value={formData.experience}
                     onChange={(e) => setFormData({...formData, experience: e.target.value})}
@@ -580,7 +580,7 @@ export default function CloudComputingLandingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                     <select 
                       value={formData.goal}
                       onChange={(e) => setFormData({...formData, goal: e.target.value})}
@@ -592,7 +592,7 @@ export default function CloudComputingLandingPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
+                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
                     <select 
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({...formData, preferredTime: e.target.value})}

@@ -200,7 +200,7 @@ export default function FullStackLandingPage() {
       }
     }));
 
-    setStatus('success');
+    window.location.href = '/thank-you';
     setEnquiryForm({
       name: '',
       email: '',
@@ -210,7 +210,6 @@ export default function FullStackLandingPage() {
       goal: 'Land a Tech Job',
       contactTime: ''
     });
-    setTimeout(() => setStatus(null), 6000);
   };
 
   const scrollToCurriculum = () => {
@@ -458,37 +457,37 @@ export default function FullStackLandingPage() {
               ) : (
                 <form onSubmit={handleApplySubmit} className="space-y-3.5 text-left">
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Full Name *</label>
+                    <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Full Name *</label>
                     <input 
                       type="text" 
                       required 
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
+                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
                       placeholder="e.g., Rohan Sharma" 
                     />
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Email *</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Email *</label>
                       <input 
                         type="email" 
                         required 
                         value={enquiryForm.email}
                         onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
                         placeholder="e.g., rohan@gmail.com" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Mobile *</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Mobile *</label>
                       <input 
                         type="tel" 
                         required 
                         value={enquiryForm.phone}
                         onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-500"
+                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
                         placeholder="e.g., 99999 99999" 
                       />
                     </div>
@@ -496,7 +495,7 @@ export default function FullStackLandingPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Qualification *</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Qualification *</label>
                       <select 
                         value={enquiryForm.qualification}
                         onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
@@ -510,7 +509,7 @@ export default function FullStackLandingPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Coding Experience *</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Coding Experience *</label>
                       <select 
                         value={enquiryForm.experience}
                         onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
@@ -525,7 +524,7 @@ export default function FullStackLandingPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Career Goal *</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Career Goal *</label>
                       <select 
                         value={enquiryForm.goal}
                         onChange={(e) => setEnquiryForm({...enquiryForm, goal: e.target.value})}
@@ -538,7 +537,7 @@ export default function FullStackLandingPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Preferred Call Time (Optional)</label>
+                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Preferred Call Time (Optional)</label>
                       <select 
                         value={enquiryForm.contactTime}
                         onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
@@ -559,7 +558,7 @@ export default function FullStackLandingPage() {
                     Apply Now
                   </button>
                   
-                  <p className="text-[8px] text-slate-500 leading-normal text-center mt-2 font-mono">
+                  <p className="text-[8px] text-slate-400 leading-normal text-center mt-2 font-mono">
                     *By submitting this form you agree to be contacted regarding this program.
                   </p>
                 </form>
