@@ -116,11 +116,17 @@ function LayoutWrapper({ children }) {
       <main className="flex-grow z-30 relative bg-transparent">
         {children}
       </main>
-      {!isPortal && <Footer />}
     </div>
   );
+}
 
-
+// Suspense-aware Footer container to prevent layout shift (CLS) during lazy-loading transitions
+function FooterContainer() {
+  const location = useLocation();
+  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/ai-ml-data-science-landing-page', '/digital-marketing-landing-page', '/cloud-computing-landing-page', '/cybersecurity-landing-page', '/admin', '/google-form', '/lp/google-form'].includes(location.pathname) || location.pathname.includes('/brochure');
+  
+  if (isPortal) return null;
+  return <Footer />;
 }
 
 export default function App() {
@@ -215,6 +221,7 @@ export default function App() {
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />
           </Routes>
+          <FooterContainer />
         </Suspense>
       </LayoutWrapper>
     </Router>
