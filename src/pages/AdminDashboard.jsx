@@ -1991,7 +1991,19 @@ export default function AdminDashboard() {
                             </td>
                             <td className="py-3.5 px-4 font-mono uppercase text-[10px]">{lead.type}</td>
                             <td className="py-3.5 px-4 font-semibold text-white text-[10px] uppercase max-w-[120px] truncate" title={lead.program}>
-                              {lead.program?.replace(/-/g, ' ')}
+                              {lead.program
+                                ? lead.program.replace(/-/g, ' ')
+                                : (lead.remarks?.toLowerCase().includes('ai/ml') || lead.campaign?.toLowerCase().includes('ai ml')
+                                    ? 'artificial intelligence'
+                                    : (lead.remarks?.toLowerCase().includes('full stack') || lead.campaign?.toLowerCase().includes('full stack')
+                                        ? 'full-stack-web'
+                                        : (lead.remarks?.toLowerCase().includes('cloud') || lead.campaign?.toLowerCase().includes('cloud')
+                                            ? 'cloud-computing'
+                                            : (lead.remarks?.toLowerCase().includes('cyber') || lead.campaign?.toLowerCase().includes('cyber')
+                                                ? 'cyber-security'
+                                                : (lead.remarks?.toLowerCase().includes('digital') || lead.campaign?.toLowerCase().includes('digital')
+                                                    ? 'digital-marketing-cert'
+                                                    : 'Unspecified')))))}
                             </td>
                             <td className="py-3.5 px-4">
                               {lead.assignedBDM || lead.assignedBDA ? (
@@ -3668,7 +3680,19 @@ export default function AdminDashboard() {
               <div>
                 <span className="text-slate-500 uppercase text-[9px] block">Program Enrolled</span>
                 <span className="text-white uppercase truncate block font-bold max-w-[120px]" title={selectedLead.program}>
-                  {selectedLead.program?.replace(/-/g, ' ')}
+                  {selectedLead.program
+                    ? selectedLead.program.replace(/-/g, ' ')
+                    : (selectedLead.remarks?.toLowerCase().includes('ai/ml') || selectedLead.campaign?.toLowerCase().includes('ai ml')
+                        ? 'artificial intelligence'
+                        : (selectedLead.remarks?.toLowerCase().includes('full stack') || selectedLead.campaign?.toLowerCase().includes('full stack')
+                            ? 'full-stack-web'
+                            : (selectedLead.remarks?.toLowerCase().includes('cloud') || selectedLead.campaign?.toLowerCase().includes('cloud')
+                                ? 'cloud-computing'
+                                : (selectedLead.remarks?.toLowerCase().includes('cyber') || selectedLead.campaign?.toLowerCase().includes('cyber')
+                                    ? 'cyber-security'
+                                    : (selectedLead.remarks?.toLowerCase().includes('digital') || selectedLead.campaign?.toLowerCase().includes('digital')
+                                        ? 'digital-marketing-cert'
+                                        : 'Unspecified')))))}
                 </span>
               </div>
             </div>
@@ -3711,12 +3735,18 @@ export default function AdminDashboard() {
                 <div>
                   <span className="text-slate-500 uppercase text-[9px] block">Experience / Status</span>
                   <span className="text-white">
-                    {selectedLead.profession || selectedLead.status}
+                    {selectedLead.profession || (!['New', 'Contacted', 'Follow Up', 'Not Connected', 'Enrolled', 'Not Interested'].includes(selectedLead.status) ? selectedLead.status : 'Unspecified')}
                   </span>
                 </div>
                 <div>
                   <span className="text-slate-500 uppercase text-[9px] block">Preferred Contact Time</span>
-                  <span className="text-white">{selectedLead.preferredContactTime || 'Unspecified'}</span>
+                  <span className="text-white">
+                    {selectedLead.preferredContactTime && selectedLead.preferredContactTime !== 'Unspecified' && selectedLead.preferredContactTime !== 'Not Specified'
+                      ? selectedLead.preferredContactTime
+                      : (selectedLead.message && selectedLead.message.includes('• Contact: ')
+                          ? selectedLead.message.split('• Contact: ')[1]?.trim()
+                          : 'Unspecified')}
+                  </span>
                 </div>
               </div>
               

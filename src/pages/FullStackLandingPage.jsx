@@ -167,13 +167,19 @@ export default function FullStackLandingPage() {
 
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
+      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
       type: 'Ads Leads',
       program: 'full-stack-web',
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,
       college: enquiryForm.qualification, 
-      status: enquiryForm.experience, 
+      qualification: enquiryForm.qualification,
+      profession: enquiryForm.experience,
+      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
+      careerGoal: enquiryForm.goal,
+      status: 'New',
+      subStatus: 'QUALIFIED',
       message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime || 'Not Specified'}`,
       campaign: utmCampaign,
       source: utmSource,
