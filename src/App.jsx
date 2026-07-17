@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { Mail, Sparkles, X, Loader2 } from 'lucide-react';
@@ -155,6 +156,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
+      <SpeedInsights />
       
       {/* Toast Notification for email simulated alert / SLA responses */}
       {toast && (
