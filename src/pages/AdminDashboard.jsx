@@ -184,6 +184,9 @@ export default function AdminDashboard() {
   const [filterSubStatus, setFilterSubStatus] = useState('');
   const [filterDateFrom, setFilterDateFrom] = useState('');
   const [filterDateTo, setFilterDateTo] = useState('');
+  const [leadChannelTab, setLeadChannelTab] = useState('all');
+  const [leadAdsSubTab, setLeadAdsSubTab] = useState('all');
+  const [draggedIdx, setDraggedIdx] = useState(null);
   
   // Bulk actions selection
   const [selectedLeadIndexes, setSelectedLeadIndexes] = useState([]);
@@ -823,8 +826,29 @@ export default function AdminDashboard() {
                           lead.phone.includes(leadSearch) ||
                           lead.id.toLowerCase().includes(leadSearch.toLowerCase());
       const matchStatus = filterStatus ? lead.status === filterStatus : true;
-      const matchType = filterType ? lead.type === filterType : true;
-      const matchProgram = filterProgram ? lead.program === filterProgram : true;
+      
+      // Filter by dynamic channel tabs
+      let matchType = filterType ? lead.type === filterType : true;
+      if (leadChannelTab === 'google') {
+        matchType = lead.type === 'Google Form Leads';
+      } else if (leadChannelTab === 'ads') {
+        matchType = lead.type === 'Ads Leads';
+      } else if (leadChannelTab === 'whatsapp') {
+        matchType = lead.type === 'WhatsApp Marketing Leads';
+      }
+
+      // Filter by dynamic sub-tabs under ads
+      let matchProgram = filterProgram ? lead.program === filterProgram : true;
+      if (leadChannelTab === 'ads') {
+        if (leadAdsSubTab === 'aimlds') {
+          matchProgram = ['artificial-intelligence', 'machine-learning', 'data-science'].includes(lead.program);
+        } else if (leadAdsSubTab === 'cloud') {
+          matchProgram = lead.program === 'cloud-computing';
+        } else if (leadAdsSubTab === 'cyber') {
+          matchProgram = lead.program === 'cyber-security';
+        }
+      }
+
       const matchBDA = filterBDA ? lead.assignedBDA === filterBDA : true;
       const matchBDM = filterBDM ? lead.assignedBDM === filterBDM : true;
       const matchSub = filterSubStatus ? lead.subStatus === filterSubStatus : true;
@@ -842,6 +866,38 @@ export default function AdminDashboard() {
   };
 
   const filteredLeads = getFilteredLeads();
+
+  // HTML5 drag and drop row reordering handlers
+  const handleDragStart = (e, index) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === targetIndex) return;
+    const items = [...filteredLeads];
+    const draggedItem = items[draggedIdx];
+    items.splice(draggedIdx, 1);
+    items.splice(targetIndex, 0, draggedItem);
+    
+    // Now, update the master leads list order based on the new order of filteredLeads
+    const finalLeads = [...leads];
+    const masterDraggedIdx = leads.findIndex(l => l.id === draggedItem.id);
+    const targetItem = filteredLeads[targetIndex];
+    const masterTargetIdx = leads.findIndex(l => l.id === targetItem.id);
+    
+    if (masterDraggedIdx !== -1 && masterTargetIdx !== -1) {
+      finalLeads.splice(masterDraggedIdx, 1);
+      finalLeads.splice(masterTargetIdx, 0, draggedItem);
+      saveLeadsToDb(finalLeads);
+    }
+    setDraggedIdx(null);
+  };
 
   // Kanban column placements calculations
   const getKanbanLeads = (col) => {
@@ -1083,6 +1139,18 @@ export default function AdminDashboard() {
 
               {/* Management Sub-Menu */}
               <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-4.5 pt-4 pb-1.5 font-mono">Management</div>
+
+              <button 
+                onClick={() => setActiveMainTab('lead_analysis')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'lead_analysis'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>Lead Analysis</span>
+              </button>
 
               <button 
                 onClick={() => setActiveMainTab('bda_performance')}
@@ -1477,6 +1545,123 @@ export default function AdminDashboard() {
             {leadsSubTab === 'list' && (
               <div className="space-y-6">
                 
+                {/* 3 Main Campaign Channel Tabs */}
+                <div className="flex flex-wrap gap-2 bg-[#050718]/80 p-2 rounded-2xl border border-white/10 w-fit">
+                  <button
+                    onClick={() => {
+                      setLeadChannelTab('all');
+                      setFilterType('');
+                    }}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      leadChannelTab === 'all'
+                        ? 'bg-[#2A4BFF] text-white shadow-lg'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    All Channels
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLeadChannelTab('google');
+                      setFilterType('Google Form Leads');
+                    }}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      leadChannelTab === 'google'
+                        ? 'bg-[#2A4BFF] text-white shadow-lg'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Google Form Leads
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLeadChannelTab('ads');
+                      setFilterType('Ads Leads');
+                      setLeadAdsSubTab('all');
+                      setFilterProgram('');
+                    }}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      leadChannelTab === 'ads'
+                        ? 'bg-[#2A4BFF] text-white shadow-lg'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Ads Campaigns Leads
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLeadChannelTab('whatsapp');
+                      setFilterType('WhatsApp Marketing Leads');
+                    }}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                      leadChannelTab === 'whatsapp'
+                        ? 'bg-[#2A4BFF] text-white shadow-lg'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    WhatsApp Campaigns
+                  </button>
+                </div>
+
+                {/* Ads Campaigns Sub-Tabs (Sheets) */}
+                {leadChannelTab === 'ads' && (
+                  <div className="flex flex-wrap gap-2 items-center bg-[#050718]/40 p-2 rounded-xl border border-white/5 w-fit">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 font-mono mr-2">Filters (Landing Pages):</span>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('all');
+                        setFilterProgram('');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'all'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      All Sheets
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('aimlds');
+                        setFilterProgram(''); 
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'aimlds'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      AI / ML / DS Sheet
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('cloud');
+                        setFilterProgram('cloud-computing');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'cloud'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Cloud computing Sheet
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLeadAdsSubTab('cyber');
+                        setFilterProgram('cyber-security');
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        leadAdsSubTab === 'cyber'
+                          ? 'bg-[#0EA5E9] text-white'
+                          : 'text-slate-450 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Cyber security Sheet
+                    </button>
+                  </div>
+                )}
+                
                 {/* Actions & Filters Header */}
                 <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white space-y-6">
                   
@@ -1723,6 +1908,7 @@ export default function AdminDashboard() {
                               className="cursor-pointer"
                             />
                           </th>
+                          <th className="py-3 px-4">Drag</th>
                           <th className="py-3 px-4">ID</th>
                           <th className="py-3 px-4">Prospect Name</th>
                           <th className="py-3 px-4">Contact Details</th>
@@ -1736,8 +1922,16 @@ export default function AdminDashboard() {
                       </thead>
                       <tbody>
                         {filteredLeads.map((lead, idx) => (
-                          <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
-                            <td className="py-3.5 px-4">
+                          <tr 
+                            key={idx} 
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, idx)}
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, idx)}
+                            onClick={() => handleStartEditLead(lead, leads.findIndex(l => l.id === lead.id))}
+                            className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors cursor-pointer"
+                          >
+                            <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
                               <input 
                                 type="checkbox"
                                 checked={selectedLeadIndexes.includes(idx)}
@@ -1750,6 +1944,9 @@ export default function AdminDashboard() {
                                 }}
                                 className="cursor-pointer"
                               />
+                            </td>
+                            <td className="py-3.5 px-4 text-slate-500 cursor-grab active:cursor-grabbing" onClick={(e) => e.stopPropagation()}>
+                              <svg className="w-3.5 h-3.5 opacity-40 hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>
                             </td>
                             <td className="py-3.5 px-4 font-mono font-bold text-slate-400">{lead.id}</td>
                             <td className="py-3.5 px-4">
@@ -1797,7 +1994,7 @@ export default function AdminDashboard() {
                                 {lead.status}
                               </span>
                             </td>
-                            <td className="py-3.5 px-4 text-right">
+                            <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-end space-x-1.5">
                                 <button 
                                   onClick={() => handleStartEditLead(lead, leads.findIndex(l => l.id === lead.id))}
@@ -2409,6 +2606,149 @@ export default function AdminDashboard() {
               )}
             </div>
 
+          </div>
+        )}
+
+        {/* -------------------- MAIN TAB: LEAD ANALYSIS -------------------- */}
+        {activeMainTab === 'lead_analysis' && !isBdaUser && (
+          <div className="space-y-8 animate-fade-in text-white">
+            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
+              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                <div>
+                  <h2 className="text-xl font-bold uppercase tracking-wider text-brand-cyan">Lead Source & Page Analytics</h2>
+                  <p className="text-xs text-slate-400 mt-1">Cross-referencing campaign channels, landing pages, and BDA allocation performance.</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="bg-[#2A4BFF]/20 text-[#2A4BFF] border border-[#2A4BFF]/30 px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase">
+                    Total Captured: {accessibleLeads.length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Lead Channels Summary Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Meta & Google Ads</span>
+                  <div className="flex items-baseline space-x-2">
+                    <p className="text-3xl font-black text-white">
+                      {accessibleLeads.filter(l => l.type === 'Ads Leads').length}
+                    </p>
+                    <span className="text-[11px] text-slate-500 font-bold font-mono">
+                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-brand-cyan h-full rounded-full" 
+                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Google Sheets Forms</span>
+                  <div className="flex items-baseline space-x-2">
+                    <p className="text-3xl font-black text-[#0EA5E9]">
+                      {accessibleLeads.filter(l => l.type === 'Google Form Leads').length}
+                    </p>
+                    <span className="text-[11px] text-slate-500 font-bold font-mono">
+                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-[#0EA5E9] h-full rounded-full" 
+                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 border border-white/5 p-5 rounded-xl space-y-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
+                  <div className="flex items-baseline space-x-2">
+                    <p className="text-3xl font-black text-[#4ADE80]">
+                      {accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
+                    </p>
+                    <span className="text-[11px] text-slate-500 font-bold font-mono">
+                      ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                    </span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-[#4ADE80] h-full rounded-full" 
+                      style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Landing Pages / Program Sheet breakdown */}
+            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+              <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Landing Page Breakdown</h3>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-white/10 text-slate-400 text-[10px] uppercase font-bold tracking-wider">
+                      <th className="py-3.5 px-4">Landing Page Program</th>
+                      <th className="py-3.5 px-4 text-center">Total Leads</th>
+                      <th className="py-3.5 px-4 text-center">Ads Campaign</th>
+                      <th className="py-3.5 px-4 text-center">Google Form</th>
+                      <th className="py-3.5 px-4 text-center">WhatsApp</th>
+                      <th className="py-3.5 px-4 text-center">Enrolled</th>
+                      <th className="py-3.5 px-4 text-center">Conversion</th>
+                      <th className="py-3.5 px-4 text-right">Lead Share</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { id: 'artificial-intelligence', name: 'AI & Data Science' },
+                      { id: 'machine-learning', name: 'Machine Learning' },
+                      { id: 'data-science', name: 'Data Science' },
+                      { id: 'data-analytics', name: 'Data Analytics' },
+                      { id: 'full-stack-web', name: 'Full Stack Development' },
+                      { id: 'cyber-security', name: 'Cyber Security' },
+                      { id: 'cloud-computing', name: 'Cloud Computing' },
+                      { id: 'digital-marketing-cert', name: 'Digital Marketing' },
+                      { id: 'hr-mgmt', name: 'HR Management' },
+                      { id: 'stock-market', name: 'Stock Market' }
+                    ].map((prog, idx) => {
+                      const progLeads = accessibleLeads.filter(l => l.program === prog.id);
+                      const adsCount = progLeads.filter(l => l.type === 'Ads Leads').length;
+                      const formCount = progLeads.filter(l => l.type === 'Google Form Leads').length;
+                      const waCount = progLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length;
+                      const enrolledCount = progLeads.filter(l => l.status === 'Enrolled').length;
+                      const conv = progLeads.length > 0 ? ((enrolledCount / progLeads.length) * 100).toFixed(1) : '0.0';
+                      const percentageShare = accessibleLeads.length > 0 ? ((progLeads.length / accessibleLeads.length) * 100).toFixed(1) : 0;
+
+                      return (
+                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                          <td className="py-4 px-4 font-bold text-white font-mono">{prog.name}</td>
+                          <td className="py-4 px-4 text-center font-bold text-white font-mono">{progLeads.length}</td>
+                          <td className="py-4 px-4 text-center font-mono text-slate-400">{adsCount}</td>
+                          <td className="py-4 px-4 text-center font-mono text-slate-400">{formCount}</td>
+                          <td className="py-4 px-4 text-center font-mono text-slate-400">{waCount}</td>
+                          <td className="py-4 px-4 text-center font-mono text-[#4ADE80] font-bold">{enrolledCount}</td>
+                          <td className="py-4 px-4 text-center font-mono font-bold text-brand-cyan">{conv}%</td>
+                          <td className="py-4 px-4 text-right">
+                            <div className="flex items-center justify-end space-x-2">
+                              <span className="font-mono text-slate-400 font-bold">{percentageShare}%</span>
+                              <div className="w-16 bg-white/10 h-1.5 rounded-full overflow-hidden">
+                                <div 
+                                  className="bg-brand-cyan h-full rounded-full" 
+                                  style={{ width: `${percentageShare}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
 
