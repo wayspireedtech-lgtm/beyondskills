@@ -29,6 +29,8 @@ const CustomLandingPage = React.lazy(() => import('./pages/CustomLandingPage'));
 const DigitalMarketingLandingPage = React.lazy(() => import('./pages/DigitalMarketingLandingPage'));
 const CloudComputingLandingPage = React.lazy(() => import('./pages/CloudComputingLandingPage'));
 const CybersecurityLandingPage = React.lazy(() => import('./pages/CybersecurityLandingPage'));
+const GoogleFormLandingPage = React.lazy(() => import('./pages/GoogleFormLandingPage'));
+
 
 // Premium, theme-matching loading fallback
 function LoadingSpinner() {
@@ -63,7 +65,7 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   
   // Hide headers/footers on specific onboarding/checkout paths if desired
-  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/ai-ml-data-science-landing-page', '/digital-marketing-landing-page', '/cloud-computing-landing-page', '/cybersecurity-landing-page', '/admin'].includes(location.pathname) || location.pathname.includes('/brochure');
+  const isPortal = ['/checkout', '/onboarding', '/full-stack-web-development-landing-page', '/ai-ml-data-science-landing-page', '/digital-marketing-landing-page', '/cloud-computing-landing-page', '/cybersecurity-landing-page', '/admin', '/google-form', '/lp/google-form'].includes(location.pathname) || location.pathname.includes('/brochure');
   
   return (
     <div id="glow-bg-container" className="flex flex-col min-h-screen bg-white text-slate-900 relative">
@@ -187,6 +189,8 @@ export default function App() {
             <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
             <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
             <Route path="/ai-ml-data-science-landing-page" element={<AiMlDataScienceLandingPage />} />
+            <Route path="/lp/google-form" element={<GoogleFormLandingPage />} />
+            <Route path="/google-form" element={<GoogleFormLandingPage />} />
             <Route path="/lp/:slug" element={<CustomLandingPage />} />
             <Route path="/digital-marketing-landing-page" element={<DigitalMarketingLandingPage />} />
             <Route path="/cloud-computing-landing-page" element={<CloudComputingLandingPage />} />

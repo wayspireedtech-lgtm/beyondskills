@@ -1610,6 +1610,20 @@ const INITIAL_LANDING_PAGES = [
       { q: 'Who is this program for?', a: 'Perfect for students, fresh graduates, software engineers, and IT specialists looking to build security auditing expertise.' },
       { q: 'Is CompTIA Security+ or CEH covered?', a: 'Our curriculum covers the foundational knowledge required for these credentials.' }
     ]
+  },
+  {
+    slug: 'google-form',
+    courseId: 'all',
+    heroHeadline: 'WhatsApp Campaign Lead Form',
+    heroSubheadline: 'Direct registration campaign page for catalog counseling and batch allocations.',
+    ctaText: 'Submit Details',
+    highlights: [
+      'Interactive registration',
+      'July / August batch selection',
+      'Real-time CRM dashboard sync',
+      'Course catalog redirect'
+    ],
+    faqs: []
   }
 ];
 
