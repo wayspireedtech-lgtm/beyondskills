@@ -529,21 +529,26 @@ export default function CourseDetails() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {course.mentors.map((mentor, idx) => (
-                  <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl flex items-start space-x-4 hover:bg-white hover:shadow-md transition-all">
-                    <div className="bg-brand-purple/10 p-3 rounded-2xl text-brand-purple flex-shrink-0">
-                      <Users className="w-6 h-6" />
+                  <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl flex items-start justify-between space-x-4 hover:bg-white hover:shadow-md transition-all">
+                    <div className="flex items-start space-x-4">
+                      <div className="bg-brand-purple/10 p-3 rounded-2xl text-brand-purple flex-shrink-0">
+                        <Users className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">
+                          {mentor.name}
+                        </h4>
+                        <p className="text-xs text-brand-purple font-semibold font-mono">
+                          {mentor.role}
+                        </p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-mono">
+                          {mentor.experience} Experience
+                        </p>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">
-                        {mentor.name}
-                      </h4>
-                      <p className="text-xs text-brand-purple font-semibold font-mono">
-                        {mentor.role}
-                      </p>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-mono">
-                        {mentor.experience} Experience
-                      </p>
-                    </div>
+                    {mentor.logo && (
+                      <img src={mentor.logo} alt="" className="w-6 h-6 opacity-80 mt-1 flex-shrink-0" />
+                    )}
                   </div>
                 ))}
               </div>

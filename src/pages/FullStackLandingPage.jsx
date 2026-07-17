@@ -862,20 +862,23 @@ export default function FullStackLandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
             {/* Mentor 1 */}
             <div className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-              <div className="flex items-center space-x-3.5">
-                <div className="w-12 h-12 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-sm">
-                  AR
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-sm">
+                    NM
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Nikhil Mehra</h4>
+                    <p className="text-[10px] text-slate-400">Founder & Web Architect (NadahWeb)</p>
+                    <p className="text-[9px] text-[#2563EB] font-mono font-bold">5+ Years Development Experience</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Dr. Aris Rawat</h4>
-                  <p className="text-[10px] text-slate-400">Lead Program Instructor</p>
-                  <p className="text-[9px] text-[#2563EB] font-mono font-bold">12+ Years Industry Experience</p>
-                </div>
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg" alt="NadahWeb" className="w-5 h-5 opacity-80" />
               </div>
               <div className="border-t border-slate-100 pt-3 text-[11px] text-slate-500 leading-normal space-y-2">
-                <p><strong>Past Company Experience:</strong> Tech Lead Architect & Academic Researcher</p>
+                <p><strong>Past Company Experience:</strong> Lead Full-Stack Web Architect & NadahWeb Founder</p>
                 <p className="italic text-slate-600">
-                  "I specialize in database structures, Node servers, and system scalability guidelines. In this cohort, we focus on writing clean, modular APIs and configuring robust production database indexes."
+                  "I specialize in MERN stack development, responsive design systems, and deploying scalable client-facing layouts. In this cohort, we focus on modular JSX code and production-ready applications."
                 </p>
                 <p className="text-[#2563EB] font-medium font-mono text-[9px] flex items-center space-x-1">
                   <Globe className="w-3.5 h-3.5 text-slate-400" />
@@ -886,20 +889,23 @@ export default function FullStackLandingPage() {
 
             {/* Mentor 2 */}
             <div className="bg-white border border-slate-200/60 p-6 rounded-2xl space-y-4">
-              <div className="flex items-center space-x-3.5">
-                <div className="w-12 h-12 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-sm">
-                  SM
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3.5">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center font-bold text-sm">
+                    SS
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">Saurav Kumar Sinha</h4>
+                    <p className="text-[10px] text-slate-400">MERN & Data Science Mentor</p>
+                    <p className="text-[9px] text-[#2563EB] font-mono font-bold">6+ Years Industry Experience</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">Siddharth Mehta</h4>
-                  <p className="text-[10px] text-slate-400">Senior Web Architect & MERN Lead</p>
-                  <p className="text-[9px] text-[#2563EB] font-mono font-bold">8+ Years Development Experience</p>
-                </div>
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg" alt="Capgemini" className="w-5 h-5 opacity-80" />
               </div>
               <div className="border-t border-slate-100 pt-3 text-[11px] text-slate-500 leading-normal space-y-2">
-                <p><strong>Past Company Experience:</strong> Lead Engineer at Enterprise SaaS Division</p>
+                <p><strong>Past Company Experience:</strong> Tech Lead at Capgemini, Tietoevry</p>
                 <p className="italic text-slate-600">
-                  "My focus is frontend component trees, React State Context, and responsive styling systems. I'll be guiding your weekly portfolio project code audits to prepare you for tech interviews."
+                  "My focus is backend architecture, database triggers, and APIs structure. I'll guide you on building robust Express routing pipelines, token authentications, and REST systems."
                 </p>
                 <p className="text-[#2563EB] font-medium font-mono text-[9px] flex items-center space-x-1">
                   <Globe className="w-3.5 h-3.5 text-slate-400" />

@@ -66,8 +66,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Saurav Kumar Sinha', role: 'Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini', experience: '8+ Years' },
-      { name: 'Vinod Kumar Eslavath', role: 'Assistant Manager - Data Scientist at Shemaroo', experience: '5+ Years' }
+      { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor at Gradus (Worked at Capgemini)', experience: '6+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' }
     ],
     outcomes: [
       'Understand and apply neural networks and deep learning architectures.',
@@ -148,8 +147,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Uttam Grade', role: 'EY | Ex-Accenture, McKinsey', experience: '6+ Years' },
-      { name: 'Vinod Kumar Eslavath', role: 'Assistant Manager - Data Scientist at Shemaroo', experience: '5+ Years' }
+      { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor at Gradus (Worked at Capgemini)', experience: '6+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' }
     ],
     outcomes: [
       'Clean, pre-process, and visualize complex datasets in Python.',
@@ -220,8 +218,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Vikram Aditya', role: 'Staff Engineer at Swiggy', experience: '9+ Years' },
-      { name: 'Neha Gupta', role: 'Senior React Developer', experience: '5+ Years' }
+      { name: 'Nikhil Mehra', role: 'Full Stack Developer & Founder of Nadahweb', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' }
     ],
     outcomes: [
       'Build responsive, highly interactive web applications using React.',
@@ -288,8 +285,8 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Kunal Sen', role: 'Digital Lead at Ogilvy', experience: '7+ Years' },
-      { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
+      { name: 'Kunal Rawal', role: 'Data Analytics & Marketing Instructor (Worked at Deloitte & Airtel)', experience: '7+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
+      { name: 'Sanchit Singh', role: 'Data Analytics Mentor at Gradus (Worked at EY)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
     ],
     outcomes: [
       'Create and optimize high-converting Google & Meta ad campaigns from scratch.',
@@ -505,8 +502,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
-      { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
+      { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor at Gradus (Worked at Capgemini)', experience: '6+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' }
     ],
     outcomes: [
       'Write optimized SQL queries for extracting datasets.',
@@ -722,8 +718,9 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Dr. Aris Rawat', role: 'Ex-Data Scientist at Microsoft', experience: '8+ Years' },
-      { name: 'Riddhima Das', role: 'Growth Hacker & Ex-Consultant', experience: '5+ Years' }
+      { name: 'Kunal Rawal', role: 'Data Analytics Instructor (Worked at Deloitte & Airtel)', experience: '7+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
+      { name: 'Shevam Nagar', role: 'Power BI Mentor at Gradus (Worked at Capgemini)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+      { name: 'Sanchit Singh', role: 'Data Analytics Mentor at Gradus (Worked at EY)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
     ],
     outcomes: [
       'Extract datasets from relational databases using SQL.',
@@ -932,7 +929,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Meenakshi Iyer', role: 'HR Director at GlobalCorp', experience: '12+ Years' }
+      { name: 'Sanchit Singh', role: 'Data Analytics Mentor at Gradus (Worked at EY)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
     ],
     outcomes: [
       'Conduct professional hiring campaigns and pre-screen applicants using ATS criteria.',
@@ -997,7 +994,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Rajeev Singhal', role: 'Certified Financial Analyst', experience: '10+ Years' }
+      { name: 'Kunal Rawal', role: 'Data Analytics Instructor (Worked at Deloitte & Airtel)', experience: '7+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' }
     ],
     outcomes: [
       'Perform chart reading and pattern identification for technical short-term trades.',
@@ -1183,7 +1180,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Aditya Sen', role: 'Certified CEH, Security Analyst', experience: '6+ Years' }
+      { name: 'Hardik Dhingra', role: 'Cyber Security Specialist (GoDaddy)', experience: '6+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' }
     ],
     outcomes: [
       'Scan networks for active hosts and open ports securely using Nmap.',
@@ -1378,7 +1375,7 @@ export const COURSES = [
       }
     ],
     mentors: [
-      { name: 'Mohit Rao', role: 'Lead Solutions Architect at AWS', experience: '8+ Years' }
+      { name: 'Hardik Dhingra', role: 'Cyber Security Specialist (GoDaddy)', experience: '6+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' }
     ],
     outcomes: [
       'Provision and manage secure cloud servers and object storage pools on AWS.',
@@ -1439,10 +1436,12 @@ export const BLOGS = [
 ];
 
 export const MENTORS = [
-  { name: 'Dr. Aris Rawat', role: 'AI & Data Science Lead', org: 'Ex-Microsoft', exp: '8+ Years', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Vikram Aditya', role: 'Full Stack Staff Architect', org: 'Swiggy', exp: '9+ Years', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Meenakshi Iyer', role: 'Human Resources Director', org: 'GlobalCorp', exp: '12+ Years', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80' },
-  { name: 'Kunal Sen', role: 'Growth & Ads Specialist', org: 'Ogilvy', exp: '7+ Years', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80' }
+  { name: 'Kunal Rawal', role: 'Data Analytics Instructor', org: 'Deloitte & Airtel', exp: '7+ Years', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
+  { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor', org: 'Capgemini', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Nikhil Mehra', role: 'Full Stack Developer', org: 'NadahWeb', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' },
+  { name: 'Hardik Dhingra', role: 'Cyber Security Specialist', org: 'GoDaddy', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' },
+  { name: 'Shevam Nagar', role: 'Power BI Mentor', org: 'Capgemini', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Sanchit Singh', role: 'Data Analytics Mentor', org: 'EY', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
 ];
 
 export const CLIENT_TESTIMONIALS = [
@@ -1618,8 +1617,9 @@ if (!localStorage.getItem('beyondskills_blogs')) {
   setDbItem('beyondskills_blogs', BLOGS);
 }
 
-if (!localStorage.getItem('beyondskills_mentors')) {
+if (!localStorage.getItem('beyondskills_mentors') || !localStorage.getItem('beyondskills_mentors_refreshed_v3')) {
   setDbItem('beyondskills_mentors', MENTORS);
+  localStorage.setItem('beyondskills_mentors_refreshed_v3', 'true');
 }
 
 if (!localStorage.getItem('beyondskills_landing_pages')) {

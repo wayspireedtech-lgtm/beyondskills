@@ -351,11 +351,17 @@ export default function CustomLandingPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {dynamicMentors.map((m, idx) => (
-              <div key={idx} className="text-center bg-slate-50/50 border border-slate-100 rounded-2xl p-5 shadow-sm">
-                <img src={m.image} alt={m.name} className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border border-slate-200" />
-                <h4 className="font-bold text-slate-900 text-xs">{m.name}</h4>
-                <p className="text-[10px] text-brand-purple font-medium mt-0.5">{m.role}</p>
-                <p className="text-[9px] text-slate-400 mt-0.5">{m.org} • {m.exp} Exp</p>
+              <div key={idx} className="text-center bg-slate-50/50 border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between items-center">
+                <div>
+                  <img src={m.image} alt={m.name} className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border border-slate-200" />
+                  <h4 className="font-bold text-slate-900 text-xs">{m.name}</h4>
+                  <p className="text-[10px] text-brand-purple font-medium mt-0.5">{m.role}</p>
+                </div>
+                <div className="text-[9px] text-slate-400 mt-2 flex items-center justify-center gap-1 flex-wrap">
+                  <span>{m.org}</span>
+                  {m.logo && <img src={m.logo} alt="" className="w-3 h-3 opacity-80" />}
+                  <span>• {m.exp} Exp</span>
+                </div>
               </div>
             ))}
           </div>
