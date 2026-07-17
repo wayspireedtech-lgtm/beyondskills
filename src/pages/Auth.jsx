@@ -83,10 +83,14 @@ export default function Auth() {
                     phone: '',
                     password: `BS-${Math.floor(100000 + Math.random() * 900000)}`,
                     studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
-                    activeCourses: []
+                    activeCourses: [],
+                    accountStatus: 'Active'
                   };
                   users.push(targetUser);
                   setDbItem('beyondskills_users', users);
+                } else if (targetUser.accountStatus === 'Suspended') {
+                  setError('Your account has been suspended. Please contact support at connect@beyondskills.in.');
+                  return;
                 }
                 
                 setDbItem('beyondskills_current_user', targetUser);
@@ -269,13 +273,21 @@ export default function Auth() {
 
       if (!userExists) {
         // Save new user registration
+        currentUserData.accountStatus = 'Active';
         users.push(currentUserData);
         setDbItem('beyondskills_users', users);
         loggedInRecord = currentUserData;
       } else {
         // Retrieve matched database user record
         const dbMatch = users.find(u => u.email === currentUserData.email);
-        if (dbMatch) loggedInRecord = dbMatch;
+        if (dbMatch) {
+          if (dbMatch.accountStatus === 'Suspended') {
+            setError('Your account has been suspended. Please contact support at connect@beyondskills.in.');
+            setLoading(false);
+            return;
+          }
+          loggedInRecord = dbMatch;
+        }
       }
 
       setDbItem('beyondskills_current_user', loggedInRecord);

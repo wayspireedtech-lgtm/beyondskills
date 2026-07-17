@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDbItem, setDbItem, logUserAccess } from '../utils/mockDb';
+import { getDbItem, setDbItem, logUserAccess, COURSES } from '../utils/mockDb';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
@@ -174,6 +174,26 @@ export default function AdminDashboard() {
   const [selectedLead, setSelectedLead] = useState(null);
   const [selectedLeadIdx, setSelectedLeadIdx] = useState(null);
   const [logs, setLogs] = useState([]);
+
+  // Student Roster Management States
+  const [usersSubTab, setUsersSubTab] = useState('students'); // 'students' or 'crm'
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [showEditStudentModal, setShowEditStudentModal] = useState(false);
+  const [showStudentLogsModal, setShowStudentLogsModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [studentForm, setStudentForm] = useState({
+    name: '', email: '', phone: '', status: 'College Student',
+    college: '', gradYear: '', bio: '', accountStatus: 'Active',
+    password: '', activeCourses: []
+  });
+  const [newStudentForm, setNewStudentForm] = useState({
+    name: '', email: '', phone: '', status: 'College Student',
+    college: '', gradYear: '', bio: '', password: '', activeCourses: []
+  });
+  const [studentSearch, setStudentSearch] = useState('');
+  const [studentFilterStatus, setStudentFilterStatus] = useState('');
+  const [studentFilterAcademic, setStudentFilterAcademic] = useState('');
   
   // Filters
   const [leadSearch, setLeadSearch] = useState('');
@@ -870,6 +890,135 @@ export default function AdminDashboard() {
     setDbItem('beyondskills_crm_users', updated);
     if (targetUser) {
       logUserAccess(targetUser.email, targetUser.name, `CRM User Revoked: ${targetUser.role}`);
+    }
+  };
+
+  // Student Action Handlers
+  const handleAddStudent = (e) => {
+    e.preventDefault();
+    const studentsList = getDbItem('beyondskills_users', []);
+    
+    // Check duplicate
+    if (studentsList.some(s => s.email.trim().toLowerCase() === newStudentForm.email.trim().toLowerCase())) {
+      alert('A student account with this email address already exists.');
+      return;
+    }
+
+    const createdStudent = {
+      ...newStudentForm,
+      email: newStudentForm.email.trim().toLowerCase(),
+      studentId: `BS-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+      accountStatus: 'Active',
+      activeCourses: newStudentForm.activeCourses || []
+    };
+
+    const updated = [...studentsList, createdStudent];
+    setStudents(updated);
+    setDbItem('beyondskills_users', updated);
+    logUserAccess(createdStudent.email, createdStudent.name, 'Student Registered Manually');
+    
+    setShowAddStudentModal(false);
+    setNewStudentForm({ name: '', email: '', phone: '', status: 'College Student', college: '', gradYear: '', bio: '', password: '', activeCourses: [] });
+  };
+
+  const handleSaveStudent = (e) => {
+    e.preventDefault();
+    if (!selectedStudent) return;
+
+    const studentsList = getDbItem('beyondskills_users', []);
+    const updated = studentsList.map(s => {
+      if (s.email.toLowerCase() === selectedStudent.email.toLowerCase()) {
+        return {
+          ...s,
+          name: studentForm.name,
+          phone: studentForm.phone,
+          status: studentForm.status,
+          college: studentForm.status === 'College Student' ? studentForm.college : '',
+          gradYear: studentForm.gradYear,
+          bio: studentForm.bio,
+          accountStatus: studentForm.accountStatus,
+          password: studentForm.password,
+          activeCourses: studentForm.activeCourses
+        };
+      }
+      return s;
+    });
+
+    setStudents(updated);
+    setDbItem('beyondskills_users', updated);
+    logUserAccess(selectedStudent.email, studentForm.name, `Student Profile Updated by Admin (${studentForm.accountStatus})`);
+    
+    // If the edited student is the current logged-in user, refresh their session
+    const loggedInUser = getDbItem('beyondskills_current_user', null);
+    if (loggedInUser && loggedInUser.email.toLowerCase() === selectedStudent.email.toLowerCase()) {
+      const refreshedUser = updated.find(s => s.email.toLowerCase() === loggedInUser.email.toLowerCase());
+      setDbItem('beyondskills_current_user', refreshedUser);
+      window.dispatchEvent(new Event('auth_change'));
+    }
+
+    setShowEditStudentModal(false);
+    setSelectedStudent(null);
+  };
+
+  const handleDeleteStudent = (email) => {
+    if (!window.confirm(`Are you sure you want to delete the student account for ${email}? This action is irreversible.`)) return;
+
+    const studentsList = getDbItem('beyondskills_users', []);
+    const targetStudent = studentsList.find(s => s.email.toLowerCase() === email.toLowerCase());
+    const updated = studentsList.filter(s => s.email.toLowerCase() !== email.toLowerCase());
+
+    setStudents(updated);
+    setDbItem('beyondskills_users', updated);
+    
+    if (targetStudent) {
+      logUserAccess(targetStudent.email, targetStudent.name, 'Student Account Deleted by Admin');
+    }
+
+    // Deselect from bulk list
+    setSelectedStudentIds(prev => prev.filter(id => id !== email));
+  };
+
+  const handleBulkStudentAction = (actionType) => {
+    if (selectedStudentIds.length === 0) return;
+    
+    if (actionType === 'delete') {
+      if (!window.confirm(`Are you sure you want to delete ${selectedStudentIds.length} selected student account(s)? This action is irreversible.`)) return;
+      
+      const studentsList = getDbItem('beyondskills_users', []);
+      const updated = studentsList.filter(s => !selectedStudentIds.includes(s.email));
+      
+      setStudents(updated);
+      setDbItem('beyondskills_users', updated);
+      
+      logUserAccess(currentUser.email, currentUser.name, `Bulk Deleted ${selectedStudentIds.length} Student Accounts`);
+      setSelectedStudentIds([]);
+      alert('Selected student accounts successfully deleted!');
+    } else if (actionType === 'suspend' || actionType === 'activate') {
+      const statusValue = actionType === 'suspend' ? 'Suspended' : 'Active';
+      const studentsList = getDbItem('beyondskills_users', []);
+      
+      const updated = studentsList.map(s => {
+        if (selectedStudentIds.includes(s.email)) {
+          return { ...s, accountStatus: statusValue };
+        }
+        return s;
+      });
+
+      setStudents(updated);
+      setDbItem('beyondskills_users', updated);
+      
+      logUserAccess(currentUser.email, currentUser.name, `Bulk Updated status to ${statusValue} for ${selectedStudentIds.length} Student Accounts`);
+      
+      // Refresh current session if admin suspended their own account (highly unlikely, but safe)
+      const loggedInUser = getDbItem('beyondskills_current_user', null);
+      if (loggedInUser && selectedStudentIds.includes(loggedInUser.email)) {
+        const refreshedUser = updated.find(s => s.email.toLowerCase() === loggedInUser.email.toLowerCase());
+        setDbItem('beyondskills_current_user', refreshedUser);
+        window.dispatchEvent(new Event('auth_change'));
+      }
+      
+      setSelectedStudentIds([]);
+      alert(`Selected student accounts status successfully set to ${statusValue}!`);
     }
   };
 
@@ -3004,178 +3153,365 @@ export default function AdminDashboard() {
         )}
 
         {activeMainTab === 'users' && !isBdaUser && (
-          <div className="space-y-8 animate-fade-in text-white">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Context manual setup */}
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
-                <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">CRM Organizational Roster</h3>
-                <p className="text-slate-400 leading-normal">
-                  Build BDA and Administrator credentials here. When created, they will log in using their custom email and password.
-                </p>
-                
-                <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3 font-mono text-[11px] text-slate-300">
-                  <p className="font-bold text-brand-cyan border-b border-white/10 pb-1">Gradus CRM Tree Setup</p>
-                  <div className="flex items-center">
-                    <span>Sales Head</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
-                    <span className="text-brand-cyan font-bold">BDM Manager</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
-                    <span>BDA Associate</span>
+          <div className="space-y-6 animate-fade-in text-white">
+            
+            {/* Sub-tabs Selection */}
+            <div className="flex border-b border-white/10 mb-6 gap-6 text-sm">
+              <button 
+                onClick={() => setUsersSubTab('students')}
+                className={`pb-3 font-bold border-b-2 transition-all cursor-pointer ${
+                  usersSubTab === 'students' ? 'border-[#2A4BFF] text-[#2A4BFF]' : 'border-transparent text-slate-400 hover:text-white'
+                }`}
+              >
+                Registered Student Accounts
+              </button>
+              <button 
+                onClick={() => setUsersSubTab('crm')}
+                className={`pb-3 font-bold border-b-2 transition-all cursor-pointer ${
+                  usersSubTab === 'crm' ? 'border-[#2A4BFF] text-[#2A4BFF]' : 'border-transparent text-slate-400 hover:text-white'
+                }`}
+              >
+                CRM Team Associates
+              </button>
+            </div>
+
+            {/* Sub-tab 1: Student Roster */}
+            {usersSubTab === 'students' && (() => {
+              const filteredStudents = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(studentSearch.toLowerCase()) || 
+                                      student.email.toLowerCase().includes(studentSearch.toLowerCase()) ||
+                                      (student.phone && student.phone.includes(studentSearch)) ||
+                                      (student.contact && student.contact.includes(studentSearch));
+                const matchesAcademic = !studentFilterAcademic || student.status === studentFilterAcademic;
+                const matchesStatus = !studentFilterStatus || (student.accountStatus || 'Active') === studentFilterStatus;
+                return matchesSearch && matchesAcademic && matchesStatus;
+              });
+
+              const handleSelectStudent = (email) => {
+                setSelectedStudentIds(prev => 
+                  prev.includes(email) ? prev.filter(id => id !== email) : [...prev, email]
+                );
+              };
+
+              const handleSelectAllStudents = (e) => {
+                if (e.target.checked) {
+                  setSelectedStudentIds(filteredStudents.map(s => s.email));
+                } else {
+                  setSelectedStudentIds([]);
+                }
+              };
+
+              return (
+                <div className="space-y-6">
+                  
+                  {/* Filters & Actions Header */}
+                  <div className="bg-[#0A0E35] border border-white/10 p-5 rounded-2xl shadow-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full md:w-auto">
+                      <input 
+                        type="text"
+                        placeholder="Search student Name, Email, Phone..."
+                        value={studentSearch}
+                        onChange={(e) => setStudentSearch(e.target.value)}
+                        className="bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                      />
+                      <select 
+                        value={studentFilterAcademic}
+                        onChange={(e) => setStudentFilterAcademic(e.target.value)}
+                        className="bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                      >
+                        <option value="">All Academic Status</option>
+                        <option value="College Student">College Student</option>
+                        <option value="Graduate">Graduate</option>
+                      </select>
+                      <select 
+                        value={studentFilterStatus}
+                        onChange={(e) => setStudentFilterStatus(e.target.value)}
+                        className="bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                      >
+                        <option value="">All Account Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Suspended">Suspended</option>
+                      </select>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        setNewStudentForm({ name: '', email: '', phone: '', status: 'College Student', college: '', gradYear: '', bio: '', password: '', activeCourses: [] });
+                        setShowAddStudentModal(true);
+                      }}
+                      className="w-full md:w-auto bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-2.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer shrink-0"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Create Student Account</span>
+                    </button>
+                  </div>
+
+                  {/* Bulk Actions Panel */}
+                  {selectedStudentIds.length > 0 && (
+                    <div className="bg-blue-500/10 border border-blue-500/30 p-4 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 animate-fade-in">
+                      <span className="text-xs font-bold text-[#0EA5E9]">
+                        Selected {selectedStudentIds.length} Student Account(s)
+                      </span>
+                      <div className="flex gap-2 w-full sm:w-auto">
+                        <button 
+                          onClick={() => handleBulkStudentAction('activate')}
+                          className="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider px-3.5 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Activate Selected
+                        </button>
+                        <button 
+                          onClick={() => handleBulkStudentAction('suspend')}
+                          className="flex-1 sm:flex-initial bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] uppercase tracking-wider px-3.5 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Suspend Selected
+                        </button>
+                        <button 
+                          onClick={() => handleBulkStudentAction('delete')}
+                          className="flex-1 sm:flex-initial bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] uppercase tracking-wider px-3.5 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Delete Selected
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Students Table */}
+                  <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs text-slate-300">
+                        <thead>
+                          <tr className="border-b border-white/10 text-slate-400 pb-3.5 uppercase text-[9px] tracking-wider font-mono">
+                            <th className="py-2 px-3 w-8">
+                              <input 
+                                type="checkbox"
+                                checked={filteredStudents.length > 0 && selectedStudentIds.length === filteredStudents.length}
+                                onChange={handleSelectAllStudents}
+                                className="rounded text-[#2A4BFF] focus:ring-0 border-white/20 bg-transparent"
+                              />
+                            </th>
+                            <th className="py-2 px-3">Avatar</th>
+                            <th className="py-2 px-3">Student ID</th>
+                            <th className="py-2 px-3">Name</th>
+                            <th className="py-2 px-3">Email Address</th>
+                            <th className="py-2 px-3">Phone</th>
+                            <th className="py-2 px-3">Status</th>
+                            <th className="py-2 px-3">College / University</th>
+                            <th className="py-2 px-3">Enrolled Courses</th>
+                            <th className="py-2 px-3 text-right">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredStudents.length === 0 ? (
+                            <tr>
+                              <td colSpan="10" className="text-center py-10 text-slate-500 italic font-mono">
+                                No student accounts found matching your search.
+                              </td>
+                            </tr>
+                          ) : (
+                            filteredStudents.map((student, idx) => {
+                              const isAlreadyCrm = crmUsers.some(u => u.email.trim().toLowerCase() === student.email.trim().toLowerCase());
+                              const isChecked = selectedStudentIds.includes(student.email);
+                              const accountStatusVal = student.accountStatus || 'Active';
+                              return (
+                                <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
+                                  <td className="py-2.5 px-3">
+                                    <input 
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={() => handleSelectStudent(student.email)}
+                                      className="rounded text-[#2A4BFF] focus:ring-0 border-white/20 bg-transparent"
+                                    />
+                                  </td>
+                                  <td className="py-2.5 px-3">
+                                    {student.avatar ? (
+                                      <img src={student.avatar} alt={student.name} className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                                    ) : (
+                                      <div className="w-8 h-8 rounded-full bg-[#2A4BFF]/20 text-[#0EA5E9] font-bold flex items-center justify-center border border-[#2A4BFF]/25 font-mono text-[10px]">
+                                        {student.name ? student.name[0].toUpperCase() : 'S'}
+                                      </div>
+                                    )}
+                                  </td>
+                                  <td className="py-2.5 px-3 font-mono text-[10px] text-slate-400">{student.studentId || 'N/A'}</td>
+                                  <td className="py-2.5 px-3 font-semibold text-white">{student.name}</td>
+                                  <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{student.email}</td>
+                                  <td className="py-2.5 px-3 font-mono text-slate-400">{student.phone || student.contact || 'N/A'}</td>
+                                  <td className="py-2.5 px-3">
+                                    <div className="flex flex-col space-y-1">
+                                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide w-max ${
+                                        accountStatusVal === 'Active' ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/30' :
+                                        'bg-red-500/10 text-red-400 border border-red-500/30'
+                                      }`}>
+                                        {accountStatusVal}
+                                      </span>
+                                      <span className={`text-[9px] font-medium px-2 py-0.5 rounded tracking-wide w-max text-slate-400 border border-white/5`}>
+                                        {student.status || 'Student'}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td className="py-2.5 px-3 text-slate-400 max-w-[120px] truncate" title={student.college || 'N/A'}>
+                                    {student.college || 'N/A'}
+                                  </td>
+                                  <td className="py-2.5 px-3 font-mono text-[10px] text-[#4ADE80] max-w-[150px] truncate" title={student.activeCourses ? student.activeCourses.join(', ') : 'None'}>
+                                    {student.activeCourses && student.activeCourses.length > 0 
+                                      ? student.activeCourses.join(', ')
+                                      : 'None'}
+                                  </td>
+                                  <td className="py-2.5 px-3 text-right">
+                                    <div className="flex justify-end gap-1.5">
+                                      <button 
+                                        onClick={() => {
+                                          setSelectedStudent(student);
+                                          setStudentForm({
+                                            name: student.name || '',
+                                            phone: student.phone || student.contact || '',
+                                            status: student.status || 'College Student',
+                                            college: student.college || '',
+                                            gradYear: student.gradYear || '',
+                                            bio: student.bio || '',
+                                            accountStatus: student.accountStatus || 'Active',
+                                            password: student.password || '',
+                                            activeCourses: student.activeCourses || []
+                                          });
+                                          setShowEditStudentModal(true);
+                                        }}
+                                        className="p-1 bg-white/5 hover:bg-white/10 text-slate-200 rounded border border-white/15 transition-all cursor-pointer"
+                                        title="Edit Details"
+                                      >
+                                        <Edit2 className="w-3.5 h-3.5" />
+                                      </button>
+                                      <button 
+                                        onClick={() => {
+                                          setSelectedStudent(student);
+                                          setShowStudentLogsModal(true);
+                                        }}
+                                        className="p-1 bg-blue-500/10 hover:bg-blue-500/20 text-[#0EA5E9] rounded border border-blue-500/20 transition-all cursor-pointer"
+                                        title="Access Logs"
+                                      >
+                                        <ClipboardList className="w-3.5 h-3.5" />
+                                      </button>
+                                      <button 
+                                        onClick={() => handleDeleteStudent(student.email)}
+                                        className="p-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded border border-red-500/20 transition-all cursor-pointer"
+                                        title="Delete Student"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                      {isAlreadyCrm ? (
+                                        <span className="p-1 bg-white/5 text-slate-500 rounded border border-white/5 text-[9px] font-bold font-mono">
+                                          CRM
+                                        </span>
+                                      ) : (
+                                        <button 
+                                          onClick={() => {
+                                            setNewUserForm({
+                                              name: student.name,
+                                              email: student.email,
+                                              password: student.password || 'Gradus@123',
+                                              role: 'Admin',
+                                              reportsTo: ''
+                                            });
+                                            setShowAddUserModal(true);
+                                          }}
+                                          className="p-1 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 rounded border border-purple-500/20 transition-all cursor-pointer text-[9px] font-bold uppercase tracking-wider"
+                                          title="Promote to CRM Roster"
+                                        >
+                                          +CRM
+                                        </button>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
+              );
+            })()}
 
-                <button 
-                  onClick={() => setShowAddUserModal(true)}
-                  className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>Create Account / Role</span>
-                </button>
-              </div>
+            {/* Sub-tab 2: CRM Associates */}
+            {usersSubTab === 'crm' && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Context manual setup */}
+                <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
+                  <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">CRM Organizational Roster</h3>
+                  <p className="text-slate-400 leading-normal">
+                    Build BDA and Administrator credentials here. When created, they will log in using their custom email and password.
+                  </p>
+                  
+                  <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3 font-mono text-[11px] text-slate-300">
+                    <p className="font-bold text-brand-cyan border-b border-white/10 pb-1">Gradus CRM Tree Setup</p>
+                    <div className="flex items-center">
+                      <span>Sales Head</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
+                      <span className="text-brand-cyan font-bold">BDM Manager</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-500 mx-1" />
+                      <span>BDA Associate</span>
+                    </div>
+                  </div>
 
-              {/* Users Roster Table */}
-              <div className="lg:col-span-2 bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Team Associate Roster</h3>
-                
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs text-slate-300">
-                    <thead>
-                      <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
-                        <th className="py-2 px-3">Name</th>
-                        <th className="py-2 px-3">Email Address</th>
-                        <th className="py-2 px-3">Role</th>
-                        <th className="py-2 px-3">Password</th>
-                        <th className="py-2 px-3">Reports To (Manager)</th>
-                        <th className="py-2 px-3 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {crmUsers.map((user, idx) => (
-                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
-                          <td className="py-2.5 px-3 font-semibold text-white">{user.name}</td>
-                          <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{user.email}</td>
-                          <td className="py-2.5 px-3">
-                            <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide ${
-                              user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30' :
-                              user.role === 'BDM' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
-                              'bg-[#2A4BFF]/10 text-slate-200 border border-white/10'
-                            }`}>
-                              {user.role}
-                            </span>
-                          </td>
-                          <td className="py-2.5 px-3 font-mono text-[#4ADE80] font-bold">{user.password || 'Gradus@123'}</td>
-                          <td className="py-2.5 px-3 font-mono text-slate-400">{user.reportsTo || 'N/A'}</td>
-                          <td className="py-2.5 px-3 text-right">
-                            <button 
-                              onClick={() => handleRemoveUser(idx)}
-                              className="p-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded border border-red-500/20 transition-all cursor-pointer"
-                              title="Remove Associate"
-                            >
-                              <X className="w-3.5 h-3.5" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <button 
+                    onClick={() => setShowAddUserModal(true)}
+                    className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-md flex items-center justify-center space-x-1.5 cursor-pointer"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    <span>Create Account / Role</span>
+                  </button>
                 </div>
-              </div>
-            </div>
 
-            {/* Registered Student Accounts (For Promotion) */}
-            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
-              <div className="border-b border-white/10 pb-4">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-brand-cyan">Registered Student Accounts</h3>
-                <p className="text-[11px] text-slate-400 mt-1">List of all registered students. Promote them to BDA/BDM/Admin roles to grant them console access.</p>
-              </div>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead>
-                    <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
-                      <th className="py-2 px-3">Avatar</th>
-                      <th className="py-2 px-3">Student ID</th>
-                      <th className="py-2 px-3">Name</th>
-                      <th className="py-2 px-3">Email Address</th>
-                      <th className="py-2 px-3">Phone</th>
-                      <th className="py-2 px-3">Status</th>
-                      <th className="py-2 px-3">College / University</th>
-                      <th className="py-2 px-3">Enrolled Courses</th>
-                      <th className="py-2 px-3 text-right">Promote / Assign Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {students.length === 0 ? (
-                      <tr>
-                        <td colSpan="9" className="text-center py-10 text-slate-500 italic font-mono">
-                          No student accounts found in database.
-                        </td>
-                      </tr>
-                    ) : (
-                      students.map((student, idx) => {
-                        const isAlreadyCrm = crmUsers.some(u => u.email.trim().toLowerCase() === student.email.trim().toLowerCase());
-                        return (
+                {/* Users Roster Table */}
+                <div className="lg:col-span-2 bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Team Associate Roster</h3>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs text-slate-300">
+                      <thead>
+                        <tr className="border-b border-white/10 text-slate-400 pb-2 uppercase text-[9px] tracking-wider font-mono">
+                          <th className="py-2 px-3">Name</th>
+                          <th className="py-2 px-3">Email Address</th>
+                          <th className="py-2 px-3">Role</th>
+                          <th className="py-2 px-3">Password</th>
+                          <th className="py-2 px-3">Reports To (Manager)</th>
+                          <th className="py-2 px-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {crmUsers.map((user, idx) => (
                           <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors">
-                            <td className="py-2.5 px-3">
-                              {student.avatar ? (
-                                <img src={student.avatar} alt={student.name} className="w-8 h-8 rounded-full object-cover border border-white/10" />
-                              ) : (
-                                <div className="w-8 h-8 rounded-full bg-[#2A4BFF]/20 text-[#0EA5E9] font-bold flex items-center justify-center border border-[#2A4BFF]/25 font-mono text-[10px]">
-                                  {student.name ? student.name[0].toUpperCase() : 'S'}
-                                </div>
-                              )}
-                            </td>
-                            <td className="py-2.5 px-3 font-mono text-[10px] text-slate-400">{student.studentId || 'N/A'}</td>
-                            <td className="py-2.5 px-3 font-semibold text-white">{student.name}</td>
-                            <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{student.email}</td>
-                            <td className="py-2.5 px-3 font-mono text-slate-400">{student.phone || student.contact || 'N/A'}</td>
+                            <td className="py-2.5 px-3 font-semibold text-white">{user.name}</td>
+                            <td className="py-2.5 px-3 font-mono text-slate-400 text-[11px]">{user.email}</td>
                             <td className="py-2.5 px-3">
                               <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wide ${
-                                student.status === 'Graduate' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
-                                'bg-purple-500/10 text-purple-400 border border-purple-500/30'
+                                user.role === 'Admin' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/30' :
+                                user.role === 'BDM' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/30' :
+                                'bg-[#2A4BFF]/10 text-slate-200 border border-white/10'
                               }`}>
-                                {student.status || 'Student'}
+                                {user.role}
                               </span>
                             </td>
-                            <td className="py-2.5 px-3 text-slate-400 max-w-[150px] truncate" title={student.college || 'N/A'}>
-                              {student.college || 'N/A'}
-                            </td>
-                            <td className="py-2.5 px-3 font-mono text-[10px] text-[#4ADE80]">
-                              {student.activeCourses && student.activeCourses.length > 0 
-                                ? student.activeCourses.join(', ')
-                                : 'None'}
-                            </td>
+                            <td className="py-2.5 px-3 font-mono text-[#4ADE80] font-bold">{user.password || 'Gradus@123'}</td>
+                            <td className="py-2.5 px-3 font-mono text-slate-400">{user.reportsTo || 'N/A'}</td>
                             <td className="py-2.5 px-3 text-right">
-                              {isAlreadyCrm ? (
-                                <span className="text-[10px] font-bold text-slate-500 bg-white/5 border border-white/5 px-2.5 py-1 rounded">
-                                  Already CRM User
-                                </span>
-                              ) : (
-                                <button 
-                                  onClick={() => {
-                                    setNewUserForm({
-                                      name: student.name,
-                                      email: student.email,
-                                      password: student.password || 'Gradus@123',
-                                      role: 'Admin',
-                                      reportsTo: ''
-                                    });
-                                    setShowAddUserModal(true);
-                                  }}
-                                  className="bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-[10px] uppercase tracking-wide px-3 py-1.5 rounded transition-all cursor-pointer"
-                                >
-                                  Make Admin/BDA
-                                </button>
-                              )}
+                              <button 
+                                onClick={() => handleRemoveUser(idx)}
+                                className="p-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded border border-red-500/20 transition-all cursor-pointer"
+                                title="Remove Associate"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
                             </td>
                           </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+
           </div>
         )}
 
@@ -4673,6 +5009,373 @@ export default function AdminDashboard() {
                 Confirm Add Associate
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- ADD STUDENT MODAL -------------------- */}
+      {showAddStudentModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#05071F] border border-white/10 rounded-3xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl relative">
+            <button 
+              onClick={() => setShowAddStudentModal(false)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="border-b border-white/10 pb-4">
+              <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Create Student Account</h3>
+              <p className="text-[11px] text-slate-400 mt-1">Add a new registered student to the database manually.</p>
+            </div>
+
+            <form onSubmit={handleAddStudent} className="space-y-4 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Full Name</label>
+                  <input 
+                    type="text"
+                    required
+                    value={newStudentForm.name}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, name: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="Enter name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Email Address</label>
+                  <input 
+                    type="email"
+                    required
+                    value={newStudentForm.email}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, email: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="student@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Contact Number</label>
+                  <input 
+                    type="text"
+                    required
+                    value={newStudentForm.phone}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, phone: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="+91 XXXXX XXXXX"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Password</label>
+                  <input 
+                    type="password"
+                    required
+                    value={newStudentForm.password}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, password: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="Set account password"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Academic Status</label>
+                  <select 
+                    value={newStudentForm.status}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, status: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="College Student">College Student</option>
+                    <option value="Graduate">Graduate</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Graduation Year</label>
+                  <input 
+                    type="text"
+                    value={newStudentForm.gradYear}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, gradYear: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="e.g. 2027"
+                  />
+                </div>
+              </div>
+
+              {newStudentForm.status === 'College Student' && (
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">College / University</label>
+                  <input 
+                    type="text"
+                    value={newStudentForm.college}
+                    onChange={(e) => setNewStudentForm({ ...newStudentForm, college: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                    placeholder="Enter College Name"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Personal Bio</label>
+                <textarea 
+                  value={newStudentForm.bio}
+                  onChange={(e) => setNewStudentForm({ ...newStudentForm, bio: e.target.value })}
+                  className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] min-h-[60px]"
+                  placeholder="Tell us about yourself..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3 font-mono">Allocate Enrolled Courses</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[150px] overflow-y-auto bg-[#0A0E35] p-3 rounded-lg border border-white/10">
+                  {COURSES.map(course => {
+                    const isChecked = (newStudentForm.activeCourses || []).includes(course.id);
+                    return (
+                      <label key={course.id} className="flex items-center space-x-2.5 cursor-pointer text-slate-300 hover:text-white select-none">
+                        <input 
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const updatedCourses = e.target.checked 
+                              ? [...(newStudentForm.activeCourses || []), course.id]
+                              : (newStudentForm.activeCourses || []).filter(c => c !== course.id);
+                            setNewStudentForm({ ...newStudentForm, activeCourses: updatedCourses });
+                          }}
+                          className="rounded text-[#2A4BFF] focus:ring-0 border-white/20 bg-transparent"
+                        />
+                        <span className="truncate">{course.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Confirm Add Student
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- EDIT STUDENT MODAL -------------------- */}
+      {showEditStudentModal && selectedStudent && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#05071F] border border-white/10 rounded-3xl p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto space-y-6 shadow-2xl relative">
+            <button 
+              onClick={() => {
+                setShowEditStudentModal(false);
+                setSelectedStudent(null);
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="border-b border-white/10 pb-4">
+              <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Edit Student Details</h3>
+              <p className="text-[11px] text-slate-400 mt-1">Modify account parameters, status, and course allocations for {selectedStudent.email}.</p>
+            </div>
+
+            <form onSubmit={handleSaveStudent} className="space-y-4 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Full Name</label>
+                  <input 
+                    type="text"
+                    required
+                    value={studentForm.name}
+                    onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Account status</label>
+                  <select 
+                    value={studentForm.accountStatus}
+                    onChange={(e) => setStudentForm({ ...studentForm, accountStatus: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="Active">Active (Console Allowed)</option>
+                    <option value="Suspended">Suspended (Access Revoked)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Contact Number</label>
+                  <input 
+                    type="text"
+                    required
+                    value={studentForm.phone}
+                    onChange={(e) => setStudentForm({ ...studentForm, phone: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Password</label>
+                  <input 
+                    type="text"
+                    required
+                    value={studentForm.password}
+                    onChange={(e) => setStudentForm({ ...studentForm, password: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Academic Status</label>
+                  <select 
+                    value={studentForm.status}
+                    onChange={(e) => setStudentForm({ ...studentForm, status: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
+                  >
+                    <option value="College Student">College Student</option>
+                    <option value="Graduate">Graduate</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Graduation Year</label>
+                  <input 
+                    type="text"
+                    value={studentForm.gradYear}
+                    onChange={(e) => setStudentForm({ ...studentForm, gradYear: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              </div>
+
+              {studentForm.status === 'College Student' && (
+                <div>
+                  <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">College / University</label>
+                  <input 
+                    type="text"
+                    value={studentForm.college}
+                    onChange={(e) => setStudentForm({ ...studentForm, college: e.target.value })}
+                    className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF]"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Personal Bio</label>
+                <textarea 
+                  value={studentForm.bio}
+                  onChange={(e) => setStudentForm({ ...studentForm, bio: e.target.value })}
+                  className="w-full bg-[#0A0E35] border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-[#2A4BFF] min-h-[60px]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3 font-mono">Enrolled Courses (Permissions)</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[150px] overflow-y-auto bg-[#0A0E35] p-3 rounded-lg border border-white/10">
+                  {COURSES.map(course => {
+                    const isChecked = (studentForm.activeCourses || []).includes(course.id);
+                    return (
+                      <label key={course.id} className="flex items-center space-x-2.5 cursor-pointer text-slate-300 hover:text-white select-none">
+                        <input 
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            const updatedCourses = e.target.checked 
+                              ? [...(studentForm.activeCourses || []), course.id]
+                              : (studentForm.activeCourses || []).filter(c => c !== course.id);
+                            setStudentForm({ ...studentForm, activeCourses: updatedCourses });
+                          }}
+                          className="rounded text-[#2A4BFF] focus:ring-0 border-white/20 bg-transparent"
+                        />
+                        <span className="truncate">{course.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2A4BFF] hover:bg-[#2A4BFF]/95 text-white font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-all shadow-lg cursor-pointer"
+              >
+                Save Changes
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* -------------------- STUDENT ACCESS LOGS MODAL -------------------- */}
+      {showStudentLogsModal && selectedStudent && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-[#05071F] border border-white/10 rounded-3xl p-6 w-full max-w-4xl max-h-[85vh] overflow-y-auto space-y-6 shadow-2xl relative">
+            <button 
+              onClick={() => {
+                setShowStudentLogsModal(false);
+                setSelectedStudent(null);
+              }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="border-b border-white/10 pb-4">
+              <h3 className="text-base font-bold uppercase tracking-wider text-brand-cyan">Student Audit Log Trail</h3>
+              <p className="text-[11px] text-slate-400 mt-1">Access security history, session logins, and manual actions for: <strong className="text-white">{selectedStudent.name} ({selectedStudent.email})</strong></p>
+            </div>
+
+            <div className="bg-[#0A0E35] border border-white/10 rounded-2xl overflow-hidden">
+              <div className="overflow-x-auto max-h-[50vh]">
+                <table className="w-full text-left text-xs text-slate-300">
+                  <thead className="bg-[#05071F] border-b border-white/10 sticky top-0">
+                    <tr className="text-slate-400 uppercase text-[9px] tracking-wider font-mono">
+                      <th className="py-3 px-3">Log ID</th>
+                      <th className="py-3 px-3">Timestamp</th>
+                      <th className="py-3 px-3">Action Description</th>
+                      <th className="py-3 px-3">Client Agent Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {logs.filter(l => l.email.toLowerCase() === selectedStudent.email.toLowerCase()).length === 0 ? (
+                      <tr>
+                        <td colSpan="4" className="text-center py-10 text-slate-500 italic font-mono">
+                          No logs recorded for this student account.
+                        </td>
+                      </tr>
+                    ) : (
+                      logs
+                        .filter(l => l.email.toLowerCase() === selectedStudent.email.toLowerCase())
+                        .map((log, i) => (
+                          <tr key={log.id || i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td className="py-2.5 px-3 font-mono text-[10px] text-slate-400">{log.id}</td>
+                            <td className="py-2.5 px-3 font-mono text-[10px] text-[#0EA5E9]">
+                              {new Date(log.timestamp).toLocaleString()}
+                            </td>
+                            <td className="py-2.5 px-3">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded tracking-wide ${
+                                log.action.includes('Logged In') ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/30' :
+                                log.action.includes('Logged Out') ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' :
+                                log.action.includes('Profile Updated') ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30' :
+                                'bg-purple-500/10 text-purple-400 border border-purple-500/30'
+                              }`}>
+                                {log.action}
+                              </span>
+                            </td>
+                            <td className="py-2.5 px-3 text-[10px] text-slate-400 max-w-[200px] truncate" title={log.userAgent}>
+                              {log.userAgent}
+                            </td>
+                          </tr>
+                        ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       )}
