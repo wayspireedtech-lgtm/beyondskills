@@ -5,7 +5,7 @@ import {
   Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download,
   MessageCircle, FileText, BookOpen, Users, Award, Clock, Laptop, User, GraduationCap
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
 import adobeLogo from '../assets/adobe.svg';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { getDbItem } from '../utils/mockDb';
+import { getDbItem } from '../utils/dbHelpers';
 import { ShieldCheck, ShieldAlert, Award, ArrowLeft, Search, Download, Sparkles } from 'lucide-react';
 
 export default function Verification() {

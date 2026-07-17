@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Sparkles, Award, Users, ShieldAlert, Briefcase, MessageSquare, CheckCircle, Star } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 export default function CampusAmbassador() {
   const [form, setForm] = useState({

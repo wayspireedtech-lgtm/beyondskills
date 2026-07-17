@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, ArrowRight, Download } from 'lucide-react';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 export default function BrochureModal({ isOpen, onClose, course }) {
   const [formData, setFormData] = useState({

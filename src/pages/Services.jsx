@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Code, Megaphone, Terminal, FileText, CheckCircle, ArrowLeft, Send, Sparkles, AlertCircle } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 const SERVICE_DATA = {
   'website-development': {

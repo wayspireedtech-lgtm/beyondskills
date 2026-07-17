@@ -1,4 +1,5 @@
 // Mock Database for BeyondSkills platform content and localStorage persistence
+import { getDbItem as _getDbItem, setDbItem as _setDbItem, logUserAccess as _logUserAccess } from './dbHelpers.js';
 
 export const COURSES = [
   {
@@ -1456,41 +1457,9 @@ export const STUDENT_TESTIMONIALS = [
 
 // Helper database triggers stored in localStorage
 
-export const getDbItem = (key, defaultVal) => {
-  try {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : defaultVal;
-  } catch (e) {
-    return defaultVal;
-  }
-};
-
-export const setDbItem = (key, val) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(val));
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-export const logUserAccess = (email, name, action) => {
-  try {
-    const logs = getDbItem('beyondskills_access_logs', []);
-    const newLog = {
-      id: `LOG-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
-      email: email || 'Unknown',
-      name: name || 'Guest',
-      action: action,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    };
-    logs.unshift(newLog);
-    if (logs.length > 200) logs.pop();
-    setDbItem('beyondskills_access_logs', logs);
-  } catch (e) {
-    console.error('Failed to log user access:', e);
-  }
-};
+export const getDbItem = _getDbItem;
+export const setDbItem = _setDbItem;
+export const logUserAccess = _logUserAccess;
 
 // Initialize DB as empty arrays, forcing a reset for client-side storage
 if (!localStorage.getItem('beyondskills_db_reset_v4')) {

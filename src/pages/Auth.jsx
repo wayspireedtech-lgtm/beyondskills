@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { getDbItem, setDbItem, logUserAccess } from '../utils/mockDb';
+import { getDbItem, setDbItem, logUserAccess } from '../utils/dbHelpers';
 import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 
 export default function Auth() {

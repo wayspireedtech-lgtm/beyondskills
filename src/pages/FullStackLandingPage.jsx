@@ -6,7 +6,7 @@ import {
   MessageCircle, Layout, Server, Database, GitBranch, ShieldCheck, Laptop, 
   TrendingUp, RefreshCw, BarChart2, Shield, Eye
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 const OUTCOMES = [
   { title: "Build 8+ Practical Projects", desc: "Construct fully functional web applications from scratch, building a tangible repository that proves your capabilities to recruiters." },

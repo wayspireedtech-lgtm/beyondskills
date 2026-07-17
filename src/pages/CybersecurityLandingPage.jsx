@@ -6,7 +6,7 @@ import {
   Search, ShieldCheck, TrendingUp, RefreshCw, Send, FileText, Link as LinkIcon,
   Server, Cpu, Network, Activity, Layers, Lock, Key, EyeOff
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 const OUTCOMES = [
   { title: "Perform Network Scanning", desc: "Identify active hosts, open ports, and footprint network services using industry tools like Nmap." },

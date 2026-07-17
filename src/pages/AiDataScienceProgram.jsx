@@ -4,7 +4,7 @@ import {
   ChevronRight, Calendar, ShieldAlert, Sparkles, Phone, Mail, Globe, 
   Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download, Play, RefreshCw, BarChart2
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 export default function AiDataScienceProgram() {

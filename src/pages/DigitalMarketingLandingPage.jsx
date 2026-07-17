@@ -5,7 +5,7 @@ import {
   HelpCircle, ChevronDown, ChevronUp, Download, MessageCircle, Layout, 
   Search, ShieldCheck, TrendingUp, RefreshCw, Send, FileText, Link as LinkIcon
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import wiproLogo from '../assets/wipro.svg';
 import tcsLogo from '../assets/tcs.svg';
 import infosysLogo from '../assets/infosys.svg';
