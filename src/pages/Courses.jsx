@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Search, BookOpen, Clock, Star, GraduationCap, CheckCircle, ShieldAlert, Award, FileText, ArrowLeft, Users } from 'lucide-react';
-import { COURSES } from '../utils/mockDb';
+import { COURSES_SUMMARY as COURSES } from '../utils/coursesSummary';
 import TechIcon from '../components/TechIcon';
 import BrochureModal from '../components/BrochureModal';
 

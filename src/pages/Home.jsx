@@ -2,7 +2,26 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Code, Megaphone, CheckCircle, Star, Users, Briefcase, Award, Sparkles, MessageSquare, Plus, Minus, Send, Play, Terminal } from 'lucide-react';
 import TechIcon from '../components/TechIcon';
-import { COURSES, MENTORS, STUDENT_TESTIMONIALS, CLIENT_TESTIMONIALS, getDbItem, setDbItem } from '../utils/mockDb';
+import { COURSES_SUMMARY, findCourseSummary } from '../utils/coursesSummary';
+import { getDbItem, setDbItem } from '../utils/dbHelpers';
+
+// Static testimonials and mentors for homepage (avoiding heavy mockDb import)
+const MENTORS = [
+  { name: 'Kunal Rawal', role: 'Data Analytics Instructor', org: 'Deloitte & Airtel', exp: '7+ Years', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
+  { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor', org: 'Capgemini', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Nikhil Mehra', role: 'Full Stack Developer', org: 'NadahWeb', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' },
+  { name: 'Hardik Dhingra', role: 'Cyber Security Specialist', org: 'GoDaddy', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' },
+  { name: 'Shevam Nagar', role: 'Power BI Mentor', org: 'Capgemini', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Sanchit Singh', role: 'Data Analytics Mentor', org: 'EY', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
+];
+const CLIENT_TESTIMONIALS = [
+  { company: 'EdStart Solutions', client: 'Dr. Ramesh R.', text: 'BeyondSkills built our custom learning platform in record time. The quality of react implementation and analytics dashboard is incredible.', rating: 5 },
+  { company: 'Zeta Fashion Brand', client: 'Priya K.', text: 'Our performance ad campaign ROI went up by 45% in the first two months. Their meta ads optimizations are top tier.', rating: 5 }
+];
+const STUDENT_TESTIMONIALS = [
+  { name: 'Arjun Das', course: 'Full Stack Development', text: 'The dual learning model of recorded lessons and weekly live mentor reviews helped me clear coding interviews easily. The project dashboard is amazing.', rating: 5, company: 'Wipro' },
+  { name: 'Srinidhi Gowda', course: 'AI/ML/DS', text: 'Awesome mentor sessions! The Capstone project gave me hands-on practice. The onboarding is instant and certificate PDF download is direct.', rating: 5, company: 'Cognizant' }
+];
 import PartnerLogo from '../components/PartnerLogo';
 import BrochureModal from '../components/BrochureModal';
 
@@ -124,7 +143,7 @@ export default function Home() {
     'artificial-intelligence',
     'machine-learning',
     'digital-marketing-cert'
-  ].map(id => COURSES.find(c => c.id === id)).filter(Boolean);
+  ].map(id => findCourseSummary(id)).filter(Boolean);
 
   const partnersRow1 = [
     { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
@@ -795,7 +814,7 @@ export default function Home() {
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Course of Interest *</label>
                   <select value={academyForm.course} onChange={(e) => setAcademyForm({...academyForm, course: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
-                    {COURSES.map((c) => (
+                    {COURSES_SUMMARY.map((c) => (
                       <option key={c.id} value={c.id}>{c.title}</option>
                     ))}
                   </select>

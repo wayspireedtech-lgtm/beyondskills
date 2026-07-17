@@ -95,14 +95,27 @@
 
 .animate-pulse-glow {
   animation: pulseGlow 12s infinite ease-in-out;
+  will-change: opacity, transform;
 }
 
 .animate-float {
   animation: floatElement 6s infinite ease-in-out;
+  will-change: transform;
 }
 
 .animate-spin-slow {
   animation: spinSlow 20s infinite linear;
+  will-change: transform;
+}
+
+/* Disable decorative animations for users/devices that prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-glow,
+  .animate-float,
+  .animate-spin-slow,
+  .animate-infinite-scroll {
+    animation: none !important;
+  }
 }
 
 .logo-font {
