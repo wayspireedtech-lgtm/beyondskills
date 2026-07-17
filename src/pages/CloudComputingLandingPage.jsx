@@ -504,41 +504,41 @@ export default function CloudComputingLandingPage() {
             </div>
 
             {/* Sticky Lead Form Right column */}
-            <div id="enquiry-form-section" className="lg:col-span-5 bg-[#0F172A] border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+            <div id="enquiry-form-section" className="lg:col-span-5 bg-white border border-slate-200/85 text-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
               <div className="absolute -top-3.5 right-6 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider py-1 px-3.5 rounded-full shadow-md shadow-blue-500/20">
                 Admissions Open
               </div>
               
-              <h3 className="text-xl font-black text-white mb-1">Apply For Cohort</h3>
-              <p className="text-xs text-slate-400 mb-6">Enter your details to receive syllabus access, scheduling guidelines, and call advisor support.</p>
+              <h3 className="text-xl font-black text-slate-900 mb-1">Apply For Cohort</h3>
+              <p className="text-xs text-slate-500 mb-6">Enter your details to receive syllabus access, scheduling guidelines, and call advisor support.</p>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <input 
                     type="text" 
                     required 
                     placeholder="Enter your name" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 placeholder:text-slate-450"
                   />
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                     <input 
                       type="email" 
                       required 
                       placeholder="name@email.com" 
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 placeholder:text-slate-450"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
                     <input 
                       type="tel" 
                       required 
@@ -546,61 +546,61 @@ export default function CloudComputingLandingPage() {
                       placeholder="10-digit number" 
                       value={formData.phone}
                       onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white placeholder:text-slate-400"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 placeholder:text-slate-450"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                   <select 
                     value={formData.qualification}
                     onChange={(e) => setFormData({...formData, qualification: e.target.value})}
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
                   >
-                    <option className="bg-[#0F172A] text-white">Undergraduate Student</option>
-                    <option className="bg-[#0F172A] text-white">Postgraduate Student</option>
-                    <option className="bg-[#0F172A] text-white">Working Professional</option>
-                    <option className="bg-[#0F172A] text-white">Fresh Graduate (Job Seeking)</option>
+                    <option className="bg-white text-slate-900">Undergraduate Student</option>
+                    <option className="bg-white text-slate-900">Postgraduate Student</option>
+                    <option className="bg-white text-slate-900">Working Professional</option>
+                    <option className="bg-white text-slate-900">Fresh Graduate (Job Seeking)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Prior Cloud / Systems Experience</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Prior Cloud / Systems Experience</label>
                   <select 
                     value={formData.experience}
                     onChange={(e) => setFormData({...formData, experience: e.target.value})}
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
                   >
-                    <option className="bg-[#0F172A] text-white">Beginner (No Experience)</option>
-                    <option className="bg-[#0F172A] text-white">Basic Concepts (Some Knowledge)</option>
-                    <option className="bg-[#0F172A] text-white">Experienced (Looking to Upskill)</option>
+                    <option className="bg-white text-slate-900">Beginner (No Experience)</option>
+                    <option className="bg-white text-slate-900">Basic Concepts (Some Knowledge)</option>
+                    <option className="bg-white text-slate-900">Experienced (Looking to Upskill)</option>
                   </select>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                     <select 
                       value={formData.goal}
                       onChange={(e) => setFormData({...formData, goal: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
                     >
-                      <option className="bg-[#0F172A] text-white">Start a Career in Cloud & DevOps</option>
-                      <option className="bg-[#0F172A] text-white">Transition roles within IT</option>
-                      <option className="bg-[#0F172A] text-white">Prepare for AWS/Azure Certificates</option>
+                      <option className="bg-white text-slate-900">Start a Career in Cloud & DevOps</option>
+                      <option className="bg-white text-slate-900">Transition roles within IT</option>
+                      <option className="bg-white text-slate-900">Prepare for AWS/Azure Certificates</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
                     <select 
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({...formData, preferredTime: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-slate-900 transition-all text-white cursor-pointer"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
                     >
-                      <option className="bg-[#0F172A] text-white">Morning (10 AM - 1 PM)</option>
-                      <option className="bg-[#0F172A] text-white">Afternoon (2 PM - 5 PM)</option>
-                      <option className="bg-[#0F172A] text-white">Evening (6 PM - 9 PM)</option>
+                      <option className="bg-white text-slate-900">Morning (10 AM - 1 PM)</option>
+                      <option className="bg-white text-slate-900">Afternoon (2 PM - 5 PM)</option>
+                      <option className="bg-white text-slate-900">Evening (6 PM - 9 PM)</option>
                     </select>
                   </div>
                 </div>

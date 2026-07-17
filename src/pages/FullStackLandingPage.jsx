@@ -440,54 +440,54 @@ export default function FullStackLandingPage() {
           <div className="lg:col-span-5">
             <div 
               id="hero-application-form" 
-              className="bg-[#0F172A] border border-white/10 text-white rounded-3xl p-6 shadow-2xl w-full transition-all duration-300 relative overflow-hidden"
+              className="bg-white border border-slate-200/85 text-slate-800 rounded-3xl p-6 shadow-2xl w-full transition-all duration-300 relative overflow-hidden"
             >
-              <h3 className="font-manrope font-bold text-white text-base sm:text-lg mb-4 text-left border-b border-white/10 pb-2">
+              <h3 className="font-manrope font-bold text-slate-900 text-base sm:text-lg mb-4 text-left border-b border-slate-100 pb-2">
                 Cohort Admission Enquiry
               </h3>
               
               {status === 'success' ? (
-                <div className="bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
-                  <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto" />
-                  <h4 className="font-bold text-xs text-white">Enquiry Registered Successfully!</h4>
-                  <p className="text-[11px] text-emerald-400 leading-relaxed">
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-6 rounded-2xl space-y-2 text-center animate-fade-in">
+                  <CheckCircle className="w-10 h-10 text-emerald-600 mx-auto" />
+                  <h4 className="font-bold text-xs text-emerald-900">Enquiry Registered Successfully!</h4>
+                  <p className="text-[11px] text-emerald-700 leading-relaxed">
                     Your details have been logged in the admissions queue. An advisor will reach out to you shortly.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleApplySubmit} className="space-y-3.5 text-left">
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Full Name *</label>
+                    <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Full Name *</label>
                     <input 
                       type="text" 
                       required 
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({...enquiryForm, name: e.target.value})}
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all placeholder:text-slate-400"
                       placeholder="e.g., Rohan Sharma" 
                     />
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Email *</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Email *</label>
                       <input 
                         type="email" 
                         required 
                         value={enquiryForm.email}
                         onChange={(e) => setEnquiryForm({...enquiryForm, email: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all placeholder:text-slate-400"
                         placeholder="e.g., rohan@gmail.com" 
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Mobile *</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Mobile *</label>
                       <input 
                         type="tel" 
                         required 
                         value={enquiryForm.phone}
                         onChange={(e) => setEnquiryForm({...enquiryForm, phone: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all placeholder:text-slate-400"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all placeholder:text-slate-400"
                         placeholder="e.g., 99999 99999" 
                       />
                     </div>
@@ -495,58 +495,58 @@ export default function FullStackLandingPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Qualification *</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Qualification *</label>
                       <select 
                         value={enquiryForm.qualification}
                         onChange={(e) => setEnquiryForm({...enquiryForm, qualification: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all cursor-pointer text-slate-800"
                       >
-                        <option className="bg-[#0F172A] text-white" value="Undergraduate">Undergraduate Student</option>
-                        <option className="bg-[#0F172A] text-white" value="Postgraduate">Postgraduate Student</option>
-                        <option className="bg-[#0F172A] text-white" value="Fresh Graduate">Fresh Graduate</option>
-                        <option className="bg-[#0F172A] text-white" value="Working Professional">Working Professional</option>
-                        <option className="bg-[#0F172A] text-white" value="Other">Other</option>
+                        <option className="bg-white text-slate-900" value="Undergraduate">Undergraduate Student</option>
+                        <option className="bg-white text-slate-900" value="Postgraduate">Postgraduate Student</option>
+                        <option className="bg-white text-slate-900" value="Fresh Graduate">Fresh Graduate</option>
+                        <option className="bg-white text-slate-900" value="Working Professional">Working Professional</option>
+                        <option className="bg-white text-slate-900" value="Other">Other</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Coding Experience *</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Coding Experience *</label>
                       <select 
                         value={enquiryForm.experience}
                         onChange={(e) => setEnquiryForm({...enquiryForm, experience: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all cursor-pointer text-slate-800"
                       >
-                        <option className="bg-[#0F172A] text-white" value="Beginner - No Coding">Beginner - No Coding</option>
-                        <option className="bg-[#0F172A] text-white" value="Basic - Little Coding">Basic - Little Coding</option>
-                        <option className="bg-[#0F172A] text-white" value="Intermediate - Code Daily">Intermediate - Code Daily</option>
+                        <option className="bg-white text-slate-900" value="Beginner - No Coding">Beginner - No Coding</option>
+                        <option className="bg-white text-slate-900" value="Basic - Little Coding">Basic - Little Coding</option>
+                        <option className="bg-white text-slate-900" value="Intermediate - Code Daily">Intermediate - Code Daily</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Career Goal *</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Career Goal *</label>
                       <select 
                         value={enquiryForm.goal}
                         onChange={(e) => setEnquiryForm({...enquiryForm, goal: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all cursor-pointer text-slate-800"
                       >
-                        <option className="bg-[#0F172A] text-white" value="Land a Tech Job">Land a Tech Job</option>
-                        <option className="bg-[#0F172A] text-white" value="Freelancing/Independent">Freelancing</option>
-                        <option className="bg-[#0F172A] text-white" value="Build a Startup">Build a Startup</option>
-                        <option className="bg-[#0F172A] text-white" value="General Upskilling">General Upskilling</option>
+                        <option className="bg-white text-slate-900" value="Land a Tech Job">Land a Tech Job</option>
+                        <option className="bg-white text-slate-900" value="Freelancing/Independent">Freelancing</option>
+                        <option className="bg-white text-slate-900" value="Build a Startup">Build a Startup</option>
+                        <option className="bg-white text-slate-900" value="General Upskilling">General Upskilling</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-100 uppercase tracking-widest mb-1 font-mono">Preferred Call Time (Optional)</label>
+                      <label className="block text-[9px] font-bold text-slate-600 uppercase tracking-widest mb-1 font-mono">Preferred Call Time (Optional)</label>
                       <select 
                         value={enquiryForm.contactTime}
                         onChange={(e) => setEnquiryForm({...enquiryForm, contactTime: e.target.value})}
-                        className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-[#2563EB] focus:bg-slate-900 transition-all cursor-pointer"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:outline-none focus:border-[#2563EB] focus:bg-white transition-all cursor-pointer text-slate-800"
                       >
-                        <option className="bg-[#0F172A] text-white" value="">Select time...</option>
-                        <option className="bg-[#0F172A] text-white" value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
-                        <option className="bg-[#0F172A] text-white" value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
-                        <option className="bg-[#0F172A] text-white" value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
+                        <option className="bg-white text-slate-900" value="">Select time...</option>
+                        <option className="bg-white text-slate-900" value="Morning 9 AM - 12 PM">Morning 9 AM - 12 PM</option>
+                        <option className="bg-white text-slate-900" value="Afternoon 12 PM - 4 PM">Afternoon 12 PM - 4 PM</option>
+                        <option className="bg-white text-slate-900" value="Evening 4 PM - 8 PM">Evening 4 PM - 8 PM</option>
                       </select>
                     </div>
                   </div>
@@ -558,7 +558,7 @@ export default function FullStackLandingPage() {
                     Apply Now
                   </button>
                   
-                  <p className="text-[8px] text-slate-400 leading-normal text-center mt-2 font-mono">
+                  <p className="text-[8px] text-slate-500 leading-normal text-center mt-2 font-mono">
                     *By submitting this form you agree to be contacted regarding this program.
                   </p>
                 </form>

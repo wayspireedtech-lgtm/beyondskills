@@ -390,19 +390,19 @@ export default function AiMlDataScienceLandingPage() {
 
           {/* Right Lead Capture Form Card */}
           <div className="lg:col-span-5 relative">
-            <div id="hero-application-form" className="bg-[#0F172A] border border-white/10 text-white rounded-3xl p-6 sm:p-8 shadow-2xl transition-all relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/10 rounded-full blur-[30px] pointer-events-none"></div>
+            <div id="hero-application-form" className="bg-white border border-slate-200/85 text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl transition-all relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/5 rounded-full blur-[30px] pointer-events-none"></div>
               
-              <h3 className="text-white font-extrabold text-lg sm:text-xl mb-1.5 text-left">Request Program Info</h3>
-              <p className="text-xs text-slate-400 mb-6 text-left">Fill in details. Our admissions advisor will contact you soon.</p>
+              <h3 className="text-slate-900 font-extrabold text-lg sm:text-xl mb-1.5 text-left">Request Program Info</h3>
+              <p className="text-xs text-slate-500 mb-6 text-left">Fill in details. Our admissions advisor will contact you soon.</p>
               
               <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <div className="relative">
                     <input 
                       type="text" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. Rahul Sharma"
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
@@ -412,11 +412,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                   <div className="relative">
                     <input 
                       type="email" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. rahul@example.com"
                       value={enquiryForm.email}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
@@ -426,11 +426,11 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
                   <div className="relative">
                     <input 
                       type="tel" required 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:border-[#2563EB] outline-none"
+                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. +91 98765 43210"
                       value={enquiryForm.phone}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
@@ -441,57 +441,57 @@ export default function AiMlDataScienceLandingPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                     <select 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
+                      className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                       value={enquiryForm.qualification}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, qualification: e.target.value })}
                     >
-                      <option className="bg-[#0F172A] text-white" value="Undergraduate">Undergraduate</option>
-                      <option className="bg-[#0F172A] text-white" value="Postgraduate">Postgraduate</option>
-                      <option className="bg-[#0F172A] text-white" value="College Student">College Student</option>
-                      <option className="bg-[#0F172A] text-white" value="Working Professional">Working Professional</option>
+                      <option className="bg-white text-slate-900" value="Undergraduate">Undergraduate</option>
+                      <option className="bg-white text-slate-900" value="Postgraduate">Postgraduate</option>
+                      <option className="bg-white text-slate-900" value="College Student">College Student</option>
+                      <option className="bg-white text-slate-900" value="Working Professional">Working Professional</option>
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
+                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
                     <select 
-                      className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
+                      className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                       value={enquiryForm.experience}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, experience: e.target.value })}
                     >
-                      <option className="bg-[#0F172A] text-white" value="Beginner - No Coding">Beginner (No Coding)</option>
-                      <option className="bg-[#0F172A] text-white" value="Basic Knowledge">Basic Knowledge</option>
-                      <option className="bg-[#0F172A] text-white" value="Experienced Developer">Experienced Developer</option>
+                      <option className="bg-white text-slate-900" value="Beginner - No Coding">Beginner (No Coding)</option>
+                      <option className="bg-white text-slate-900" value="Basic Knowledge">Basic Knowledge</option>
+                      <option className="bg-white text-slate-900" value="Experienced Developer">Experienced Developer</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                   <select 
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
+                    className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                     value={enquiryForm.goal}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, goal: e.target.value })}
                   >
-                    <option className="bg-[#0F172A] text-white" value="Land a Tech Job">Get a Tech Job</option>
-                    <option className="bg-[#0F172A] text-white" value="Career Transition">Switch Careers</option>
-                    <option className="bg-[#0F172A] text-white" value="Freelancing / Projects">Freelance Work</option>
-                    <option className="bg-[#0F172A] text-white" value="Build an AI Startup">Build an AI Startup</option>
+                    <option className="bg-white text-slate-900" value="Land a Tech Job">Get a Tech Job</option>
+                    <option className="bg-white text-slate-900" value="Career Transition">Switch Careers</option>
+                    <option className="bg-white text-slate-900" value="Freelancing / Projects">Freelance Work</option>
+                    <option className="bg-white text-slate-900" value="Build an AI Startup">Build an AI Startup</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-100 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
+                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
                   <select 
-                    className="w-full bg-slate-900/60 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:border-[#2563EB] outline-none cursor-pointer"
+                    className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                     value={enquiryForm.contactTime}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, contactTime: e.target.value })}
                   >
-                    <option className="bg-[#0F172A] text-white" value="">Any Time</option>
-                    <option className="bg-[#0F172A] text-white" value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                    <option className="bg-[#0F172A] text-white" value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
-                    <option className="bg-[#0F172A] text-white" value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
+                    <option className="bg-white text-slate-900" value="">Any Time</option>
+                    <option className="bg-white text-slate-900" value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
+                    <option className="bg-white text-slate-900" value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
+                    <option className="bg-white text-slate-900" value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
                   </select>
                 </div>
 
@@ -504,13 +504,13 @@ export default function AiMlDataScienceLandingPage() {
                 </button>
 
                 {status === 'success' && (
-                  <div className="bg-emerald-955/40 border border-emerald-500/20 text-emerald-400 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center space-x-1.5 animate-fade-in">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center space-x-1.5 animate-fade-in">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     <span>Application logged! Our counselor will call you shortly.</span>
                   </div>
                 )}
 
-                <p className="text-[9px] text-slate-400 text-center leading-relaxed pt-2">
+                <p className="text-[9px] text-slate-500 text-center leading-relaxed pt-2">
                   By submitting this form you agree to be contacted regarding this upskilling program.
                 </p>
               </form>

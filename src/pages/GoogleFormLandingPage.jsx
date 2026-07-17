@@ -229,9 +229,9 @@ Submitted via Google Form Campaign page
         </div>
 
         {/* Form Card */}
-        <div className="bg-slate-900/55 border border-white/10 p-6 sm:p-10 rounded-3xl backdrop-blur-xl shadow-2xl space-y-8">
+        <div className="bg-white border border-slate-200/85 p-6 sm:p-10 rounded-3xl backdrop-blur-xl shadow-2xl space-y-8 text-slate-850">
           {errorMessage && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs font-medium">
+            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-xs font-medium">
               ⚠️ {errorMessage}
             </div>
           )}
@@ -240,8 +240,8 @@ Submitted via Google Form Campaign page
             {/* Required Group Name, Email, Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <User className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <User className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Full Name <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -251,13 +251,13 @@ Submitted via Google Form Campaign page
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Enter your name"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
                 />
               </div>
               
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <Phone className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <Phone className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Phone Number <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -267,15 +267,15 @@ Submitted via Google Form Campaign page
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="e.g. +91 9876543210"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <Mail className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <Mail className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Email Address <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -285,13 +285,13 @@ Submitted via Google Form Campaign page
                   value={form.email}
                   onChange={handleChange}
                   placeholder="e.g. john@gmail.com"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   College / Institute
                 </label>
                 <input
@@ -300,7 +300,7 @@ Submitted via Google Form Campaign page
                   value={form.college}
                   onChange={handleChange}
                   placeholder="Enter your college name"
-                  className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
                 />
               </div>
             </div>
@@ -308,15 +308,15 @@ Submitted via Google Form Campaign page
             {/* Year & Student/Working Professional */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Academic Year
                 </label>
                 <select
                   name="year"
                   value={form.year}
                   onChange={handleChange}
-                  className="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all cursor-pointer"
                 >
                   <option value="1st Year">1st Year</option>
                   <option value="2nd Year">2nd Year</option>
@@ -327,15 +327,15 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <Briefcase className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <Briefcase className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Current Profile
                 </label>
                 <select
                   name="role"
                   value={form.role}
                   onChange={handleChange}
-                  className="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all cursor-pointer"
                 >
                   <option value="Student">Student</option>
                   <option value="Working Professional">Working Professional</option>
@@ -346,15 +346,15 @@ Submitted via Google Form Campaign page
             {/* Upskilling (Dropdown of all courses) & Batch (July/August) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <BookOpen className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <BookOpen className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Upskilling Goal (Course)
                 </label>
                 <select
                   name="upskilling"
                   value={form.upskilling}
                   onChange={handleChange}
-                  className="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all cursor-pointer"
                 >
                   {COURSES.map(course => (
                     <option key={course.id} value={course.id}>
@@ -365,15 +365,15 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                  <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Preferred Batch
                 </label>
                 <select
                   name="batch"
                   value={form.batch}
                   onChange={handleChange}
-                  className="w-full bg-slate-950/80 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all cursor-pointer"
                 >
                   <option value="July Batch">July Batch</option>
                   <option value="August Batch">August Batch</option>
@@ -383,8 +383,8 @@ Submitted via Google Form Campaign page
 
             {/* Project Work Experience */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+              <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                 Project / Work Experience
               </label>
               <input
@@ -393,14 +393,14 @@ Submitted via Google Form Campaign page
                 value={form.projectExp}
                 onChange={handleChange}
                 placeholder="Briefly describe your project/work experience (e.g. None, Basic HTML site, Python script)"
-                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all shadow-inner placeholder-slate-400"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
               />
             </div>
 
             {/* Why Interested */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-100 uppercase tracking-widest font-mono mb-2 flex items-center">
-                <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
+              <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                 Why are you interested in this program?
               </label>
               <textarea
@@ -409,7 +409,7 @@ Submitted via Google Form Campaign page
                 value={form.whyInterested}
                 onChange={handleChange}
                 placeholder="What is your learning goal or target outcome from this course..."
-                className="w-full bg-slate-950/60 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-white transition-all placeholder-slate-400"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-blue-500 focus:bg-white outline-none text-slate-800 transition-all placeholder-slate-400"
               />
             </div>
 
