@@ -5,6 +5,7 @@ import {
   Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download, Play, RefreshCw, BarChart2
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/mockDb';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 export default function AiDataScienceProgram() {
   const [faqOpen, setFaqOpen] = useState({});
@@ -242,14 +243,61 @@ export default function AiDataScienceProgram() {
     }
   };
 
-  const handleEnquirySubmit = (e) => {
+  const handleEnquirySubmit = async (e) => {
     e.preventDefault();
+
+    const courseTitle = 'AI & Data Science Specialist';
+    const detailedNotes = `College: ${enquiryForm.college || 'N/A'}\nMessage: ${enquiryForm.message || 'N/A'}\nSubmitted via AI & Data Science Program page`;
+
+    const payload = {
+      name: enquiryForm.name.trim(),
+      email: enquiryForm.email.trim(),
+      phone: enquiryForm.phone.trim(),
+      type: 'Ads Leads',
+      program: 'artificial-intelligence',
+      notes: detailedNotes,
+      college: enquiryForm.college || 'Unspecified',
+      profession: enquiryForm.status,
+      message: enquiryForm.message || ''
+    };
+
+    // 1. Save to Supabase (dynamic client with fallbacks)
+    const leadRecord = {
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      status: payload.profession,
+      course_id: payload.program,
+      course_title: courseTitle,
+      student_details: `College: ${payload.college} | Message: ${payload.message}`,
+      job_role: payload.profession
+    };
+    await saveLeadToSupabase(leadRecord);
+
+    // 2. Post to backend webhook API
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.error('Error posting enquiry to backend webhook:', err);
+    }
+
+    // 3. Save locally for fallback redundancy
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       id: `LD${String(leads.length + 101).padStart(3, '0')}`,
       type: 'Ads Leads', 
       program: 'artificial-intelligence',
-      course: 'AI & Data Science Specialist',
+      course: courseTitle,
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,

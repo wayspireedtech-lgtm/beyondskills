@@ -7,7 +7,8 @@ import {
   ChevronLeft, ArrowLeft, Download, Maximize2, Minimize2, Laptop, GraduationCap, MapPin, Phone, Globe, Eye, BookOpenCheck,
   Clock, RefreshCw, ShieldAlert, Check
 } from 'lucide-react';
-import { COURSES } from '../utils/mockDb';
+import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 import TechIcon from '../components/TechIcon';
 
 const COMPANYS_TIEUPS = [
@@ -518,9 +519,94 @@ export default function AiBrochure() {
     }
   };
 
-  const handleEnquirySubmit = (e) => {
+  const handleEnquirySubmit = async (e) => {
     e.preventDefault();
+
+    const courseTitle = course ? course.title : 'Program Specialist';
+    const courseSlug = course ? course.id : 'artificial-intelligence';
+    const detailedNotes = `College: ${enquiryForm.college || 'N/A'}\nMessage: ${enquiryForm.message || 'N/A'}\nSubmitted via ${courseTitle} Brochure / Booklet page`;
+
+    const payload = {
+      name: enquiryForm.name.trim(),
+      email: enquiryForm.email.trim(),
+      phone: enquiryForm.phone.trim(),
+      type: 'Ads Leads',
+      program: courseSlug,
+      notes: detailedNotes,
+      college: enquiryForm.college || 'Unspecified',
+      profession: enquiryForm.status,
+      message: enquiryForm.message || ''
+    };
+
+    // 1. Save to Supabase (dynamic client with fallbacks)
+    const leadRecord = {
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      status: payload.profession,
+      course_id: payload.program,
+      course_title: courseTitle,
+      student_details: `College: ${payload.college} | Message: ${payload.message}`,
+      job_role: payload.profession
+    };
+    await saveLeadToSupabase(leadRecord);
+
+    // 2. Post to backend webhook API
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.error('Error posting enquiry to backend webhook:', err);
+    }
+
+    // 3. Save locally for fallback redundancy
+    const leads = getDbItem('beyondskills_leads', []);
+    const newLead = { 
+      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
+      type: 'Ads Leads', 
+      program: courseSlug,
+      course: courseTitle,
+      name: enquiryForm.name,
+      email: enquiryForm.email,
+      phone: enquiryForm.phone,
+      college: enquiryForm.college,
+      qualification: enquiryForm.college,
+      profession: enquiryForm.status,
+      message: enquiryForm.message,
+      status: 'New',
+      subStatus: 'QUALIFIED',
+      date: new Date().toISOString() 
+    };
+    leads.push(newLead);
+    setDbItem('beyondskills_leads', leads);
+
+    // Simulated email SLA trigger
+    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+      detail: {
+        subject: `${courseTitle} Brochure Query Registered`,
+        body: `Hello ${enquiryForm.name},\n\nWe have logged your course brochure query for ${courseTitle}.\n\nAn academic counselor will contact you within 24 hours at ${enquiryForm.phone} or via email to guide you through model files, schedules, and dashboard logins.\n\nWarm regards,\nBeyondSkills Admissions Team`
+      }
+    }));
+
     setEnquiryStatus('success');
+    setEnquiryForm({
+      name: '',
+      email: '',
+      phone: '',
+      college: '',
+      status: 'Undergraduate Student',
+      message: ''
+    });
+    setTimeout(() => setEnquiryStatus(null), 5000);
   };
 
   const downloadSyllabusMock = () => {
