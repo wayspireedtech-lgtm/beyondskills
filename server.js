@@ -118,6 +118,34 @@ app.post('/api/verify-payment', (req, res) => {
 
 // Webhook leads database helper path
 const LEADS_FILE = './leads_db.json';
+const CONFIG_FILE = './config.json';
+
+// GET: Fetch config settings
+app.get('/api/config', (req, res) => {
+  try {
+    if (!fs.existsSync(CONFIG_FILE)) {
+      return res.status(200).json({ googleSheetWebhookUrl: '' });
+    }
+    const data = fs.readFileSync(CONFIG_FILE, 'utf-8');
+    res.status(200).json(JSON.parse(data || '{}'));
+  } catch (error) {
+    console.error('Error fetching config:', error);
+    res.status(500).json({ error: 'Failed to retrieve configuration.' });
+  }
+});
+
+// POST: Save config settings
+app.post('/api/config', (req, res) => {
+  try {
+    const { googleSheetWebhookUrl } = req.body;
+    const config = { googleSheetWebhookUrl: googleSheetWebhookUrl || '' };
+    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
+    res.status(200).json({ success: true, message: 'Configuration saved successfully.' });
+  } catch (error) {
+    console.error('Error saving config:', error);
+    res.status(500).json({ error: 'Failed to save configuration.' });
+  }
+});
 
 // GET: Fetch all webhook leads
 app.get('/api/webhook/leads', (req, res) => {
@@ -134,9 +162,12 @@ app.get('/api/webhook/leads', (req, res) => {
 });
 
 // POST: Add new lead (from Google Apps Script webhook / Ads triggers)
-app.post('/api/webhook/leads', (req, res) => {
+app.post('/api/webhook/leads', async (req, res) => {
   try {
-    const { name, email, phone, type, program, notes } = req.body;
+    const { 
+      name, email, phone, type, program, notes,
+      college, profession, message, batch, projectExp, whyInterested, year
+    } = req.body;
     
     if (!name || !phone) {
       return res.status(400).json({ error: 'Name and Phone fields are required.' });
@@ -165,7 +196,9 @@ app.post('/api/webhook/leads', (req, res) => {
       assignedBDA: '',
       status: 'New',
       subStatus: 'QUALIFIED',
-      profession: 'Unspecified',
+      profession: profession || 'Unspecified',
+      college: college || 'Unspecified',
+      message: message || '',
       mentor: 'None',
       duration: 'None',
       callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
@@ -175,7 +208,53 @@ app.post('/api/webhook/leads', (req, res) => {
     existingLeads.push(newLead);
     fs.writeFileSync(LEADS_FILE, JSON.stringify(existingLeads, null, 2), 'utf-8');
 
-    res.status(201).json({ success: true, message: 'Lead recorded successfully.', lead: newLead });
+    // Forward to Google Sheet Webhook if configured
+    let forwardedToSheet = false;
+    if (fs.existsSync(CONFIG_FILE)) {
+      try {
+        const configData = fs.readFileSync(CONFIG_FILE, 'utf-8');
+        const config = JSON.parse(configData || '{}');
+        if (config.googleSheetWebhookUrl) {
+          const webhookPayload = {
+            name,
+            phone,
+            email,
+            college: college || 'N/A',
+            year: year || 'N/A',
+            role: profession || 'N/A',
+            program: program || 'N/A',
+            batch: batch || 'N/A',
+            projectExp: projectExp || 'N/A',
+            whyInterested: whyInterested || 'N/A',
+            date: newLead.date
+          };
+          
+          const sheetRes = await fetch(config.googleSheetWebhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(webhookPayload)
+          });
+          
+          if (sheetRes.ok) {
+            forwardedToSheet = true;
+            console.log(`Successfully forwarded lead to Google Sheet Webhook: ${name}`);
+          } else {
+            console.warn(`Google Sheet Webhook returned status: ${sheetRes.status}`);
+          }
+        }
+      } catch (err) {
+        console.error('Error forwarding lead to Google Sheet Webhook:', err);
+      }
+    }
+
+    res.status(201).json({ 
+      success: true, 
+      message: 'Lead recorded successfully.', 
+      lead: newLead,
+      forwardedToSheet
+    });
   } catch (error) {
     console.error('Error saving lead via webhook:', error);
     res.status(500).json({ error: 'Internal server error while processing webhook.' });

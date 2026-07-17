@@ -166,6 +166,7 @@ export default function AdminDashboard() {
 
   // Google Sheets integration bindings
   const [googleFormSheetUrl, setGoogleFormSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_google_form') || '');
+  const [googleSheetWebhookUrl, setGoogleSheetWebhookUrl] = useState('');
   const [adsSheetUrl, setAdsSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_ads') || '');
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -196,6 +197,24 @@ export default function AdminDashboard() {
 
   // Selected BDA for detailed BDA Performance sub-status view
   const [selectedBdaName, setSelectedBdaName] = useState('');
+
+  const handleSaveWebhookUrl = async (url) => {
+    setGoogleSheetWebhookUrl(url);
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+      await fetch(`${apiHost}/api/config`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ googleSheetWebhookUrl: url })
+      });
+    } catch (err) {
+      console.error('Error saving config:', err);
+    }
+  };
 
   const fetchWebhookLeads = async () => {
     try {
@@ -233,6 +252,25 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
+    // Fetch google sheet webhook url from backend config
+    const fetchConfig = async () => {
+      try {
+        const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:5000'
+          : window.location.origin;
+        const res = await fetch(`${apiHost}/api/config`);
+        if (res.ok) {
+          const config = await res.json();
+          if (config.googleSheetWebhookUrl) {
+            setGoogleSheetWebhookUrl(config.googleSheetWebhookUrl);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching config:', err);
+      }
+    };
+    fetchConfig();
+
     // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
     if (!loggedInUser || !['Admin', 'BDA', 'BDM', 'Sales Head'].includes(loggedInUser.role)) {
@@ -3584,13 +3622,62 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-1.5 leading-relaxed text-slate-350">
+              <div>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono text-[#0EA5E9]">
+                  Google Sheet Webhook URL (Real-time React Form Writes)
+                </label>
+                <input 
+                  type="text"
+                  value={googleSheetWebhookUrl}
+                  onChange={(e) => handleSaveWebhookUrl(e.target.value)}
+                  placeholder="https://script.google.com/macros/s/.../exec"
+                  className="w-full bg-[#05092A] border border-[#0EA5E9]/20 rounded-lg px-3 py-2 text-white outline-none focus:border-[#0EA5E9] font-mono text-[11px]"
+                />
+                <span className="text-[9px] text-slate-500 mt-1 block">
+                  Pushes student campaign form submissions directly to this Sheet in real-time.
+                </span>
+              </div>
+
+              <div className="bg-slate-950/40 p-4 rounded-xl border border-white/5 space-y-2.5 leading-relaxed text-slate-350 max-h-[300px] overflow-y-auto">
                 <p className="font-bold text-slate-300">How to publish your Sheets for Direct Integration:</p>
-                <ol className="list-decimal list-inside space-y-1 font-mono text-[10px]">
+                <ol className="list-decimal list-inside space-y-1.5 font-mono text-[10px]">
                   <li>Open your Google Sheet linked with Google Forms / FB Ads.</li>
                   <li>Click <strong className="text-white">File &gt; Share &gt; Publish to web</strong>.</li>
                   <li>Select the targets and choose format: <strong className="text-white">Comma-separated values (.csv)</strong>.</li>
-                  <li>Copy and paste the published link in the input fields above.</li>
+                  <li>Copy and paste the published link in the CSV Link inputs above.</li>
+                </ol>
+
+                <p className="font-bold text-[#0EA5E9] text-[10px] uppercase tracking-wider border-t border-white/10 pt-2.5 mt-2">
+                  Direct Real-time Form Connection (Apps Script):
+                </p>
+                <ol className="list-decimal list-inside space-y-2 font-mono text-[10px]">
+                  <li>Open your Google Sheet, click <strong className="text-white">Extensions &gt; Apps Script</strong>.</li>
+                  <li>Clear default code and paste the following:
+                    <pre className="bg-slate-950 p-2 rounded text-brand-cyan text-[9px] overflow-x-auto mt-1 block select-all font-sans font-mono whitespace-pre-wrap leading-tight">
+{`function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.date || new Date().toLocaleDateString('en-GB'),
+    data.name,
+    data.phone,
+    data.email,
+    data.college,
+    data.year,
+    data.role,
+    data.program,
+    data.batch,
+    data.projectExp,
+    data.whyInterested
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({ success: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`}
+                    </pre>
+                  </li>
+                  <li>Click <strong className="text-white">Deploy &gt; New Deployment</strong>. Select type: <strong className="text-white">Web App</strong>.</li>
+                  <li>Set "Execute as" to <strong className="text-white">Me</strong> and "Who has access" to <strong className="text-white">Anyone</strong>.</li>
+                  <li>Click Deploy, authorize permissions, copy the Web App URL, and paste it into the Webhook input above.</li>
                 </ol>
               </div>
 

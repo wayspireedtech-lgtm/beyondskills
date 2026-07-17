@@ -68,7 +68,14 @@ Submitted via Google Form Campaign page
         phone: form.phone.trim(),
         type: 'Google Form Leads', // Classified under Google Form Leads as requested
         program: form.upskilling,
-        notes: detailedNotes
+        notes: detailedNotes,
+        college: form.college.trim() || 'Unspecified',
+        profession: form.role,
+        year: form.year,
+        batch: form.batch,
+        projectExp: form.projectExp.trim() || 'None',
+        whyInterested: form.whyInterested.trim() || 'N/A',
+        message: detailedNotes
       };
 
       // 1. Post to backend webhook API
@@ -99,6 +106,8 @@ Submitted via Google Form Campaign page
         status: 'New',
         subStatus: 'QUALIFIED',
         profession: form.role,
+        college: form.college.trim() || 'Unspecified',
+        message: detailedNotes,
         mentor: 'None',
         duration: 'None',
         callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
