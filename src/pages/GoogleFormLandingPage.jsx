@@ -5,6 +5,7 @@ import {
   Calendar, BookOpen, User, Phone, Mail, FileText, CheckCircle 
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 export default function GoogleFormLandingPage() {
   const navigate = useNavigate();
@@ -50,6 +51,19 @@ export default function GoogleFormLandingPage() {
       // Find course name for logs
       const selectedCourse = COURSES.find(c => c.id === form.upskilling);
       const courseTitle = selectedCourse ? selectedCourse.title : form.upskilling;
+
+      // 0. Save to Supabase (dynamic client with fallbacks)
+      const leadRecord = {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        status: form.role,
+        course_id: form.upskilling,
+        course_title: courseTitle,
+        student_details: `College: ${form.college || 'N/A'} | Year: ${form.year} | Batch: ${form.batch} | Why: ${form.whyInterested || 'N/A'}`,
+        job_role: form.projectExp || 'None'
+      };
+      await saveLeadToSupabase(leadRecord);
 
       // Construct detailed notes containing extra metadata fields
       const detailedNotes = `
