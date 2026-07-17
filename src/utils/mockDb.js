@@ -1221,16 +1221,14 @@ export const COURSES = [
     curriculum: [
       {
         week: 'Module 1',
-        title: 'Introduction to Cloud Computing: Concepts, Service Models, & Modern Use Cases',
+        title: 'Introduction to Cloud Computing: Concepts, Service Models, and Modern Use Cases',
         topics: [
-          'Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology',
-          'Service Models: Infrastructure as a Service (IaaS), Platform as a Service (PaaS), Software as a Service (SaaS)',
-          'Modern Enterprise Use Cases for Cloud Computing'
+          'Introduction to Cloud Computing: Concepts, Service Models (IaaS, PaaS, SaaS), and Modern Use Cases'
         ]
       },
       {
         week: 'Module 2',
-        title: 'Cloud Fundamentals: Core Concepts & Service Models',
+        title: 'Cloud Fundamentals: Core Concepts, Service Models, and Use Cases',
         topics: [
           'Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology',
           'Key Benefits of Cloud Computing: Scalability, Cost Efficiency, Flexibility, Security, and High Availability'
@@ -1245,14 +1243,14 @@ export const COURSES = [
       },
       {
         week: 'Module 4',
-        title: 'Cloud Fundamentals (Advanced Concepts & Practical Understanding)',
+        title: 'Cloud Fundamentals (Advanced Concepts and Practical Understanding)',
         topics: [
           'Cloud Computing Models: Service Models (IaaS, PaaS, SaaS) and Deployment Models (Public, Private, Hybrid, Multi-Cloud)'
         ]
       },
       {
         week: 'Module 5',
-        title: 'Microsoft Azure Fundamentals: Overview of Services & Architecture',
+        title: 'Microsoft Azure Fundamentals: Overview of Azure Services and Architecture',
         topics: [
           'Introduction to Microsoft Azure: Overview and Core Capabilities',
           'Exploring Azure Services: Service Tour and Practical Use Cases',
@@ -1277,7 +1275,7 @@ export const COURSES = [
       },
       {
         week: 'Module 8',
-        title: 'Azure Networking (Advanced Configuration & Security)',
+        title: 'Azure Networking (Advanced Configuration and Security)',
         topics: [
           'Implementing N-Tier Architecture in Azure: Design and Best Practices',
           'Network Security Groups (NSGs): Configuration and Access Control',
@@ -1290,7 +1288,7 @@ export const COURSES = [
       },
       {
         week: 'Module 9',
-        title: 'Azure Compute Services: Virtual Machines, App Services, & Containers',
+        title: 'Azure Compute Services: Virtual Machines, App Services, and Containers',
         topics: [
           'Virtual Machines and Containers in Azure: Deployment and Management',
           'Azure App Service: Hosting Web Apps and APIs',
@@ -1304,7 +1302,7 @@ export const COURSES = [
       },
       {
         week: 'Module 10',
-        title: 'Azure Storage: Types of Data and Storage Solutions',
+        title: 'Azure Storage: Types of Data (Structured, Unstructured) and Storage Solutions',
         topics: [
           'Overview of Azure Storage: Architecture, Capabilities, and Use Cases',
           'Types of Azure Storage: Blob, File, Queue, Disk, and Data Lake Storage',
@@ -1323,7 +1321,7 @@ export const COURSES = [
       },
       {
         week: 'Module 11',
-        title: 'Azure Security: Layered Security Approach & Best Practices',
+        title: 'Azure Security: Layered Security Approach and Best Practices',
         topics: [
           'Cloud Security Usage Scenarios: Practical Applications and Best Practices',
           'Identity and Access Management (IAM): Authentication, Authorization, and Role-Based Access Control',
@@ -1336,7 +1334,7 @@ export const COURSES = [
       },
       {
         week: 'Module 12',
-        title: 'Azure Machine Learning: Introduction & Optimization',
+        title: 'Azure Machine Learning, Cost Optimization, & Backup Services',
         topics: [
           'Setting Up Monitoring with Azure Service Health: Alerts, Insights, and Issue Management',
           'Implementing Azure Policy: Enforcing Organizational Standards and Compliance',
@@ -1359,14 +1357,14 @@ export const COURSES = [
       },
       {
         week: 'Module 14',
-        title: 'Project Discussion, Career Guidance, & Doubt Resolution',
+        title: 'Project Discussion, Career Guidance, and Course Doubt Resolution',
         topics: [
           'Project Overview and Requirements Analysis: Planning and Execution Strategy',
           'Project Review, Feedback, and Iterative Improvement Sessions',
           'Continuous Doubt Resolution and Mentorship Support',
           'Concept Revision, Interactive Q&A, and Knowledge Reinforcement',
           'Industry Use Cases and Real-World Application Discussions',
-          'Career Opportunities in Data Science and Emerging Domains',
+          'Career Opportunities and Emerging Roles in Data Science',
           'Job Roles, Career Pathways, and Professional Growth Strategies',
           'Key Skills, Tools, and Competencies for Industry Readiness'
         ]

@@ -19,126 +19,166 @@ const OUTCOMES = [
 const CURRICULUM = [
   {
     week: "Module 1",
-    title: "Introduction to Cloud Computing",
-    subtopic: "Concepts, Service Models, and Modern Enterprise Use Cases",
+    title: "Introduction to Cloud Computing: Concepts, Service Models, and Modern Use Cases",
+    subtopic: "Introduction to Cloud Computing: Concepts, Service Models (IaaS, PaaS, SaaS), and Modern Use Cases",
     details: [
-      "Cloud Infrastructure Fundamentals: Understanding virtualization, storage networks, and hypervisor frameworks.",
-      "Service Delivery Models: Breaking down Infrastructure as a Service (IaaS), Platform (PaaS), and Software (SaaS).",
-      "Modern Enterprise Use Cases: Multi-region hosting, microservices scaling, and high-availability database clusters."
+      "Introduction to Cloud Computing: Concepts, Service Models (IaaS, PaaS, SaaS), and Modern Use Cases"
     ]
   },
   {
     week: "Module 2",
-    title: "Key Infrastructure Benefits",
-    subtopic: "Scalability, Cost Controls, and System Availability Models",
+    title: "Cloud Fundamentals: Core Concepts, Service Models, and Use Cases",
+    subtopic: "Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology",
     details: [
-      "Core Cloud Mechanics: How hardware virtualization allocates compute nodes dynamically.",
-      "Infrastructure Benefits: Analyzing vertical/horizontal scaling, cost governance, payload flexibilities, and standard SLAs."
+      "Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology",
+      "Key Benefits of Cloud Computing: Scalability, Cost Efficiency, Flexibility, Security, and High Availability"
     ]
   },
   {
     week: "Module 3",
-    title: "Doubt Resolution & Discussions",
-    subtopic: "Real-time Q&A, Support Forums, and Interactive Exercises",
+    title: "Dedicated Doubt-Clearing and Interactive Discussion Sessions",
+    subtopic: "Dedicated sessions will be conducted to address course-related doubts and encourage discussions",
     details: [
-      "Interactive Support: Reviewing week 1 & 2 cloud architecture setups, resolving dashboard deployment queries."
+      "Dedicated sessions will be conducted to address course-related doubts and encourage discussions"
     ]
   },
   {
     week: "Module 4",
-    title: "Deployment Architectures",
-    subtopic: "Public, Private, Hybrid, and Multi-Cloud Models",
+    title: "Cloud Fundamentals (Advanced Concepts and Practical Understanding)",
+    subtopic: "Cloud Computing Models: Service Models (IaaS, PaaS, SaaS) and Deployment Models",
     details: [
-      "Cloud Deployment Strategies: Reviewing compliance, performance parameters, and network speeds of public, private, and hybrid setups."
+      "Cloud Computing Models: Service Models (IaaS, PaaS, SaaS) and Deployment Models (Public, Private, Hybrid, Multi-Cloud)"
     ]
   },
   {
     week: "Module 5",
-    title: "Microsoft Azure Fundamentals",
-    subtopic: "Console Overview, Azure Services, and Subscriptions",
+    title: "Microsoft Azure Fundamentals: Overview of Azure Services and Architecture",
+    subtopic: "Introduction to Microsoft Azure: Overview and Core Capabilities",
     details: [
-      "Azure Portal Walkthrough: Navigating resources, creating billing alerts, managing organizations, and resource groups.",
-      "Subscription Management: Access controls, Azure Active Directory sync, and cost tracking configurations."
+      "Introduction to Microsoft Azure: Overview and Core Capabilities",
+      "Exploring Azure Services: Service Tour and Practical Use Cases",
+      "Managing Azure Subscriptions: Setup, Configuration, and Access Control"
     ]
   },
   {
     week: "Module 6",
-    title: "Azure Networking & VPN",
-    subtopic: "Virtual Networks, Subnets, and Connectivity Rules",
+    title: "Azure Networking: Virtual Networks, Subnets, and Connectivity",
+    subtopic: "Virtual Networks (VNet) in Azure: Concepts, Configuration, and Best Practices",
     details: [
-      "Virtual Networks (VNet): Creating subnets, routing tables, and setting up DNS routing profiles.",
-      "VNet Peering & VPN Gateways: Building secure secure tunnels between isolated virtual networks."
+      "Understanding Azure VPN: Purpose, Use Cases, and Hands-On Implementation",
+      "Introduction to Azure Regions: Geographic Distribution and Availability Zones",
+      "Virtual Networks (VNet) in Azure: Concepts, Configuration, and Best Practices"
     ]
   },
   {
     week: "Module 7",
-    title: "Mid-Term Review & Support",
-    subtopic: "Interactive Review of Custom VNet & Network Configurations",
+    title: "Regular Doubt-Clearing and Support Sessions",
+    subtopic: "Regular sessions will be held to resolve course-related doubts and encourage discussions",
     details: [
-      "Practical Review: Debugging custom routing table overlaps, validating subnet isolations, and configuring gateway security."
+      "Regular sessions will be held to resolve course-related doubts and facilitate interactive discussions."
     ]
   },
   {
     week: "Module 8",
-    title: "Advanced Network Security & Traffic Management",
-    subtopic: "NSGs, Load Balancers, and Global Traffic Manager",
+    title: "Azure Networking (Advanced Configuration and Security)",
+    subtopic: "Implementing N-Tier Architecture in Azure: Design and Best Practices",
     details: [
-      "Network Security Groups (NSG): Inbound and outbound access control rule setups.",
-      "High Availability Routing: Implementing Azure Load Balancer, Web Application Firewalls, and Application Gateway."
+      "Implementing N-Tier Architecture in Azure: Design and Best Practices",
+      "Network Security Groups (NSGs): Configuration and Access Control",
+      "Azure Load Balancer: Traffic Distribution and High Availability",
+      "Ensuring Availability and High Availability in Azure Environments",
+      "Azure Application Gateway: Web Traffic Management and Security",
+      "Azure DNS: Domain Management and Name Resolution",
+      "Azure Traffic Manager: Global Traffic Routing and Performance Optimization"
     ]
   },
   {
     week: "Module 9",
-    title: "Compute App Services & Orchestration",
-    subtopic: "Virtual Machines, Serverless Functions, and Kubernetes (AKS)",
+    title: "Azure Compute Services: Virtual Machines, App Services, and Containers",
+    subtopic: "Virtual Machines and Containers in Azure: Deployment and Management",
     details: [
-      "Compute Provisioning: Scaling VMs, configuring system parameters, and mounting block volumes.",
-      "Modern Compute Architectures: Host web APIs using App Services, running serverless triggers, and deploying Kubernetes clusters."
+      "Virtual Machines and Containers in Azure: Deployment and Management",
+      "Azure App Service: Hosting Web Apps and APIs",
+      "Serverless Computing in Azure: Functions and Event-Driven Architectures",
+      "Scaling Virtual Machines in Azure: Autoscaling and Load Management",
+      "Scaling Availability Sets for High Availability and Fault Tolerance",
+      "Virtual Machine Types and Sizes: Choosing the Right Compute Resources",
+      "Azure Kubernetes Service (AKS): Container Orchestration and Management",
+      "Advanced Azure App Services: Deployment, Scaling, and Monitoring"
     ]
   },
   {
     week: "Module 10",
-    title: "Cloud Storage Solutions",
-    subtopic: "Object Pools, Shared Drives, and Relational Databases",
+    title: "Azure Storage: Types of Data (Structured, Unstructured) and Storage Solutions",
+    subtopic: "Overview of Azure Storage: Architecture, Capabilities, and Use Cases",
     details: [
-      "Unstructured Data Storage: Uploading and managing assets inside Azure Blob Storage and Data Lakes.",
-      "Cloud DB Infrastructure: Provisioning managed Azure SQL relational engines and Cosmos DB clusters."
+      "Overview of Azure Storage: Architecture, Capabilities, and Use Cases",
+      "Types of Azure Storage: Blob, File, Queue, Disk, and Data Lake Storage",
+      "Azure SQL Database: Managed Relational Database Services",
+      "Azure Cosmos DB: Globally Distributed, Multi-Model Database",
+      "Azure Blob Storage: Object Storage for Unstructured Data",
+      "Azure Data Lake Storage: Big Data Storage and Analytics",
+      "Azure Files: Managed File Shares for Cloud Applications",
+      "Azure Queue Storage: Messaging and Asynchronous Workflows",
+      "Disk Storage and Storage Tiers: Standard, Premium, and Ultra Disk Options",
+      "Storage Security: Encryption, Replication, and Access Management",
+      "Azure Storage Explorer: Managing and Monitoring Storage Accounts",
+      "Comparison of Azure Storage vs. On-Premises Storage Solutions",
+      "Hands-On Labs: Working with Blob and File Storage in Azure"
     ]
   },
   {
     week: "Module 11",
-    title: "Cloud Identity & Encryption",
-    subtopic: "Identity & Access Management (IAM) and Cryptographic Keys",
+    title: "Azure Security: Layered Security Approach and Best Practices",
+    subtopic: "Cloud Security Usage Scenarios: Practical Applications and Best Practices",
     details: [
-      "IAM Access Architectures: Setting up custom user roles, groups, and multi-factor authentication policies.",
-      "Data Safeguards: Implementing SSL certificates, encryption-at-rest keys, and secure vault configurations."
+      "Cloud Security Usage Scenarios: Practical Applications and Best Practices",
+      "Identity and Access Management (IAM): Authentication, Authorization, and Role-Based Access Control",
+      "Data Encryption: At-Rest, In-Transit, and Key Management",
+      "Managing Azure Certificates: Secure Communication and SSL/TLS Implementation",
+      "Network Protection: Securing Virtual Networks and Traffic Flow",
+      "Protecting Shared Documents and Data in Azure",
+      "Azure Advanced Threat Protection (ATP): Detecting, Preventing, and Responding to Security Threats"
     ]
   },
   {
     week: "Module 12",
-    title: "Governance & Compliance",
-    subtopic: "Azure Policies, Corporate Blueprints, and Compliance Audits",
+    title: "Azure Machine Learning, Cost Optimization, & Backup Services",
+    subtopic: "Setting Up Monitoring with Azure Service Health",
     details: [
-      "Cloud Governance Policies: Restricting resource regions, budget guardrails, and auditing configurations.",
-      "Resource Consistency: Packaging resource group templates, blueprints, and monitoring compliance reports."
+      "Setting Up Monitoring with Azure Service Health: Alerts, Insights, and Issue Management",
+      "Implementing Azure Policy: Enforcing Organizational Standards and Compliance",
+      "Defining IT Compliance Using Azure Policy for Governance",
+      "Organizing Policies with Initiatives for Streamlined Management",
+      "Enterprise Governance in Azure: Best Practices and Frameworks",
+      "Defining Standardized Resources Using Azure Blueprints",
+      "Monitoring and Ensuring Service Compliance with Azure Compliance Manager"
     ]
   },
   {
     week: "Module 13",
-    title: "Backup & Disaster Recovery",
-    subtopic: "Backup Schedules, VM Snapshots, and Key Vault Security",
+    title: "Azure Backup and Recovery Solutions & ARM Templates",
+    subtopic: "Azure Key Vault: Securely Manage Secrets, Keys, and Certificates",
     details: [
-      "Recovery Vaults: Scheduling continuous backups, creating VM recovery snapshots, and defining replication targets.",
-      "Sensitive Storage: Encrypting secrets, API keys, and connection credentials inside Key Vaults."
+      "Azure Key Vault: Securely Manage Secrets, Keys, and Certificates",
+      "Scheduling and Automating Backups for Azure Virtual Machines (VMs)",
+      "Configuring Disaster Recovery (DR) Solutions in Azure",
+      "Cost Management and Optimization: Monitoring Spending and Reducing Cloud Expenses"
     ]
   },
   {
     week: "Module 14",
-    title: "Capstone Project & Careers",
-    subtopic: "Project Audits, Interview Q&As, and Solution Architect Prep",
+    title: "Project Discussion, Career Guidance, and Course Doubt Resolution",
+    subtopic: "Project Overview and Requirements Analysis: Planning and Execution Strategy",
     details: [
-      "Capstone Project Review: Auditing the secure multi-tier VPC deployment architecture.",
-      "Job Readiness: Preparing for Cloud Architect certificates, reviewing mock interview answers, and structuring portfolios."
+      "Project Overview and Requirements Analysis: Planning and Execution Strategy",
+      "Project Review, Feedback, and Iterative Improvement Sessions",
+      "Continuous Doubt Resolution and Mentorship Support",
+      "Concept Revision, Interactive Q&A, and Knowledge Reinforcement",
+      "Industry Use Cases and Real-World Application Discussions",
+      "Career Opportunities and Emerging Roles in Data Science",
+      "Job Roles, Career Pathways, and Professional Growth Strategies",
+      "Key Skills, Tools, and Competencies for Industry Readiness"
     ]
   }
 ];

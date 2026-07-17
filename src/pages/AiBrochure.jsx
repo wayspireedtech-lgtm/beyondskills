@@ -1124,108 +1124,101 @@ export default function AiBrochure() {
       'cloud-computing': {
         8: {
           module: "Module 1", duration: "Weeks 1-2 • Introduction & Service Models",
-          title: "Cloud Fundamentals & Infrastructure Models",
-          desc: "Understand cloud service paradigms, resource scales, and shared security divisions.",
-          sec1Title: "1. Cloud Fundamentals",
+          title: "Introduction to Cloud Computing & Core Fundamentals",
+          desc: "Understand cloud concepts, virtualization, core benefits, delivery models, and tenant isolation.",
+          sec1Title: "1. Introduction to Cloud Computing",
           sec1Items: [
-            "Introduction to Cloud Computing: Service models (IaaS, PaaS, SaaS)",
-            "What it is and why it matters in modern technology",
-            "Key benefits: scalability, cost efficiency, flexibility, security",
-            "High availability and global deployment parameters"
+            "Introduction to Cloud Computing: Concepts, Service Models (IaaS, PaaS, SaaS), and Modern Use Cases",
+            "Introduction to Cloud Computing: What It Is and Why It Matters in Modern Technology"
           ],
-          sec2Title: "2. Infrastructure Basics",
+          sec2Title: "2. Cloud Fundamentals",
           sec2Items: [
-            "Difference between public, private, and hybrid clouds",
-            "Understanding cloud elasticity and billing trigger loops",
-            "Virtualization platforms and bare metal structures",
-            "Shared responsibility security models"
+            "Key Benefits of Cloud Computing: Scalability, Cost Efficiency, Flexibility, Security, and High Availability",
+            "Cloud Computing Models: Service Models (IaaS, PaaS, SaaS) and Deployment Models (Public, Private, Hybrid, Multi-Cloud)"
           ],
-          sec3Title: "3. Interactive Doubt Clearing",
-          sec3Desc: "Dedicated sessions to address course-related doubts, service setups, and resource groups."
+          sec3Title: "3. Doubt-Clearing and Interactive Discussions",
+          sec3Desc: "Dedicated interactive sessions to address course-related doubts, service setups, and resource groups."
         },
         9: {
           module: "Module 2", duration: "Weeks 3-5 • Azure Basics & Core Networks",
-          title: "Azure Cloud Console & VNet Configuration",
-          desc: "Deploy Microsoft subscriptions, manage resource groups, and route virtual private networks.",
-          sec1Title: "1. Microsoft Azure Setup",
+          title: "Microsoft Azure Fundamentals & Networking",
+          desc: "Explore subscription management, resource organization, subnets, routing tables, regions, and VPN connectivity.",
+          sec1Title: "1. Microsoft Azure Fundamentals",
           sec1Items: [
-            "Introduction to Microsoft Azure: Overview & capabilities",
-            "Exploring Azure services: service tour and practical use cases",
-            "Managing Azure Subscriptions: Setup and access control",
-            "Azure Portal dashboards & CLI configuration"
+            "Introduction to Microsoft Azure: Overview and Core Capabilities",
+            "Exploring Azure Services: Service Tour and Practical Use Cases",
+            "Managing Azure Subscriptions: Setup, Configuration, and Access Control"
           ],
-          sec2Title: "2. Azure Networking",
+          sec2Title: "2. Azure Networking Basics",
           sec2Items: [
-            "Virtual Networks (VNet) in Azure: Concepts & configuration",
-            "Understanding Azure VPN: Purpose and implementation",
-            "Subnetting, routing tables, and gateway configurations",
-            "Azure regions, geographic distribution, and availability zones"
+            "Virtual Networks (VNet) in Azure: Concepts, Configuration, and Best Practices",
+            "Understanding Azure VPN: Purpose, Use Cases, and Hands-On Implementation",
+            "Introduction to Azure Regions: Geographic Distribution and Availability Zones"
           ],
-          sec3Title: "3. Connectivity Labs",
-          sec3Desc: "Hands-on labs configuring virtual networks, remote access tunnels, and subnet permissions."
+          sec3Title: "3. Doubt-Clearing & Support Sessions",
+          sec3Desc: "Regular sessions held to resolve course-related doubts, VNet configuration conflicts, and facilitate interactive discussions."
         },
         10: {
           module: "Module 3", duration: "Weeks 6-7 • Advanced Security & Traffic",
-          title: "Global Traffic Routing & Network Firewalls",
-          desc: "Implement load balancing, register DNS paths, and write network filter policies (NSGs).",
-          sec1Title: "1. Traffic Routing & DNS",
+          title: "Azure Networking (Advanced Configuration & Security)",
+          desc: "Implement N-tier security matrices, manage traffic, set up load balancers, and configure public/private endpoints.",
+          sec1Title: "1. Advanced Traffic Routing & DNS",
           sec1Items: [
-            "Azure Load Balancer: Traffic distribution & high availability",
-            "Azure Application Gateway: Web traffic management & security",
-            "Azure Traffic Manager: Global traffic routing",
-            "Azure DNS: Domain management and name resolution"
+            "Azure Load Balancer: Traffic Distribution and High Availability",
+            "Azure Application Gateway: Web Traffic Management and Security",
+            "Azure Traffic Manager: Global Traffic Routing and Performance Optimization",
+            "Azure DNS: Domain Management and Name Resolution"
           ],
-          sec2Title: "2. Network Security",
+          sec2Title: "2. Network Security Groups & Controls",
           sec2Items: [
-            "Implementing N-Tier architecture design & best practices",
-            "Network Security Groups (NSGs): Configuration & access control",
-            "Application Security Groups (ASGs) configurations",
-            "Configuring public/private endpoints"
+            "Implementing N-Tier Architecture in Azure: Design and Best Practices",
+            "Network Security Groups (NSGs): Configuration and Access Control",
+            "Ensuring Availability and High Availability in Azure Environments"
           ],
-          sec3Title: "3. Infrastructure Security",
-          sec3Desc: "Deploying NSG rule matrix filters, load balancer listeners, and domain routes."
+          sec3Title: "3. Connectivity Labs",
+          sec3Desc: "Hands-on labs deploying N-Tier routing tables, configuring NSGs, application gateways, and DNS records."
         },
         11: {
           module: "Module 4", duration: "Weeks 8-10 • Compute Services & Storage",
-          title: "Azure Virtual Machines & Database Architectures",
-          desc: "Provision virtual machines, host APIs in app containers, and configure Blob and SQL storage.",
-          sec1Title: "1. Azure Compute Nodes",
+          title: "Azure Compute Services & Storage Solutions",
+          desc: "Provision virtual machines, host APIs in app containers, deploy Kubernetes, and configure structured/unstructured storage.",
+          sec1Title: "1. Azure Compute Services",
           sec1Items: [
-            "Virtual Machines and Containers in Azure: Deployment & management",
-            "Azure App Service: Hosting web apps & backend REST APIs",
-            "Serverless computing in Azure: Functions & event architectures",
-            "Azure Kubernetes Service (AKS): Container orchestration"
+            "Virtual Machines and Containers in Azure: Deployment and Management",
+            "Azure App Service: Hosting Web Apps and APIs",
+            "Serverless Computing in Azure: Functions and Event-Driven Architectures",
+            "Azure Kubernetes Service (AKS): Container Orchestration and Management",
+            "Scaling Virtual Machines in Azure: Autoscaling, Load Management, and Availability Sets"
           ],
-          sec2Title: "2. Azure Cloud Storage",
+          sec2Title: "2. Azure Storage & Database Solutions",
           sec2Items: [
-            "Overview of Azure Storage: Architecture, limits, and use cases",
-            "Types: Blob (unstructured), File (shares), Queue, Disk options",
-            "Azure SQL Database: Managed relational database services",
-            "Azure Cosmos DB: Globally distributed database"
+            "Azure Storage: Types of Data (Structured, Unstructured) and Storage Solutions",
+            "Blob, File, Queue, Disk, Data Lake, and Azure SQL Database Services",
+            "Azure Cosmos DB: Globally Distributed, Multi-Model Database",
+            "Storage Security: Encryption, Replication, and Access Management"
           ],
-          sec3Title: "3. Storage Management",
-          sec3Desc: "Managing files inside Azure Storage Explorer, configuring auto-scaling compute sets, and backup points."
+          sec3Title: "3. Hands-On Labs",
+          sec3Desc: "Working with Blob and File Storage in Azure, managing instances inside Azure Storage Explorer, and compute scaling."
         },
         12: {
-          module: "Module 5", duration: "Weeks 11-12 • Security, Governance & Backup",
-          title: "Azure Identity IAM & Backup Recoveries",
-          desc: "Audit role-based permissions (RBAC), run ARM template automations, and plan disaster backups.",
-          sec1Title: "1. Governance & Compliance",
+          module: "Module 5", duration: "Weeks 11-12 • Security, ML, Backup & Projects",
+          title: "Azure Security, Governance, Machine Learning & Capstone",
+          desc: "Configure role-based access control, set up automation templates, perform compliance audits, and deploy capstone projects.",
+          sec1Title: "1. Security & Governance Compliance",
           sec1Items: [
-            "Identity & Access Management (IAM): Role-Based Access Control",
-            "Data Encryption: At-rest, In-transit, and key vault secrets",
-            "Azure Policy: Enforcing organizational standards",
-            "Azure Blueprints & Azure Compliance Manager guidelines"
+            "Azure Security: Layered Security Approach and Best Practices (IAM, Data Hashing, Encryption)",
+            "Implementing Azure Policy & Blueprints: Enforcing Organizational Standards",
+            "Enterprise Governance in Azure: Best Practices and Compliance Manager guidelines"
           ],
-          sec2Title: "2. Backup & ML Introduction",
+          sec2Title: "2. Backup, Automation & AI",
           sec2Items: [
-            "Azure Backup and recovery solutions & scheduling backups",
-            "Azure Resource Manager (ARM) templates & automated deployment",
-            "Overview of Azure Machine Learning and cost optimization",
-            "Azure Service Health: Alerts, insights, and issues management"
+            "Azure Backup & Recovery Solutions: Key Vault, disaster recovery configurations",
+            "Azure Resource Manager (ARM) Templates and Automated Deployment",
+            "Azure Machine Learning: Introduction and Use Cases",
+            "Cost Optimization Strategies and Azure Service Health Monitoring"
           ],
           sec3Title: "3. Capstone Real-world Implementation",
-          sec3Desc: "Configure ARM templates, deploy secure database networks, and implement backup strategies."
+          sec3Desc: "Project Discussion, career guidance, resume building, mock interviews, and final portfolio verification."
         }
       },
       'stock-market': {
