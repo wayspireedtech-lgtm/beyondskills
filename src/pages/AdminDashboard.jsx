@@ -1364,13 +1364,6 @@ export default function AdminDashboard() {
               {isAdminUser && (
                 <>
                   <button 
-                    onClick={handleSeedDemoData} 
-                    className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 shadow-lg"
-                  >
-                    <RefreshCw className="w-3.5 h-3.5" />
-                    <span>Seed Demo Data</span>
-                  </button>
-                  <button 
                     onClick={() => {
                       setLeads([]);
                       setDbItem('beyondskills_leads', []);
