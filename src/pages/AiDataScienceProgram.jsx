@@ -247,6 +247,7 @@ export default function AiDataScienceProgram() {
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Ads Leads', 
+      program: 'artificial-intelligence',
       course: 'AI & Data Science Specialist',
       ...enquiryForm, 
       date: new Date().toISOString() 

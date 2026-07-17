@@ -159,6 +159,7 @@ export default function AiMlDataScienceLandingPage() {
     const newLead = {
       id: `LD${String(leads.length + 101).padStart(3, '0')}`,
       type: 'Ads Leads',
+      program: 'artificial-intelligence',
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,

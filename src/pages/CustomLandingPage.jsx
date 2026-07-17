@@ -68,6 +68,7 @@ export default function CustomLandingPage() {
     const newLead = {
       id: `LD${String(leads.length + 101).padStart(3, '0')}`,
       type: 'Ads Leads',
+      program: lp?.courseId || course?.id || slug,
       name: enquiryForm.name,
       email: enquiryForm.email || 'no-email@beyondskills.com',
       phone: enquiryForm.phone,

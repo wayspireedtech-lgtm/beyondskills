@@ -168,6 +168,7 @@ export default function FullStackLandingPage() {
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
       type: 'Ads Leads',
+      program: 'full-stack-web',
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,

@@ -3696,6 +3696,65 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+            {/* Student Submission & Campaign Details Section */}
+            <div className="bg-[#050718] border border-white/5 p-4 rounded-xl space-y-3.5 text-xs">
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono border-b border-white/10 pb-1">Student Details & Campaign Tags</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                <div>
+                  <span className="text-slate-500 uppercase text-[9px] block">Prospect Email</span>
+                  <span className="text-white break-all">{selectedLead.email || 'Unspecified'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[9px] block">Highest Qualification</span>
+                  <span className="text-white">{selectedLead.college || selectedLead.qualification || 'Unspecified'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[9px] block">Experience / Status</span>
+                  <span className="text-white">
+                    {selectedLead.profession || selectedLead.status}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[9px] block">Preferred Contact Time</span>
+                  <span className="text-white">{selectedLead.preferredContactTime || 'Unspecified'}</span>
+                </div>
+              </div>
+              
+              <div className="border-t border-white/10 pt-2 space-y-2">
+                <div>
+                  <span className="text-slate-500 uppercase text-[9px] block font-mono">Goal / Message Submitted</span>
+                  <p className="text-slate-200 leading-normal bg-white/5 p-2 rounded border border-white/5 italic font-mono text-[11px] whitespace-pre-line">
+                    {selectedLead.message || selectedLead.careerGoal || 'No goal statement submitted.'}
+                  </p>
+                </div>
+                {selectedLead.remarks && (
+                  <div>
+                    <span className="text-slate-500 uppercase text-[9px] block font-mono">System Remarks</span>
+                    <p className="text-slate-400 text-[11px] leading-normal">{selectedLead.remarks}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[10px] text-slate-450 font-mono border-t border-white/10 pt-2">
+                <div>
+                  <span className="text-slate-500 uppercase text-[8px] block">UTM Source</span>
+                  <span className="text-slate-200">{selectedLead.source || '-'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[8px] block">UTM Medium</span>
+                  <span className="text-slate-200">{selectedLead.utmMedium || '-'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[8px] block">UTM Campaign</span>
+                  <span className="text-brand-cyan font-bold">{selectedLead.campaign || selectedLead.utmCampaign || '-'}</span>
+                </div>
+                <div>
+                  <span className="text-slate-500 uppercase text-[8px] block">UTM Content</span>
+                  <span className="text-slate-200">{selectedLead.utmContent || '-'}</span>
+                </div>
+              </div>
+            </div>
+
             {/* SUB-STATUS FUNNELS SECTION */}
             <div className="space-y-4">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono border-b border-white/5 pb-2">Sub-Status Funnels</h4>
