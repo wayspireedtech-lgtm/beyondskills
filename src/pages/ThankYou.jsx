@@ -20,7 +20,7 @@ export default function ThankYou() {
   }, []);
 
   return (
-    <div className="text-slate-900 min-h-[85vh] flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden bg-white">
+    <div className="text-slate-900 min-h-[85vh] flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden bg-transparent">
       {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
       
