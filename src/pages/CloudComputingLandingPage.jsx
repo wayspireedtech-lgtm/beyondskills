@@ -742,14 +742,13 @@ export default function CloudComputingLandingPage() {
           </div>
         </div>
       </section>
-
       {/* Practical Lab Projects Section */}
       <section className="py-16 md:py-24 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4">
           
           <div className="max-w-2xl mx-auto text-center mb-16 space-y-3">
             <span className="text-blue-600 font-extrabold uppercase text-xs tracking-wider font-mono">Hands-on Cloud Experience</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Deploy 6 Capstone Projects</h2>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Deploy Industrial based Projects</h2>
             <p className="text-sm text-slate-650">Master real console steps, command scripts, and architectures compiled in your professional deploy sheet portfolio.</p>
           </div>
 
@@ -779,44 +778,44 @@ export default function CloudComputingLandingPage() {
       </section>
 
       {/* Program Reviews / Testimonials Slots */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-slate-950 text-white border-b border-slate-900">
         <div className="max-w-7xl mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center mb-16 space-y-3">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Student Experience</h2>
-            <p className="text-sm text-slate-650">Real reviews and experiences of students upskilled through our structured cloud cohorts.</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">Student Experience</h2>
+            <p className="text-sm text-slate-400">Real reviews and experiences of students upskilled through our structured cloud cohorts.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 space-y-4">
+            <div className="bg-[#0F172A] border border-white/10 rounded-2xl p-6 space-y-4 shadow-lg">
               <div className="flex justify-between items-center">
                 <div>
-                  <h4 className="font-bold text-slate-800 text-sm">Nisha K.</h4>
-                  <p className="text-[10px] text-slate-500">Cloud Support Associate</p>
+                  <h4 className="font-bold text-white text-sm">Nisha K.</h4>
+                  <p className="text-[10px] text-slate-400">Cloud Support Associate</p>
                 </div>
                 <div className="flex text-amber-400">
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
                 </div>
               </div>
-              <p className="text-xs text-slate-650 leading-relaxed italic">
+              <p className="text-xs text-slate-300 leading-relaxed italic">
                 "Clear, step-by-step AWS console walkthroughs. Got my cloud routing, security groups, and object bucket concepts completely clear. The mentorship calls are extremely valuable."
               </p>
-              <div className="text-[10px] font-mono text-slate-400">Date: June 2026</div>
+              <div className="text-[10px] font-mono text-slate-500">Date: June 2026</div>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-6 space-y-4">
+            <div className="bg-[#0F172A] border border-white/10 rounded-2xl p-6 space-y-4 shadow-lg">
               <div className="flex justify-between items-center">
                 <div>
-                  <h4 className="font-bold text-slate-800 text-sm">Vikram Aditya</h4>
-                  <p className="text-[10px] text-slate-550">Infrastructure Engineer</p>
+                  <h4 className="font-bold text-white text-sm">Vikram Aditya</h4>
+                  <p className="text-[10px] text-slate-400">Infrastructure Engineer</p>
                 </div>
                 <div className="flex text-amber-400">
                   {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
                 </div>
               </div>
-              <p className="text-xs text-slate-655 leading-relaxed italic">
+              <p className="text-xs text-slate-300 leading-relaxed italic">
                 "We set up secure multi-tier VPC networks and auto scaling clusters. Building the Kubernetes container pipeline gave me hands-on confidence to apply for cloud engineer roles."
               </p>
-              <div className="text-[10px] font-mono text-slate-400">Date: May 2026</div>
+              <div className="text-[10px] font-mono text-slate-500">Date: May 2026</div>
             </div>
           </div>
         </div>
