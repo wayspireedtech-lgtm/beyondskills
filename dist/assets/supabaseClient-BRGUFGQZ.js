@@ -1,1 +1,0 @@
-console.warn(`Supabase URL or Anon Key is missing. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your env settings. Operations will mock-succeed locally.`);async function e(e){return console.log(`[Supabase MOCK] Saved lead to local database:`,e),{data:e,error:null}}export{e as t};

@@ -4,8 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { Mail, Sparkles, X, Loader2 } from 'lucide-react';
 
-// Lazy load page components for fast initial bundle loads
-const Home = React.lazy(() => import('./pages/Home'));
+import Home from './pages/Home';
 const About = React.lazy(() => import('./pages/About'));
 const Services = React.lazy(() => import('./pages/Services'));
 const Courses = React.lazy(() => import('./pages/Courses'));

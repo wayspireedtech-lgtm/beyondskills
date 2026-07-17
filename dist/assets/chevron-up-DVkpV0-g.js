@@ -1,1 +1,0 @@
-import{m as e}from"./index-Gzo8-j4E.js";var t=e(`chevron-up`,[[`path`,{d:`m18 15-6-6-6 6`,key:`153udz`}]]);export{t};
