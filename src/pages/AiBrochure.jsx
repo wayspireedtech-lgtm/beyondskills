@@ -2333,11 +2333,11 @@ export default function AiBrochure() {
                 </div>
               </a>
 
-              <a href="mailto:admissions@wayspire.in" className={`flex items-center space-x-3 p-3.5 rounded-xl transition-colors border ${cardBg}`}>
+              <a href="mailto:contact@beyondskills.in" className={`flex items-center space-x-3 p-3.5 rounded-xl transition-colors border ${cardBg}`}>
                 <Mail className="w-5 h-5 text-[#2A4BFF] dark:text-[#0EA5E9]" />
                 <div>
                   <span className="text-[9px] text-slate-400 font-mono block">Admissions Email</span>
-                  <span className={`text-xs font-mono font-bold ${textPrimary}`}>admissions@wayspire.in</span>
+                  <span className={`text-xs font-mono font-bold ${textPrimary}`}>contact@beyondskills.in</span>
                 </div>
               </a>
             </div>
