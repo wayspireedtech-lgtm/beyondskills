@@ -122,7 +122,10 @@ export default function GoogleFormLandingPage() {
         student_details: `College: ${form.college || 'N/A'} | Year: ${form.year} | Batch: ${form.batch} | Why: ${form.whyInterested || 'N/A'}`,
         job_role: form.projectExp || 'None'
       };
-      await saveLeadToSupabase(leadRecord);
+      // Fire Supabase insert promise
+      const supabasePromise = saveLeadToSupabase(leadRecord).catch(err => {
+        console.error('[Supabase Error] Failed in parallel lead submission:', err);
+      });
 
       // Construct detailed notes containing extra metadata fields
       const detailedNotes = `
@@ -156,13 +159,18 @@ Submitted via Google Form Campaign page
         ? 'http://localhost:5000'
         : window.location.origin;
 
-      const response = await fetch(`${apiHost}/api/webhook/leads`, {
+      const webhookPromise = fetch(`${apiHost}/api/webhook/leads`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
+      }).catch(err => {
+        console.error('[Webhook Error] Failed in parallel lead submission:', err);
       });
+
+      // Await both promises in parallel (greatly accelerates total response time!)
+      await Promise.all([supabasePromise, webhookPromise]);
 
       // 2. Also save to local storage for local client redundancy
       const localLeads = getDbItem('beyondskills_leads', []);
