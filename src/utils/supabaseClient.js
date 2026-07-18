@@ -224,3 +224,103 @@ export async function saveUserToSupabase(user) {
     return { data: null, error: err };
   }
 }
+
+/**
+ * Fetches all CRM users from Supabase 'crm_users' table
+ */
+export async function getCrmUsersFromSupabase() {
+  if (!supabase) {
+    console.log('[Supabase MOCK] Fetching CRM users from localStorage fallback...');
+    return { data: getDbItem('beyondskills_crm_users', []), error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('crm_users')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('[Supabase Error] Failed to fetch CRM users:', error);
+      return { data: [], error };
+    }
+
+    const mappedData = data.map(u => ({
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      reportsTo: u.reports_to || '',
+      password: u.password
+    }));
+
+    return { data: mappedData, error: null };
+  } catch (err) {
+    console.error('[Supabase Exception] Error fetching CRM users:', err);
+    return { data: [], error: err };
+  }
+}
+
+/**
+ * Saves a CRM user to Supabase 'crm_users' table
+ */
+export async function saveCrmUserToSupabase(user) {
+  if (!supabase) {
+    console.log('[Supabase MOCK] Saved CRM user to local database:', user);
+    return { data: user, error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('crm_users')
+      .upsert([
+        {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          reports_to: user.reportsTo || '',
+          password: user.password,
+          created_at: new Date().toISOString()
+        }
+      ], { onConflict: 'email' });
+    
+    if (error) {
+      console.error('[Supabase Error] Failed to save CRM user:', error);
+      return { data: null, error };
+    }
+    
+    console.log('[Supabase Success] CRM User saved:', data);
+    return { data, error: null };
+  } catch (err) {
+    console.error('[Supabase Exception] Error saving CRM user:', err);
+    return { data: null, error: err };
+  }
+}
+
+/**
+ * Deletes a CRM user from Supabase 'crm_users' table by email
+ */
+export async function deleteCrmUserFromSupabase(email) {
+  if (!supabase) {
+    console.log('[Supabase MOCK] Deleted CRM user from local database:', email);
+    return { data: email, error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('crm_users')
+      .delete()
+      .eq('email', email);
+    
+    if (error) {
+      console.error('[Supabase Error] Failed to delete CRM user:', error);
+      return { data: null, error };
+    }
+    
+    console.log('[Supabase Success] CRM User deleted:', data);
+    return { data, error: null };
+  } catch (err) {
+    console.error('[Supabase Exception] Error deleting CRM user:', err);
+    return { data: null, error: err };
+  }
+}
+

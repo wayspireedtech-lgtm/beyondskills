@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDbItem, setDbItem, logUserAccess, COURSES } from '../utils/mockDb';
-import { getLeadsFromSupabase, saveLeadToSupabase, updateLeadInSupabase } from '../utils/supabaseClient';
+import { 
+  getLeadsFromSupabase, 
+  saveLeadToSupabase, 
+  updateLeadInSupabase,
+  getCrmUsersFromSupabase,
+  saveCrmUserToSupabase,
+  deleteCrmUserFromSupabase
+} from '../utils/supabaseClient';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
@@ -38,15 +45,32 @@ export default function AdminDashboard() {
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginError('');
     setLoginLoading(true);
 
     const targetEmail = 'beyondskills.ai@gmail.com';
     const savedPassword = localStorage.getItem('beyondskills_admin_password') || '9953607074';
-    const crmUsers = getDbItem('beyondskills_crm_users', []);
-    const matchingUser = crmUsers.find(u => u.email.trim().toLowerCase() === loginEmail.trim().toLowerCase());
+    
+    // Fetch latest users from Supabase to ensure fresh credentials check
+    let usersList = [];
+    try {
+      const { data, error } = await getCrmUsersFromSupabase();
+      if (!error && data) {
+        usersList = data;
+        setCrmUsers(data);
+        setDbItem('beyondskills_crm_users', data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch CRM users during login validation:', err);
+    }
+    
+    if (usersList.length === 0) {
+      usersList = crmUsers.length > 0 ? crmUsers : getDbItem('beyondskills_crm_users', []);
+    }
+
+    const matchingUser = usersList.find(u => u.email.trim().toLowerCase() === loginEmail.trim().toLowerCase());
 
     let authenticatedUser = null;
 
@@ -94,26 +118,47 @@ export default function AdminDashboard() {
       setLandingPages(getDbItem('beyondskills_landing_pages', []));
       setLogs(getDbItem('beyondskills_access_logs', []));
       
-      // Seed default CRM Users if none exist
-      const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
-      let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
-      if (!crmUsersSeeded && existingCrmUsers.length === 0) {
-        existingCrmUsers = [
-          { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
-          { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
-          { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: '7982738724' },
-          { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: 'Deepak@123' },
-          { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Shubham@123' },
-          { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
-        ];
-        setDbItem('beyondskills_crm_users', existingCrmUsers);
-        localStorage.setItem('beyondskills_crm_users_seeded', 'true');
-      }
-      setCrmUsers(existingCrmUsers);
-      if (existingCrmUsers.length > 0 && !selectedBdaName) {
-        const firstBda = existingCrmUsers.find(u => u.role === 'BDA');
-        if (firstBda) setSelectedBdaName(firstBda.name);
-      }
+      // Seed default CRM Users to Supabase if none exist
+      fetchCrmUsers().then(users => {
+        if (users.length === 0) {
+          const defaultCrmUsers = [
+            { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
+            { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
+            { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: '7982738724' },
+            { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: 'Deepak@123' },
+            { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Shubham@123' },
+            { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
+          ];
+          setDbItem('beyondskills_crm_users', defaultCrmUsers);
+          localStorage.setItem('beyondskills_crm_users_seeded', 'true');
+          
+          Promise.all(defaultCrmUsers.map(u => saveCrmUserToSupabase(u))).then(() => {
+            fetchCrmUsers().then(newUsers => {
+              if (newUsers.length > 0) {
+                if (!selectedBdaName) {
+                  const firstBda = newUsers.find(u => u.role === 'BDA');
+                  if (firstBda) setSelectedBdaName(firstBda.name);
+                }
+                if (!selectedBdmName) {
+                  const firstBdm = newUsers.find(u => u.role === 'BDM');
+                  if (firstBdm) setSelectedBdmName(firstBdm.name);
+                }
+              }
+            });
+          });
+        } else {
+          if (users.length > 0) {
+            if (!selectedBdaName) {
+              const firstBda = users.find(u => u.role === 'BDA');
+              if (firstBda) setSelectedBdaName(firstBda.name);
+            }
+            if (!selectedBdmName) {
+              const firstBdm = users.find(u => u.role === 'BDM');
+              if (firstBdm) setSelectedBdmName(firstBdm.name);
+            }
+          }
+        }
+      });
       
       // Start webhook sync
       fetchWebhookLeads();
@@ -225,6 +270,9 @@ export default function AdminDashboard() {
   // Selected BDA for detailed BDA Performance sub-status view
   const [selectedBdaName, setSelectedBdaName] = useState('');
 
+  // Selected BDM for detailed BDM Performance view
+  const [selectedBdmName, setSelectedBdmName] = useState('');
+
   const handleSaveWebhookUrl = async (url) => {
     setGoogleSheetWebhookUrl(url);
     try {
@@ -280,6 +328,23 @@ export default function AdminDashboard() {
       console.error('Error saving config:', err);
     }
   };
+
+  const fetchCrmUsers = async () => {
+    try {
+      const { data, error } = await getCrmUsersFromSupabase();
+      if (!error && data) {
+        setCrmUsers(data);
+        setDbItem('beyondskills_crm_users', data);
+        return data;
+      }
+    } catch (err) {
+      console.error('Failed to fetch CRM users from Supabase:', err);
+    }
+    const fallback = getDbItem('beyondskills_crm_users', []);
+    setCrmUsers(fallback);
+    return fallback;
+  };
+
   const fetchWebhookLeads = async () => {
     try {
       // 1. Fetch Google Sheet leads (Master source)
@@ -413,6 +478,20 @@ export default function AdminDashboard() {
     };
     fetchConfig();
 
+    // Fetch CRM Users from Supabase on mount
+    fetchCrmUsers().then(users => {
+      if (users && users.length > 0) {
+        if (!selectedBdaName) {
+          const firstBda = users.find(u => u.role === 'BDA');
+          if (firstBda) setSelectedBdaName(firstBda.name);
+        }
+        if (!selectedBdmName) {
+          const firstBdm = users.find(u => u.role === 'BDM');
+          if (firstBdm) setSelectedBdmName(firstBdm.name);
+        }
+      }
+    });
+
     // Check if logged in user is admin or BDA
     const loggedInUser = getDbItem('beyondskills_current_user', null);
     if (!loggedInUser || !['Admin', 'BDA', 'BDM', 'Sales Head'].includes(loggedInUser.role)) {
@@ -428,20 +507,6 @@ export default function AdminDashboard() {
     setMentors(getDbItem('beyondskills_mentors', []));
     setLandingPages(getDbItem('beyondskills_landing_pages', []));
     setLogs(getDbItem('beyondskills_access_logs', []));
-    
-    // Clear old demo CRM Users and keep it empty by default
-    const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded_v2');
-    if (!crmUsersSeeded) {
-      setDbItem('beyondskills_crm_users', []);
-      localStorage.setItem('beyondskills_crm_users_seeded_v2', 'true');
-      localStorage.setItem('beyondskills_crm_users_seeded', 'true');
-    }
-    let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
-    setCrmUsers(existingCrmUsers);
-    if (existingCrmUsers.length > 0 && !selectedBdaName) {
-      const firstBda = existingCrmUsers.find(u => u.role === 'BDA');
-      if (firstBda) setSelectedBdaName(firstBda.name);
-    }
 
     // Fetch initial leads and set polling interval
     fetchWebhookLeads();
@@ -1013,24 +1078,43 @@ export default function AdminDashboard() {
   };
 
   // Manage users
-  const handleAddUser = (e) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
-    const updated = [...crmUsers, newUserForm];
+    const updatedUser = { ...newUserForm };
+    
+    // Save to local storage state first as cache/fallback
+    const updated = [...crmUsers, updatedUser];
     setCrmUsers(updated);
     setDbItem('beyondskills_crm_users', updated);
-    logUserAccess(newUserForm.email, newUserForm.name, `CRM User Created: ${newUserForm.role}`);
+
+    // Save to Supabase
+    try {
+      await saveCrmUserToSupabase(updatedUser);
+    } catch (err) {
+      console.error('Failed to save CRM user to Supabase:', err);
+    }
+    
+    logUserAccess(updatedUser.email, updatedUser.name, `CRM User Created: ${updatedUser.role}`);
     setShowAddUserModal(false);
     setNewUserForm({ name: '', email: '', role: 'BDA', reportsTo: '', password: '' });
   };
 
-  const handleRemoveUser = (idx) => {
+  const handleRemoveUser = async (idx) => {
     const targetUser = crmUsers[idx];
+    if (!targetUser) return;
+    
     const updated = crmUsers.filter((_, i) => i !== idx);
     setCrmUsers(updated);
     setDbItem('beyondskills_crm_users', updated);
-    if (targetUser) {
-      logUserAccess(targetUser.email, targetUser.name, `CRM User Revoked: ${targetUser.role}`);
+    
+    // Delete from Supabase
+    try {
+      await deleteCrmUserFromSupabase(targetUser.email);
+    } catch (err) {
+      console.error('Failed to delete CRM user from Supabase:', err);
     }
+    
+    logUserAccess(targetUser.email, targetUser.name, `CRM User Revoked: ${targetUser.role}`);
   };
 
   // Student Action Handlers
@@ -1530,6 +1614,18 @@ export default function AdminDashboard() {
               >
                 <TrendingUp className="w-4 h-4" />
                 <span>BDAs Performance</span>
+              </button>
+
+              <button 
+                onClick={() => setActiveMainTab('bdm_performance')}
+                className={`w-full flex items-center space-x-3 px-4.5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all text-left cursor-pointer ${
+                  activeMainTab === 'bdm_performance'
+                    ? 'bg-white/5 border border-white/5 text-[#0EA5E9]' 
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                <Award className="w-4 h-4" />
+                <span>BDMs Performance</span>
               </button>
 
               <button 
@@ -3021,6 +3117,160 @@ export default function AdminDashboard() {
               ) : (
                 <div className="text-center py-20 text-slate-500 text-xs italic font-mono">
                   Select a business associate from the left roster to view performance parameters.
+                </div>
+              )}
+            </div>
+
+          </div>
+        )}
+
+        {/* -------------------- MAIN TAB 4B: BDM PERFORMANCE -------------------- */}
+        {activeMainTab === 'bdm_performance' && !isBdaUser && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in text-white">
+            
+            {/* BDMs Roster sidebar */}
+            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+              <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Roster of Managers</h3>
+              
+              <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-1">
+                {crmUsers.filter(u => u.role === 'BDM').map((bdm, idx) => {
+                  const bdmLeadsCount = leads.filter(l => l.assignedBDM === bdm.name).length;
+                  const bdmEnrolls = leads.filter(l => l.assignedBDM === bdm.name && l.status === 'Enrolled').length;
+                  return (
+                    <div 
+                      key={idx} 
+                      onClick={() => setSelectedBdmName(bdm.name)}
+                      className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                        selectedBdmName === bdm.name 
+                          ? 'bg-[#2A4BFF]/25 border-[#2A4BFF] shadow-md shadow-[#2A4BFF]/10' 
+                          : 'bg-[#050718] border-white/5 hover:border-white/10 hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-xs font-bold text-white">{bdm.name}</h4>
+                        <span className="text-[10px] text-brand-cyan font-mono font-bold">BDM</span>
+                      </div>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">{bdm.email}</p>
+                      <div className="border-t border-white/10 pt-2 mt-2.5 flex justify-between text-[9px] text-slate-500 font-mono">
+                        <span>Reports to: {bdm.reportsTo || 'Sales Head'}</span>
+                        <span className="text-slate-300 font-bold">{bdmLeadsCount} Leads / {bdmEnrolls} Enrolled</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Selected BDM Details and metrics */}
+            <div className="lg:col-span-2 bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-8">
+              
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-4 gap-4">
+                <div>
+                  <span className="text-[10px] font-bold text-[#0EA5E9] uppercase tracking-widest font-mono">Manager KPI Details</span>
+                  <h3 className="text-base font-extrabold text-white mt-0.5">{selectedBdmName || 'No Manager Selected'}</h3>
+                </div>
+                <div className="bg-[#2A4BFF]/10 text-[#2A4BFF] border border-[#2A4BFF]/25 px-3 py-1.5 rounded-lg text-xs font-mono">
+                  Role: Business Development Manager (BDM)
+                </div>
+              </div>
+
+              {selectedBdmName ? (
+                <div className="space-y-8">
+                  {/* KPI mini grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                    <div className="bg-[#050718] border border-white/5 p-4 rounded-xl">
+                      <span className="text-[9px] text-slate-500 uppercase font-mono block">Total Team Leads</span>
+                      <p className="text-xl font-bold font-mono text-white mt-1">
+                        {leads.filter(l => l.assignedBDM === selectedBdmName).length}
+                      </p>
+                    </div>
+                    <div className="bg-[#050718] border border-white/5 p-4 rounded-xl">
+                      <span className="text-[9px] text-slate-500 uppercase font-mono block">Team Enrolled</span>
+                      <p className="text-xl font-bold font-mono text-[#4ADE80] mt-1">
+                        {leads.filter(l => l.assignedBDM === selectedBdmName && l.status === 'Enrolled').length}
+                      </p>
+                    </div>
+                    <div className="bg-[#050718] border border-white/5 p-4 rounded-xl">
+                      <span className="text-[9px] text-slate-500 uppercase font-mono block">Team Conversion</span>
+                      <p className="text-xl font-bold font-mono text-brand-cyan mt-1">
+                        {leads.filter(l => l.assignedBDM === selectedBdmName).length > 0 
+                          ? ((leads.filter(l => l.assignedBDM === selectedBdmName && l.status === 'Enrolled').length / 
+                              leads.filter(l => l.assignedBDM === selectedBdmName).length) * 100).toFixed(1) 
+                          : '0.0'}%
+                      </p>
+                    </div>
+                    <div className="bg-[#050718] border border-white/5 p-4 rounded-xl">
+                      <span className="text-[9px] text-slate-500 uppercase font-mono block">Team Follow Up</span>
+                      <p className="text-xl font-bold font-mono text-orange-400 mt-1">
+                        {leads.filter(l => l.assignedBDM === selectedBdmName && l.status === 'Follow Up').length}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* BDAs reporting to this BDM */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">Assigned Business Associates (BDAs) Performance</h4>
+                    
+                    <div className="space-y-3">
+                      {crmUsers.filter(u => u.role === 'BDA' && u.reportsTo === selectedBdmName).length > 0 ? (
+                        crmUsers.filter(u => u.role === 'BDA' && u.reportsTo === selectedBdmName).map((bda, i) => {
+                          const bdaLeads = leads.filter(l => l.assignedBDA === bda.name);
+                          const bdaEnrolls = bdaLeads.filter(l => l.status === 'Enrolled').length;
+                          const bdaConvPct = bdaLeads.length > 0 ? ((bdaEnrolls / bdaLeads.length) * 100).toFixed(1) : '0.0';
+                          return (
+                            <div key={i} className="bg-[#050718] border border-white/5 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs">
+                              <div>
+                                <h5 className="font-bold text-white text-sm">{bda.name}</h5>
+                                <span className="text-[10px] text-slate-400 font-mono">{bda.email}</span>
+                              </div>
+                              <div className="flex gap-4 font-mono text-[11px] text-slate-300">
+                                <div>Leads: <span className="font-bold text-white">{bdaLeads.length}</span></div>
+                                <div>Enrolled: <span className="font-bold text-[#4ADE80]">{bdaEnrolls}</span></div>
+                                <div>Conv. Rate: <span className="font-bold text-brand-cyan">{bdaConvPct}%</span></div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="text-slate-500 text-xs italic font-mono p-4 border border-white/5 rounded-xl text-center bg-[#050718]">
+                          No BDAs are currently assigned to report to this BDM.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Funnel distribution */}
+                  <div className="space-y-3.5">
+                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest font-mono">Manager Team Funnel distribution</h4>
+                    
+                    <div className="space-y-2.5">
+                      {[
+                        { name: 'New Leads', status: 'New', color: 'from-blue-500 to-indigo-500' },
+                        { name: 'Contacted', status: 'Contacted', color: 'from-[#0EA5E9] to-cyan-500' },
+                        { name: 'Follow Up', status: 'Follow Up', color: 'from-orange-500 to-amber-500' },
+                        { name: 'Not Interested', status: 'Not Interested', color: 'from-slate-650 to-slate-800' }
+                      ].map((step, i) => {
+                        const totalLeadsForBdm = leads.filter(l => l.assignedBDM === selectedBdmName).length;
+                        const count = leads.filter(l => l.assignedBDM === selectedBdmName && l.status === step.status).length;
+                        const pct = totalLeadsForBdm > 0 ? ((count / totalLeadsForBdm) * 100).toFixed(1) : 0;
+                        return (
+                          <div key={i} className="text-xs">
+                            <div className="flex justify-between items-center mb-1 font-mono">
+                              <span className="text-slate-300">{step.name}</span>
+                              <span>{count} / {totalLeadsForBdm} ({pct}%)</span>
+                            </div>
+                            <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden border border-white/5">
+                              <div className={`bg-gradient-to-r ${step.color} h-full`} style={{ width: `${pct}%` }}></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-20 text-slate-500 text-xs italic font-mono">
+                  Select a business development manager from the left roster to view team performance parameters.
                 </div>
               )}
             </div>
