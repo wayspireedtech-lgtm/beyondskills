@@ -282,30 +282,86 @@ export default function AdminDashboard() {
   };
   const fetchWebhookLeads = async () => {
     try {
-      const { data: supabaseLeads, error: sbError } = await getLeadsFromSupabase();
-      if (!sbError && supabaseLeads) {
-        setLeads(supabaseLeads);
-        setDbItem('beyondskills_leads', supabaseLeads);
-        return;
-      }
-    } catch (sbErr) {
-      console.warn('Supabase fetch failed, falling back to local API:', sbErr);
-    }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-      const res = await fetch(`${apiHost}/api/webhook/leads`);
-      if (res.ok) {
-        const webhookLeads = await res.json();
-        if (webhookLeads) {
-          setLeads(webhookLeads);
-          setDbItem('beyondskills_leads', webhookLeads);
+      // 1. Fetch Google Sheet leads (Master source)
+      let sheetLeads = [];
+      const targetSheetUrl = adsSheetUrl || googleFormSheetUrl;
+      if (targetSheetUrl) {
+        try {
+          const res = await fetch(targetSheetUrl);
+          if (res.ok) {
+            const csvText = await res.text();
+            sheetLeads = parseSheetCSV(csvText);
+          }
+        } catch (sheetErr) {
+          console.warn('Failed to fetch master sheet CSV:', sheetErr);
         }
       }
+
+      // 2. Fetch leads from Supabase
+      let supabaseLeads = [];
+      try {
+        const { data, error } = await getLeadsFromSupabase();
+        if (!error && data) {
+          supabaseLeads = data;
+        }
+      } catch (sbErr) {
+        console.warn('Failed to fetch from Supabase:', sbErr);
+      }
+
+      // If we couldn't load from sheet, fallback to show Supabase directly
+      if (sheetLeads.length === 0) {
+        if (supabaseLeads.length > 0) {
+          setLeads(supabaseLeads);
+          setDbItem('beyondskills_leads', supabaseLeads);
+        }
+        return;
+      }
+
+      // STRICT SYNC: Filter and build the leads list based on sheetLeads
+      const sheetPhones = new Set(sheetLeads.map(l => l.phone.toString().trim()));
+      
+      // Filter Supabase leads to only those present in the Google Sheet
+      let activeLeads = supabaseLeads.filter(l => sheetPhones.has(l.phone.toString().trim()));
+
+      // If a lead is in the Google Sheet but not in Supabase, we append it
+      for (const sLead of sheetLeads) {
+        const phoneKey = sLead.phone.toString().trim();
+        if (!activeLeads.some(l => l.phone.toString().trim() === phoneKey)) {
+          const newLead = {
+            id: `LD${String(activeLeads.length + 101).padStart(3, '0')}`,
+            name: sLead.name,
+            email: sLead.email,
+            phone: sLead.phone,
+            date: sLead.date,
+            type: 'Ads Leads',
+            program: sLead.program || 'full-stack-web',
+            assignedBDM: '',
+            assignedBDA: '',
+            status: 'New',
+            subStatus: 'QUALIFIED',
+            profession: 'Unspecified',
+            mentor: 'None',
+            duration: 'None',
+            callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+            history: sLead.notes ? [{ note: sLead.notes, date: new Date().toISOString() }] : []
+          };
+          
+          activeLeads.push(newLead);
+          
+          // Save back to Supabase so it has central record
+          try {
+            await saveLeadToSupabase(newLead);
+          } catch (e) {
+            console.error('Failed to sync new sheet lead to Supabase:', e);
+          }
+        }
+      }
+
+      // Set the clean list to state and local storage fallback
+      setLeads(activeLeads);
+      setDbItem('beyondskills_leads', activeLeads);
     } catch (e) {
-      console.error('Real-time sync webhook error:', e);
+      console.error('Error in fetchWebhookLeads strict sheet sync:', e);
     }
   };
 
