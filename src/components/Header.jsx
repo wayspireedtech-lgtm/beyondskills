@@ -208,7 +208,11 @@ export default function Header() {
 
           {/* Mobile hamburger menu button */}
           <div className="flex lg:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-400 hover:text-white focus:outline-none">
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className="text-slate-400 hover:text-white focus:outline-none"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>

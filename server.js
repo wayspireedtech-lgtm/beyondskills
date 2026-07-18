@@ -120,14 +120,55 @@ app.post('/api/verify-payment', (req, res) => {
 const LEADS_FILE = './leads_db.json';
 const CONFIG_FILE = './config.json';
 
+// Helper to write JSON files robustly (falls back to /tmp/ if root is read-only like on Vercel)
+const writeJsonFileSync = (filepath, data) => {
+  try {
+    fs.writeFileSync(filepath, JSON.stringify(data, null, 2), 'utf-8');
+    return true;
+  } catch (err) {
+    console.warn(`[WARNING] Failed to write to ${filepath}. Retrying with /tmp fallback...`, err);
+    try {
+      const filename = filepath.split('/').pop();
+      fs.writeFileSync(`/tmp/${filename}`, JSON.stringify(data, null, 2), 'utf-8');
+      return true;
+    } catch (tmpErr) {
+      console.error(`[ERROR] Fallback write to /tmp failed for ${filepath}:`, tmpErr);
+      return false;
+    }
+  }
+};
+
+// Helper to read JSON files robustly (checks root first, then /tmp/ fallback)
+const readJsonFileSync = (filepath, defaultValue = []) => {
+  try {
+    if (fs.existsSync(filepath)) {
+      const data = fs.readFileSync(filepath, 'utf-8');
+      return JSON.parse(data || '[]');
+    }
+  } catch (err) {
+    console.warn(`[WARNING] Failed to read from ${filepath}. Checking /tmp fallback...`, err);
+  }
+
+  try {
+    const filename = filepath.split('/').pop();
+    const tmpPath = `/tmp/${filename}`;
+    if (fs.existsSync(tmpPath)) {
+      const data = fs.readFileSync(tmpPath, 'utf-8');
+      return JSON.parse(data || '[]');
+    }
+  } catch (tmpErr) {
+    console.error(`[ERROR] Fallback read from /tmp failed for ${filepath}:`, tmpErr);
+  }
+
+  return defaultValue;
+};
+
 // GET: Fetch config settings
 app.get('/api/config', (req, res) => {
   try {
-    if (!fs.existsSync(CONFIG_FILE)) {
-      return res.status(200).json({ googleSheetWebhookUrl: '' });
-    }
-    const data = fs.readFileSync(CONFIG_FILE, 'utf-8');
-    res.status(200).json(JSON.parse(data || '{}'));
+    const config = readJsonFileSync(CONFIG_FILE, {});
+    const googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || config.googleSheetWebhookUrl || '';
+    res.status(200).json({ googleSheetWebhookUrl });
   } catch (error) {
     console.error('Error fetching config:', error);
     res.status(500).json({ error: 'Failed to retrieve configuration.' });
@@ -139,7 +180,7 @@ app.post('/api/config', (req, res) => {
   try {
     const { googleSheetWebhookUrl } = req.body;
     const config = { googleSheetWebhookUrl: googleSheetWebhookUrl || '' };
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2), 'utf-8');
+    writeJsonFileSync(CONFIG_FILE, config);
     res.status(200).json({ success: true, message: 'Configuration saved successfully.' });
   } catch (error) {
     console.error('Error saving config:', error);
@@ -150,11 +191,8 @@ app.post('/api/config', (req, res) => {
 // GET: Fetch all webhook leads
 app.get('/api/webhook/leads', (req, res) => {
   try {
-    if (!fs.existsSync(LEADS_FILE)) {
-      return res.status(200).json([]);
-    }
-    const data = fs.readFileSync(LEADS_FILE, 'utf-8');
-    res.status(200).json(JSON.parse(data || '[]'));
+    const leads = readJsonFileSync(LEADS_FILE, []);
+    res.status(200).json(leads);
   } catch (error) {
     console.error('Error fetching leads:', error);
     res.status(500).json({ error: 'Failed to retrieve leads from database.' });
@@ -173,11 +211,7 @@ app.post('/api/webhook/leads', async (req, res) => {
       return res.status(400).json({ error: 'Name and Phone fields are required.' });
     }
 
-    let existingLeads = [];
-    if (fs.existsSync(LEADS_FILE)) {
-      const data = fs.readFileSync(LEADS_FILE, 'utf-8');
-      existingLeads = JSON.parse(data || '[]');
-    }
+    let existingLeads = readJsonFileSync(LEADS_FILE, []);
 
     // Check if phone already exists in server webhook DB
     if (existingLeads.some(l => l.phone === phone)) {
@@ -206,43 +240,45 @@ app.post('/api/webhook/leads', async (req, res) => {
     };
 
     existingLeads.push(newLead);
-    fs.writeFileSync(LEADS_FILE, JSON.stringify(existingLeads, null, 2), 'utf-8');
+    writeJsonFileSync(LEADS_FILE, existingLeads);
 
     // Forward to Google Sheet Webhook if configured
     let forwardedToSheet = false;
-    if (fs.existsSync(CONFIG_FILE)) {
+    let googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL;
+    if (!googleSheetWebhookUrl) {
+      const config = readJsonFileSync(CONFIG_FILE, {});
+      googleSheetWebhookUrl = config.googleSheetWebhookUrl;
+    }
+
+    if (googleSheetWebhookUrl) {
       try {
-        const configData = fs.readFileSync(CONFIG_FILE, 'utf-8');
-        const config = JSON.parse(configData || '{}');
-        if (config.googleSheetWebhookUrl) {
-          const webhookPayload = {
-            name,
-            phone,
-            email,
-            college: college || 'N/A',
-            year: year || 'N/A',
-            role: profession || 'N/A',
-            program: program || 'N/A',
-            batch: batch || 'N/A',
-            projectExp: projectExp || 'N/A',
-            whyInterested: whyInterested || 'N/A',
-            date: newLead.date
-          };
-          
-          const sheetRes = await fetch(config.googleSheetWebhookUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(webhookPayload)
-          });
-          
-          if (sheetRes.ok) {
-            forwardedToSheet = true;
-            console.log(`Successfully forwarded lead to Google Sheet Webhook: ${name}`);
-          } else {
-            console.warn(`Google Sheet Webhook returned status: ${sheetRes.status}`);
-          }
+        const webhookPayload = {
+          name,
+          phone,
+          email,
+          college: college || 'N/A',
+          year: year || 'N/A',
+          role: profession || 'N/A',
+          program: program || 'N/A',
+          batch: batch || 'N/A',
+          projectExp: projectExp || 'N/A',
+          whyInterested: whyInterested || 'N/A',
+          date: newLead.date
+        };
+        
+        const sheetRes = await fetch(googleSheetWebhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+        
+        if (sheetRes.ok) {
+          forwardedToSheet = true;
+          console.log(`Successfully forwarded lead to Google Sheet Webhook: ${name}`);
+        } else {
+          console.warn(`Google Sheet Webhook returned status: ${sheetRes.status}`);
         }
       } catch (err) {
         console.error('Error forwarding lead to Google Sheet Webhook:', err);
@@ -260,6 +296,7 @@ app.post('/api/webhook/leads', async (req, res) => {
     res.status(500).json({ error: 'Internal server error while processing webhook.' });
   }
 });
+
 
 // Temporary in-memory store for SMS OTPs
 const otpStore = new Map();

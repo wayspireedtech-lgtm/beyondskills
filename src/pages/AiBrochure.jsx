@@ -2410,6 +2410,7 @@ export default function AiBrochure() {
                 value={currentPage}
                 onChange={(e) => setCurrentPage(Number(e.target.value))}
                 className="border font-mono text-xs px-3 py-1.5 rounded-lg outline-none bg-slate-50 border-slate-200 text-slate-800"
+                aria-label="Select brochure page"
               >
                 <option value={1}>Page 1: Cover</option>
                 <option value={2}>Page 2: Who We Are</option>
@@ -3125,8 +3126,9 @@ export default function AiBrochure() {
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Current Status *</label>
+                        <label htmlFor="brochure-status" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Current Status *</label>
                         <select 
+                          id="brochure-status"
                           value={enquiryForm.status}
                           onChange={(e) => setEnquiryForm({...enquiryForm, status: e.target.value})}
                           className="w-full bg-[#F5F7FA] border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-[#2D43B8] transition-all"

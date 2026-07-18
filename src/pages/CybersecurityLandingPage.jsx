@@ -462,9 +462,10 @@ export default function CybersecurityLandingPage() {
               <p className="text-xs text-slate-500 mb-6">Enter your details to receive syllabus access, scheduling guidelines, and call advisor support.</p>
               
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                 <div>
+                  <label htmlFor="cyber-name" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <input 
+                    id="cyber-name"
                     type="text" 
                     required 
                     placeholder="Enter your name" 
@@ -476,8 +477,9 @@ export default function CybersecurityLandingPage() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                    <label htmlFor="cyber-email" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                     <input 
+                      id="cyber-email"
                       type="email" 
                       required 
                       placeholder="name@email.com" 
@@ -487,8 +489,9 @@ export default function CybersecurityLandingPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
+                    <label htmlFor="cyber-phone" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">WhatsApp Phone</label>
                     <input 
+                      id="cyber-phone"
                       type="tel" 
                       required 
                       maxLength="10"
@@ -501,8 +504,9 @@ export default function CybersecurityLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                  <label htmlFor="cyber-qualification" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                   <select 
+                    id="cyber-qualification"
                     value={formData.qualification}
                     onChange={(e) => setFormData({...formData, qualification: e.target.value})}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
@@ -515,8 +519,9 @@ export default function CybersecurityLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Prior Security / CLI Experience</label>
+                  <label htmlFor="cyber-experience" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Prior Security / CLI Experience</label>
                   <select 
+                    id="cyber-experience"
                     value={formData.experience}
                     onChange={(e) => setFormData({...formData, experience: e.target.value})}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
@@ -529,8 +534,9 @@ export default function CybersecurityLandingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                    <label htmlFor="cyber-goal" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                     <select 
+                      id="cyber-goal"
                       value={formData.goal}
                       onChange={(e) => setFormData({...formData, goal: e.target.value})}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"
@@ -541,8 +547,9 @@ export default function CybersecurityLandingPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
+                    <label htmlFor="cyber-preferred-time" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Callback Slot</label>
                     <select 
+                      id="cyber-preferred-time"
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({...formData, preferredTime: e.target.value})}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-slate-800 cursor-pointer"

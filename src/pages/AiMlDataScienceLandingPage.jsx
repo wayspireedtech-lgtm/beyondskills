@@ -398,9 +398,10 @@ export default function AiMlDataScienceLandingPage() {
               
               <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
+                  <label htmlFor="aiml-name" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
                   <div className="relative">
                     <input 
+                      id="aiml-name"
                       type="text" required 
                       className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. Rahul Sharma"
@@ -412,9 +413,10 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
+                  <label htmlFor="aiml-email" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
                   <div className="relative">
                     <input 
+                      id="aiml-email"
                       type="email" required 
                       className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. rahul@example.com"
@@ -426,9 +428,10 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
+                  <label htmlFor="aiml-phone" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
                   <div className="relative">
                     <input 
+                      id="aiml-phone"
                       type="tel" required 
                       className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
                       placeholder="e.g. +91 98765 43210"
@@ -441,8 +444,9 @@ export default function AiMlDataScienceLandingPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
+                    <label htmlFor="aiml-qualification" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
                     <select 
+                      id="aiml-qualification"
                       className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                       value={enquiryForm.qualification}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, qualification: e.target.value })}
@@ -454,8 +458,9 @@ export default function AiMlDataScienceLandingPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
+                    <label htmlFor="aiml-experience" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
                     <select 
+                      id="aiml-experience"
                       className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                       value={enquiryForm.experience}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, experience: e.target.value })}
@@ -468,8 +473,9 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
+                  <label htmlFor="aiml-goal" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
                   <select 
+                    id="aiml-goal"
                     className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                     value={enquiryForm.goal}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, goal: e.target.value })}
@@ -482,8 +488,9 @@ export default function AiMlDataScienceLandingPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
+                  <label htmlFor="aiml-contact-time" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
                   <select 
+                    id="aiml-contact-time"
                     className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
                     value={enquiryForm.contactTime}
                     onChange={(e) => setEnquiryForm({ ...enquiryForm, contactTime: e.target.value })}

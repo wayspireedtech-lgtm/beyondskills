@@ -743,38 +743,38 @@ export default function Home() {
             <form onSubmit={handleAgencySubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Name *</label>
-                  <input type="text" required value={agencyForm.name} onChange={(e) => setAgencyForm({...agencyForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter full name" />
+                  <label htmlFor="agency-name" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Name *</label>
+                  <input id="agency-name" type="text" required value={agencyForm.name} onChange={(e) => setAgencyForm({...agencyForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter full name" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Company Name *</label>
-                  <input type="text" required value={agencyForm.company} onChange={(e) => setAgencyForm({...agencyForm, company: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter company name" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Email Address *</label>
-                  <input type="email" required value={agencyForm.email} onChange={(e) => setAgencyForm({...agencyForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="name@company.com" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Phone Number *</label>
-                  <input type="tel" required value={agencyForm.phone} onChange={(e) => setAgencyForm({...agencyForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="+91 98765 43210" />
+                  <label htmlFor="agency-company" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Company Name *</label>
+                  <input id="agency-company" type="text" required value={agencyForm.company} onChange={(e) => setAgencyForm({...agencyForm, company: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter company name" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Service Required *</label>
-                  <select value={agencyForm.service} onChange={(e) => setAgencyForm({...agencyForm, service: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
+                  <label htmlFor="agency-email" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Email Address *</label>
+                  <input id="agency-email" type="email" required value={agencyForm.email} onChange={(e) => setAgencyForm({...agencyForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="name@company.com" />
+                </div>
+                <div>
+                  <label htmlFor="agency-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Phone Number *</label>
+                  <input id="agency-phone" type="tel" required value={agencyForm.phone} onChange={(e) => setAgencyForm({...agencyForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="+91 98765 43210" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="agency-service" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Service Required *</label>
+                  <select id="agency-service" value={agencyForm.service} onChange={(e) => setAgencyForm({...agencyForm, service: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                     <option value="Website Development">Website Development</option>
                     <option value="Custom Web Applications">Custom Web Applications</option>
                     <option value="Google & Meta Ads - Performance Marketing">Google & Meta Ads - Performance Marketing</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Estimated Budget *</label>
-                  <select value={agencyForm.budget} onChange={(e) => setAgencyForm({...agencyForm, budget: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
+                  <label htmlFor="agency-budget" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Estimated Budget *</label>
+                  <select id="agency-budget" value={agencyForm.budget} onChange={(e) => setAgencyForm({...agencyForm, budget: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                     <option value="Below 1 Lakh">Below 1 Lakh</option>
                     <option value="₹1,00,000 - ₹3,00,000">₹1,00,000 - ₹3,00,000</option>
                     <option value="₹3,00,000 - ₹5,00,000">₹3,00,000 - ₹5,00,000</option>
@@ -784,8 +784,8 @@ export default function Home() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Project Brief / Message</label>
-                <textarea rows={4} value={agencyForm.message} onChange={(e) => setAgencyForm({...agencyForm, message: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Scope, features, design inputs, timelines..."></textarea>
+                <label htmlFor="agency-message" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Project Brief / Message</label>
+                <textarea id="agency-message" rows={4} value={agencyForm.message} onChange={(e) => setAgencyForm({...agencyForm, message: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Scope, features, design inputs, timelines..."></textarea>
               </div>
 
               <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-2">
@@ -798,23 +798,23 @@ export default function Home() {
             <form onSubmit={handleAcademySubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Name *</label>
-                  <input type="text" required value={academyForm.name} onChange={(e) => setAcademyForm({...academyForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter full name" />
+                  <label htmlFor="academy-name" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Name *</label>
+                  <input id="academy-name" type="text" required value={academyForm.name} onChange={(e) => setAcademyForm({...academyForm, name: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter full name" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Email Address *</label>
-                  <input type="email" required value={academyForm.email} onChange={(e) => setAcademyForm({...academyForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="johndoe@gmail.com" />
+                  <label htmlFor="academy-email" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Email Address *</label>
+                  <input id="academy-email" type="email" required value={academyForm.email} onChange={(e) => setAcademyForm({...academyForm, email: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="johndoe@gmail.com" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Phone Number *</label>
-                  <input type="tel" required value={academyForm.phone} onChange={(e) => setAcademyForm({...academyForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="+91 98765 43210" />
+                  <label htmlFor="academy-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Phone Number *</label>
+                  <input id="academy-phone" type="tel" required value={academyForm.phone} onChange={(e) => setAcademyForm({...academyForm, phone: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="+91 98765 43210" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Course of Interest *</label>
-                  <select value={academyForm.course} onChange={(e) => setAcademyForm({...academyForm, course: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
+                  <label htmlFor="academy-course" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Course of Interest *</label>
+                  <select id="academy-course" value={academyForm.course} onChange={(e) => setAcademyForm({...academyForm, course: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                     {COURSES_SUMMARY.map((c) => (
                       <option key={c.id} value={c.id}>{c.title}</option>
                     ))}
@@ -824,12 +824,12 @@ export default function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">College / Organization Name *</label>
-                  <input type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter college/organization name" />
+                  <label htmlFor="academy-college" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">College / Organization Name *</label>
+                  <input id="academy-college" type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter college/organization name" />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status *</label>
-                  <select value={academyForm.status} onChange={(e) => setAcademyForm({...academyForm, status: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
+                  <label htmlFor="academy-status" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status *</label>
+                  <select id="academy-status" value={academyForm.status} onChange={(e) => setAcademyForm({...academyForm, status: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                     <option value="Undergraduate Student">Undergraduate Student</option>
                     <option value="Postgraduate Student">Postgraduate Student</option>
                     <option value="Recent Graduate">Recent Graduate</option>
@@ -840,8 +840,8 @@ export default function Home() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Message</label>
-                <textarea rows={4} value={academyForm.message} onChange={(e) => setAcademyForm({...academyForm, message: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Any doubts or questions about recorded schedules, reviews, or materials..."></textarea>
+                <label htmlFor="academy-message" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Message</label>
+                <textarea id="academy-message" rows={4} value={academyForm.message} onChange={(e) => setAcademyForm({...academyForm, message: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Any doubts or questions about recorded schedules, reviews, or materials..."></textarea>
               </div>
 
               <button type="submit" className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-2">

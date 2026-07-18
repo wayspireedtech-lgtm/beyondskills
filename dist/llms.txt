@@ -1,0 +1,11 @@
+# BeyondSkills
+
+BeyondSkills is a Gurugram-based tech training academy and digital services agency.
+
+## Navigation Links
+- [Home Page](https://www.beyondskills.in/)
+- [Technology Courses](https://www.beyondskills.in/courses)
+- [About BeyondSkills](https://www.beyondskills.in/about)
+- [Contact Our Team](https://www.beyondskills.in/contact)
+- [Terms of Service](https://www.beyondskills.in/terms-and-conditions)
+- [Privacy Policy](https://www.beyondskills.in/privacy-policy)

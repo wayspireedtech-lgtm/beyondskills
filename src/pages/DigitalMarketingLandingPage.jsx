@@ -525,8 +525,9 @@ export default function DigitalMarketingLandingPage() {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Full Name</label>
+                  <label htmlFor="dm-name" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Full Name</label>
                   <input 
+                    id="dm-name"
                     type="text" 
                     required 
                     value={formData.name}
@@ -538,8 +539,9 @@ export default function DigitalMarketingLandingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Email Address</label>
+                    <label htmlFor="dm-email" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Email Address</label>
                     <input 
+                      id="dm-email"
                       type="email" 
                       required 
                       value={formData.email}
@@ -549,8 +551,9 @@ export default function DigitalMarketingLandingPage() {
                     />
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Mobile Number</label>
+                    <label htmlFor="dm-phone" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Mobile Number</label>
                     <input 
+                      id="dm-phone"
                       type="tel" 
                       required 
                       value={formData.phone}
@@ -562,8 +565,9 @@ export default function DigitalMarketingLandingPage() {
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Current Qualification</label>
+                  <label htmlFor="dm-qualification" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Current Qualification</label>
                   <select 
+                    id="dm-qualification"
                     value={formData.qualification}
                     onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer"
@@ -578,8 +582,9 @@ export default function DigitalMarketingLandingPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Marketing Experience</label>
+                    <label htmlFor="dm-experience" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Marketing Experience</label>
                     <select 
+                      id="dm-experience"
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer"
@@ -590,8 +595,9 @@ export default function DigitalMarketingLandingPage() {
                     </select>
                   </div>
                   <div className="space-y-1 text-left">
-                    <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
+                    <label htmlFor="dm-preferred-time" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Preferred Callback Slot</label>
                     <select 
+                      id="dm-preferred-time"
                       value={formData.preferredTime}
                       onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer"
@@ -604,8 +610,9 @@ export default function DigitalMarketingLandingPage() {
                 </div>
 
                 <div className="space-y-1 text-left">
-                  <label className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Primary Career Goal</label>
+                  <label htmlFor="dm-goal" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider font-mono">Primary Career Goal</label>
                   <select 
+                    id="dm-goal"
                     value={formData.goal}
                     onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-800 focus:border-blue-600 focus:bg-white outline-none transition-all cursor-pointer"

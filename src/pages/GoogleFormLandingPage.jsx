@@ -240,11 +240,12 @@ Submitted via Google Form Campaign page
             {/* Required Group Name, Email, Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-name" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <User className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Full Name <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
+                  id="gf-name"
                   type="text"
                   name="name"
                   required
@@ -256,11 +257,12 @@ Submitted via Google Form Campaign page
               </div>
               
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-phone" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Phone className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Phone Number <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
+                  id="gf-phone"
                   type="tel"
                   name="phone"
                   required
@@ -274,11 +276,12 @@ Submitted via Google Form Campaign page
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-email" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Mail className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Email Address <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
+                  id="gf-email"
                   type="email"
                   name="email"
                   required
@@ -290,11 +293,12 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-college" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   College / Institute
                 </label>
                 <input
+                  id="gf-college"
                   type="text"
                   name="college"
                   value={form.college}
@@ -308,11 +312,12 @@ Submitted via Google Form Campaign page
             {/* Year & Student/Working Professional */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-year" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Academic Year
                 </label>
                 <select
+                  id="gf-year"
                   name="year"
                   value={form.year}
                   onChange={handleChange}
@@ -327,11 +332,12 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-role" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Briefcase className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Current Profile
                 </label>
                 <select
+                  id="gf-role"
                   name="role"
                   value={form.role}
                   onChange={handleChange}
@@ -346,11 +352,12 @@ Submitted via Google Form Campaign page
             {/* Upskilling (Dropdown of all courses) & Batch (July/August) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-upskilling" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <BookOpen className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Upskilling Goal (Course)
                 </label>
                 <select
+                  id="gf-upskilling"
                   name="upskilling"
                   value={form.upskilling}
                   onChange={handleChange}
@@ -365,11 +372,12 @@ Submitted via Google Form Campaign page
               </div>
 
               <div>
-                <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+                <label htmlFor="gf-batch" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                   <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                   Preferred Batch
                 </label>
                 <select
+                  id="gf-batch"
                   name="batch"
                   value={form.batch}
                   onChange={handleChange}
@@ -383,11 +391,12 @@ Submitted via Google Form Campaign page
 
             {/* Project Work Experience */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+              <label htmlFor="gf-projectExp" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                 <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                 Project / Work Experience
               </label>
               <input
+                id="gf-projectExp"
                 type="text"
                 name="projectExp"
                 value={form.projectExp}
@@ -399,11 +408,12 @@ Submitted via Google Form Campaign page
 
             {/* Why Interested */}
             <div>
-              <label className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
+              <label htmlFor="gf-whyInterested" className="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest font-mono mb-2 flex items-center">
                 <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-500" />
                 Why are you interested in this program?
               </label>
               <textarea
+                id="gf-whyInterested"
                 name="whyInterested"
                 rows={3}
                 value={form.whyInterested}

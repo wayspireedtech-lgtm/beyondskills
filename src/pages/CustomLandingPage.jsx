@@ -234,8 +234,9 @@ export default function CustomLandingPage() {
               ) : (
                 <form onSubmit={handleApplySubmit} className="space-y-4 text-xs">
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Your Full Name</label>
+                    <label htmlFor="custom-name" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Your Full Name</label>
                     <input 
+                      id="custom-name"
                       type="text" required
                       value={enquiryForm.name}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
@@ -246,8 +247,9 @@ export default function CustomLandingPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Email Address</label>
+                      <label htmlFor="custom-email" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Email Address</label>
                       <input 
+                        id="custom-email"
                         type="email" required
                         value={enquiryForm.email}
                         onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
@@ -256,8 +258,9 @@ export default function CustomLandingPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">WhatsApp Phone Number</label>
+                      <label htmlFor="custom-phone" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">WhatsApp Phone Number</label>
                       <input 
+                        id="custom-phone"
                         type="tel" required
                         value={enquiryForm.phone}
                         onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
@@ -268,8 +271,9 @@ export default function CustomLandingPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Current Qualification</label>
+                    <label htmlFor="custom-qualification" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Current Qualification</label>
                     <select 
+                      id="custom-qualification"
                       value={enquiryForm.qualification}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, qualification: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 outline-none focus:border-[#2A4BFF] cursor-pointer"
@@ -282,8 +286,9 @@ export default function CustomLandingPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Prior Programming Experience</label>
+                    <label htmlFor="custom-experience" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Prior Programming Experience</label>
                     <select 
+                      id="custom-experience"
                       value={enquiryForm.experience}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, experience: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 outline-none focus:border-[#2A4BFF] cursor-pointer"
@@ -295,8 +300,9 @@ export default function CustomLandingPage() {
                   </div>
 
                   <div>
-                    <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Admissions Call Time Window</label>
+                    <label htmlFor="custom-contact-time" className="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 font-mono">Admissions Call Time Window</label>
                     <select 
+                      id="custom-contact-time"
                       value={enquiryForm.contactTime}
                       onChange={(e) => setEnquiryForm({ ...enquiryForm, contactTime: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-800 outline-none focus:border-[#2A4BFF] cursor-pointer"
