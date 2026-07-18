@@ -280,28 +280,12 @@ export default function AdminDashboard() {
       console.error('Error saving config:', err);
     }
   };
-
   const fetchWebhookLeads = async () => {
     try {
       const { data: supabaseLeads, error: sbError } = await getLeadsFromSupabase();
-      if (!sbError && supabaseLeads && supabaseLeads.length > 0) {
-        const currentLocal = getDbItem('beyondskills_leads', []);
-        let updated = [...currentLocal];
-        let updatedCount = 0;
-        
-        supabaseLeads.forEach(sLead => {
-          const existingIdx = updated.findIndex(l => l.phone === sLead.phone || l.id === sLead.id);
-          if (existingIdx !== -1) {
-            // Update local with Supabase data (sync state)
-            updated[existingIdx] = { ...updated[existingIdx], ...sLead };
-          } else {
-            updated.push(sLead);
-            updatedCount++;
-          }
-        });
-        
-        setLeads(updated);
-        setDbItem('beyondskills_leads', updated);
+      if (!sbError && supabaseLeads) {
+        setLeads(supabaseLeads);
+        setDbItem('beyondskills_leads', supabaseLeads);
         return;
       }
     } catch (sbErr) {
@@ -315,26 +299,9 @@ export default function AdminDashboard() {
       const res = await fetch(`${apiHost}/api/webhook/leads`);
       if (res.ok) {
         const webhookLeads = await res.json();
-        if (webhookLeads && webhookLeads.length > 0) {
-          const currentLocal = getDbItem('beyondskills_leads', []);
-          let updated = [...currentLocal];
-          let updatedCount = 0;
-          
-          webhookLeads.forEach(wLead => {
-            if (!updated.some(l => l.phone === wLead.phone)) {
-              const newId = `LD${String(updated.length + 1).padStart(3, '0')}`;
-              updated.push({
-                ...wLead,
-                id: newId
-              });
-              updatedCount++;
-            }
-          });
-          
-          if (updatedCount > 0) {
-            setLeads(updated);
-            setDbItem('beyondskills_leads', updated);
-          }
+        if (webhookLeads) {
+          setLeads(webhookLeads);
+          setDbItem('beyondskills_leads', webhookLeads);
         }
       }
     } catch (e) {
