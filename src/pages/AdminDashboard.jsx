@@ -1287,11 +1287,12 @@ export default function AdminDashboard() {
   };
 
   // CRM Statistics calculations (Filtered for BDA if BDA is logged in)
-  const statsTotalLeads = accessibleLeads.length;
-  const statsMasterclassLeads = accessibleLeads.filter(l => l.type === 'Google Form Leads').length;
-  const statsConversionRate = statsTotalLeads > 0 ? ((accessibleLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 1051).toFixed(1) : 0;
-  const statsSuccessfulEnrollments = accessibleLeads.filter(l => l.status === 'Enrolled').length;
-  const statsHotLeads = accessibleLeads.filter(l => l.status === 'Follow Up').length;
+  const activeStatsLeads = accessibleLeads.filter(l => l.status !== 'Deleted from Sheet');
+  const statsTotalLeads = activeStatsLeads.length;
+  const statsMasterclassLeads = activeStatsLeads.filter(l => l.type === 'Google Form Leads').length;
+  const statsConversionRate = statsTotalLeads > 0 ? ((activeStatsLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 100).toFixed(1) : 0;
+  const statsSuccessfulEnrollments = activeStatsLeads.filter(l => l.status === 'Enrolled').length;
+  const statsHotLeads = activeStatsLeads.filter(l => l.status === 'Follow Up').length;
 
   if (!currentUser) {
     return (
