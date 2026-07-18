@@ -251,11 +251,9 @@ app.post('/api/webhook/leads', async (req, res) => {
 
     // Forward to Google Sheet Webhook if configured
     let forwardedToSheet = false;
-    let googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL;
-    if (!googleSheetWebhookUrl) {
-      const config = readJsonFileSync(CONFIG_FILE, {});
-      googleSheetWebhookUrl = config.googleSheetWebhookUrl;
-    }
+    let googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || 
+                               process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL ||
+                               'https://script.google.com/macros/s/AKfycbwHEer3vmt4NNgpx_-aq7Zbl4QIYM2Buk_l-UrdisUJqLAukqTwKa8XTh2hQWI8LibmZg/exec';
 
     if (googleSheetWebhookUrl) {
       try {
@@ -290,6 +288,35 @@ app.post('/api/webhook/leads', async (req, res) => {
       } catch (err) {
         console.error('Error forwarding lead to Google Sheet Webhook:', err);
       }
+    }
+
+    // Send automatic email notification backup to admin
+    try {
+      if (smtpUser && smtpPass) {
+        const alertMailOptions = {
+          from: `"BeyondSkills Lead Alert" <${smtpUser}>`,
+          to: 'beyondskills.ai@gmail.com',
+          subject: `🚨 NEW LEAD: ${name} (${program || 'full-stack-web'})`,
+          html: `
+            <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; max-width: 500px;">
+              <h2 style="color: #2563eb; margin-top: 0;">New Lead Registered!</h2>
+              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 15px;" />
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>
+              <p><strong>Email:</strong> ${email || 'None'}</p>
+              <p><strong>Program:</strong> ${program || 'full-stack-web'}</p>
+              <p><strong>College:</strong> ${college || 'Unspecified'}</p>
+              <p><strong>Date:</strong> ${newLead.date}</p>
+              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 15px;" />
+              <p style="font-size: 11px; color: #64748b;">This is an automated safety alert from BeyondSkills Server.</p>
+            </div>
+          `
+        };
+        await transporter.sendMail(alertMailOptions);
+        console.log(`[SMTP Backup] Lead email notification sent for ${name}`);
+      }
+    } catch (mailErr) {
+      console.error('Failed to send SMTP backup lead email:', mailErr);
     }
 
     res.status(201).json({ 
