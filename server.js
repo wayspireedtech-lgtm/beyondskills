@@ -211,7 +211,8 @@ app.post('/api/webhook/leads', async (req, res) => {
   try {
     const { 
       name, email, phone, type, program, notes,
-      college, profession, message, batch, projectExp, whyInterested, year
+      college, profession, message, batch, projectExp, whyInterested, year,
+      preferredContactTime, careerGoal
     } = req.body;
     
     if (!name || !phone) {
@@ -268,6 +269,8 @@ app.post('/api/webhook/leads', async (req, res) => {
           batch: batch || 'N/A',
           projectExp: projectExp || 'N/A',
           whyInterested: whyInterested || 'N/A',
+          preferredContactTime: preferredContactTime || req.body.preferredContactTime || 'Not Specified',
+          careerGoal: careerGoal || req.body.careerGoal || 'Not Specified',
           date: newLead.date
         };
         
