@@ -168,7 +168,9 @@ app.get('/api/config', (req, res) => {
   try {
     const config = readJsonFileSync(CONFIG_FILE, {});
     const googleSheetWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || config.googleSheetWebhookUrl || '';
-    res.status(200).json({ googleSheetWebhookUrl });
+    const googleFormSheetUrl = config.googleFormSheetUrl || '';
+    const adsSheetUrl = config.adsSheetUrl || '';
+    res.status(200).json({ googleSheetWebhookUrl, googleFormSheetUrl, adsSheetUrl });
   } catch (error) {
     console.error('Error fetching config:', error);
     res.status(500).json({ error: 'Failed to retrieve configuration.' });
@@ -178,8 +180,13 @@ app.get('/api/config', (req, res) => {
 // POST: Save config settings
 app.post('/api/config', (req, res) => {
   try {
-    const { googleSheetWebhookUrl } = req.body;
-    const config = { googleSheetWebhookUrl: googleSheetWebhookUrl || '' };
+    const { googleSheetWebhookUrl, googleFormSheetUrl, adsSheetUrl } = req.body;
+    const config = readJsonFileSync(CONFIG_FILE, {});
+    
+    if (googleSheetWebhookUrl !== undefined) config.googleSheetWebhookUrl = googleSheetWebhookUrl;
+    if (googleFormSheetUrl !== undefined) config.googleFormSheetUrl = googleFormSheetUrl;
+    if (adsSheetUrl !== undefined) config.adsSheetUrl = adsSheetUrl;
+    
     writeJsonFileSync(CONFIG_FILE, config);
     res.status(200).json({ success: true, message: 'Configuration saved successfully.' });
   } catch (error) {

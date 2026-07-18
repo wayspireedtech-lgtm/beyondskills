@@ -237,6 +237,44 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleSaveGoogleFormSheetUrl = async (url) => {
+    setGoogleFormSheetUrl(url);
+    localStorage.setItem('beyondskills_sheet_google_form', url);
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+      await fetch(`${apiHost}/api/config`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ googleFormSheetUrl: url })
+      });
+    } catch (err) {
+      console.error('Error saving config:', err);
+    }
+  };
+
+  const handleSaveAdsSheetUrl = async (url) => {
+    setAdsSheetUrl(url);
+    localStorage.setItem('beyondskills_sheet_ads', url);
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+      await fetch(`${apiHost}/api/config`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ adsSheetUrl: url })
+      });
+    } catch (err) {
+      console.error('Error saving config:', err);
+    }
+  };
+
   const fetchWebhookLeads = async () => {
     try {
       const { data: supabaseLeads, error: sbError } = await getLeadsFromSupabase();
@@ -299,7 +337,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    // Fetch google sheet webhook url from backend config
+    // Fetch configuration from backend
     const fetchConfig = async () => {
       try {
         const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -310,6 +348,14 @@ export default function AdminDashboard() {
           const config = await res.json();
           if (config.googleSheetWebhookUrl) {
             setGoogleSheetWebhookUrl(config.googleSheetWebhookUrl);
+          }
+          if (config.googleFormSheetUrl) {
+            setGoogleFormSheetUrl(config.googleFormSheetUrl);
+            localStorage.setItem('beyondskills_sheet_google_form', config.googleFormSheetUrl);
+          }
+          if (config.adsSheetUrl) {
+            setAdsSheetUrl(config.adsSheetUrl);
+            localStorage.setItem('beyondskills_sheet_ads', config.adsSheetUrl);
           }
         }
       } catch (err) {
@@ -3979,10 +4025,7 @@ export default function AdminDashboard() {
                 <input 
                   type="text"
                   value={googleFormSheetUrl}
-                  onChange={(e) => {
-                    setGoogleFormSheetUrl(e.target.value);
-                    localStorage.setItem('beyondskills_sheet_google_form', e.target.value);
-                  }}
+                  onChange={(e) => handleSaveGoogleFormSheetUrl(e.target.value)}
                   placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
                   className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[11px]"
                 />
@@ -3993,10 +4036,7 @@ export default function AdminDashboard() {
                 <input 
                   type="text"
                   value={adsSheetUrl}
-                  onChange={(e) => {
-                    setAdsSheetUrl(e.target.value);
-                    localStorage.setItem('beyondskills_sheet_ads', e.target.value);
-                  }}
+                  onChange={(e) => handleSaveAdsSheetUrl(e.target.value)}
                   placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
                   className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] font-mono text-[11px]"
                 />
