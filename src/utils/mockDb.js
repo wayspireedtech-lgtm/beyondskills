@@ -720,7 +720,7 @@ export const COURSES = [
     ],
     mentors: [
       { name: 'Kunal Rawal', role: 'Data Analytics Instructor (Worked at Deloitte & Airtel)', experience: '7+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
-      { name: 'Shevam Nagar', role: 'Power BI Mentor at Gradus (Worked at Capgemini)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+      { name: 'Shivam Nagar', role: 'Power BI Mentor (Worked at Capgemini)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
       { name: 'Sanchit Singh', role: 'Data Analytics Mentor at Gradus (Worked at EY)', experience: '5+ Years', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
     ],
     outcomes: [
@@ -1437,11 +1437,11 @@ export const BLOGS = [
 ];
 
 export const MENTORS = [
-  { name: 'Kunal Rawal', role: 'Data Analytics Instructor', org: 'Deloitte & Airtel', exp: '7+ Years', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
-  { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor', org: 'Capgemini', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
-  { name: 'Nikhil Mehra', role: 'Full Stack Developer', org: 'NadahWeb', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' },
-  { name: 'Hardik Dhingra', role: 'Cyber Security Specialist', org: 'GoDaddy', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' },
-  { name: 'Shevam Nagar', role: 'Power BI Mentor', org: 'Capgemini', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Kunal Rawal', role: 'Data Analytics Instructor', org: 'Deloitte & Airtel', exp: '7+ Years', image: '/mentors/kunal.png', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
+  { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor', org: 'Capgemini', exp: '6+ Years', image: '/mentors/saurav.png', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
+  { name: 'Nikhil Mehra', role: 'Full Stack Developer', org: 'NadahWeb', exp: '5+ Years', image: '/mentors/nikhil.png', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' },
+  { name: 'Hardik Dhingra', role: 'Cyber Security Specialist', org: 'GoDaddy', exp: '6+ Years', image: '/mentors/hardik.png', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' },
+  { name: 'Shivam Nagar', role: 'Power BI Mentor', org: 'Capgemini', exp: '5+ Years', image: '/mentors/shivam.png', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
   { name: 'Sanchit Singh', role: 'Data Analytics Mentor', org: 'EY', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
 ];
 
@@ -1600,9 +1600,9 @@ if (!localStorage.getItem('beyondskills_blogs')) {
   setDbItem('beyondskills_blogs', BLOGS);
 }
 
-if (!localStorage.getItem('beyondskills_mentors') || !localStorage.getItem('beyondskills_mentors_refreshed_v3')) {
+if (!localStorage.getItem('beyondskills_mentors') || !localStorage.getItem('beyondskills_mentors_refreshed_v4')) {
   setDbItem('beyondskills_mentors', MENTORS);
-  localStorage.setItem('beyondskills_mentors_refreshed_v3', 'true');
+  localStorage.setItem('beyondskills_mentors_refreshed_v4', 'true');
 }
 
 if (!localStorage.getItem('beyondskills_landing_pages')) {

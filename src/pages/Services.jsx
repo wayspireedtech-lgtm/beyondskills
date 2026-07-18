@@ -81,12 +81,36 @@ export default function Services() {
 
   const data = SERVICE_DATA[serviceId];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const leads = getDbItem('beyondskills_leads', []);
-    const newLead = { type: 'Digital Services', ...form, service: data.title, date: new Date().toISOString() };
+    const newLead = { 
+      type: 'Digital Services', 
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      program: data.title || 'Digital Services',
+      college: form.company || 'Unspecified',
+      profession: 'Corporate / Client',
+      message: `Budget: ${form.budget} | Message: ${form.message}`,
+      date: new Date().toISOString() 
+    };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      });
+    } catch (err) {
+      console.error('Error posting digital services inquiry to backend webhook:', err);
+    }
 
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {

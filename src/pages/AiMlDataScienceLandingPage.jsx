@@ -146,7 +146,7 @@ export default function AiMlDataScienceLandingPage() {
     };
   }, []);
 
-  const handleApplySubmit = (e) => {
+  const handleApplySubmit = async (e) => {
     e.preventDefault();
 
     const searchParams = new URLSearchParams(window.location.search);
@@ -182,6 +182,20 @@ export default function AiMlDataScienceLandingPage() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      });
+    } catch (err) {
+      console.error('Error posting enquiry to backend webhook:', err);
+    }
 
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {

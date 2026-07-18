@@ -60,12 +60,36 @@ export default function Home() {
   const [isBrochureOpen, setIsBrochureOpen] = useState(false);
   const [brochureCourse, setBrochureCourse] = useState(null);
 
-  const handleAgencySubmit = (e) => {
+  const handleAgencySubmit = async (e) => {
     e.preventDefault();
     const leads = getDbItem('beyondskills_leads', []);
-    const newLead = { type: 'Agency', ...agencyForm, date: new Date().toISOString() };
+    const newLead = { 
+      type: 'Agency Leads', 
+      name: agencyForm.name,
+      email: agencyForm.email,
+      phone: agencyForm.phone,
+      program: agencyForm.service,
+      college: agencyForm.company || 'Unspecified',
+      profession: 'Corporate / Client',
+      message: `Budget: ${agencyForm.budget} | Message: ${agencyForm.message}`,
+      date: new Date().toISOString() 
+    };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      });
+    } catch (err) {
+      console.error('Error posting agency lead to backend webhook:', err);
+    }
     
     // Trigger simulated SLA toast
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
@@ -80,12 +104,36 @@ export default function Home() {
     setTimeout(() => setSubmitStatus(null), 5000);
   };
 
-  const handleAcademySubmit = (e) => {
+  const handleAcademySubmit = async (e) => {
     e.preventDefault();
     const leads = getDbItem('beyondskills_leads', []);
-    const newLead = { type: 'Academy', ...academyForm, date: new Date().toISOString() };
+    const newLead = { 
+      type: 'Academy Leads', 
+      name: academyForm.name,
+      email: academyForm.email,
+      phone: academyForm.phone,
+      program: academyForm.course,
+      college: academyForm.college || 'Unspecified',
+      profession: academyForm.status || 'Unspecified',
+      message: academyForm.message || '',
+      date: new Date().toISOString() 
+    };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      });
+    } catch (err) {
+      console.error('Error posting academy lead to backend webhook:', err);
+    }
 
     // Trigger simulated SLA toast
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {

@@ -14,16 +14,36 @@ export default function CampusAmbassador() {
   });
   const [status, setStatus] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Campus Ambassador', 
-      ...form, 
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      college: form.college || 'Unspecified',
+      profession: `Student (${form.year || 'N/A'})`,
+      program: 'Campus Ambassador',
+      message: `Stream: ${form.stream || 'N/A'} | Why Apply: ${form.whyApply || 'N/A'}`,
       date: new Date().toISOString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:5000'
+        : window.location.origin;
+
+      await fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      });
+    } catch (err) {
+      console.error('Error posting campus ambassador application to backend webhook:', err);
+    }
 
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
