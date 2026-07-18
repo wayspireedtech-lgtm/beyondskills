@@ -333,7 +333,7 @@ export default function Home() {
                   {logo.type === 'text' ? (
                     logo.render
                   ) : (
-                    <img src={logo.url} alt={logo.name} className="h-11 object-contain" />
+                    <img src={logo.url} alt={logo.name} className="h-11 object-contain" loading="lazy" />
                   )}
                 </div>
               ))}
@@ -363,7 +363,7 @@ export default function Home() {
                   {logo.type === 'text' ? (
                     logo.render
                   ) : (
-                    <img src={logo.url} alt={logo.name} className="h-9 object-contain" />
+                    <img src={logo.url} alt={logo.name} className="h-9 object-contain" loading="lazy" />
                   )}
                 </div>
               ))}
@@ -491,7 +491,7 @@ export default function Home() {
             {/* Startup India */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
               <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
-                <img src={startupIndiaLogo} alt="Startup India Recognized" className="max-h-full object-contain rounded-lg" />
+                <img src={startupIndiaLogo} alt="Startup India Recognized" className="max-h-full object-contain rounded-lg" loading="lazy" />
               </div>
             </div>
             
@@ -501,7 +501,7 @@ export default function Home() {
             {/* ISO Certified */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
               <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
-                <img src={isoCertifiedLogo} alt="ISO 9001:2015 Certified" className="max-h-full object-contain rounded-lg" />
+                <img src={isoCertifiedLogo} alt="ISO 9001:2015 Certified" className="max-h-full object-contain rounded-lg" loading="lazy" />
               </div>
             </div>
 
@@ -511,7 +511,7 @@ export default function Home() {
             {/* MSME Registered */}
             <div className="flex flex-col items-center justify-center group cursor-pointer">
               <div className="h-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.06]">
-                <img src={msmeRegisteredLogo} alt="MSME Registered" className="max-h-full object-contain rounded-lg" />
+                <img src={msmeRegisteredLogo} alt="MSME Registered" className="max-h-full object-contain rounded-lg" loading="lazy" />
               </div>
             </div>
 
