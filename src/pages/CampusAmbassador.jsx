@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Send, Sparkles, Award, Users, ShieldAlert, Briefcase, MessageSquare, CheckCircle, Star } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 export default function CampusAmbassador() {
   const [form, setForm] = useState({
@@ -30,6 +31,13 @@ export default function CampusAmbassador() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

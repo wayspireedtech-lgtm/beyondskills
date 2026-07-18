@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, ShieldCheck, Clock, Sparkles } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
@@ -24,6 +25,13 @@ export default function Contact() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -68,6 +76,13 @@ export default function Contact() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

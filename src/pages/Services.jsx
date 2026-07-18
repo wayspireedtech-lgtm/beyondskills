@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Code, Megaphone, Terminal, FileText, CheckCircle, ArrowLeft, Send, Sparkles, AlertCircle } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 const SERVICE_DATA = {
   'website-development': {
@@ -97,6 +98,13 @@ export default function Services() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

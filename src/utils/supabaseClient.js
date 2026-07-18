@@ -18,6 +18,8 @@ if (supabaseUrl && supabaseAnonKey) {
   );
 }
 
+import { getDbItem } from './dbHelpers';
+
 /**
  * Saves a brochure lead to Supabase 'leads' table
  */
@@ -28,19 +30,41 @@ export async function saveLeadToSupabase(lead) {
   }
 
   try {
+    const courseId = lead.program || lead.course_id || 'artificial-intelligence';
+    const courseTitle = lead.course_title || lead.course || '';
+
     const { data, error } = await supabase
       .from('leads')
       .insert([
         {
+          id: lead.id || `LD${Date.now()}`,
           name: lead.name,
           email: lead.email,
           phone: lead.phone,
-          status: lead.status,
-          course_id: lead.course_id,
-          course_title: lead.course_title,
-          student_details: lead.student_details || '',
-          job_role: lead.job_role || '',
-          created_at: new Date().toISOString()
+          status: lead.status || 'New',
+          sub_status: lead.subStatus || 'QUALIFIED',
+          assigned_bdm: lead.assignedBDM || '',
+          assigned_bda: lead.assignedBDA || '',
+          date: lead.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          type: lead.type || 'Google Form Leads',
+          program: courseId,
+          course_id: courseId,
+          course_title: courseTitle,
+          profession: lead.profession || lead.job_role || 'Unspecified',
+          job_role: lead.profession || lead.job_role || 'Unspecified',
+          college: lead.college || lead.student_details || 'Unspecified',
+          student_details: lead.college || lead.student_details || 'Unspecified',
+          message: lead.message || '',
+          mentor: lead.mentor || 'None',
+          duration: lead.duration || 'None',
+          call_attempts: lead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+          history: lead.history || [],
+          campaign: lead.campaign || lead.utmCampaign || '',
+          source: lead.source || '',
+          utm_medium: lead.utmMedium || '',
+          utm_campaign: lead.utmCampaign || '',
+          utm_content: lead.utmContent || '',
+          remarks: lead.remarks || lead.message || ''
         }
       ]);
     
@@ -53,6 +77,103 @@ export async function saveLeadToSupabase(lead) {
     return { data, error: null };
   } catch (err) {
     console.error('[Supabase Exception] Error saving lead:', err);
+    return { data: null, error: err };
+  }
+}
+
+/**
+ * Fetches all leads from Supabase 'leads' table
+ */
+export async function getLeadsFromSupabase() {
+  if (!supabase) {
+    console.log('[Supabase MOCK] Fetching leads from localStorage fallback...');
+    return { data: getDbItem('beyondskills_leads', []), error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('leads')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('[Supabase Error] Failed to fetch leads:', error);
+      return { data: [], error };
+    }
+    
+    // Map database columns to front-end lead schema
+    const mappedData = data.map(dbLead => ({
+      id: dbLead.id,
+      name: dbLead.name,
+      email: dbLead.email,
+      phone: dbLead.phone,
+      date: dbLead.date || new Date(dbLead.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      type: dbLead.type || 'Ads Leads',
+      program: dbLead.program || dbLead.course_id || 'artificial-intelligence',
+      assignedBDM: dbLead.assigned_bdm || '',
+      assignedBDA: dbLead.assigned_bda || '',
+      status: dbLead.status || 'New',
+      subStatus: dbLead.sub_status || 'QUALIFIED',
+      profession: dbLead.profession || dbLead.job_role || 'Unspecified',
+      college: dbLead.college || dbLead.student_details || 'Unspecified',
+      message: dbLead.message || '',
+      mentor: dbLead.mentor || 'None',
+      duration: dbLead.duration || 'None',
+      callAttempts: dbLead.call_attempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
+      history: dbLead.history || [],
+      campaign: dbLead.campaign || dbLead.utm_campaign || '',
+      source: dbLead.source || '',
+      utmMedium: dbLead.utm_medium || '',
+      utmCampaign: dbLead.utm_campaign || '',
+      utmContent: dbLead.utm_content || '',
+      remarks: dbLead.remarks || ''
+    }));
+
+    return { data: mappedData, error: null };
+  } catch (err) {
+    console.error('[Supabase Exception] Error fetching leads:', err);
+    return { data: [], error: err };
+  }
+}
+
+/**
+ * Updates a lead in Supabase 'leads' table
+ */
+export async function updateLeadInSupabase(lead) {
+  if (!supabase) {
+    console.log('[Supabase MOCK] Updated lead in local database:', lead);
+    return { data: lead, error: null };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('leads')
+      .update({
+        name: lead.name,
+        email: lead.email,
+        status: lead.status,
+        sub_status: lead.subStatus,
+        assigned_bdm: lead.assignedBDM,
+        assigned_bda: lead.assignedBDA,
+        profession: lead.profession,
+        college: lead.college,
+        message: lead.message,
+        mentor: lead.mentor,
+        duration: lead.duration,
+        call_attempts: lead.callAttempts,
+        history: lead.history,
+        remarks: lead.remarks
+      })
+      .eq('id', lead.id);
+
+    if (error) {
+      console.error('[Supabase Error] Failed to update lead:', error);
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (err) {
+    console.error('[Supabase Exception] Error updating lead:', err);
     return { data: null, error: err };
   }
 }

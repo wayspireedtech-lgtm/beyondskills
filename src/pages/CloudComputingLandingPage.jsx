@@ -7,6 +7,7 @@ import {
   Server, Cpu, Network, Activity, Layers, Lock
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 const OUTCOMES = [
   { title: "Provision AWS & Azure Servers", desc: "Spin up, configure, and manage high-performance compute instances (EC2 / VMs) and scalable server storage." },
@@ -346,6 +347,13 @@ export default function CloudComputingLandingPage() {
       // Save to localStorage DB so CRM is updated
       const currentLeads = getDbItem('beyondskills_leads', []);
       setDbItem('beyondskills_leads', [newLead, ...currentLeads]);
+
+      // Save to Supabase
+      try {
+        await saveLeadToSupabase(newLead);
+      } catch (sbErr) {
+        console.error('Error saving lead to Supabase:', sbErr);
+      }
 
       // Attempt to hit CRM live sync endpoint if available
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

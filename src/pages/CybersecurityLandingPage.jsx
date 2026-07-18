@@ -7,6 +7,7 @@ import {
   Server, Cpu, Network, Activity, Layers, Lock, Key, EyeOff
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 const OUTCOMES = [
   { title: "Perform Network Scanning", desc: "Identify active hosts, open ports, and footprint network services using industry tools like Nmap." },
@@ -295,6 +296,13 @@ export default function CybersecurityLandingPage() {
       // Save to localStorage DB so CRM is updated
       const currentLeads = getDbItem('beyondskills_leads', []);
       setDbItem('beyondskills_leads', [newLead, ...currentLeads]);
+
+      // Save to Supabase
+      try {
+        await saveLeadToSupabase(newLead);
+      } catch (sbErr) {
+        console.error('Error saving lead to Supabase:', sbErr);
+      }
 
       // Attempt to hit CRM live sync endpoint if available
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

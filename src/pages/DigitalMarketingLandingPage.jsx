@@ -6,6 +6,7 @@ import {
   Search, ShieldCheck, TrendingUp, RefreshCw, Send, FileText, Link as LinkIcon
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 import wiproLogo from '../assets/wipro.svg';
 import tcsLogo from '../assets/tcs.svg';
 import infosysLogo from '../assets/infosys.svg';
@@ -357,6 +358,13 @@ export default function DigitalMarketingLandingPage() {
       // Save to localStorage DB so CRM is updated
       const currentLeads = getDbItem('beyondskills_leads', []);
       setDbItem('beyondskills_leads', [newLead, ...currentLeads]);
+
+      // Save to Supabase
+      try {
+        await saveLeadToSupabase(newLead);
+      } catch (sbErr) {
+        console.error('Error saving lead to Supabase:', sbErr);
+      }
 
       // Attempt to hit CRM live sync endpoint if available
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

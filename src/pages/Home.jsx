@@ -4,6 +4,7 @@ import { ArrowRight, Code, Megaphone, CheckCircle, Star, Users, Briefcase, Award
 import TechIcon from '../components/TechIcon';
 import { COURSES_SUMMARY, findCourseSummary } from '../utils/coursesSummary';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 // Static testimonials and mentors for homepage (avoiding heavy mockDb import)
 const MENTORS = [
@@ -77,6 +78,13 @@ export default function Home() {
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
 
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
+
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000'
@@ -120,6 +128,13 @@ export default function Home() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

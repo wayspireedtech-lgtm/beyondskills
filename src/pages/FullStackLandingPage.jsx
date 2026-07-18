@@ -7,6 +7,7 @@ import {
   TrendingUp, RefreshCw, BarChart2, Shield, Eye
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 const OUTCOMES = [
   { title: "Build 8+ Practical Projects", desc: "Construct fully functional web applications from scratch, building a tangible repository that proves your capabilities to recruiters." },
@@ -192,6 +193,13 @@ export default function FullStackLandingPage() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

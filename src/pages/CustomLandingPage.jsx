@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, COURSES, MENTORS } from '../utils/mockDb';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 import { 
   Sparkles, CheckCircle, ChevronDown, ChevronUp, BookOpen, Clock, 
   MapPin, ShieldAlert, Award, Star, ArrowRight, User, GraduationCap, Check
@@ -91,6 +92,13 @@ export default function CustomLandingPage() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'

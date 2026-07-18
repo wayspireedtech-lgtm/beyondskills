@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDbItem, setDbItem, logUserAccess, COURSES } from '../utils/mockDb';
+import { getLeadsFromSupabase, saveLeadToSupabase, updateLeadInSupabase } from '../utils/supabaseClient';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
@@ -237,6 +238,32 @@ export default function AdminDashboard() {
   };
 
   const fetchWebhookLeads = async () => {
+    try {
+      const { data: supabaseLeads, error: sbError } = await getLeadsFromSupabase();
+      if (!sbError && supabaseLeads && supabaseLeads.length > 0) {
+        const currentLocal = getDbItem('beyondskills_leads', []);
+        let updated = [...currentLocal];
+        let updatedCount = 0;
+        
+        supabaseLeads.forEach(sLead => {
+          const existingIdx = updated.findIndex(l => l.phone === sLead.phone || l.id === sLead.id);
+          if (existingIdx !== -1) {
+            // Update local with Supabase data (sync state)
+            updated[existingIdx] = { ...updated[existingIdx], ...sLead };
+          } else {
+            updated.push(sLead);
+            updatedCount++;
+          }
+        });
+        
+        setLeads(updated);
+        setDbItem('beyondskills_leads', updated);
+        return;
+      }
+    } catch (sbErr) {
+      console.warn('Supabase fetch failed, falling back to local API:', sbErr);
+    }
+
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:5000'
@@ -530,9 +557,33 @@ export default function AdminDashboard() {
   };
 
   // Save changes helper
-  const saveLeadsToDb = (updatedLeads) => {
+  const saveLeadsToDb = async (updatedLeads) => {
+    const prevLeads = leads;
     setLeads(updatedLeads);
     setDbItem('beyondskills_leads', updatedLeads);
+
+    try {
+      if (prevLeads.length === 0) {
+        for (const lead of updatedLeads) {
+          await saveLeadToSupabase(lead);
+        }
+      } else if (updatedLeads.length > prevLeads.length) {
+        const newLeads = updatedLeads.filter(l => !prevLeads.some(pl => pl.id === l.id || pl.phone === l.phone));
+        for (const lead of newLeads) {
+          await saveLeadToSupabase(lead);
+        }
+      } else {
+        const modifiedLeads = updatedLeads.filter(l => {
+          const prev = prevLeads.find(pl => pl.id === l.id);
+          return !prev || JSON.stringify(prev) !== JSON.stringify(l);
+        });
+        for (const lead of modifiedLeads) {
+          await updateLeadInSupabase(lead);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to sync CRM updates to Supabase:', err);
+    }
   };
 
   // Seed demo data helper with new campaign categories
@@ -1939,13 +1990,6 @@ export default function AdminDashboard() {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-4">
                     <h3 className="font-bold text-sm uppercase tracking-wider text-brand-cyan">Active Lead Filters</h3>
                     <div className="flex items-center space-x-2">
-                      <button 
-                        onClick={() => setShowSheetsSyncModal(true)} 
-                        className="bg-[#0EA5E9] hover:bg-[#0EA5E9]/90 text-white border border-[#0EA5E9]/20 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5 shadow"
-                      >
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        <span>Google Sheet Sync</span>
-                      </button>
                       <button 
                         onClick={() => setShowImportLeadModal(true)} 
                         className="bg-white/10 hover:bg-white/15 border border-white/10 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5"

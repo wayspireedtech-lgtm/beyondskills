@@ -6,6 +6,7 @@ import {
   MessageCircle, FileText, BookOpen, Users, Award, Clock, Laptop, User, GraduationCap
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { saveLeadToSupabase } from '../utils/supabaseClient';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
 import adobeLogo from '../assets/adobe.svg';
@@ -182,6 +183,13 @@ export default function AiMlDataScienceLandingPage() {
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
+
+    // Save to Supabase
+    try {
+      await saveLeadToSupabase(newLead);
+    } catch (sbErr) {
+      console.error('Error saving lead to Supabase:', sbErr);
+    }
 
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
