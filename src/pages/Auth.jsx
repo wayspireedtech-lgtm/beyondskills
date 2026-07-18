@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, logUserAccess } from '../utils/dbHelpers';
+import { getCrmUsersFromSupabase } from '../utils/supabaseClient';
 import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 
 export default function Auth() {
@@ -405,7 +406,7 @@ export default function Auth() {
   };
 
   // --- ADMIN LOGIN LOGIC ---
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     setError(null);
     setInfo(null);
@@ -413,9 +414,23 @@ export default function Auth() {
     const targetEmail = 'beyondskills.ai@gmail.com';
     const savedPassword = localStorage.getItem('beyondskills_admin_password') || '9953607074';
     
-    // Fetch registered CRM users (BDAs/BDMs)
-    const crmUsers = getDbItem('beyondskills_crm_users', []);
-    const matchingUser = crmUsers.find(u => u.email.trim().toLowerCase() === adminLoginForm.email.trim().toLowerCase());
+    // Fetch registered CRM users (BDAs/BDMs) from Supabase database
+    let crmUsersList = [];
+    try {
+      const { data, error } = await getCrmUsersFromSupabase();
+      if (!error && data) {
+        crmUsersList = data;
+        setDbItem('beyondskills_crm_users', data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch CRM users during login validation:', err);
+    }
+
+    if (crmUsersList.length === 0) {
+      crmUsersList = getDbItem('beyondskills_crm_users', []);
+    }
+
+    const matchingUser = crmUsersList.find(u => u.email.trim().toLowerCase() === adminLoginForm.email.trim().toLowerCase());
 
     let authenticatedUser = null;
 
