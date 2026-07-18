@@ -284,6 +284,7 @@ export default function AdminDashboard() {
     try {
       // 1. Fetch Google Sheet leads (Master source)
       let sheetLeads = [];
+      let sheetFetched = false;
       const targetSheetUrl = adsSheetUrl || googleFormSheetUrl;
       if (targetSheetUrl) {
         try {
@@ -291,6 +292,7 @@ export default function AdminDashboard() {
           if (res.ok) {
             const csvText = await res.text();
             sheetLeads = parseSheetCSV(csvText);
+            sheetFetched = true;
           }
         } catch (sheetErr) {
           console.warn('Failed to fetch master sheet CSV:', sheetErr);
@@ -308,8 +310,8 @@ export default function AdminDashboard() {
         console.warn('Failed to fetch from Supabase:', sbErr);
       }
 
-      // If targetSheetUrl is not configured yet, show Supabase directly
-      if (!targetSheetUrl) {
+      // If we couldn't load/fetch the sheet, fallback to show Supabase directly
+      if (!sheetFetched) {
         if (supabaseLeads.length > 0) {
           setLeads(supabaseLeads);
           setDbItem('beyondskills_leads', supabaseLeads);
@@ -317,18 +319,30 @@ export default function AdminDashboard() {
         return;
       }
 
-      // If we fetched the sheet and it has 0 leads, the CRM list MUST be empty!
-      if (sheetLeads.length === 0) {
-        setLeads([]);
-        setDbItem('beyondskills_leads', []);
-        return;
-      }
-
-      // STRICT SYNC: Filter and build the leads list based on sheetLeads
       const sheetPhones = new Set(sheetLeads.map(l => l.phone.toString().trim()));
       
-      // Filter Supabase leads to only those present in the Google Sheet
-      let activeLeads = supabaseLeads.filter(l => sheetPhones.has(l.phone.toString().trim()));
+      // Map leads and mark them as Deleted from Sheet in Supabase if they are missing from sheet
+      let activeLeads = await Promise.all(supabaseLeads.map(async (l) => {
+        const isPresentInSheet = sheetPhones.has(l.phone.toString().trim());
+        if (!isPresentInSheet && l.status !== 'Deleted from Sheet') {
+          const updated = { ...l, status: 'Deleted from Sheet' };
+          try {
+            await updateLeadInSupabase(updated);
+          } catch (err) {
+            console.error('Failed to update deleted lead status in Supabase:', err);
+          }
+          return updated;
+        } else if (isPresentInSheet && l.status === 'Deleted from Sheet') {
+          const updated = { ...l, status: 'New' };
+          try {
+            await updateLeadInSupabase(updated);
+          } catch (err) {
+            console.error('Failed to restore deleted lead status in Supabase:', err);
+          }
+          return updated;
+        }
+        return l;
+      }));
 
       // If a lead is in the Google Sheet but not in Supabase, we append it
       for (const sLead of sheetLeads) {
@@ -355,7 +369,6 @@ export default function AdminDashboard() {
           
           activeLeads.push(newLead);
           
-          // Save back to Supabase so it has central record
           try {
             await saveLeadToSupabase(newLead);
           } catch (e) {
@@ -1179,7 +1192,9 @@ export default function AdminDashboard() {
       const matchSearch = lead.name.toLowerCase().includes(leadSearch.toLowerCase()) || 
                           lead.phone.includes(leadSearch) ||
                           lead.id.toLowerCase().includes(leadSearch.toLowerCase());
-      const matchStatus = filterStatus ? lead.status === filterStatus : true;
+      const matchStatus = filterStatus 
+        ? lead.status === filterStatus 
+        : lead.status !== 'Deleted from Sheet';
       
       // Filter by dynamic channel tabs
       let matchType = filterType ? lead.type === filterType : true;
@@ -2128,6 +2143,7 @@ export default function AdminDashboard() {
                         <option value="Not Connected">Not Connected</option>
                         <option value="Enrolled">Enrolled</option>
                         <option value="Not Interested">Not Interested</option>
+                        <option value="Deleted from Sheet">Deleted from Sheet</option>
                       </select>
                     </div>
                     <div>
