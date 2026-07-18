@@ -166,9 +166,15 @@ export default function AdminDashboard() {
   const [noteText, setNoteText] = useState('');
 
   // Google Sheets integration bindings
-  const [googleFormSheetUrl, setGoogleFormSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_google_form') || '');
+  const [googleFormSheetUrl, setGoogleFormSheetUrl] = useState(
+    localStorage.getItem('beyondskills_sheet_google_form') || 
+    'https://docs.google.com/spreadsheets/d/1Oypek5ZrY7GiaeENqox1t-PN2DQDKCJBo7g1uGcU4jU/pub?output=csv'
+  );
   const [googleSheetWebhookUrl, setGoogleSheetWebhookUrl] = useState('');
-  const [adsSheetUrl, setAdsSheetUrl] = useState(localStorage.getItem('beyondskills_sheet_ads') || '');
+  const [adsSheetUrl, setAdsSheetUrl] = useState(
+    localStorage.getItem('beyondskills_sheet_ads') || 
+    'https://docs.google.com/spreadsheets/d/1Oypek5ZrY7GiaeENqox1t-PN2DQDKCJBo7g1uGcU4jU/pub?output=csv'
+  );
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Selected Lead state for Details Modal
