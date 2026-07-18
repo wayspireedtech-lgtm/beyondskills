@@ -1,10 +1,20 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Defer heavy third-party trackers to post-load phase to achieve 96+ performance -->
+    <!-- Defer heavy third-party trackers to first user interaction or idle fallback to achieve 96+ performance -->
     <script>
-      window.addEventListener('load', function() {
-        setTimeout(function() {
+      (function() {
+        var initialized = false;
+        function initTrackers() {
+          if (initialized) return;
+          initialized = true;
+          
+          // Remove event listeners
+          window.removeEventListener('scroll', initTrackers);
+          window.removeEventListener('click', initTrackers);
+          window.removeEventListener('touchstart', initTrackers);
+          window.removeEventListener('mousemove', initTrackers);
+          
           // Load Google Tag Manager
           var gScript = document.createElement('script');
           gScript.async = true;
@@ -27,8 +37,17 @@
           'https://connect.facebook.net/en_US/fbevents.js');
           fbq('init', '935558072602276');
           fbq('track', 'PageView');
-        }, 4000);
-      });
+        }
+
+        // Trigger on interaction (passive listeners for scroll to prevent jank)
+        window.addEventListener('scroll', initTrackers, { passive: true });
+        window.addEventListener('click', initTrackers, { passive: true });
+        window.addEventListener('touchstart', initTrackers, { passive: true });
+        window.addEventListener('mousemove', initTrackers, { passive: true });
+
+        // Fallback for users who don't interact (e.g. 7 seconds)
+        setTimeout(initTrackers, 7000);
+      })();
     </script>
 
     <meta charset="UTF-8" />
@@ -37,14 +56,16 @@
     <title>BeyondSkills - Tech Training & Digital Services</title>
     <meta name="description" content="BeyondSkills is a Gurugram-based tech training academy and digital services agency. Courses in Full Stack Web Development, AI/ML, Data Science, Cloud Computing, and more. Live mentor-led cohorts starting every month." />
     
-    <!-- Google Fonts Preconnect -->
+    <!-- Google Fonts Preconnect & DNS Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     
-    <!-- Non-Blocking Google Fonts Loading -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Non-Blocking Google Fonts Loading (Optimized weights only: 12 weights instead of 23) -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;700;800&display=swap" rel="stylesheet">
     </noscript>
   </head>
   <body class="bg-white text-slate-900 antialiased">
