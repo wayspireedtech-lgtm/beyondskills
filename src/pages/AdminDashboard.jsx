@@ -429,21 +429,14 @@ export default function AdminDashboard() {
     setLandingPages(getDbItem('beyondskills_landing_pages', []));
     setLogs(getDbItem('beyondskills_access_logs', []));
     
-    // Seed default CRM Users if none exist
-    const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded');
-    let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
-    if (!crmUsersSeeded && existingCrmUsers.length === 0) {
-      existingCrmUsers = [
-        { name: 'Abhishek Manager', email: 'abhishek.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Abhishek@123' },
-        { name: 'Khushi Manager', email: 'khushi.mgr@gradus.live', role: 'BDM', reportsTo: 'Sales Head', password: 'Khushi@123' },
-        { name: 'Muskan Gupta', email: 'muskan.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: '7982738724' },
-        { name: 'Deepak Gupta', email: 'deepak.g@gradus.live', role: 'BDA', reportsTo: 'Abhishek Manager', password: 'Deepak@123' },
-        { name: 'Shubham Tyagi', email: 'shubham.t@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Shubham@123' },
-        { name: 'Jatin BDA', email: 'jatin.b@gradus.live', role: 'BDA', reportsTo: 'Khushi Manager', password: 'Jatin@123' }
-      ];
-      setDbItem('beyondskills_crm_users', existingCrmUsers);
+    // Clear old demo CRM Users and keep it empty by default
+    const crmUsersSeeded = localStorage.getItem('beyondskills_crm_users_seeded_v2');
+    if (!crmUsersSeeded) {
+      setDbItem('beyondskills_crm_users', []);
+      localStorage.setItem('beyondskills_crm_users_seeded_v2', 'true');
       localStorage.setItem('beyondskills_crm_users_seeded', 'true');
     }
+    let existingCrmUsers = getDbItem('beyondskills_crm_users', []);
     setCrmUsers(existingCrmUsers);
     if (existingCrmUsers.length > 0 && !selectedBdaName) {
       const firstBda = existingCrmUsers.find(u => u.role === 'BDA');
