@@ -609,6 +609,7 @@ export default function AdminDashboard() {
   };
 
   const accessibleLeads = getAccessibleLeads();
+  const activeAccessibleLeads = accessibleLeads.filter(l => l.status !== 'Deleted from Sheet');
 
   // Helper to filter leads and navigate to list view
   const filterLeadsAndNavigate = (filterName, filterValue) => {
@@ -1275,7 +1276,7 @@ export default function AdminDashboard() {
     const dayAfter = new Date(tomorrow);
     dayAfter.setDate(dayAfter.getDate() + 1);
 
-    return accessibleLeads.filter(l => {
+    return activeAccessibleLeads.filter(l => {
       if (l.status !== 'Follow Up') return false;
       const date = l.date ? new Date(l.date) : new Date();
       if (col === 'overdue') return date < today;
@@ -3038,7 +3039,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="bg-[#2A4BFF]/20 text-[#2A4BFF] border border-[#2A4BFF]/30 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase">
-                    Total Captured: {accessibleLeads.length}
+                    Total Captured: {activeAccessibleLeads.length}
                   </span>
                 </div>
               </div>
@@ -3060,10 +3061,10 @@ export default function AdminDashboard() {
                     <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Meta & Google Ads</span>
                     <div className="flex items-baseline space-x-2">
                       <p className="text-4xl font-black text-white">
-                        {accessibleLeads.filter(l => l.type === 'Ads Leads').length}
+                        {activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length}
                       </p>
                       <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
                       </span>
                     </div>
                   </div>
@@ -3071,7 +3072,7 @@ export default function AdminDashboard() {
                     <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-brand-cyan h-full rounded-full" 
-                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Ads Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-[10px] text-brand-cyan uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
@@ -3093,10 +3094,10 @@ export default function AdminDashboard() {
                     <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Google Sheets Forms</span>
                     <div className="flex items-baseline space-x-2">
                       <p className="text-4xl font-black text-[#0EA5E9]">
-                        {accessibleLeads.filter(l => l.type === 'Google Form Leads').length}
+                        {activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length}
                       </p>
                       <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
                       </span>
                     </div>
                   </div>
@@ -3104,7 +3105,7 @@ export default function AdminDashboard() {
                     <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-[#0EA5E9] h-full rounded-full" 
-                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'Google Form Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-[10px] text-[#0EA5E9] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
@@ -3126,10 +3127,10 @@ export default function AdminDashboard() {
                     <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
                     <div className="flex items-baseline space-x-2">
                       <p className="text-4xl font-black text-[#4ADE80]">
-                        {accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
+                        {activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
                       </p>
                       <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({accessibleLeads.length > 0 ? ((accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100).toFixed(1) : 0}%)
+                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
                       </span>
                     </div>
                   </div>
@@ -3137,7 +3138,7 @@ export default function AdminDashboard() {
                     <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-[#4ADE80] h-full rounded-full" 
-                        style={{ width: `${accessibleLeads.length > 0 ? (accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / accessibleLeads.length) * 100 : 0}%` }}
+                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-[10px] text-[#4ADE80] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
@@ -3177,13 +3178,13 @@ export default function AdminDashboard() {
                       { id: 'hr-mgmt', name: 'HR Management' },
                       { id: 'stock-market', name: 'Stock Market' }
                     ].map((prog, idx) => {
-                      const progLeads = accessibleLeads.filter(l => l.program === prog.id);
+                      const progLeads = activeAccessibleLeads.filter(l => l.program === prog.id);
                       const adsCount = progLeads.filter(l => l.type === 'Ads Leads').length;
                       const formCount = progLeads.filter(l => l.type === 'Google Form Leads').length;
                       const waCount = progLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length;
                       const enrolledCount = progLeads.filter(l => l.status === 'Enrolled').length;
                       const conv = progLeads.length > 0 ? ((enrolledCount / progLeads.length) * 100).toFixed(1) : '0.0';
-                      const percentageShare = accessibleLeads.length > 0 ? ((progLeads.length / accessibleLeads.length) * 100).toFixed(1) : 0;
+                      const percentageShare = activeAccessibleLeads.length > 0 ? ((progLeads.length / activeAccessibleLeads.length) * 100).toFixed(1) : 0;
 
                       return (
                         <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-350 transition-colors">
