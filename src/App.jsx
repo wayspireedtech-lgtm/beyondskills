@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'r
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { Mail, Sparkles, X, Loader2 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 import Home from './pages/Home';
 const About = React.lazy(() => import('./pages/About'));
@@ -223,6 +224,7 @@ export default function App() {
           <FooterContainer />
         </Suspense>
       </LayoutWrapper>
+      <Analytics />
     </Router>
   );
 }
