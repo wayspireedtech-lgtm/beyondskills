@@ -308,12 +308,19 @@ export default function AdminDashboard() {
         console.warn('Failed to fetch from Supabase:', sbErr);
       }
 
-      // If we couldn't load from sheet, fallback to show Supabase directly
-      if (sheetLeads.length === 0) {
+      // If targetSheetUrl is not configured yet, show Supabase directly
+      if (!targetSheetUrl) {
         if (supabaseLeads.length > 0) {
           setLeads(supabaseLeads);
           setDbItem('beyondskills_leads', supabaseLeads);
         }
+        return;
+      }
+
+      // If we fetched the sheet and it has 0 leads, the CRM list MUST be empty!
+      if (sheetLeads.length === 0) {
+        setLeads([]);
+        setDbItem('beyondskills_leads', []);
         return;
       }
 
@@ -401,7 +408,7 @@ export default function AdminDashboard() {
     }
     setCurrentUser(loggedInUser);
 
-    setLeads(getDbItem('beyondskills_leads', []));
+    setLeads([]);
     setPayments(getDbItem('beyondskills_payments', []));
     setStudents(getDbItem('beyondskills_users', []));
     setBlogs(getDbItem('beyondskills_blogs', []));
