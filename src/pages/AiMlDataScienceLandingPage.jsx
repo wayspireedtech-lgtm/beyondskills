@@ -1,216 +1,524 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, useInView } from 'framer-motion';
 import { 
-  Brain, Cpu, Database, TrendingUp, BarChart2, CheckCircle2, ArrowRight, Check, 
-  ChevronRight, Calendar, ShieldAlert, Sparkles, Phone, Mail, Globe, 
-  Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download,
-  MessageCircle, FileText, BookOpen, Users, Award, Clock, Laptop, User, GraduationCap
+  Sparkles, Send, ArrowRight, GraduationCap, Briefcase, 
+  Calendar, BookOpen, User, Phone, Mail, FileText, CheckCircle,
+  Users, Code, Monitor, Compass, Award, ShieldCheck, Clock,
+  Laptop, ChevronRight, Star, ChevronDown, ChevronUp, Download,
+  MessageCircle, Target, Check
 } from 'lucide-react';
-import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
 import adobeLogo from '../assets/adobe.svg';
 import ibmLogo from '../assets/ibm.svg';
 
-
-const CURRICULUM = [
-  { phase: "Module 1: Programming Fundamentals & Databases", topics: ["Python Syntax & Scopes", "Object-Oriented Programming (OOP)", "SQL Database Queries & Filters", "Data Normalization Rules"] },
-  { phase: "Module 2: Exploratory Data Analysis (EDA)", topics: ["Pandas DataFrames Manipulation", "NumPy Matrix Operations", "Handling Missing Data Fields", "Outlier Identification Workflows"] },
-  { phase: "Module 3: Data Visualization & Analytics", topics: ["Matplotlib Plot Customization", "Seaborn Statistical Graphics", "Visualizing Feature Correlations", "Building Analytical Widgets"] },
-  { phase: "Module 4: Applied Statistics & Probability", topics: ["Probability Distributions", "Hypothesis testing & p-values", "Linear & Logistic Regressions", "Feature Engineering Methods"] },
-  { phase: "Module 5: Machine Learning Models", topics: ["Decision Trees & Random Forests", "K-Means Clustering Algorithms", "Support Vector Machines (SVM)", "Model Evaluation (ROC, AUC, F1)"] },
-  { phase: "Module 6: Deep Learning Foundations", topics: ["Neural Network Architectures", "Activation & Loss Functions", "TensorFlow Tensor Math", "Image & Text Classification Mocks"] },
-  { phase: "Module 7: Model APIs & Deployments", topics: ["Flask API Server Development", "Predictive Endpoint Verification", "Docker Container Containers", "Cloud Model Hosting Workflows"] },
-  { phase: "Module 8: Capstone & Career Preparation", topics: ["Relational Dataset Case Study", "GitHub Profile Structuring", "Resume Optimization guides", "Live Mock Technical Interviews"] }
+const CURRICULUM_GROUPS = [
+  {
+    title: "Programming Foundations",
+    description: "Build core logic, syntax fluency, and file operations in Python and relational database querying.",
+    topics: [
+      "Python syntax, loops, and conditional structures",
+      "Object-Oriented Programming (OOP) architectures",
+      "SQL Database queries: joins, group by, and filters",
+      "Git version control and Git commit pipelines"
+    ]
+  },
+  {
+    title: "Data Analysis & Visualization",
+    description: "Clean, manipulate, and visualize raw datasets using Python libraries and advanced statistics.",
+    topics: [
+      "Pandas DataFrames for filtering, cleaning, and transformation",
+      "NumPy for high-performance matrix math and calculations",
+      "Data visualization with Matplotlib and Seaborn graphs",
+      "Applied statistics: distributions, regressions, and hypothesis testing"
+    ]
+  },
+  {
+    title: "Machine Learning Models",
+    description: "Train predictive algorithms, evaluate precision metrics, and understand mathematical logic.",
+    topics: [
+      "Supervised learning: Linear & Logistic regressions",
+      "Decision Trees, Random Forests, and ensemble models",
+      "Unsupervised clustering: K-Means and PCA",
+      "Model evaluation: ROC curves, AUC, F1 score, and precision-recall"
+    ]
+  },
+  {
+    title: "Deep Learning & Generative AI",
+    description: "Design neural network architectures, leverage large language model APIs, and build AI agents.",
+    topics: [
+      "Neural network foundations: activation & loss functions",
+      "TensorFlow frameworks for computer vision & text processing",
+      "Large Language Model APIs and Prompt Engineering",
+      "Hugging Face pipelines and custom AI agents"
+    ]
+  }
 ];
 
-const SAMPLE_PROJECTS = [
-  { 
-    title: "Customer Churn Predictor", 
-    desc: "Develop a classification algorithm to predict customer churn rates using historical subscription metrics.", 
-    tech: ["Python", "Pandas", "Scikit-Learn", "Flask"],
-    learn: "Data preparation, feature scaling, model scoring, and endpoint deployment.",
-    skills: "Classification Modeling, Feature Selection, Rest API Setup",
-    outcome: "A live prediction API that flags high-risk candidate clients in real-time.",
+const PROJECTS = [
+  {
+    name: "Customer Churn Predictor",
+    difficulty: "Intermediate",
+    tools: ["Python", "Scikit-Learn", "Pandas", "Flask"],
+    skills: ["Supervised Classification", "Feature Scaling", "REST API Development"],
+    outcome: "Deploys a live predictive API estimating customer churn risk with 92% accuracy.",
+    githubReady: true,
     mockType: "churn"
   },
-  { 
-    title: "E-Commerce Recommendation System", 
-    desc: "Construct a recommendation engine utilizing collaborative filtering algorithms to pitch relevant shop items.", 
-    tech: ["Python", "NumPy", "Surprise", "Streamlit"],
-    learn: "Matrix factorization, user-item scoring, and visual dashboards.",
-    skills: "Collaborative Filtering, User Experience Matrix, Dashboard Rendering",
-    outcome: "An interactive store recommendations card widget updating live recommendations.",
+  {
+    name: "E-Commerce Recommendation System",
+    difficulty: "Advanced",
+    tools: ["Python", "Surprise", "Streamlit", "NumPy"],
+    skills: ["Collaborative Filtering", "Matrix Factorization", "User Experience Design"],
+    outcome: "Builds a recommendation engine sorting catalog items by matching user vectors.",
+    githubReady: true,
     mockType: "recommend"
   },
-  { 
-    title: "Real Estate Valuation Predictor", 
-    desc: "Construct a multivariate regression model forecasting house prices based on regional property parameters.", 
-    tech: ["Python", "Pandas", "Scikit-Learn", "Matplotlib"],
-    learn: "Feature correlations, handling collinearities, and evaluating RMSE metrics.",
-    skills: "Regression Analysis, Exploratory Analysis, Graph Customization",
-    outcome: "A deployed regression dashboard estimating real estate valuations with live input sliders.",
+  {
+    name: "Real Estate Valuation Estimator",
+    difficulty: "Beginner",
+    tools: ["Python", "Pandas", "Matplotlib", "Scikit-Learn"],
+    skills: ["Linear Regression", "Exploratory Analysis", "Feature Correlations"],
+    outcome: "Estimates housing pricing parameters based on structural attributes.",
+    githubReady: true,
     mockType: "regression"
   },
-  { 
-    title: "Financial Fraud Detector", 
-    desc: "Develop an anomaly detection pipeline flagging fraudulent transactions inside unbalanced transaction streams.", 
-    tech: ["Python", "Pandas", "Random Forest", "Jupyter"],
-    learn: "Handling imbalanced datasets (SMOTE), precision-recall curves, and validation scoring.",
-    skills: "Unbalanced Data Handling, Fraud Pattern Analysis, Model Auditing",
-    outcome: "A pipeline script classifying payment risks and archiving alerts to logs database.",
+  {
+    name: "Financial Fraud Detector",
+    difficulty: "Advanced",
+    tools: ["Python", "Random Forest", "SMOTE", "Jupyter"],
+    skills: ["Imbalanced Data Handling", "Precision-Recall Curves", "Anomaly Detection"],
+    outcome: "Identifies fraudulent transactions inside highly skewed credit card streams.",
+    githubReady: true,
     mockType: "fraud"
   },
-  { 
-    title: "Sentiment Analysis Classifier", 
-    desc: "Build a natural language processing model evaluating candidate reviews to categorize sentiment levels.", 
-    tech: ["Python", "NLTK", "Scikit-Learn", "Vercel"],
-    learn: "Text tokenization, vectorization (TF-IDF), and logistic regression modeling.",
-    skills: "Natural Language Processing, Text Vectorization, API Deployment",
-    outcome: "An online review sentiment auditor scoring reviews from highly positive to warning states.",
+  {
+    name: "Review Sentiment Classifier",
+    difficulty: "Intermediate",
+    tools: ["Python", "NLTK", "Logistic Regression", "Vercel"],
+    skills: ["Natural Language Processing", "TF-IDF Vectorization", "Model Deployment"],
+    outcome: "Scores review text sentiment categories and pushes indicators to a webhook.",
+    githubReady: true,
     mockType: "sentiment"
   },
-  { 
-    title: "AI Chatbot Assistant Profile", 
-    desc: "Create an interactive chatbot widget utilizing NLP libraries to handle initial academic FAQs.", 
-    tech: ["Python", "Flask", "NLP libraries", "GitHub Pages"],
-    learn: "Context matching, session memory, API binding, and responsive chatting layouts.",
-    skills: "Context Management, Webhooks Sync, Frontend Form Integration",
-    outcome: "An embedded client widget answering course details and cohort enrollment guidelines.",
+  {
+    name: "AI Helpdesk Assistant Chatbot",
+    difficulty: "Intermediate",
+    tools: ["Python", "Flask", "Hugging Face", "Generative AI"],
+    skills: ["Context Management", "API Integrations", "Frontend UI Design"],
+    outcome: "Implements an online chatbot resolving academic FAQs via natural chat interactions.",
+    githubReady: true,
     mockType: "chatbot"
   }
 ];
 
 const FAQS = [
-  { q: "Who is this program for?", a: "This program is designed for college students, fresh graduates, beginners, and working professionals looking to break into Artificial Intelligence, Machine Learning, Data Science, or Data Analytics. No prior coding experience is required." },
-  { q: "Can absolute beginners join without a programming background?", a: "Yes, absolutely. The curriculum is constructed beginner-friendly, starting with the absolute fundamentals of Python syntax before advancing to ML math, algorithms, and deep learning." },
-  { q: "How are classes conducted?", a: "Sessions are conducted live online, typically in the evening to accommodate working professionals and college schedules. You will have access to lecture recordings, class notebooks, code scripts, and assignments on our LMS." },
-  { q: "Will I build projects during the program?", a: "Yes. You will build and deploy several practical data projects, including predictive classifiers, recommendation engines, and data analytics dashboards that you can show to recruiters." },
-  { q: "What tools and libraries will I learn?", a: "You will master Python, SQL databases, Pandas, NumPy, Matplotlib, Seaborn, Scikit-Learn, TensorFlow, Flask, Git, GitHub, and cloud hosting clients." },
-  { q: "Will I receive mentor support during the cohort?", a: "Yes. Active data practitioners and engineers lead live doubt-solving sessions, provide feedback on assignments, and audit your project code scripts." },
-  { q: "Will I receive a certificate of completion?", a: "Yes. On successfully completing the milestone assessments and capstone projects, you will be issued a digital certificate of completion from BeyondSkills." },
-  { q: "How long is the program?", a: "The program spans 3 months with structured weekly modules to ensure you have enough time to practice coding, build models, and compile your portfolio." },
-  { q: "How do I enroll in the cohort?", a: "Simply fill out the enquiry form on this landing page. Our academic admissions advisor will contact you to explain the cohort schedule, fee options, and guide you through registration." },
-  { q: "How does the admission process work?", a: "Once your enquiry is logged, we host a brief evaluation call to check batch alignment, verify prerequisites, and process your cohort onboarding details." }
+  { q: "Can beginners join?", a: "Yes, absolutely. No prior programming background is required. The curriculum starts with foundational Python syntax before moving into advanced machine learning algorithms and neural networks." },
+  { q: "How are live sessions conducted?", a: "Live online sessions are held on weekends and weekday evenings to fit around college schedules and job hours. Recorded versions are logged to the LMS within 4 hours." },
+  { q: "Will I build projects?", a: "Yes, you will construct 3+ production-grade data products and log their deployment commits directly to your GitHub repository." },
+  { q: "How much mentor support is available?", a: "You have direct access to our data science instructors during weekly live Q&A hours, group Slack channels, and code audit cycles." },
+  { q: "How long do I get LMS access?", a: "You get full access to all video modules, class code templates, and notes for 1 entire year from your cohort start." },
+  { q: "What certificate will I receive?", a: "You will receive a verified course completion certificate and a project portfolio completion badge from BeyondSkills." }
 ];
 
-export default function AiMlDataScienceLandingPage() {
-  const [enquiryForm, setEnquiryForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    qualification: 'Undergraduate',
-    experience: 'Beginner - No Coding',
-    goal: 'Land a Tech Job',
-    contactTime: ''
-  });
-  const [status, setStatus] = useState(null);
-  const [faqOpen, setFaqOpen] = useState({});
+// Helper Animated Counter Component
+function AnimatedCounter({ value, duration = 1500, suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    document.title = "AI, Machine Learning & Data Science Cohort | BeyondSkills Upskilling";
+    if (!isInView) return;
     
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.name = 'description';
-      document.head.appendChild(metaDesc);
+    let start = 0;
+    const target = parseFloat(value.replace(/,/g, ''));
+    if (isNaN(target)) {
+      setCount(value);
+      return;
     }
-    metaDesc.content = "Master AI, Machine Learning, Data Science, and Analytics. Attend live mentor-led classes, build predictive algorithm projects, and compile developer portfolios with BeyondSkills.";
+    const end = target;
+    if (start === end) return;
 
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@type": "Course",
-      "name": "Artificial Intelligence, Machine Learning & Data Science Program",
-      "description": "Learn Python, SQL, predictive models, statistics, neural networks, and Flask APIs with live mentorship.",
-      "provider": {
-        "@type": "Organization",
-        "name": "BeyondSkills",
-        "sameAs": window.location.origin
-      },
-      "educationalCredentialAwarded": "Certification in AI, Machine Learning & Data Science"
-    };
+    const isFloat = value.includes('.');
+    const steps = 50;
+    const stepTime = Math.abs(Math.floor(duration / steps));
+    let currentStep = 0;
 
-    const scriptId = "landing-ai-schema-jsonld";
-    let script = document.getElementById(scriptId);
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.type = 'application/ld+json';
-      document.head.appendChild(script);
+    const timer = setInterval(() => {
+      currentStep++;
+      const progress = currentStep / steps;
+      const easedProgress = progress * (2 - progress);
+      const nextCount = start + (end - start) * easedProgress;
+
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        setCount(end);
+      } else {
+        setCount(isFloat ? Math.round(nextCount * 10) / 10 : Math.round(nextCount));
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [value, duration, isInView]);
+
+  const formatCount = (val) => {
+    if (typeof val === 'number') {
+      if (val >= 1000) {
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+      return val.toString();
     }
-    script.text = JSON.stringify(schemaData);
+    return val;
+  };
 
-    return () => {
-      const s = document.getElementById(scriptId);
-      if (s) s.remove();
-    };
+  return <span ref={ref}>{formatCount(count)}{suffix}</span>;
+}
+
+// Hero Interactive Visual IDE Component
+function HeroIDEVisual() {
+  const [epoch, setEpoch] = useState(1);
+  const [loss, setLoss] = useState(0.85);
+  const [accuracy, setAccuracy] = useState(0.62);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setEpoch(prev => (prev >= 100 ? 1 : prev + 1));
+      setLoss(prev => (prev <= 0.05 ? 0.85 : Math.max(0.04, prev - 0.008)));
+      setAccuracy(prev => (prev >= 0.98 ? 0.62 : Math.min(0.98, prev + 0.004)));
+    }, 300);
+    return () => clearInterval(timer);
   }, []);
+
+  return (
+    <div className="w-full bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl p-4 font-mono text-[10px] text-slate-300 text-left overflow-hidden select-none relative">
+      <div className="flex items-center justify-between border-b border-slate-900 pb-2 mb-3">
+        <div className="flex space-x-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+        </div>
+        <span className="text-[9px] text-slate-500 uppercase tracking-widest">ai_model_training.py</span>
+      </div>
+      <div className="space-y-1 text-xs">
+        <div><span className="text-purple-400">import</span> tensorflow <span className="text-purple-400">as</span> tf</div>
+        <div><span className="text-purple-400">from</span> tensorflow.keras <span className="text-purple-400">import</span> layers</div>
+        <div className="text-slate-500"># Compiling neural network architecture...</div>
+        <div>model = tf.keras.Sequential([</div>
+        <div className="pl-4">layers.Dense(<span className="text-amber-400">128</span>, activation=<span className="text-emerald-400">'relu'</span>),</div>
+        <div className="pl-4">layers.Dropout(<span className="text-amber-400">0.2</span>),</div>
+        <div className="pl-4">layers.Dense(<span className="text-amber-400">1</span>, activation=<span className="text-emerald-400">'sigmoid'</span>)</div>
+        <div>])</div>
+        <div className="text-slate-500 pt-1.5"># Epoch Loop Active</div>
+        <div className="bg-slate-900 border border-slate-800 rounded-lg p-2.5 mt-2 space-y-1">
+          <div className="flex justify-between font-bold text-white text-[10px]">
+            <span className="text-blue-400">Epoch {epoch}/100</span>
+            <span className="text-emerald-400">Loss: {loss.toFixed(4)}</span>
+            <span className="text-cyan-400">Acc: {(accuracy * 100).toFixed(1)}%</span>
+          </div>
+          <div className="w-full bg-slate-955 h-1.5 rounded-full overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-[#0EA5E9] h-full" style={{ width: `${accuracy * 100}%` }}></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function AiMlDataScienceLandingPage() {
+  const navigate = useNavigate();
+
+  const [enquiryForm, setEnquiryForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    college: '',
+    year: '1st Year',
+    role: 'Student', // Current Status
+    upskilling: 'artificial-intelligence',
+    batch: 'July Batch',
+    skillLevel: 'Beginner - No Coding',
+    careerGoal: 'Placement',
+    laptopAccess: 'Yes',
+    weeklyHours: '5-8 Hours',
+    whyInterested: '',
+    learningStart: 'Immediately'
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
+  const [errorMessage, setErrorMessage] = useState('');
+  const [expandedMod, setExpandedMod] = useState(0);
+  const [faqOpen, setFaqOpen] = useState({});
+  const [formStarted, setFormStarted] = useState(false);
+
+  // Analytics event tracking helper
+  const trackPixelEvent = (eventName, params = {}) => {
+    if (typeof window.fbq === 'function') {
+      try {
+        window.fbq('track', eventName, params);
+      } catch (err) {
+        console.error('Meta Pixel tracking error:', err);
+      }
+    }
+    if (typeof window.gtag === 'function') {
+      try {
+        window.gtag('event', eventName, params);
+      } catch (err) {
+        console.error('Google Analytics tracking error:', err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.title = "AI, Machine Learning & Data Science Cohort | BeyondSkills Admissions";
+    
+    // PageView & ViewContent
+    trackPixelEvent('PageView');
+    trackPixelEvent('ViewContent', { content_name: 'AI & Data Science Cohort Page' });
+
+    // Scroll depth tracking
+    const trackedDepths = new Set();
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight <= 0) return;
+      const scrollPercent = Math.round((window.scrollY / scrollHeight) * 100);
+      
+      [25, 50, 75, 100].forEach(depth => {
+        if (scrollPercent >= depth && !trackedDepths.has(depth)) {
+          trackedDepths.add(depth);
+          trackPixelEvent('ScrollDepth', { depth_percent: depth });
+        }
+      });
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    // Lead Queue Sync on Mount
+    syncFailedLeadsQueue();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Sync queued offline/failed leads
+  const syncFailedLeadsQueue = async () => {
+    const queue = getDbItem('beyondskills_leads_queue', []);
+    if (queue.length === 0) return;
+
+    console.log(`[Queue Sync] Found ${queue.length} unsynced leads. Retrying...`);
+    const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
+      : window.location.origin;
+
+    const remainingQueue = [];
+
+    for (const item of queue) {
+      let supabaseSuccess = !item.failedSupabase;
+      let webhookSuccess = !item.failedWebhook;
+
+      if (item.failedSupabase) {
+        try {
+          const res = await saveLeadToSupabase(item.lead);
+          if (!res.error) supabaseSuccess = true;
+        } catch (err) {
+          console.error('[Sync] Supabase retry failed:', err);
+        }
+      }
+
+      if (item.failedWebhook) {
+        try {
+          const res = await fetch(`${apiHost}/api/webhook/leads`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item.lead)
+          });
+          if (res.ok) webhookSuccess = true;
+        } catch (err) {
+          console.error('[Sync] Webhook retry failed:', err);
+        }
+      }
+
+      if (!supabaseSuccess || !webhookSuccess) {
+        remainingQueue.push({
+          ...item,
+          failedSupabase: !supabaseSuccess,
+          failedWebhook: !webhookSuccess,
+          attempts: item.attempts + 1
+        });
+      } else {
+        console.log(`[Sync] Successfully synced lead: ${item.lead.name}`);
+      }
+    }
+
+    setDbItem('beyondskills_leads_queue', remainingQueue);
+  };
+
+  const getDeviceDetails = () => {
+    const ua = navigator.userAgent;
+    let browser = 'Unknown Browser';
+    if (ua.includes('Chrome') && !ua.includes('Chromium') && !ua.includes('Edg')) {
+      browser = 'Chrome';
+    } else if (ua.includes('Firefox')) {
+      browser = 'Firefox';
+    } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
+      browser = 'Safari';
+    } else if (ua.includes('Edg')) {
+      browser = 'Edge';
+    }
+    const isMobile = /Mobile|Android|iP(hone|od|ad)|IEMobile|BlackBerry/i.test(ua);
+    return {
+      device: isMobile ? 'Mobile' : 'Desktop',
+      browser
+    };
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (!formStarted) {
+      setFormStarted(true);
+      trackPixelEvent('FormStart', { form_name: 'AI ML Data Science Application' });
+    }
+    setEnquiryForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage('');
+    
+    // Field validations
+    if (!enquiryForm.name.trim() || !enquiryForm.phone.trim() || !enquiryForm.email.trim()) {
+      setErrorMessage('Full Name, Phone Number, and Email Address are required fields.');
+      setIsSubmitting(false);
+      return;
+    }
 
+    trackPixelEvent('SubmitApplication', { form_name: 'AI ML Data Science Application' });
+
+    // Parameters Extraction
     const searchParams = new URLSearchParams(window.location.search);
-    const utmSource = searchParams.get('utm_source') || 'Direct / CPC';
-    const utmMedium = searchParams.get('utm_medium') || 'Search Ads';
-    const utmCampaign = searchParams.get('utm_campaign') || 'AI ML Data Science';
-    const utmContent = searchParams.get('utm_content') || 'Ad Variant 1';
+    const utmSource = searchParams.get('utm_source') || 'Direct';
+    const utmMedium = searchParams.get('utm_medium') || 'None';
+    const utmCampaign = searchParams.get('utm_campaign') || 'None';
+    const utmContent = searchParams.get('utm_content') || 'None';
+    const utmTerm = searchParams.get('utm_term') || 'None';
 
-    const leads = getDbItem('beyondskills_leads', []);
+    const referrer = document.referrer || 'Direct';
+    const pageUrl = window.location.href;
+    const { device, browser } = getDeviceDetails();
+    const submissionTime = new Date().toISOString();
+    const leadId = `LD-AI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    const detailedNotes = `
+College: ${enquiryForm.college || 'N/A'}
+Academic Year: ${enquiryForm.year}
+Current Status: ${enquiryForm.role}
+Skill Level: ${enquiryForm.skillLevel}
+Career Goal: ${enquiryForm.careerGoal}
+Laptop Availability: ${enquiryForm.laptopAccess}
+Weekly Learning Hours: ${enquiryForm.weeklyHours}
+Start Timeline: ${enquiryForm.learningStart}
+Why interested: ${enquiryForm.whyInterested || 'N/A'}
+Referrer: ${referrer}
+Device: ${device}
+Browser: ${browser}
+Page URL: ${pageUrl}
+Submission Time: ${submissionTime}
+    `.trim();
+
     const newLead = {
-      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
+      id: leadId,
+      leadId: leadId,
       type: 'Ads Leads',
-      program: 'artificial-intelligence',
-      name: enquiryForm.name,
-      email: enquiryForm.email,
-      phone: enquiryForm.phone,
-      college: enquiryForm.qualification, 
-      qualification: enquiryForm.qualification,
-      profession: enquiryForm.experience,
-      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
-      careerGoal: enquiryForm.goal,
+      program: enquiryForm.upskilling,
+      course_id: enquiryForm.upskilling,
+      course_title: 'Artificial Intelligence, Machine Learning & Data Science',
+      name: enquiryForm.name.trim(),
+      email: enquiryForm.email.trim(),
+      phone: enquiryForm.phone.trim(),
+      college: enquiryForm.college.trim() || 'Unspecified',
+      student_details: `College: ${enquiryForm.college || 'N/A'} | Year: ${enquiryForm.year} | Status: ${enquiryForm.role} | Skill: ${enquiryForm.skillLevel} | Laptop: ${enquiryForm.laptopAccess} | Hours: ${enquiryForm.weeklyHours}`,
+      qualification: enquiryForm.college.trim() || 'Unspecified',
+      profession: enquiryForm.role,
+      experience: enquiryForm.skillLevel,
+      contactTime: 'Any Time',
+      careerGoal: enquiryForm.careerGoal,
+      goal: enquiryForm.careerGoal,
       status: 'New',
       subStatus: 'QUALIFIED',
-      message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime || 'Not Specified'}`,
+      message: detailedNotes,
+      notes: detailedNotes,
       campaign: utmCampaign,
       source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
+      utm_content: utmContent,
+      utm_term: utmTerm,
       utmMedium: utmMedium,
       utmCampaign: utmCampaign,
       utmContent: utmContent,
-      leadStatus: 'New Lead',
-      remarks: 'Submitted via Standalone AI/ML/Data Science Landing Page',
-      date: new Date().toISOString()
+      utmTerm: utmTerm,
+      referrer: referrer,
+      deviceType: device,
+      browser: browser,
+      submissionTime: submissionTime,
+      pageUrl: pageUrl,
+      timestamp: Date.now(),
+      remarks: 'Submitted via Standalone AI/ML/Data Science Landing Page'
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
+
+    // Save locally
+    const localLeads = getDbItem('beyondskills_leads', []);
+    localLeads.push(newLead);
+    setDbItem('beyondskills_leads', localLeads);
+
+    let savedSupabase = false;
+    let savedWebhook = false;
 
     // Save to Supabase
     try {
-      await saveLeadToSupabase(newLead);
+      const res = await saveLeadToSupabase(newLead);
+      if (!res.error) savedSupabase = true;
     } catch (sbErr) {
       console.error('Error saving lead to Supabase:', sbErr);
     }
 
+    // Post to backend webhook
     try {
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
+        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
         : window.location.origin;
 
-      await fetch(`${apiHost}/api/webhook/leads`, {
+      const res = await fetch(`${apiHost}/api/webhook/leads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newLead)
       });
+      if (res.ok) {
+        savedWebhook = true;
+      }
     } catch (err) {
-      console.error('Error posting enquiry to backend webhook:', err);
+      console.error('Error posting lead to webhook:', err);
     }
 
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Cohort Application Registered: ${enquiryForm.name}`,
-        body: `Dear ${enquiryForm.name},\n\nWe have logged your registration profile for the AI & Data Science cohort. An admissions counselor will reach out to you at ${enquiryForm.phone} to discuss curriculum timeline details.`
-      }
-    }));
+    // Fallback to queue if not completely saved
+    if (!savedSupabase || !savedWebhook) {
+      const queue = getDbItem('beyondskills_leads_queue', []);
+      queue.push({
+        lead: newLead,
+        failedSupabase: !savedSupabase,
+        failedWebhook: !savedWebhook,
+        attempts: 1
+      });
+      setDbItem('beyondskills_leads_queue', queue);
+    }
+
+    // Analytics success tracking
+    trackPixelEvent('Lead', { value: 1.0, currency: 'USD', lead_id: leadId });
 
     confetti({
       particleCount: 120,
@@ -218,26 +526,22 @@ export default function AiMlDataScienceLandingPage() {
       origin: { y: 0.6 }
     });
 
+    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+      detail: {
+        subject: `Program Application Received`,
+        body: `Dear ${enquiryForm.name},\n\nYour application has been logged for evaluation. Our admissions counselling team will verify details and reach out to you within 24 hours.\n\nLead ID: ${leadId}`
+      }
+    }));
+
+    setIsSubmitting(false);
     window.location.href = '/thank-you';
-    setEnquiryForm({
-      name: '',
-      email: '',
-      phone: '',
-      qualification: 'Undergraduate',
-      experience: 'Beginner - No Coding',
-      goal: 'Land a Tech Job',
-      contactTime: ''
-    });
   };
 
-  const scrollToHeroForm = () => {
-    const el = document.getElementById('hero-application-form');
+  const scrollToHeroForm = (buttonName) => {
+    trackPixelEvent('CtaClick', { button_name: buttonName });
+    const el = document.getElementById('admissions-application-form');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-      el.classList.add('ring-4', 'ring-[#2563EB]/30');
-      setTimeout(() => {
-        el.classList.remove('ring-4', 'ring-[#2563EB]/30');
-      }, 1500);
     }
   };
 
@@ -251,376 +555,253 @@ export default function AiMlDataScienceLandingPage() {
   const renderProjectMock = (type) => {
     switch (type) {
       case "churn":
-        return (
-          <div className="w-full h-32 bg-[#0F172A] border border-white/10 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-305 text-left select-none">
-            <div className="flex items-center justify-between border-b border-white/5 pb-1 mb-1">
-              <span className="text-[7px] text-[#2563EB]">model_training.py</span>
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            </div>
-            <div className="flex-1 space-y-1">
-              <div><span className="text-purple-400">import</span> sklearn.ensemble</div>
-              <div className="text-slate-400"># Fit Classifier model</div>
-              <div className="text-emerald-400">clf = RandomForestClassifier()</div>
-              <div className="text-[#F97316]">clf.fit(X_train, y_train)</div>
-            </div>
-            <div className="text-[7px] text-slate-500 border-t border-white/5 pt-1 flex justify-between">
-              <span>Accuracy: 92.4%</span>
-              <span className="text-[#2563EB]">Live API</span>
-            </div>
+        return <div className="w-full h-28 bg-[#0B0F19] border border-slate-900 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-300 text-left select-none">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-1 mb-1">
+            <span className="text-[7px] text-[#2563EB]">model_fit.py</span>
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
           </div>
-        );
+          <div className="flex-1 space-y-1">
+            <div><span className="text-purple-400">import</span> sklearn.ensemble</div>
+            <div className="text-slate-500"># Random Forest Classifier fit</div>
+            <div className="text-emerald-400">clf = RandomForestClassifier()</div>
+            <div className="text-[#F97316]">clf.fit(X_train, y_train)</div>
+          </div>
+          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1 flex justify-between">
+            <span>Accuracy: 92.4%</span>
+            <span className="text-[#2563EB]">Active</span>
+          </div>
+        </div>;
       case "recommend":
-        return (
-          <div className="w-full h-32 bg-[#0F172A] border border-white/10 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-305 text-left select-none">
-            <div className="flex items-center justify-between border-b border-white/5 pb-1 mb-1">
-              <span className="text-[7px] text-[#2563EB]">recommender_matrix.py</span>
-              <span className="text-slate-400">surprise_engine</span>
-            </div>
-            <div className="flex-1 space-y-0.5 pt-1 text-[8px]">
-              <div className="text-slate-400">User ID: U_1042</div>
-              <div className="text-emerald-400">Rec 1: AI Masterclass Course (Match: 98%)</div>
-              <div className="text-emerald-400">Rec 2: ML Pipeline Script (Match: 91%)</div>
-              <div className="text-slate-500">Rec 3: Cloud Compute Notebook (Match: 85%)</div>
-            </div>
-            <div className="text-[7px] text-slate-500 border-t border-white/5 pt-1">
-              <span>Collaborative Filtering Active</span>
-            </div>
+        return <div className="w-full h-28 bg-[#0B0F19] border border-slate-900 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-300 text-left select-none">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-1 mb-1">
+            <span className="text-[7px] text-[#2563EB]">recommend_engine.py</span>
+            <span className="text-slate-500">surprise_fit</span>
           </div>
-        );
+          <div className="flex-1 space-y-0.5 pt-1 text-[8px]">
+            <div className="text-slate-500">User Vector: U_1042</div>
+            <div className="text-emerald-400">Rec 1: AI Masterclass (Match: 98%)</div>
+            <div className="text-emerald-400">Rec 2: ML Pipeline Script (Match: 91%)</div>
+          </div>
+          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1">
+            <span>Collaborative Filtering Active</span>
+          </div>
+        </div>;
       case "regression":
-        return (
-          <div className="w-full h-32 bg-[#0F172A] border border-white/10 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-305 text-left select-none">
-            <div className="flex items-center justify-between border-b border-white/5 pb-1 mb-1">
-              <span className="text-[7px] text-[#2563EB]">housing_regression.py</span>
-              <span className="text-slate-400">metrics</span>
-            </div>
-            <div className="flex-grow flex flex-col justify-center space-y-1">
-              <div className="text-[#F97316]">R2 Score: 0.892</div>
-              <div className="text-slate-400">Mean Absolute Error: $12.4k</div>
-              <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-[#2563EB] h-full w-[89%]"></div>
-              </div>
-            </div>
-            <div className="text-[7px] text-slate-500 border-t border-white/5 pt-1 flex justify-between">
-              <span>Epoch: 50 / 50</span>
-              <span className="text-green-500">Stable</span>
-            </div>
+        return <div className="w-full h-28 bg-[#0B0F19] border border-slate-900 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-300 text-left select-none">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-1 mb-1">
+            <span className="text-[7px] text-[#2563EB]">house_regression.py</span>
+            <span className="text-slate-500">metrics</span>
           </div>
-        );
+          <div className="flex-grow flex flex-col justify-center space-y-1">
+            <div className="text-[#F97316]">R2 Score: 0.892</div>
+            <div className="text-slate-400">Mean Absolute Error: $12.4k</div>
+          </div>
+          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1 flex justify-between">
+            <span>Epoch: 50 / 50</span>
+            <span className="text-green-500">Stable</span>
+          </div>
+        </div>;
       default:
-        return (
-          <div className="w-full h-32 bg-[#0F172A] border border-white/10 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-350 text-left select-none">
-            <div className="flex items-center justify-between border-b border-white/5 pt-1">
-              <span className="text-[#2563EB]">data_pipeline.py</span>
-              <span className="text-[7px] text-slate-500">Pandas Engine</span>
-            </div>
-            <div className="flex-grow flex flex-col justify-center space-y-1">
-              <div className="text-emerald-400">df = pd.read_csv("dataset.csv")</div>
-              <div className="text-slate-400">df.dropna(inplace=True)</div>
-              <div className="text-purple-400">df.groupby("goals").mean()</div>
-            </div>
-            <div className="text-[7px] text-slate-500 border-t border-white/5 pt-1">
-              <span>Records Cleaned: 15,204</span>
-            </div>
+        return <div className="w-full h-28 bg-[#0B0F19] border border-slate-900 rounded-xl relative overflow-hidden flex flex-col justify-between p-3 font-mono text-[9px] text-slate-300 text-left select-none">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-1">
+            <span className="text-[#2563EB]">data_pipeline.py</span>
+            <span className="text-[7px] text-slate-500">Pandas Engine</span>
           </div>
-        );
+          <div className="flex-grow flex flex-col justify-center space-y-1">
+            <div className="text-emerald-400">df = pd.read_csv("dataset.csv")</div>
+            <div className="text-slate-450">df.dropna(inplace=True)</div>
+          </div>
+          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1">
+            <span>Records Cleaned: 15,204</span>
+          </div>
+        </div>;
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1, 
+      transition: { staggerChildren: 0.1 } 
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.5, ease: "easeOut" } 
     }
   };
 
   return (
-    <div className="text-slate-900 min-h-screen relative bg-[#FFFFFF] font-sans bg-grid-light">
+    <div className="text-slate-900 min-h-screen relative bg-white font-sans overflow-x-hidden">
       
-      {/* Sticky Header wrapper */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8">
+      {/* Custom grid pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
+
+      {/* Sticky Navigation Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-1 group">
-            <span className="logo-font font-extrabold tracking-tight text-[#0F172A] text-xl">
-              Beyond
-            </span>
-            <span className="logo-font font-extrabold tracking-tight text-[#2563EB] text-xl">
-              Skills
-            </span>
+            <span className="logo-font font-extrabold tracking-tight text-slate-950 text-xl">Beyond</span>
+            <span className="logo-font font-extrabold tracking-tight text-blue-600 text-xl">Skills</span>
           </div>
           <div className="flex items-center space-x-4">
             <button 
-              onClick={scrollToHeroForm}
-              className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer"
+              onClick={() => scrollToHeroForm('Header CTA')}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer shadow-sm hover:shadow"
             >
-              APPLY NOW
+              Apply Now
             </button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-16 lg:py-24 overflow-hidden border-b border-slate-100">
+      <section className="relative py-16 lg:py-24 border-b border-slate-100 overflow-hidden">
+        {/* Glow Spheres */}
         <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+        
+        <motion.div 
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           {/* Left Text */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <span className="inline-flex items-center space-x-1.5 bg-[#2563EB]/10 text-[#2563EB] px-3 py-1 rounded-full text-xs font-bold font-mono uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next Cohort Starts: July 2026</span>
-            </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] leading-tight text-left">
-              Master Practical <span className="bg-gradient-to-r from-[#2563EB] via-[#F97316] to-[#0EA5E9] bg-clip-text text-transparent font-black">Artificial Intelligence, Machine Learning, Data Science & Data Analytics</span>
+            <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 px-3.5 py-1.5 rounded-full text-blue-600 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+              <span>Next Cohort Batch Opening</span>
+            </div>
+            
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-950">
+              Launch Your Career in <span className="bg-gradient-to-r from-blue-600 to-[#0EA5E9] bg-clip-text text-transparent">AI & Data Science</span>
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed">
-              No programming background required. Build statistical algorithms, design recommendation engines, and deploy neural network models with direct mentor audits and live support.
+            
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
+              Master Artificial Intelligence, Machine Learning and Data Science through live mentor-led training, hands-on projects, industry guidance and practical learning. Even if you're starting from scratch.
             </p>
             
-            {/* CTA row */}
+            {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
               <button 
-                onClick={scrollToHeroForm}
-                className="bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold text-xs uppercase tracking-widest px-6 py-4 rounded-xl shadow-lg transition-all text-center cursor-pointer"
+                onClick={() => scrollToHeroForm('Hero Core CTA')}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all text-center cursor-pointer"
               >
                 Apply Now
               </button>
               <button 
                 onClick={() => {
-                  confetti({ particleCount: 60, spread: 40 });
-                  alert("Your curriculum catalog download has started! Please check your browser notifications.");
+                  confetti({ particleCount: 50, spread: 30 });
+                  alert("Your curriculum syllabus download has started! Admissions team will sync details.");
                 }}
-                className="bg-[#0F172A] hover:bg-[#0F172A]/95 text-white font-bold text-xs uppercase tracking-widest px-6 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer"
+                className="bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer shadow-md"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4 text-blue-400" />
                 <span>Download Syllabus</span>
               </button>
             </div>
-
-            {/* Trust badge tags */}
-            <div className="pt-6 border-t border-slate-100">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-mono font-bold mb-3">Our Core Program Pillars:</p>
-              <div className="flex flex-wrap gap-2.5">
-                {[
-                  "Practical Learning",
-                  "Hands-on Projects",
-                  "Mentor Support",
-                  "Career Guidance",
-                  "Certificate After Completion"
-                ].map((tag, idx) => (
-                  <span key={idx} className="flex items-center space-x-1 text-slate-600 bg-slate-50 border border-slate-200/60 rounded-lg px-2.5 py-1.5 text-xs font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#2563EB]" />
-                    <span>{tag}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
-          {/* Right Lead Capture Form Card */}
-          <div className="lg:col-span-5 relative">
-            <div id="hero-application-form" className="bg-white border border-slate-200/85 text-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl transition-all relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/5 rounded-full blur-[30px] pointer-events-none"></div>
-              
-              <h3 className="text-slate-900 font-extrabold text-lg sm:text-xl mb-1.5 text-left">Request Program Info</h3>
-              <p className="text-xs text-slate-500 mb-6 text-left">Fill in details. Our admissions advisor will contact you soon.</p>
-              
-              <form onSubmit={handleApplySubmit} className="space-y-4 text-left">
-                <div>
-                  <label htmlFor="aiml-name" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Full Name</label>
-                  <div className="relative">
-                    <input 
-                      id="aiml-name"
-                      type="text" required 
-                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
-                      placeholder="e.g. Rahul Sharma"
-                      value={enquiryForm.name}
-                      onChange={(e) => setEnquiryForm({ ...enquiryForm, name: e.target.value })}
-                    />
-                    <User className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  </div>
+          {/* Right Visual IDE Workspace & Floating Info Card */}
+          <div className="lg:col-span-5 space-y-6">
+            <motion.div variants={itemVariants}>
+              <HeroIDEVisual />
+            </motion.div>
+
+            {/* Floating Information Card */}
+            <motion.div 
+              className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100 space-y-3.5 text-left"
+              variants={itemVariants}
+            >
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Program Duration</p>
+                  <p className="text-sm font-bold text-white mt-0.5">4 Months</p>
                 </div>
-
-                <div>
-                  <label htmlFor="aiml-email" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Email Address</label>
-                  <div className="relative">
-                    <input 
-                      id="aiml-email"
-                      type="email" required 
-                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
-                      placeholder="e.g. rahul@example.com"
-                      value={enquiryForm.email}
-                      onChange={(e) => setEnquiryForm({ ...enquiryForm, email: e.target.value })}
-                    />
-                    <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  </div>
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Learning Mode</p>
+                  <p className="text-sm font-bold text-white mt-0.5">Live + Recorded</p>
                 </div>
-
-                <div>
-                  <label htmlFor="aiml-phone" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Mobile Number</label>
-                  <div className="relative">
-                    <input 
-                      id="aiml-phone"
-                      type="tel" required 
-                      className="w-full bg-slate-55 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:border-[#2563EB] focus:bg-white outline-none"
-                      placeholder="e.g. +91 98765 43210"
-                      value={enquiryForm.phone}
-                      onChange={(e) => setEnquiryForm({ ...enquiryForm, phone: e.target.value })}
-                    />
-                    <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  </div>
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Industry Projects</p>
+                  <p className="text-sm font-bold text-white mt-0.5">3+ Projects</p>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-qualification" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Current Qualification</label>
-                    <select 
-                      id="aiml-qualification"
-                      className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
-                      value={enquiryForm.qualification}
-                      onChange={(e) => setEnquiryForm({ ...enquiryForm, qualification: e.target.value })}
-                    >
-                      <option className="bg-white text-slate-900" value="Undergraduate">Undergraduate</option>
-                      <option className="bg-white text-slate-900" value="Postgraduate">Postgraduate</option>
-                      <option className="bg-white text-slate-900" value="College Student">College Student</option>
-                      <option className="bg-white text-slate-900" value="Working Professional">Working Professional</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="aiml-experience" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Coding Experience</label>
-                    <select 
-                      id="aiml-experience"
-                      className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
-                      value={enquiryForm.experience}
-                      onChange={(e) => setEnquiryForm({ ...enquiryForm, experience: e.target.value })}
-                    >
-                      <option className="bg-white text-slate-900" value="Beginner - No Coding">Beginner (No Coding)</option>
-                      <option className="bg-white text-slate-900" value="Basic Knowledge">Basic Knowledge</option>
-                      <option className="bg-white text-slate-900" value="Experienced Developer">Experienced Developer</option>
-                    </select>
-                  </div>
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Mentor Support</p>
+                  <p className="text-sm font-bold text-white mt-0.5">Direct Access</p>
                 </div>
-
-                <div>
-                  <label htmlFor="aiml-goal" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Career Goal</label>
-                  <select 
-                    id="aiml-goal"
-                    className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
-                    value={enquiryForm.goal}
-                    onChange={(e) => setEnquiryForm({ ...enquiryForm, goal: e.target.value })}
-                  >
-                    <option className="bg-white text-slate-900" value="Land a Tech Job">Get a Tech Job</option>
-                    <option className="bg-white text-slate-900" value="Career Transition">Switch Careers</option>
-                    <option className="bg-white text-slate-900" value="Freelancing / Projects">Freelance Work</option>
-                    <option className="bg-white text-slate-900" value="Build an AI Startup">Build an AI Startup</option>
-                  </select>
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Certificate Status</p>
+                  <p className="text-sm font-bold text-white mt-0.5">Industry Recognized</p>
                 </div>
-
-                <div>
-                  <label htmlFor="aiml-contact-time" className="block text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 font-mono">Preferred Contact Time</label>
-                  <select 
-                    id="aiml-contact-time"
-                    className="w-full bg-slate-55 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:border-[#2563EB] focus:bg-white outline-none cursor-pointer"
-                    value={enquiryForm.contactTime}
-                    onChange={(e) => setEnquiryForm({ ...enquiryForm, contactTime: e.target.value })}
-                  >
-                    <option className="bg-white text-slate-900" value="">Any Time</option>
-                    <option className="bg-white text-slate-900" value="Morning (9 AM - 12 PM)">Morning (9 AM - 12 PM)</option>
-                    <option className="bg-white text-slate-900" value="Afternoon (12 PM - 5 PM)">Afternoon (12 PM - 5 PM)</option>
-                    <option className="bg-white text-slate-900" value="Evening (5 PM - 8 PM)">Evening (5 PM - 8 PM)</option>
-                  </select>
+                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
+                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Career Guidance</p>
+                  <p className="text-sm font-bold text-white mt-0.5">Portfolio & Mocks</p>
                 </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+      </section>
 
-                <button 
-                  type="submit" 
-                  className="w-full bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg flex items-center justify-center space-x-1.5 cursor-pointer"
-                >
-                  <span>Apply Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                {status === 'success' && (
-                  <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] px-3.5 py-2.5 rounded-xl font-bold flex items-center space-x-1.5 animate-fade-in">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>Application logged! Our counselor will call you shortly.</span>
-                  </div>
-                )}
-
-                <p className="text-[9px] text-slate-500 text-center leading-relaxed pt-2">
-                  By submitting this form you agree to be contacted regarding this upskilling program.
-                </p>
-              </form>
-            </div>
+      {/* Trust Signals Section */}
+      <section className="py-12 bg-slate-900 border-y border-slate-800 text-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div className="space-y-1">
+            <h3 className="text-2xl sm:text-3xl font-black text-white">
+              <AnimatedCounter value="10000" suffix="+" />
+            </h3>
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-mono font-bold">Learners Enrolled</p>
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-2xl sm:text-3xl font-black text-white">
+              <AnimatedCounter value="100" suffix="+" />
+            </h3>
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-mono font-bold">Academic Collaborations</p>
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-2xl sm:text-3xl font-black text-white flex items-center justify-center">
+              <AnimatedCounter value="4.8" />
+              <Star className="w-5 h-5 text-amber-400 fill-amber-400 ml-1 inline-block" />
+            </h3>
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-mono font-bold">Learner Rating</p>
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-2xl sm:text-3xl font-black text-white">
+              Experienced
+            </h3>
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-widest font-mono font-bold">Industry Mentors</p>
           </div>
         </div>
       </section>
 
-      {/* Why Learn AI & Data Science Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+      {/* Program Highlights Section */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Market Analysis & Careers</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Why Master AI & Data Science Today?</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">The industry demand for data-literate professionals is reaching historic levels.</p>
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Academic Excellence</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">AI & Data Science Program Highlights</h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">We provide the technical ecosystem and mentor infrastructure required to master algorithm architectures.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            {
-              title: "Extreme Industry Demand",
-              desc: "From product companies to healthcare, organizations globally are converting data into intelligence to automate predictive analytics.",
-              highlight: "Data Scientists & AI engineers are crucial."
-            },
-            {
-              title: "Competitive Compensation",
-              desc: "Data modeling, statistical analysis, and machine learning skillsets command highly premium budgets in today's tech recruiting market.",
-              highlight: "High career growth potential."
-            },
-            {
-              title: "Freelancing & Automation",
-              desc: "Master automated script pipelines to construct predictive web crawlers, text aggregators, and financial fraud analyzers.",
-              highlight: "Diverse gig workflows."
-            },
-            {
-              title: "AI Startups & Innovation",
-              desc: "Understand algorithm mechanics to build SaaS products, recommendation tools, custom chat layers, and data insights engines.",
-              highlight: "SaaS Builder friendly."
-            }
+            { icon: <Users className="w-5 h-5" />, title: "Live Mentor Sessions", desc: "Interact directly with data engineers and resolve questions in real-time." },
+            { icon: <Code className="w-5 h-5" />, title: "Hands-on Projects", desc: "Construct predictive applications matching specifications of actual tech roles." },
+            { icon: <BookOpen className="w-5 h-5" />, title: "Industry Curriculum", desc: "Acquire skills matching active requirements requested by modern corporate hiring partners." },
+            { icon: <Monitor className="w-5 h-5" />, title: "Portfolio Development", desc: "Compile codebase, organize git logs, and deploy model endpoints to host systems." },
+            { icon: <Compass className="w-5 h-5" />, title: "Career Guidance", desc: "Resume reviews, developer profile alignment, and technical mock interview prep." },
+            { icon: <Award className="w-5 h-5" />, title: "Verified Certification", desc: "Earn professional credentials recognized by recruiters to clear baseline resume screens." }
           ].map((item, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/80 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div>
-                <h3 className="text-[#0F172A] font-extrabold text-sm sm:text-base mb-2.5">{item.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed mb-4">{item.desc}</p>
-              </div>
-              <span className="text-[10px] text-[#F97316] font-bold uppercase tracking-wider font-mono bg-orange-50 border border-orange-200/30 px-2 py-1 rounded inline-block self-start">
-                {item.highlight}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Why BeyondSkills Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
-        <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">BeyondSkills Advantages</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Upskilling Engineered For Results</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">We provide the structure, direct guidance, and practice modules you need to gain true coding confidence.</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {[
-            { icon: <GraduationCap className="w-5 h-5" />, title: "Beginner Friendly", desc: "Start from coding syntax structures before scaling to predictive algorithms and network layers." },
-            { icon: <Laptop className="w-5 h-5" />, title: "Practical Learning", desc: "Build predictive models and analytics dashboards utilizing real relational dataset files." },
-            { icon: <Users className="w-5 h-5" />, title: "Mentor Guidance", desc: "Receive structural code audits and review feedback from practicing data engineers." },
-            { icon: <Clock className="w-5 h-5" />, title: "Live Sessions", desc: "Participate in interactive online classes with direct screen sharing and debugging support." },
-            { icon: <Database className="w-5 h-5" />, title: "Real Projects", desc: "Build anomaly detectors, estimators, and text sorters to add to your git repository." },
-            { icon: <Briefcase className="w-5 h-5" />, title: "Career Readiness", desc: "Optimize your developer profiles, construct portfolios, and learn industry standards." },
-            { icon: <FileText className="w-5 h-5" />, title: "Resume Support", desc: "Format coding achievements and capstones professionally to pass recruiter screens." },
-            { icon: <HelpCircle className="w-5 h-5" />, title: "Interview Prep", desc: "Understand algorithm test structures, mock evaluation prompts, and system designs." },
-            { icon: <Users className="w-5 h-5" />, title: "Learning Community", desc: "Network with other cohort members to share code models and solve blockers." },
-            { icon: <Award className="w-5 h-5" />, title: "LMS Access", desc: "Watch recorded lecture videos, read notes, and download project code models for 1 year." },
-            { icon: <CheckCircle2 className="w-5 h-5" />, title: "Assignments", desc: "Assess weekly milestones with structured coding checklists and validation tests." },
-            { icon: <TrendingUp className="w-5 h-5" />, title: "Portfolio Development", desc: "Deploy algorithm endpoints on live hosts to verify code utility directly." }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex items-start space-x-3.5">
-              <div className="bg-[#2563EB]/10 text-[#2563EB] p-2.5 rounded-xl border border-[#2563EB]/20 shrink-0">
+            <div key={idx} className="bg-white border border-slate-200/85 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex items-start space-x-4">
+              <div className="bg-blue-50 text-blue-600 p-2.5 rounded-xl border border-blue-100/50 shrink-0">
                 {item.icon}
               </div>
               <div className="space-y-1">
-                <h4 className="text-[#0F172A] font-bold text-sm">{item.title}</h4>
+                <h4 className="text-slate-950 font-bold text-sm sm:text-base">{item.title}</h4>
                 <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
             </div>
@@ -628,364 +809,637 @@ export default function AiMlDataScienceLandingPage() {
         </div>
       </section>
 
+      {/* Career Benefits Section */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
+        <div className="text-center space-y-3 mb-12">
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Student Outcomes</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">How You Benefit From This Program</h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">We focus on teaching practical capabilities that make you ready to tackle actual work environments.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { title: "Build Practical AI Projects", desc: "Create working classifiers, recommendation filters, and fraud detectors from raw dataset files." },
+            { title: "Strengthen Your Portfolio", desc: "Compile all your code commits to your public GitHub profile to prove your technical abilities to teams." },
+            { title: "Learn Industry Tools", desc: "Master tools like Python, SQL databases, Scikit-Learn, TensorFlow, Git, and model endpoints." },
+            { title: "Gain Mentor Feedback", desc: "Get structural feedback, code optimizations, and design advice directly from data practitioners." },
+            { title: "Prepare for Technical Mocks", desc: "Solve algorithmic case study exercises and learn to communicate statistics parameters clearly." },
+            { title: "Build Real Confidence", desc: "Develop the ability to solve blockers independently, debug script errors, and optimize models." }
+          ].map((benefit, idx) => (
+            <div key={idx} className="bg-slate-50/50 border border-slate-200/60 p-6 rounded-2xl hover:bg-slate-50 transition-colors">
+              <h3 className="text-slate-955 font-bold text-sm sm:text-base mb-2 flex items-center">
+                <Check className="w-4 h-4 text-blue-600 mr-2 shrink-0" />
+                {benefit.title}
+              </h3>
+              <p className="text-xs text-slate-550 leading-relaxed pl-6">{benefit.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Curriculum Section */}
-      <section className="py-16 bg-slate-950 text-white border-b border-slate-900 bg-grid-dark">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 bg-slate-950 text-white border-b border-slate-900 text-left">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-12">
-            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Structured Roadmap</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Our AI & Data Science Cohort Path</h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">A comprehensive timeline engineered to take you from foundational Python syntax to live model deployment.</p>
+            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Curriculum Syllabus</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white">Cohort Syllabus Path</h2>
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">A comprehensive path divided into logical modules. Click below to expand topics.</p>
           </div>
 
-          <div className="max-w-3xl mx-auto relative border-l border-slate-800 pl-6 sm:pl-8 space-y-10 py-2 text-left">
-            {CURRICULUM.map((mod, idx) => (
-              <div key={idx} className="relative">
-                {/* Dot indicator */}
-                <span className="absolute -left-[35px] sm:-left-[43px] top-1.5 w-4 h-4 rounded-full bg-slate-950 border-2 border-blue-500 flex items-center justify-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                </span>
-                
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest font-mono">Module {idx + 1}</span>
-                  <h3 className="text-white font-extrabold text-sm sm:text-base leading-tight">{mod.phase}</h3>
-                  
-                  {/* Topic tags */}
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {mod.topics.map((t, i) => (
-                      <span key={i} className="text-slate-300 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs font-medium">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+          <div className="space-y-4">
+            {CURRICULUM_GROUPS.map((group, idx) => {
+              const isExpanded = expandedMod === idx;
+              return (
+                <div 
+                  key={idx} 
+                  className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 shadow-lg"
+                >
+                  <button
+                    onClick={() => setExpandedMod(isExpanded ? -1 : idx)}
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-white hover:bg-slate-850/50 transition-all"
+                  >
+                    <div className="space-y-1">
+                      <p className="text-[10px] text-blue-400 uppercase tracking-widest font-mono font-extrabold">Module 0{idx + 1}</p>
+                      <h4 className="text-white text-base font-black">{group.title}</h4>
+                    </div>
+                    {isExpanded ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="p-5 border-t border-slate-850 bg-slate-950/60 space-y-4 animate-fade-in">
+                      <p className="text-xs text-slate-400 leading-relaxed italic">{group.description}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                        {group.topics.map((t, i) => (
+                          <div key={i} className="flex items-center space-x-2 text-xs text-slate-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                            <span>{t}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <div className="relative bg-gradient-to-b from-[#2563EB]/5 via-white to-transparent py-16 border-b border-slate-100">
-        {/* Soft glowing blue spots behind the grid */}
-        <div className="absolute top-[20%] left-[10%] w-[300px] h-[300px] rounded-full bg-[#2563EB]/5 blur-[80px] pointer-events-none"></div>
-        <div className="absolute bottom-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-[#2563EB]/5 blur-[80px] pointer-events-none"></div>
-        
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 bg-[#f8fafc] border-b border-slate-100 text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-12">
-            <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Hands-on Experience</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Construct Deployed Data Projects</h2>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Compile a powerful coding repository showcasing real statistical applications. Below are sample projects constructed during the batch.</p>
+            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Portfolio Building</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Build Deployed Portfolio Projects</h2>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Create working code for these 6 diverse sample projects to host on your public git repository.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SAMPLE_PROJECTS.map((proj, idx) => (
-              <div key={idx} className="bg-slate-950 border border-slate-800 text-white rounded-2xl shadow-sm hover:shadow-xl hover:shadow-slate-100/10 transition-all p-5 flex flex-col justify-between space-y-5">
-                
-                {/* Dynamic Interactive Code Preview Mockup */}
+            {PROJECTS.map((proj, idx) => (
+              <div 
+                key={idx} 
+                className="bg-slate-950 border border-slate-850 rounded-2xl p-5 flex flex-col justify-between space-y-5 text-white shadow-xl hover:shadow-2xl transition-all"
+              >
                 <div className="space-y-4">
+                  {/* Embedded IDE Mockup */}
                   {renderProjectMock(proj.mockType)}
                   
-                  <div className="space-y-2 text-left">
-                    <h3 className="text-white font-extrabold text-base leading-snug">{proj.title}</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">{proj.desc}</p>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-extrabold text-base text-white">{proj.name}</h3>
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase font-mono border ${
+                        proj.difficulty === 'Beginner' ? 'text-green-400 bg-green-950/40 border-green-900/50' :
+                        proj.difficulty === 'Intermediate' ? 'text-blue-400 bg-blue-950/40 border-blue-900/50' :
+                        'text-orange-400 bg-orange-950/40 border-orange-900/50'
+                      }`}>
+                        {proj.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400 leading-relaxed">{proj.outcome}</p>
                   </div>
                 </div>
 
-                <div className="space-y-3 border-t border-slate-900 pt-4 text-xs text-left">
+                <div className="space-y-3 border-t border-slate-900 pt-4">
                   <div className="flex flex-wrap gap-1.5">
-                    {proj.tech.map((t, i) => (
-                      <span key={i} className="text-blue-400 bg-blue-950 border border-blue-900/60 font-bold px-2 py-0.5 rounded text-[10px] uppercase font-mono">
+                    {proj.tools.map((t, i) => (
+                      <span key={i} className="text-blue-400 bg-blue-950/60 border border-blue-900/60 font-bold px-2 py-0.5 rounded text-[9px] uppercase font-mono">
                         {t}
                       </span>
                     ))}
                   </div>
-                  <div className="space-y-1">
-                    <p className="text-slate-500 text-[10px] uppercase font-mono tracking-wider">Key Learnings:</p>
-                    <p className="text-blue-400 font-medium italic">{proj.learn}</p>
+
+                  <div className="space-y-1.5 text-xs">
+                    <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Key Skills:</p>
+                    <div className="flex flex-wrap gap-x-3 gap-y-1">
+                      {proj.skills.map((s, i) => (
+                        <span key={i} className="text-slate-300 inline-flex items-center">
+                          <span className="w-1 h-1 rounded-full bg-blue-500 mr-1.5"></span>
+                          {s}
+                        </span>
+                      ))}
+                    </div>
                   </div>
+
+                  {proj.githubReady && (
+                    <div className="flex items-center space-x-1.5 text-[9px] font-bold text-emerald-400 bg-emerald-950/20 border border-emerald-900/40 px-2 py-1 rounded inline-flex self-start">
+                      <Check className="w-3 h-3" />
+                      <span>GITHUB PORTFOLIO READY</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
-      {/* Learning Experience Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+      {/* Who Should Apply Section */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">The Cohort Journey</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">How You Will Master AI & ML</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">A structured cycle designed to build logic, code fluency, and career confidence step-by-step.</p>
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Cohort Demographics</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Who Should Apply?</h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Prerequisites are minimal. No prior programming background is required to start.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { step: "01", title: "Live Classes", desc: "Attend mentor-led interactive sessions to understand syntax logic and algorithm theory." },
-            { step: "02", title: "Milestone Assignments", desc: "Complete practical tasks evaluating module checkpoints with detailed support." },
-            { step: "03", title: "Build Projects", desc: "Construct regression engines, classifiers, and recommendation system interfaces." },
-            { step: "04", title: "Code Reviews", desc: "Receive structural code audits from data practitioners to align with engineering standards." },
-            { step: "05", title: "Resolve Blockers", desc: "Participate in dedicated Q&A hours to debug code scripts and query datasets." },
-            { step: "06", title: "GitHub Compilation", desc: "Organize script commits, write documentation, and deploy analytics platforms live." },
-            { step: "07", title: "Interview Prep", desc: " Triage statistics questionnaires, solve mock evaluation test queries, and map case studies." },
-            { step: "08", title: "Career Launch", desc: "Compile your upskilling achievements, update your profile logs, and apply with confidence." }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl space-y-3 text-left">
-              <span className="text-2xl font-black text-[#2563EB]/25 font-mono">{item.step}</span>
-              <h3 className="text-[#0F172A] font-extrabold text-sm sm:text-base">{item.title}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+            { title: "College Students", desc: "Undergraduate students (1st-4th Year) wanting to acquire industry coding skills and build resume capstones." },
+            { title: "Fresh Graduates", desc: "Graduates interested in structuring developer portfolios and starting a career in AI and Data Science." },
+            { title: "Beginners", desc: "Absolute beginners seeking logic foundations, Python coding structures, and guided milestone checkpoints." },
+            { title: "Career Switchers", desc: "Professionals looking to transition into data analytics, predictive modeling, or automation engineering." }
+          ].map((profile, idx) => (
+            <div key={idx} className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-slate-955 font-extrabold text-sm sm:text-base mb-2">{profile.title}</h3>
+              <p className="text-xs text-slate-550 leading-relaxed">{profile.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Program Details Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
-        <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Program Specs</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Cohort Information</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Clear cohort parameters. Find program schedules, details, and access modules below.</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch text-left">
-          {/* Details Card */}
-          <div className="lg:col-span-8 bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-sm flex flex-col justify-between">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs sm:text-sm">
-              {[
-                { label: "Program Duration", value: "3 Months", detail: "12 Weeks (3 Months)" },
-                { label: "Class Schedule", value: "3 Lectures / Week", detail: "3 Live Classes/Week (Evening)" },
-                { label: "Lead Instructor", value: "Industry Mentors", detail: "Active Data Scientists" },
-                { label: "Learning Mode", value: "Online Live Lectures", detail: "LMS recordings & codes provided" },
-                { label: "Cohort Demographics", value: "95% College Students", detail: "5% Graduates & Working Professionals" },
-                { label: "Course language", value: "English / Hindi support", detail: "Practical industry terms" }
-              ].map((spec, idx) => (
-                <div key={idx} className="space-y-1.5 border-b border-slate-100 pb-4">
-                  <p className="text-[10px] text-slate-400 uppercase font-mono tracking-wider">{spec.label}</p>
-                  <p className="text-base font-extrabold text-[#0F172A]">{spec.value}</p>
-                  <p className="text-xs text-slate-500">{spec.detail}</p>
-                </div>
-              ))}
-            </div>
-            
-            <div className="pt-6 mt-6 border-t border-slate-100 flex items-center space-x-3.5 text-xs text-slate-500">
-              <Award className="w-5 h-5 text-[#2563EB] shrink-0" />
-              <p>Successful candidates will receive an industry-recognized upskilling completion certificate.</p>
-            </div>
+      {/* Application Form Section */}
+      <section id="admissions-application-form" className="py-16 bg-slate-900 border-b border-slate-800 text-slate-100 text-left relative overflow-hidden">
+        <div className="absolute top-[20%] left-[-10%] w-[350px] h-[350px] bg-blue-500/5 rounded-full blur-[110px] pointer-events-none"></div>
+        
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
+          <div className="text-center max-w-xl mx-auto space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-white">Apply for the Next AI & Data Science Cohort</h2>
+            <p className="text-xs sm:text-sm text-slate-405 leading-relaxed">
+              Complete your application and our admissions team will contact you with program details and eligibility guidance.
+            </p>
           </div>
 
-          {/* Cohort Inclusions Card */}
-          <div className="lg:col-span-4 bg-[#0F172A] text-white p-6 sm:p-8 rounded-3xl shadow-lg flex flex-col justify-between text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#2563EB]/10 rounded-full blur-[30px] pointer-events-none"></div>
-            
-            <div className="space-y-6">
-              <span className="text-[10px] font-bold text-[#F97316] uppercase tracking-widest font-mono bg-orange-500/10 border border-orange-500/20 px-3 py-1 rounded-full inline-block">
-                Batch Open
-              </span>
+          <div className="bg-slate-950/95 border border-white/10 p-6 sm:p-8 rounded-3xl shadow-2xl backdrop-blur-xl">
+            {errorMessage && (
+              <div className="bg-red-500/10 border border-red-500/25 text-red-300 p-4 rounded-xl text-xs font-medium mb-6">
+                ⚠️ {errorMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleApplySubmit} className="space-y-6">
               
-              <div className="space-y-1">
-                <p className="text-xs text-slate-400 uppercase font-mono tracking-wider">Cohort Access</p>
-                <p className="text-3xl font-black font-mono">Live Batch</p>
-                <p className="text-[10px] text-slate-450">Join our cohort of data practitioners</p>
+              {/* Part 1: Credentials */}
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                  1. Contact Information
+                </h4>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-name" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Full Name *</label>
+                    <input 
+                      id="aiml-name"
+                      type="text" 
+                      name="name"
+                      required 
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
+                      placeholder="e.g. Rahul Sharma"
+                      value={enquiryForm.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="aiml-phone" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Phone Number *</label>
+                    <input 
+                      id="aiml-phone"
+                      type="tel" 
+                      name="phone"
+                      required 
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
+                      placeholder="e.g. +91 9876543210"
+                      value={enquiryForm.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="aiml-email" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Email Address *</label>
+                  <input 
+                    id="aiml-email"
+                    type="email" 
+                    name="email"
+                    required 
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
+                    placeholder="e.g. rahul@example.com"
+                    value={enquiryForm.email}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
 
-              <div className="space-y-3.5 text-left text-xs text-slate-350 border-t border-white/5 pt-6">
-                <div className="flex items-center space-x-2">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>1 Year Access to LMS portal logs</span>
+              {/* Part 2: Background Profile */}
+              <div className="space-y-4 pt-4 border-t border-white/5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                  2. Academic & Status Credentials
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-role" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Current Status</label>
+                    <select 
+                      id="aiml-role"
+                      name="role"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.role}
+                      onChange={handleChange}
+                    >
+                      <option value="Student">Student</option>
+                      <option value="Working Professional">Working Professional</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-year" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Academic Year</label>
+                    <select 
+                      id="aiml-year"
+                      name="year"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.year}
+                      onChange={handleChange}
+                    >
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="Graduated">Graduated</option>
+                    </select>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Interactive coding notebooks</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Direct mentor portfolio audits</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Weekly doubts Q&A calls</span>
+
+                <div>
+                  <label htmlFor="aiml-college" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">College / Institute Name</label>
+                  <input 
+                    id="aiml-college"
+                    type="text" 
+                    name="college"
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
+                    placeholder="Enter your college or employer name"
+                    value={enquiryForm.college}
+                    onChange={handleChange}
+                  />
                 </div>
               </div>
-            </div>
 
-            <button 
-              onClick={scrollToHeroForm}
-              className="w-full bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all mt-8 shadow-md cursor-pointer"
-            >
-              Secure Cohort Seat
-            </button>
+              {/* Part 3: Program & Career Qualification */}
+              <div className="space-y-4 pt-4 border-t border-white/5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                  3. Program Matching & Lead Qualification
+                </h4>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-upskilling" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Preferred Program</label>
+                    <select 
+                      id="aiml-upskilling"
+                      name="upskilling"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.upskilling}
+                      onChange={handleChange}
+                    >
+                      <option value="artificial-intelligence">AI & Machine Learning Program</option>
+                      <option value="data-science">Data Science Program</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-batch" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Preferred Batch</label>
+                    <select 
+                      id="aiml-batch"
+                      name="batch"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.batch}
+                      onChange={handleChange}
+                    >
+                      <option value="July Batch">July Batch</option>
+                      <option value="August Batch">August Batch</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-skillLevel" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Current Skill Level</label>
+                    <select 
+                      id="aiml-skillLevel"
+                      name="skillLevel"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.skillLevel}
+                      onChange={handleChange}
+                    >
+                      <option value="Beginner - No Coding">Beginner - No Coding</option>
+                      <option value="Basic Knowledge">Basic Knowledge</option>
+                      <option value="Intermediate">Intermediate</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-careerGoal" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Career Goal</label>
+                    <select 
+                      id="aiml-careerGoal"
+                      name="careerGoal"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.careerGoal}
+                      onChange={handleChange}
+                    >
+                      <option value="Internship">Internship</option>
+                      <option value="Placement">Placement</option>
+                      <option value="Higher Studies">Higher Studies</option>
+                      <option value="Freelancing">Freelancing</option>
+                      <option value="Skill Development">Skill Development</option>
+                      <option value="Career Switch">Career Switch</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-laptopAccess" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Laptop Availability</label>
+                    <select 
+                      id="aiml-laptopAccess"
+                      name="laptopAccess"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.laptopAccess}
+                      onChange={handleChange}
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Planning to Purchase">Planning to Purchase</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-weeklyHours" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Weekly Learning Hours</label>
+                    <select 
+                      id="aiml-weeklyHours"
+                      name="weeklyHours"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.weeklyHours}
+                      onChange={handleChange}
+                    >
+                      <option value="Less than 3 Hours">Less than 3 Hours</option>
+                      <option value="3–5 Hours">3–5 Hours</option>
+                      <option value="5–8 Hours">5–8 Hours</option>
+                      <option value="More than 8 Hours">More than 8 Hours</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="aiml-learningStart" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">When do you plan to start?</label>
+                    <select 
+                      id="aiml-learningStart"
+                      name="learningStart"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.learningStart}
+                      onChange={handleChange}
+                    >
+                      <option value="Immediately">Immediately</option>
+                      <option value="Within 30 Days">Within 30 Days</option>
+                      <option value="Within 3 Months">Within 3 Months</option>
+                      <option value="Just Exploring">Just Exploring</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="aiml-whyInterested" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Why do you want to join? *</label>
+                  <textarea 
+                    id="aiml-whyInterested"
+                    name="whyInterested"
+                    required
+                    rows={3}
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
+                    placeholder="Tell us about your career goals and what you hope to achieve after completing this program."
+                    value={enquiryForm.whyInterested}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              {/* Submit Application Button */}
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-blue-600 to-[#0EA5E9] hover:opacity-95 disabled:opacity-50 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center space-x-2.5 shadow-lg shadow-blue-500/20"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Submitting Application...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Submit Application</span>
+                  </>
+                )}
+              </button>
+
+              <p className="text-[9px] text-slate-500 text-center leading-relaxed pt-2">
+                By submitting this application, you authorize BeyondSkills Admissions to evaluate details and schedule a profile counseling session.
+              </p>
+            </form>
           </div>
         </div>
       </section>
 
-      {/* Testimonials & Partner Logos Slider Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes marquee-forward {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-marquee-forward {
-            animation: marquee-forward 25s linear infinite;
-          }
-          .partner-logo-item {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 140px;
-            height: 50px;
-            padding: 0 20px;
-          }
-        `}} />
+      {/* After Form Section: Admissions Counselling Timeline */}
+      <section className="py-16 bg-[#0B0F19] text-white border-b border-slate-950 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="space-y-2">
+            <h3 className="text-xl sm:text-2xl font-black text-white">Application Process</h3>
+            <p className="text-xs text-slate-400">Our admissions counselling cycle checks commitment and maps curriculum routes.</p>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-[28px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-blue-600/30 via-[#0EA5E9]/30 to-emerald-500/20 z-0"></div>
+
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-slate-800 rounded-2xl text-center shadow-md">
+              <div className="w-10 h-10 rounded-full bg-blue-600/10 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-sm">
+                1
+              </div>
+              <h4 className="text-xs font-bold text-white">Submit Application</h4>
+              <p className="text-[10px] text-slate-450 leading-relaxed">Complete your student credentials and goals questionnaire.</p>
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-slate-800 rounded-2xl text-center shadow-md">
+              <div className="w-10 h-10 rounded-full bg-blue-600/10 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-sm">
+                2
+              </div>
+              <h4 className="text-xs font-bold text-white">Admissions Counselling</h4>
+              <p className="text-[10px] text-slate-455 leading-relaxed">Connect with academic advisor to verify batch readiness.</p>
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-slate-800 rounded-2xl text-center shadow-md">
+              <div className="w-10 h-10 rounded-full bg-blue-600/10 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-sm">
+                3
+              </div>
+              <h4 className="text-xs font-bold text-white">Program Recommendation</h4>
+              <p className="text-[10px] text-slate-460 leading-relaxed">Unlock cohort curriculum alignment matching roadmap.</p>
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-emerald-500/30 rounded-2xl text-center shadow-md">
+              <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                4
+              </div>
+              <h4 className="text-xs font-bold text-emerald-300">Enrollment</h4>
+              <p className="text-[10px] text-slate-465 leading-relaxed">Secure cohort seat allocation to begin learning journey.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Success Stories</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Student Success & Hiring Partners</h2>
-          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Our cohort consists of 95% college students and 5% graduates, interns, or working professionals. Read their learning logs below.</p>
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Feedback Logs</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Student Success Reviews</h2>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Hear how cohort candidates acquired confidence, formatted developer portfolios, and learned script logic.</p>
         </div>
 
-        {/* Real Student Success Reviews */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { 
-              name: "Ankita Patel", 
+            {
+              name: "Ankita Patel",
               role: "B.Tech CSE Student (3rd Year)",
-              company: "VIT Vellore",
-              avatarColor: "bg-blue-600/10 text-blue-600",
-              review: "As a B.Tech student, our college lectures were too theoretical. This cohort gave me the practical coding side. Starting from Python foundations to building custom machine learning models, the hands-on project approach was perfect. I completed my college capstone project here under mentor guidance!"
+              org: "VIT Vellore",
+              feedback: "The practical coding approach helped me immensely. I was able to build regression predictors and clean dataset parameters for my college capstone under mentor guidance. My confidence in coding has improved greatly.",
+              color: "bg-blue-600/10 text-blue-600"
             },
-            { 
-              name: "Rahul Sen", 
+            {
+              name: "Rahul Sen",
               role: "BCA Student (3rd Year)",
-              company: "Delhi University",
-              avatarColor: "bg-emerald-500/10 text-emerald-500",
-              review: "Being a BCA student, I wanted to build a strong portfolio for placement drives. The cohort statistics and data visualization modules helped me understand real data workflows. Building the customer churn predictor and deploying it live on the cloud gave me projects that stood out in college reviews."
+              org: "Delhi University",
+              feedback: "Building recommendation algorithms and compiling commits to my public GitHub was the best part of this cohort. I formatted a developer portfolio that really stood out during college placement rounds.",
+              color: "bg-emerald-500/10 text-emerald-500"
             },
-            { 
-              name: "Vikram Malhotra", 
-              role: "Data Analyst Intern (Graduate Track)",
-              company: "EY India",
-              avatarColor: "bg-orange-500/10 text-orange-500",
-              review: "Although the cohort is majorly composed of college students, the 5% seats allocated for graduates and interns like me are extremely valuable. The advanced Flask API deployment and database normalization lessons helped me directly in my internship tasks at EY. The code reviews were super clean!"
+            {
+              name: "Vikram Malhotra",
+              role: "Data Analyst Track Graduate",
+              org: "Noida Sector 62",
+              feedback: "Understanding neural network loss functions, compiling Pandas pipelines, and deploying model endpoints to Vercel was exactly the upskilling I needed. Highly recommend for any beginner switcher.",
+              color: "bg-orange-500/10 text-orange-500"
             }
-          ].map((item, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl space-y-4 hover:shadow-md transition-shadow">
+          ].map((story, idx) => (
+            <div key={idx} className="bg-slate-50 border border-slate-200/60 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow space-y-4">
               <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-full ${item.avatarColor} font-black flex items-center justify-center font-mono text-sm`}>
-                  {item.name[0]}
+                <div className={`w-10 h-10 rounded-full ${story.color} font-black flex items-center justify-center font-mono text-sm`}>
+                  {story.name[0]}
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-[#0F172A]">{item.name}</p>
-                  <p className="text-[10px] text-slate-400 font-mono">{item.role} at {item.company}</p>
+                  <p className="text-xs font-extrabold text-slate-900">{story.name}</p>
+                  <p className="text-[10px] text-slate-450 font-mono">{story.role} at {story.org}</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-650 italic leading-relaxed">"{item.review}"</p>
+              <p className="text-xs text-slate-650 italic leading-relaxed">"{story.feedback}"</p>
             </div>
           ))}
         </div>
-        
-        {/* Scrolling Partner Logos Slider */}
-        <div className="mt-16 text-center border-t border-slate-100 pt-8 space-y-4">
-          <p className="text-[10px] text-slate-400 uppercase tracking-widest font-mono font-bold">Upskilled Candidates Placed & Hired at:</p>
-          
-          <div className="w-full flex overflow-hidden select-none relative mt-4">
-            <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-            
-            <div className="flex whitespace-nowrap animate-marquee-forward items-center py-2">
-              {[
-                { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
-                { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
-                { name: 'Microsoft', url: microsoftLogo },
-                { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
-                { name: 'Adobe', url: adobeLogo },
-                { name: 'IBM', url: ibmLogo },
-                { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
-                { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
-                { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
-              ].concat([
-                { name: 'Cisco', url: 'https://cdn.simpleicons.org/cisco/005073' },
-                { name: 'Intuit', url: 'https://cdn.simpleicons.org/intuit/3F4EBF' },
-                { name: 'Microsoft', url: microsoftLogo },
-                { name: 'Meta', url: 'https://cdn.simpleicons.org/meta/0668E1' },
-                { name: 'Adobe', url: adobeLogo },
-                { name: 'IBM', url: ibmLogo },
-                { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/1428A0' },
-                { name: 'Infosys', url: 'https://cdn.simpleicons.org/infosys/007CC3' },
-                { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/000000' }
-              ]).map((logo, idx) => (
-                <div key={idx} className="partner-logo-item hover:scale-105 transition-transform duration-300">
-                  <img src={logo.url} alt={logo.name} className="h-7 object-contain opacity-70 hover:opacity-100 transition-opacity" />
-                </div>
-              ))}
-            </div>
+
+        {/* Scrolling Partner Logos */}
+        <div className="mt-16 text-center border-t border-slate-100 pt-8 space-y-4 overflow-hidden">
+          <p className="text-[10px] text-slate-450 uppercase tracking-widest font-mono font-bold">Candidates Hired & Placed at:</p>
+          <div className="flex justify-center items-center flex-wrap gap-8 opacity-60">
+            <img src={microsoftLogo} alt="Microsoft Logo" className="h-6" />
+            <img src={adobeLogo} alt="Adobe Logo" className="h-6" />
+            <img src={ibmLogo} alt="IBM Logo" className="h-6" />
           </div>
         </div>
       </section>
 
       {/* Frequently Asked Questions Section */}
-      <section className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100">
+      <section className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
-          <span className="text-xs font-bold text-[#2563EB] uppercase tracking-widest font-mono">Academic Queries</span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A]">Frequently Asked Questions</h2>
-          <p className="text-xs sm:text-sm text-slate-500">Find clear, direct answers to common cohort and upskilling queries.</p>
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Academic Queries</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Frequently Asked Questions</h2>
+          <p className="text-xs sm:text-sm text-slate-500">Get direct answers to common queries regarding the upskilling program.</p>
         </div>
 
         <div className="space-y-4">
-          {FAQS.map((faq, idx) => (
-            <div key={idx} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all duration-300 text-left">
-              <button 
-                onClick={() => toggleFaq(idx)}
-                className="w-full flex items-center justify-between p-4.5 text-left font-bold text-xs sm:text-sm text-[#0F172A] hover:bg-slate-50 transition-colors"
-              >
-                <span>{faq.q}</span>
-                {faqOpen[idx] ? <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-500 shrink-0" />}
-              </button>
-              
-              {faqOpen[idx] && (
-                <div className="p-4.5 border-t border-slate-100 text-xs text-slate-500 leading-relaxed bg-slate-50/50 animate-fade-in">
-                  {faq.a}
-                </div>
-              )}
-            </div>
-          ))}
+          {FAQS.map((faq, idx) => {
+            const isOpen = faqOpen[idx];
+            return (
+              <div key={idx} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <button
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full flex items-center justify-between p-4.5 text-left font-bold text-xs sm:text-sm text-slate-950 hover:bg-slate-50 transition-colors outline-none"
+                >
+                  <span>{faq.q}</span>
+                  {isOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                </button>
+
+                {isOpen && (
+                  <div className="p-4.5 border-t border-slate-100 text-xs text-slate-500 leading-relaxed bg-slate-50/50 animate-fade-in">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 bg-[#0F172A] text-white text-center relative overflow-hidden">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-[#2563EB]/10 blur-[130px] pointer-events-none"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#2563EB]/10 blur-[130px] pointer-events-none"></div>
-        
+      <section className="py-16 bg-slate-950 text-white text-center relative overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[130px] pointer-events-none"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[130px] pointer-events-none"></div>
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6">
-          <span className="inline-flex items-center space-x-1.5 bg-[#2563EB]/20 text-[#2563EB] px-3.5 py-1 rounded-full text-xs font-bold font-mono uppercase tracking-wider">
+          <span className="inline-flex items-center space-x-1.5 bg-blue-500/20 text-blue-400 px-3.5 py-1 rounded-full text-xs font-bold font-mono uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Join BeyondSkills Cohort</span>
+            <span>Apply Today</span>
           </span>
-          <h2 className="text-3xl sm:text-4xl font-black leading-tight">Start Building Real Software with BeyondSkills</h2>
-          <p className="text-xs sm:text-sm text-slate-355 max-w-xl mx-auto leading-relaxed">
-            Construct predictive models, script data cleaning queries, and deploy production ML endpoints under direct mentor guidance.
+          <h2 className="text-3xl sm:text-4xl font-black leading-tight text-white">Ready to Start Your AI Journey?</h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
+            Construct statistical scripts, train decision classifiers, and deploy neural network APIs under direct guidance from industry mentors.
           </p>
-          
+
           <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4 max-w-xs sm:max-w-none mx-auto">
-            <button 
-              onClick={scrollToHeroForm}
-              className="bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg cursor-pointer"
+            <button
+              onClick={() => scrollToHeroForm('Final CTA Core')}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg cursor-pointer"
             >
               Apply Now
             </button>
-            <button 
+            <button
               onClick={() => {
                 confetti({ particleCount: 50, spread: 30 });
-                alert("Curriculum guide catalog download starting!");
+                alert("Curriculum catalog guide download started!");
               }}
               className="bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer"
             >
-              Syllabus PDF
+              Download Program Guide
             </button>
           </div>
-          
-          <p className="text-[10px] text-slate-400 max-w-md mx-auto pt-4 leading-relaxed">
-            Our team will contact you to explain the program, curriculum, fee structure and answer all your questions.
+
+          <p className="text-[9px] text-slate-400 max-w-sm mx-auto pt-4 leading-relaxed">
+            Our academic admissions counselling team will contact you to explain cohort timings, fee options, and guide eligibility.
           </p>
         </div>
       </section>
@@ -994,17 +1448,17 @@ export default function AiMlDataScienceLandingPage() {
       <a 
         href="https://wa.me/919953607074?text=Hi!+I+am+interested+in+BeyondSkills+AI+ML+and+Data+Science+Cohort."
         target="_blank" rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 border border-emerald-400/20"
+        className="fixed bottom-6 right-6 z-40 bg-emerald-505 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 border border-emerald-400/20"
         title="Chat on WhatsApp"
       >
         <MessageCircle className="w-6 h-6" />
       </a>
 
-      {/* Sticky mobile CTA button */}
-      <div className="fixed bottom-0 inset-x-0 z-35 bg-white/95 backdrop-blur border-t border-slate-200 p-3 sm:hidden flex items-center justify-center">
-        <button 
-          onClick={scrollToHeroForm}
-          className="w-full bg-[#2563EB] hover:bg-[#2563EB]/95 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all shadow text-center cursor-pointer"
+      {/* Sticky Mobile CTA Footer */}
+      <div className="fixed bottom-0 inset-x-0 z-30 bg-white/90 backdrop-blur border-t border-slate-200 p-3 sm:hidden flex items-center justify-center">
+        <button
+          onClick={() => scrollToHeroForm('Mobile Sticky CTA')}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all shadow text-center cursor-pointer"
         >
           Apply Now
         </button>

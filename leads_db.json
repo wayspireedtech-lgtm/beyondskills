@@ -1,1 +1,90 @@
-[]
+[
+  {
+    "id": "LD101",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "9876543210",
+    "date": "19 Jul 2026",
+    "type": "Ads Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Student",
+    "college": "VIT University",
+    "qualification": "VIT University",
+    "experience": "Student",
+    "contactTime": "Any Time",
+    "goal": "Internship",
+    "message": "College: VIT University\nAcademic Year: 3rd Year\nCurrent Status: Student\nSkill Level: Beginner - No Coding\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: 5–8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build practical AI projects and gain mentor feedback.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:11:30.546Z",
+    "campaign": "None",
+    "source": "Direct",
+    "utmMedium": "None",
+    "utmCampaign": "None",
+    "utmContent": "None",
+    "remarks": "Submitted via Standalone AI/ML/Data Science Landing Page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: VIT University\nAcademic Year: 3rd Year\nCurrent Status: Student\nSkill Level: Beginner - No Coding\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: 5–8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build practical AI projects and gain mentor feedback.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:11:30.546Z",
+        "date": "2026-07-19T06:12:41.508Z"
+      },
+      {
+        "note": "College: VIT University\nAcademic Year: 3rd Year\nCurrent Status: Student\nSkill Level: Beginner - No Coding\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: 5–8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build practical AI projects and gain mentor feedback.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:11:30.546Z",
+        "date": "2026-07-19T06:12:41.526Z"
+      }
+    ]
+  },
+  {
+    "id": "LD102",
+    "name": "Jane Miller",
+    "email": "jane@example.com",
+    "phone": "9999988888",
+    "date": "19 Jul 2026",
+    "type": "Ads Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Student",
+    "college": "Delhi University",
+    "qualification": "Delhi University",
+    "experience": "Student",
+    "contactTime": "Any Time",
+    "goal": "Placement",
+    "message": "College: Delhi University\nAcademic Year: 4th Year\nCurrent Status: Student\nSkill Level: Basic Knowledge\nCareer Goal: Placement\nLaptop Availability: Yes\nWeekly Learning Hours: More than 8 Hours\nStart Timeline: Immediately\nWhy interested: I want to prepare for technical interviews and build machine learning portfolio projects.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:14:46.807Z",
+    "campaign": "None",
+    "source": "Direct",
+    "utmMedium": "None",
+    "utmCampaign": "None",
+    "utmContent": "None",
+    "remarks": "Submitted via Standalone AI/ML/Data Science Landing Page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: Delhi University\nAcademic Year: 4th Year\nCurrent Status: Student\nSkill Level: Basic Knowledge\nCareer Goal: Placement\nLaptop Availability: Yes\nWeekly Learning Hours: More than 8 Hours\nStart Timeline: Immediately\nWhy interested: I want to prepare for technical interviews and build machine learning portfolio projects.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:14:46.807Z",
+        "date": "2026-07-19T06:14:46.833Z"
+      }
+    ]
+  }
+]
