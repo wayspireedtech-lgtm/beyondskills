@@ -129,14 +129,14 @@ export default function GoogleFormLandingPage() {
     year: '1st Year',
     role: 'Student',
     upskilling: 'artificial-intelligence',
-    whyInterested: '',
+    whyInterested: 'Not specified',
     batch: 'July Batch',
-    projectExp: '',
-    careerGoal: 'Placement',
+    projectExp: 'Not specified',
+    careerGoal: 'Skill Development',
     learningStart: 'Immediately',
-    weeklyTime: '5-8 Hours',
-    hasLaptop: 'Yes',
-    completedCert: 'No'
+    weeklyTime: 'Not specified',
+    hasLaptop: 'Not specified',
+    completedCert: 'Not specified'
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -221,9 +221,8 @@ Submitted via Google Form Campaign page
         completedCert: form.completedCert
       };
 
-      // 1. Post to backend webhook API
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
+        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
         : window.location.origin;
 
       const response = await fetch(`${apiHost}/api/webhook/leads`, {
@@ -343,14 +342,14 @@ Submitted via Google Form Campaign page
                   year: '1st Year',
                   role: 'Student',
                   upskilling: 'artificial-intelligence',
-                  whyInterested: '',
+                  whyInterested: 'Not specified',
                   batch: 'July Batch',
-                  projectExp: '',
-                  careerGoal: 'Placement',
+                  projectExp: 'Not specified',
+                  careerGoal: 'Skill Development',
                   learningStart: 'Immediately',
-                  weeklyTime: '5-8 Hours',
-                  hasLaptop: 'Yes',
-                  completedCert: 'No'
+                  weeklyTime: 'Not specified',
+                  hasLaptop: 'Not specified',
+                  completedCert: 'Not specified'
                 });
                 setSubmitStatus(null);
               }}
@@ -365,146 +364,166 @@ Submitted via Google Form Campaign page
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 py-10 px-4 relative overflow-x-hidden font-sans">
-      {/* Floating Background Icons */}
-      {renderFloatingTools()}
-
-      {/* Decorative Lights */}
-      <div className="absolute top-[5%] left-[-10%] w-[400px] h-[400px] rounded-full blur-[130px] bg-blue-500/5 pointer-events-none"></div>
-      <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#0EA5E9]/5 pointer-events-none"></div>
-      <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full blur-[130px] bg-indigo-500/5 pointer-events-none"></div>
-      
-      {/* Custom grid pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
-
-      <motion.div 
-        className="max-w-6xl mx-auto space-y-10 relative z-10"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        {/* Brand Logo & Top Info */}
-        <motion.div className="flex flex-col items-center text-center space-y-4" variants={itemVariants}>
-          <img 
-            src="/logo.png" 
-            alt="BeyondSkills Logo" 
-            className="h-16 sm:h-20 w-auto object-contain mix-blend-multiply drop-shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:scale-103 transition-transform duration-300"
-          />
-          <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100/80 px-3.5 py-1.5 rounded-full text-blue-600 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
-            <span>Program Application</span>
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative overflow-x-hidden font-sans">
+      {/* Sticky Navigation Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8 shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-1 group">
+            <span className="logo-font font-extrabold tracking-tight text-slate-955 text-xl">Beyond</span>
+            <span className="logo-font font-extrabold tracking-tight text-blue-600 text-xl">Skills</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900 max-w-3xl">
-            Apply for Your <span className="bg-gradient-to-r from-blue-600 to-[#0EA5E9] bg-clip-text text-transparent">Career Accelerator Program</span>
-          </h1>
-          <p className="text-slate-500 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-            Complete your application to receive personalized career guidance and explore the BeyondSkills program best suited to your career goals. Our admissions team will review your application and contact eligible applicants.
-          </p>
-        </motion.div>
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={() => {
+                const el = document.getElementById('gf-name');
+                if (el) {
+                  el.focus({ preventScroll: false });
+                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all cursor-pointer shadow-sm hover:shadow"
+            >
+              Apply Now
+            </button>
+          </div>
+        </div>
+      </header>
 
-        {/* Responsive Grid layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
-          {/* LEFT SIDEBAR: Program Details, Value Prop and Trust Metrics */}
-          <div className="lg:col-span-5 space-y-6">
+      <div className="py-10 px-4">
+        {/* Floating Background Icons */}
+        {renderFloatingTools()}
+
+        {/* Decorative Lights */}
+        <div className="absolute top-[5%] left-[-10%] w-[400px] h-[400px] rounded-full blur-[130px] bg-blue-500/5 pointer-events-none"></div>
+        <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#0EA5E9]/5 pointer-events-none"></div>
+        <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] rounded-full blur-[130px] bg-indigo-500/5 pointer-events-none"></div>
+        
+        {/* Custom grid pattern overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
+
+        <motion.div 
+          className="max-w-6xl mx-auto space-y-10 relative z-10"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          {/* Brand Logo & Top Info */}
+          <motion.div className="flex flex-col items-center text-center space-y-4" variants={itemVariants}>
+            <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100/80 px-3.5 py-1.5 rounded-full text-blue-600 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+              <span>Program Application</span>
+            </div>
+            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900 max-w-3xl">
+              Apply for the <span className="bg-gradient-to-r from-blue-600 to-[#0EA5E9] bg-clip-text text-transparent">Training Program</span>
+            </h1>
+            <p className="text-slate-500 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
+              Complete your application to receive personalized career guidance and explore the BeyondSkills program best suited to your career goals. Our admissions team will review your application and contact eligible applicants.
+            </p>
+          </motion.div>
+
+          {/* Responsive Grid layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Program Snapshot Card */}
-            <motion.div 
-              className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100 space-y-4"
-              variants={itemVariants}
-            >
-              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-blue-400">Program Snapshot</h3>
+            {/* LEFT SIDEBAR: Program Details, Value Prop and Trust Metrics */}
+            <div className="lg:col-span-5 space-y-6">
               
-              <div className="grid grid-cols-2 gap-3.5">
-                <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-medium">Duration</p>
-                    <p className="text-xs font-bold text-white">4 Months</p>
-                  </div>
-                </div>
-
-                <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
-                    <Monitor className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-medium">Learning Mode</p>
-                    <p className="text-xs font-bold text-white">Live + Recorded</p>
-                  </div>
-                </div>
-
-                <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
-                    <Code className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-medium">Industry Projects</p>
-                    <p className="text-xs font-bold text-white">3+ Projects</p>
-                  </div>
-                </div>
-
-                <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
-                  <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
-                    <Compass className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-slate-400 font-medium">Career Support</p>
-                    <p className="text-xs font-bold text-white">Included</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl flex items-center space-x-3">
-                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 font-medium">Certification Status</p>
-                  <p className="text-xs font-bold text-white">Industry Recognized Professional Credential</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Trust and Stats Section */}
-            <motion.div 
-              className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100"
-              variants={itemVariants}
-            >
-              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-blue-400 mb-4">Proven Outcomes</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
-                  <p className="text-2xl sm:text-3xl font-black text-white">
-                    <AnimatedCounter value="10000" suffix="+" />
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Learners</p>
-                </div>
+              {/* Program Snapshot Card */}
+              <motion.div 
+                className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100 space-y-4"
+                variants={itemVariants}
+              >
+                <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-blue-400">Program Snapshot</h3>
                 
-                <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
-                  <p className="text-2xl sm:text-3xl font-black text-white">
-                    <AnimatedCounter value="500" suffix="+" />
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Hiring Partners</p>
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
+                    <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-medium">Duration</p>
+                      <p className="text-xs font-bold text-white">2 to 4 Months</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
+                    <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                      <Monitor className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-medium">Learning Mode</p>
+                      <p className="text-xs font-bold text-white">Live + Recorded</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
+                    <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                      <Code className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-medium">Industry Projects</p>
+                      <p className="text-xs font-bold text-white">3+ Projects</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl flex items-center space-x-2.5">
+                    <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+                      <Users className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-400 font-medium">Mentorship</p>
+                      <p className="text-xs font-bold text-white">Live Sessions</p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
-                  <p className="text-2xl sm:text-3xl font-black text-white">
-                    <AnimatedCounter value="100" suffix="+" />
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Colleges</p>
+                <div className="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-xl flex items-center space-x-3">
+                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-slate-400 font-medium">Certification Status</p>
+                    <p className="text-xs font-bold text-white">Industry Recognized Professional Credential</p>
+                  </div>
                 </div>
+              </motion.div>
 
-                <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
-                  <p className="text-2xl sm:text-3xl font-black text-white flex items-center justify-center">
-                    <AnimatedCounter value="4.8" />
-                    <Star className="w-5 h-5 text-amber-400 fill-amber-400 ml-1 inline-block" />
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Learner Rating</p>
+              {/* Trust and Stats Section */}
+              <motion.div 
+                className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100"
+                variants={itemVariants}
+              >
+                <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-blue-400 mb-4">Proven Outcomes</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
+                    <p className="text-2xl sm:text-3xl font-black text-white">
+                      <AnimatedCounter value="10000" suffix="+" />
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Learners</p>
+                  </div>
+                  
+                  <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
+                    <p className="text-2xl sm:text-3xl font-black text-white">
+                      <AnimatedCounter value="50" suffix="+" />
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Live Projects</p>
+                  </div>
+
+                  <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
+                    <p className="text-2xl sm:text-3xl font-black text-white">
+                      <AnimatedCounter value="100" suffix="+" />
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Colleges</p>
+                  </div>
+
+                  <div className="text-center p-3.5 bg-slate-950/50 rounded-xl border border-slate-800/65 hover:border-slate-700 transition-colors">
+                    <p className="text-2xl sm:text-3xl font-black text-white flex items-center justify-center">
+                      <AnimatedCounter value="4.8" />
+                      <Star className="w-5 h-5 text-amber-400 fill-amber-400 ml-1 inline-block" />
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Learner Rating</p>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
 
             {/* Why Students Choose BeyondSkills */}
             <motion.div 
@@ -574,8 +593,8 @@ Submitted via Google Form Campaign page
                     <Award className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Placement Support</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5">Access structured resume audits, mock interviews, and partner employer hiring drives.</p>
+                    <h4 className="text-xs font-bold text-white">Resume Projects</h4>
+                    <p className="text-[10px] text-slate-400 mt-0.5">Build industry-grade projects that can be added to your CV and GitHub portfolio.</p>
                   </div>
                 </motion.div>
 
@@ -727,41 +746,26 @@ Submitted via Google Form Campaign page
                   <div>
                     <label htmlFor="gf-college" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
                       <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                      College / Institute
+                      College / Institute <span className="text-red-400 ml-1">*</span>
                     </label>
                     <input
                       id="gf-college"
                       type="text"
                       name="college"
+                      required
                       value={form.college}
                       onChange={handleChange}
                       placeholder="Enter college name or employer company"
                       className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
                     />
                   </div>
-
-                  <div>
-                    <label htmlFor="gf-projectExp" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                      <Code className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                      Project / Work Experience
-                    </label>
-                    <input
-                      id="gf-projectExp"
-                      type="text"
-                      name="projectExp"
-                      value={form.projectExp}
-                      onChange={handleChange}
-                      placeholder="e.g. Basic HTML, Python script, or none"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
-                    />
-                  </div>
                 </div>
 
-                {/* Field Section 3: Program & Career Qualification */}
+                {/* Field Section 3: Program Preferences */}
                 <div className="space-y-4 pt-4 border-t border-white/5">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                    3. Target Goals & Lead Qualification
+                    3. Program Preferences
                   </h4>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -786,48 +790,6 @@ Submitted via Google Form Campaign page
                     </div>
 
                     <div>
-                      <label htmlFor="gf-batch" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                        <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                        Preferred Batch
-                      </label>
-                      <select
-                        id="gf-batch"
-                        name="batch"
-                        value={form.batch}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none text-white transition-all cursor-pointer"
-                      >
-                        <option value="July Batch">July Batch</option>
-                        <option value="August Batch">August Batch</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Dropdown: Primary Career Goal */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="gf-careerGoal" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                        <Compass className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                        Primary Career Goal
-                      </label>
-                      <select
-                        id="gf-careerGoal"
-                        name="careerGoal"
-                        value={form.careerGoal}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none text-white transition-all cursor-pointer"
-                      >
-                        <option value="Internship">Internship</option>
-                        <option value="Placement">Placement</option>
-                        <option value="Higher Studies">Higher Studies</option>
-                        <option value="Freelancing">Freelancing</option>
-                        <option value="Skill Development">Skill Development</option>
-                        <option value="Career Switch">Career Switch</option>
-                      </select>
-                    </div>
-
-                    {/* Dropdown: Planning to begin */}
-                    <div>
                       <label htmlFor="gf-learningStart" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
                         <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
                         Planning to Begin Learning
@@ -845,82 +807,6 @@ Submitted via Google Form Campaign page
                         <option value="Just Exploring">Just Exploring</option>
                       </select>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Dropdown: Time dedication */}
-                    <div>
-                      <label htmlFor="gf-weeklyTime" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                        <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                        Weekly Time Dedication
-                      </label>
-                      <select
-                        id="gf-weeklyTime"
-                        name="weeklyTime"
-                        value={form.weeklyTime}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none text-white transition-all cursor-pointer"
-                      >
-                        <option value="Less than 3 Hours">Less than 3 Hours</option>
-                        <option value="3–5 Hours">3–5 Hours</option>
-                        <option value="5–8 Hours">5–8 Hours</option>
-                        <option value="More than 8 Hours">More than 8 Hours</option>
-                      </select>
-                    </div>
-
-                    {/* Dropdown: Laptop access */}
-                    <div>
-                      <label htmlFor="gf-hasLaptop" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                        <Laptop className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                        Laptop / Desktop Access
-                      </label>
-                      <select
-                        id="gf-hasLaptop"
-                        name="hasLaptop"
-                        value={form.hasLaptop}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none text-white transition-all cursor-pointer"
-                      >
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Planning to Purchase">Planning to Purchase</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Dropdown: Prior completed cert */}
-                  <div>
-                    <label htmlFor="gf-completedCert" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                      <Award className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                      Completed Prior Professional Certification?
-                    </label>
-                    <select
-                      id="gf-completedCert"
-                      name="completedCert"
-                      value={form.completedCert}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 outline-none text-white transition-all cursor-pointer"
-                    >
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
-                  </div>
-
-                  {/* Why Interested (Improved) */}
-                  <div>
-                    <label htmlFor="gf-whyInterested" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center">
-                      <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
-                      Why are you interested in this program?
-                    </label>
-                    <textarea
-                      id="gf-whyInterested"
-                      name="whyInterested"
-                      rows={3}
-                      value={form.whyInterested}
-                      onChange={handleChange}
-                      placeholder="Tell us about your career goals and what you hope to achieve after completing this program."
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
-                    />
                   </div>
                 </div>
 
@@ -1003,7 +889,7 @@ Submitted via Google Form Campaign page
               </div>
               <div>
                 <h4 className="text-xs font-bold text-emerald-300">Enrollment</h4>
-                <p className="text-[10px] text-slate-400 mt-1">Secure seat placement inside the upcoming curriculum.</p>
+                <p className="text-[10px] text-slate-400 mt-1">Secure seat enrollment inside the upcoming curriculum.</p>
               </div>
             </div>
           </div>
@@ -1023,6 +909,7 @@ Submitted via Google Form Campaign page
           </p>
         </motion.div>
       </motion.div>
+      </div>
     </div>
   );
 }

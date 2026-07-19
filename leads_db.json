@@ -128,5 +128,47 @@
         "date": "2026-07-19T06:24:10.616Z"
       }
     ]
+  },
+  {
+    "id": "LD104",
+    "name": "Bruce Wayne",
+    "email": "bruce@wayne.com",
+    "phone": "9999911111",
+    "date": "19 Jul 2026",
+    "type": "Google Form Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Working Professional",
+    "college": "Wayne Enterprises",
+    "qualification": "Wayne Enterprises",
+    "experience": "Working Professional",
+    "contactTime": "Anytime",
+    "goal": "Skill Development",
+    "message": "College: Wayne Enterprises\nYear: Graduated\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+    "campaign": "",
+    "source": "",
+    "utmMedium": "",
+    "utmCampaign": "",
+    "utmContent": "",
+    "remarks": "College: Wayne Enterprises\nYear: Graduated\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: Wayne Enterprises\nYear: Graduated\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+        "date": "2026-07-19T10:29:07.496Z"
+      }
+    ]
   }
 ]
