@@ -350,17 +350,36 @@ export default function AdminDashboard() {
       // 1. Fetch Google Sheet leads (Master source)
       let sheetLeads = [];
       let sheetFetched = false;
-      const targetSheetUrl = adsSheetUrl || googleFormSheetUrl;
-      if (targetSheetUrl) {
+
+      // Fetch Ads Leads
+      if (adsSheetUrl) {
         try {
-          const res = await fetch(targetSheetUrl);
+          const res = await fetch(adsSheetUrl);
           if (res.ok) {
             const csvText = await res.text();
-            sheetLeads = parseSheetCSV(csvText);
+            const parsed = parseSheetCSV(csvText);
+            parsed.forEach(p => { p.type = 'Ads Leads'; });
+            sheetLeads = [...sheetLeads, ...parsed];
             sheetFetched = true;
           }
         } catch (sheetErr) {
-          console.warn('Failed to fetch master sheet CSV:', sheetErr);
+          console.warn('Failed to fetch Ads sheet CSV:', sheetErr);
+        }
+      }
+
+      // Fetch Google Form Leads
+      if (googleFormSheetUrl) {
+        try {
+          const res = await fetch(googleFormSheetUrl);
+          if (res.ok) {
+            const csvText = await res.text();
+            const parsed = parseSheetCSV(csvText);
+            parsed.forEach(p => { p.type = 'Google Form Leads'; });
+            sheetLeads = [...sheetLeads, ...parsed];
+            sheetFetched = true;
+          }
+        } catch (sheetErr) {
+          console.warn('Failed to fetch Google Form sheet CSV:', sheetErr);
         }
       }
 
@@ -409,23 +428,31 @@ export default function AdminDashboard() {
         return l;
       }));
 
-      // If a lead is in the Google Sheet but not in Supabase, we append it
+      // Merge sheet leads
       for (const sLead of sheetLeads) {
         const phoneKey = sLead.phone.toString().trim();
-        if (!activeLeads.some(l => l.phone.toString().trim() === phoneKey)) {
+        const existingLeadIndex = activeLeads.findIndex(l => l.phone.toString().trim() === phoneKey);
+        
+        if (existingLeadIndex === -1) {
+          // Lead does not exist -> Append
           const newLead = {
             id: `LD${String(activeLeads.length + 101).padStart(3, '0')}`,
             name: sLead.name,
             email: sLead.email,
             phone: sLead.phone,
             date: sLead.date,
-            type: 'Ads Leads',
+            type: sLead.type || 'Ads Leads',
             program: sLead.program || 'full-stack-web',
             assignedBDM: '',
             assignedBDA: '',
             status: 'New',
             subStatus: 'QUALIFIED',
-            profession: 'Unspecified',
+            profession: sLead.profession || 'Unspecified',
+            college: sLead.college || 'Unspecified',
+            qualification: sLead.qualification || 'Unspecified',
+            experience: sLead.experience || 'Unspecified',
+            contactTime: sLead.contactTime || 'Anytime',
+            goal: sLead.goal || 'Unspecified',
             mentor: 'None',
             duration: 'None',
             callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
@@ -438,6 +465,43 @@ export default function AdminDashboard() {
             await saveLeadToSupabase(newLead);
           } catch (e) {
             console.error('Failed to sync new sheet lead to Supabase:', e);
+          }
+        } else {
+          // Lead exists -> Update only unspecified fields
+          const existingLead = activeLeads[existingLeadIndex];
+          let updated = false;
+          const updatedLead = { ...existingLead };
+          
+          if ((!updatedLead.college || updatedLead.college === 'Unspecified') && sLead.college && sLead.college !== 'Unspecified') {
+            updatedLead.college = sLead.college;
+            updatedLead.qualification = sLead.college;
+            updated = true;
+          }
+          if ((!updatedLead.profession || updatedLead.profession === 'Unspecified') && sLead.profession && sLead.profession !== 'Unspecified') {
+            updatedLead.profession = sLead.profession;
+            updatedLead.experience = sLead.profession;
+            updated = true;
+          }
+          if ((!updatedLead.goal || updatedLead.goal === 'Unspecified') && sLead.goal && sLead.goal !== 'Unspecified') {
+            updatedLead.goal = sLead.goal;
+            updated = true;
+          }
+          if ((!updatedLead.contactTime || updatedLead.contactTime === 'Anytime' || updatedLead.contactTime === 'Anytime between 10am to 8pm') && sLead.contactTime && sLead.contactTime !== 'Anytime') {
+            updatedLead.contactTime = sLead.contactTime;
+            updated = true;
+          }
+          if (sLead.email && sLead.email !== 'no-email@beyondskills.com' && (!updatedLead.email || updatedLead.email === 'no-email@beyondskills.com')) {
+            updatedLead.email = sLead.email;
+            updated = true;
+          }
+          
+          if (updated) {
+            activeLeads[existingLeadIndex] = updatedLead;
+            try {
+              await updateLeadInSupabase(updatedLead);
+            } catch (e) {
+              console.error('Failed to update existing lead details from sheet sync:', e);
+            }
           }
         }
       }
@@ -835,6 +899,10 @@ export default function AdminDashboard() {
     const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('time'));
     const programIdx = headers.findIndex(h => h.includes('program') || h.includes('course') || h.includes('interest'));
     const notesIdx = headers.findIndex(h => h.includes('note') || h.includes('msg') || h.includes('message') || h.includes('comment') || h.includes('feedback'));
+    const qualificationIdx = headers.findIndex(h => h.includes('qual') || h.includes('coll') || h.includes('degree') || h.includes('class') || h.includes('edu'));
+    const experienceIdx = headers.findIndex(h => h.includes('exp') || h.includes('prof') || h.includes('work') || h.includes('job') || h.includes('role'));
+    const goalIdx = headers.findIndex(h => h.includes('goal') || h.includes('career') || h.includes('target') || h.includes('why'));
+    const contactTimeIdx = headers.findIndex(h => h.includes('time') || h.includes('slot') || h.includes('contact') || h.includes('call') || h.includes('window'));
 
     const parsedRecords = [];
     
@@ -862,13 +930,24 @@ export default function AdminDashboard() {
       
       const parsedName = nameIdx !== -1 ? cols[nameIdx] : cols[0];
       if (parsedName) {
+        const parsedCollege = qualificationIdx !== -1 ? cols[qualificationIdx] : 'Unspecified';
+        const parsedProfession = experienceIdx !== -1 ? cols[experienceIdx] : 'Unspecified';
+        const parsedGoal = goalIdx !== -1 ? cols[goalIdx] : 'Unspecified';
+        const parsedContactTime = contactTimeIdx !== -1 ? cols[contactTimeIdx] : 'Anytime';
+
         parsedRecords.push({
           name: parsedName,
           email: emailIdx !== -1 ? cols[emailIdx] : 'no-email@beyondskills.com',
           phone: phoneIdx !== -1 ? cols[phoneIdx] : '0000000000',
           date: dateIdx !== -1 ? cols[dateIdx] : new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
           program: programIdx !== -1 ? cols[programIdx] : 'ai-data-science',
-          notes: notesIdx !== -1 ? cols[notesIdx] : 'Synced from sheet'
+          notes: notesIdx !== -1 ? cols[notesIdx] : 'Synced from sheet',
+          college: parsedCollege,
+          qualification: parsedCollege,
+          profession: parsedProfession,
+          experience: parsedProfession,
+          goal: parsedGoal,
+          contactTime: parsedContactTime
         });
       }
     }
@@ -896,8 +975,8 @@ export default function AdminDashboard() {
           const csvText = await res.text();
           const parsed = parseSheetCSV(csvText);
           parsed.forEach(row => {
-            // Avoid duplicate phones
-            if (!currentLeadsList.some(l => l.phone === row.phone)) {
+            const existingIndex = currentLeadsList.findIndex(l => l.phone === row.phone);
+            if (existingIndex === -1) {
               currentLeadsList.push({
                 id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
                 name: row.name,
@@ -910,13 +989,47 @@ export default function AdminDashboard() {
                 assignedBDA: '',
                 status: 'New',
                 subStatus: 'QUALIFIED',
-                profession: 'Unspecified',
+                profession: row.profession || 'Unspecified',
+                college: row.college || 'Unspecified',
+                qualification: row.qualification || 'Unspecified',
+                experience: row.experience || 'Unspecified',
+                contactTime: row.contactTime || 'Anytime',
+                goal: row.goal || 'Unspecified',
                 mentor: 'None',
                 duration: 'None',
                 callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
                 history: [{ note: row.notes, date: new Date().toISOString() }]
               });
               formLeadsAdded++;
+            } else {
+              // Update existing lead's unspecified fields
+              const existingLead = currentLeadsList[existingIndex];
+              let updated = false;
+              if ((!existingLead.college || existingLead.college === 'Unspecified') && row.college && row.college !== 'Unspecified') {
+                existingLead.college = row.college;
+                existingLead.qualification = row.college;
+                updated = true;
+              }
+              if ((!existingLead.profession || existingLead.profession === 'Unspecified') && row.profession && row.profession !== 'Unspecified') {
+                existingLead.profession = row.profession;
+                existingLead.experience = row.profession;
+                updated = true;
+              }
+              if ((!existingLead.goal || existingLead.goal === 'Unspecified') && row.goal && row.goal !== 'Unspecified') {
+                existingLead.goal = row.goal;
+                updated = true;
+              }
+              if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime' || existingLead.contactTime === 'Anytime between 10am to 8pm') && row.contactTime && row.contactTime !== 'Anytime') {
+                existingLead.contactTime = row.contactTime;
+                updated = true;
+              }
+              if (row.email && row.email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
+                existingLead.email = row.email;
+                updated = true;
+              }
+              if (updated) {
+                currentLeadsList[existingIndex] = existingLead;
+              }
             }
           });
         }
@@ -929,7 +1042,8 @@ export default function AdminDashboard() {
           const csvText = await res.text();
           const parsed = parseSheetCSV(csvText);
           parsed.forEach(row => {
-            if (!currentLeadsList.some(l => l.phone === row.phone)) {
+            const existingIndex = currentLeadsList.findIndex(l => l.phone === row.phone);
+            if (existingIndex === -1) {
               currentLeadsList.push({
                 id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
                 name: row.name,
@@ -942,13 +1056,47 @@ export default function AdminDashboard() {
                 assignedBDA: '',
                 status: 'New',
                 subStatus: 'QUALIFIED',
-                profession: 'Unspecified',
+                profession: row.profession || 'Unspecified',
+                college: row.college || 'Unspecified',
+                qualification: row.qualification || 'Unspecified',
+                experience: row.experience || 'Unspecified',
+                contactTime: row.contactTime || 'Anytime',
+                goal: row.goal || 'Unspecified',
                 mentor: 'None',
                 duration: 'None',
                 callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
                 history: [{ note: row.notes, date: new Date().toISOString() }]
               });
               adsLeadsAdded++;
+            } else {
+              // Update existing lead's unspecified fields
+              const existingLead = currentLeadsList[existingIndex];
+              let updated = false;
+              if ((!existingLead.college || existingLead.college === 'Unspecified') && row.college && row.college !== 'Unspecified') {
+                existingLead.college = row.college;
+                existingLead.qualification = row.college;
+                updated = true;
+              }
+              if ((!existingLead.profession || existingLead.profession === 'Unspecified') && row.profession && row.profession !== 'Unspecified') {
+                existingLead.profession = row.profession;
+                existingLead.experience = row.profession;
+                updated = true;
+              }
+              if ((!existingLead.goal || existingLead.goal === 'Unspecified') && row.goal && row.goal !== 'Unspecified') {
+                existingLead.goal = row.goal;
+                updated = true;
+              }
+              if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime' || existingLead.contactTime === 'Anytime between 10am to 8pm') && row.contactTime && row.contactTime !== 'Anytime') {
+                existingLead.contactTime = row.contactTime;
+                updated = true;
+              }
+              if (row.email && row.email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
+                existingLead.email = row.email;
+                updated = true;
+              }
+              if (updated) {
+                currentLeadsList[existingIndex] = existingLead;
+              }
             }
           });
         }
@@ -967,8 +1115,8 @@ export default function AdminDashboard() {
 
   // Mock simulation sheet sync
   const handleSimulateSync = () => {
-    const mockGoogleFormCSV = `Timestamp,Full Name,Email,Mobile,Course Program,Query Notes\n2026-07-15 14:02,Rajesh Kumar,rajesh.k@gmail.com,9898980011,ai-data-science,Wants to apply for scholarship\n2026-07-15 14:25,Anjali Mehta,anjali@yahoo.com,8787870022,full-stack-web-development,Inquired on MERN stack fee structure`;
-    const mockAdsCSV = `Lead ID,Ad Name,Full Name,Email,Phone,Program Interested\nld_ads_445,AI_Lead_Generation,Vikram Aditya,vikram@outlook.com,7676760033,ai-data-science\nld_ads_446,Fullstack_Camp,Priya Verma,priya@gmail.com,9595950044,full-stack-web-development`;
+    const mockGoogleFormCSV = `Timestamp,Full Name,Email,Mobile,Course Program,Query Notes,Qualification,Experience,Goal,Preferred Call Time\n2026-07-15 14:02,Rajesh Kumar,rajesh.k@gmail.com,9898980011,ai-data-science,Wants to apply for scholarship,Undergraduate,Beginner - No Coding,Land a Tech Job,Afternoon 12 PM - 4 PM\n2026-07-15 14:25,Anjali Mehta,anjali@yahoo.com,8787870022,full-stack-web-development,Inquired on MERN stack fee structure,Fresh Graduate,Basic - Little Coding,Freelancing/Independent,Evening 4 PM - 8 PM`;
+    const mockAdsCSV = `Lead ID,Ad Name,Full Name,Email,Phone,Program Interested,Qualification,Experience,Goal,Preferred Call Time\nld_ads_445,AI_Lead_Generation,Vikram Aditya,vikram@outlook.com,7676760033,ai-data-science,Working Professional,Basic - Little Coding,Land a Tech Job,Morning 10 AM - 1 PM\nld_ads_446,Fullstack_Camp,Priya Verma,priya@gmail.com,9595950044,full-stack-web-development,Postgraduate,Intermediate Developer,Upskill/Promotion,Evening 4 PM - 8 PM`;
 
     let addedCount = 0;
     const currentLeadsList = [...leads];
@@ -976,7 +1124,8 @@ export default function AdminDashboard() {
     // Parse Google Form mock
     const formParsed = parseSheetCSV(mockGoogleFormCSV);
     formParsed.forEach(row => {
-      if (!currentLeadsList.some(l => l.phone === row.phone)) {
+      const existingIndex = currentLeadsList.findIndex(l => l.phone === row.phone);
+      if (existingIndex === -1) {
         currentLeadsList.push({
           id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
           name: row.name,
@@ -989,20 +1138,54 @@ export default function AdminDashboard() {
           assignedBDA: '',
           status: 'New',
           subStatus: 'QUALIFIED',
-          profession: 'Unspecified',
+          profession: row.profession || 'Unspecified',
+          college: row.college || 'Unspecified',
+          qualification: row.qualification || 'Unspecified',
+          experience: row.experience || 'Unspecified',
+          contactTime: row.contactTime || 'Anytime',
+          goal: row.goal || 'Unspecified',
           mentor: 'None',
           duration: 'None',
           callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
           history: [{ note: row.notes, date: new Date().toISOString() }]
         });
         addedCount++;
+      } else {
+        const existingLead = currentLeadsList[existingIndex];
+        let updated = false;
+        if ((!existingLead.college || existingLead.college === 'Unspecified') && row.college && row.college !== 'Unspecified') {
+          existingLead.college = row.college;
+          existingLead.qualification = row.college;
+          updated = true;
+        }
+        if ((!existingLead.profession || existingLead.profession === 'Unspecified') && row.profession && row.profession !== 'Unspecified') {
+          existingLead.profession = row.profession;
+          existingLead.experience = row.profession;
+          updated = true;
+        }
+        if ((!existingLead.goal || existingLead.goal === 'Unspecified') && row.goal && row.goal !== 'Unspecified') {
+          existingLead.goal = row.goal;
+          updated = true;
+        }
+        if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime') && row.contactTime && row.contactTime !== 'Anytime') {
+          existingLead.contactTime = row.contactTime;
+          updated = true;
+        }
+        if (row.email && row.email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
+          existingLead.email = row.email;
+          updated = true;
+        }
+        if (updated) {
+          currentLeadsList[existingIndex] = existingLead;
+        }
       }
     });
 
     // Parse Ads mock
     const adsParsed = parseSheetCSV(mockAdsCSV);
     adsParsed.forEach(row => {
-      if (!currentLeadsList.some(l => l.phone === row.phone)) {
+      const existingIndex = currentLeadsList.findIndex(l => l.phone === row.phone);
+      if (existingIndex === -1) {
         currentLeadsList.push({
           id: `LD${String(currentLeadsList.length + 1).padStart(3, '0')}`,
           name: row.name,
@@ -1015,18 +1198,51 @@ export default function AdminDashboard() {
           assignedBDA: '',
           status: 'New',
           subStatus: 'QUALIFIED',
-          profession: 'Unspecified',
+          profession: row.profession || 'Unspecified',
+          college: row.college || 'Unspecified',
+          qualification: row.qualification || 'Unspecified',
+          experience: row.experience || 'Unspecified',
+          contactTime: row.contactTime || 'Anytime',
+          goal: row.goal || 'Unspecified',
           mentor: 'None',
           duration: 'None',
           callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
           history: [{ note: 'Imported from mock Facebook/Instagram Campaign', date: new Date().toISOString() }]
         });
         addedCount++;
+      } else {
+        const existingLead = currentLeadsList[existingIndex];
+        let updated = false;
+        if ((!existingLead.college || existingLead.college === 'Unspecified') && row.college && row.college !== 'Unspecified') {
+          existingLead.college = row.college;
+          existingLead.qualification = row.college;
+          updated = true;
+        }
+        if ((!existingLead.profession || existingLead.profession === 'Unspecified') && row.profession && row.profession !== 'Unspecified') {
+          existingLead.profession = row.profession;
+          existingLead.experience = row.profession;
+          updated = true;
+        }
+        if ((!existingLead.goal || existingLead.goal === 'Unspecified') && row.goal && row.goal !== 'Unspecified') {
+          existingLead.goal = row.goal;
+          updated = true;
+        }
+        if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime') && row.contactTime && row.contactTime !== 'Anytime') {
+          existingLead.contactTime = row.contactTime;
+          updated = true;
+        }
+        if (row.email && row.email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
+          existingLead.email = row.email;
+          updated = true;
+        }
+        if (updated) {
+          currentLeadsList[existingIndex] = existingLead;
+        }
       }
     });
 
     saveLeadsToDb(currentLeadsList);
-    alert(`Mock Sheet Sync Simulation Successful!\nAdded ${addedCount} new unique lead records to the database.`);
+    alert(`Mock Sheet Sync Simulation Successful!\nAdded or updated leads in the database.`);
     setShowSheetsSyncModal(false);
   };
 

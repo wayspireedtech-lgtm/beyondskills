@@ -212,7 +212,9 @@ app.post('/api/webhook/leads', async (req, res) => {
     const { 
       name, email, phone, type, program, notes,
       college, profession, message, batch, projectExp, whyInterested, year,
-      preferredContactTime, careerGoal
+      preferredContactTime, careerGoal,
+      campaign, source, utmMedium, utmCampaign, utmContent, remarks,
+      qualification, experience, contactTime, goal
     } = req.body;
     
     if (!name || !phone) {
@@ -222,8 +224,54 @@ app.post('/api/webhook/leads', async (req, res) => {
     let existingLeads = readJsonFileSync(LEADS_FILE, []);
 
     // Check if phone already exists in server webhook DB
-    if (existingLeads.some(l => l.phone === phone)) {
-      return res.status(200).json({ success: false, message: 'Lead with this phone number already exists.' });
+    const existingIndex = existingLeads.findIndex(l => l.phone === phone);
+    if (existingIndex !== -1) {
+      const existingLead = existingLeads[existingIndex];
+      let updated = false;
+      
+      const newCollege = college || qualification || 'Unspecified';
+      if ((!existingLead.college || existingLead.college === 'Unspecified') && newCollege !== 'Unspecified') {
+        existingLead.college = newCollege;
+        existingLead.qualification = newCollege;
+        updated = true;
+      }
+      const newProfession = profession || experience || 'Unspecified';
+      if ((!existingLead.profession || existingLead.profession === 'Unspecified') && newProfession !== 'Unspecified') {
+        existingLead.profession = newProfession;
+        existingLead.experience = newProfession;
+        updated = true;
+      }
+      const newGoal = goal || careerGoal || 'Unspecified';
+      if ((!existingLead.goal || existingLead.goal === 'Unspecified') && newGoal !== 'Unspecified') {
+        existingLead.goal = newGoal;
+        updated = true;
+      }
+      const newContactTime = contactTime || preferredContactTime || 'Anytime';
+      if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime' || existingLead.contactTime === 'Anytime between 10am to 8pm') && newContactTime !== 'Anytime') {
+        existingLead.contactTime = newContactTime;
+        updated = true;
+      }
+      if (email && email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
+        existingLead.email = email;
+        updated = true;
+      }
+      if (notes) {
+        if (!existingLead.history) existingLead.history = [];
+        existingLead.history.push({ note: notes, date: new Date().toISOString() });
+        updated = true;
+      }
+      
+      if (updated) {
+        existingLeads[existingIndex] = existingLead;
+        writeJsonFileSync(LEADS_FILE, existingLeads);
+      }
+
+      return res.status(200).json({ 
+        success: true, 
+        message: 'Lead updated with new details.', 
+        lead: existingLead,
+        updated
+      });
     }
 
     const newLead = {
@@ -238,9 +286,19 @@ app.post('/api/webhook/leads', async (req, res) => {
       assignedBDA: '',
       status: 'New',
       subStatus: 'QUALIFIED',
-      profession: profession || 'Unspecified',
-      college: college || 'Unspecified',
-      message: message || '',
+      profession: profession || experience || 'Unspecified',
+      college: college || qualification || 'Unspecified',
+      qualification: college || qualification || 'Unspecified',
+      experience: profession || experience || 'Unspecified',
+      contactTime: contactTime || preferredContactTime || 'Anytime',
+      goal: goal || careerGoal || 'Unspecified',
+      message: message || remarks || '',
+      campaign: campaign || utmCampaign || '',
+      source: source || '',
+      utmMedium: utmMedium || '',
+      utmCampaign: utmCampaign || '',
+      utmContent: utmContent || '',
+      remarks: remarks || message || '',
       mentor: 'None',
       duration: 'None',
       callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
