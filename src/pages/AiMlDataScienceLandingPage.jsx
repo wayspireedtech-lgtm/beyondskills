@@ -117,8 +117,8 @@ const PROJECTS = [
 
 const FAQS = [
   { q: "Can beginners join?", a: "Yes, absolutely. No prior programming background is required. The curriculum starts with foundational Python syntax before moving into advanced machine learning algorithms and neural networks." },
-  { q: "How are live sessions conducted?", a: "Live online sessions are held on weekends and weekday evenings to fit around college schedules and job hours. Recorded versions are logged to the LMS within 4 hours." },
-  { q: "Will I build projects?", a: "Yes, you will construct 3+ production-grade data products and log their deployment commits directly to your GitHub repository." },
+  { q: "How are live sessions conducted?", a: "Live online sessions are held on weekends and weekday evenings to fit around college schedules. Recorded versions are logged to the LMS within 4 hours." },
+  { q: "Will I build projects?", a: "Yes, you will construct 3+ resume-ready data products and log their deployment commits directly to your GitHub repository." },
   { q: "How much mentor support is available?", a: "You have direct access to our data science instructors during weekly live Q&A hours, group Slack channels, and code audit cycles." },
   { q: "How long do I get LMS access?", a: "You get full access to all video modules, class code templates, and notes for 1 entire year from your cohort start." },
   { q: "What certificate will I receive?", a: "You will receive a verified course completion certificate and a project portfolio completion badge from BeyondSkills." }
@@ -193,7 +193,7 @@ function HeroIDEVisual() {
   }, []);
 
   return (
-    <div className="w-full bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl p-4 font-mono text-[10px] text-slate-300 text-left overflow-hidden select-none relative">
+    <div className="w-full bg-slate-955 border border-slate-800 rounded-2xl shadow-2xl p-4 font-mono text-[10px] text-slate-300 text-left overflow-hidden select-none relative">
       <div className="flex items-center justify-between border-b border-slate-900 pb-2 mb-3">
         <div className="flex space-x-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -202,7 +202,7 @@ function HeroIDEVisual() {
         </div>
         <span className="text-[9px] text-slate-500 uppercase tracking-widest">ai_model_training.py</span>
       </div>
-      <div className="space-y-1 text-xs">
+      <div className="space-y-1.5 text-xs">
         <div><span className="text-purple-400">import</span> tensorflow <span className="text-purple-400">as</span> tf</div>
         <div><span className="text-purple-400">from</span> tensorflow.keras <span className="text-purple-400">import</span> layers</div>
         <div className="text-slate-500"># Compiling neural network architecture...</div>
@@ -240,7 +240,7 @@ export default function AiMlDataScienceLandingPage() {
     upskilling: 'artificial-intelligence',
     batch: 'July Batch',
     skillLevel: 'Beginner - No Coding',
-    careerGoal: 'Placement',
+    careerGoal: 'Internship',
     laptopAccess: 'Yes',
     weeklyHours: '5-8 Hours',
     whyInterested: '',
@@ -248,7 +248,6 @@ export default function AiMlDataScienceLandingPage() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
   const [errorMessage, setErrorMessage] = useState('');
   const [expandedMod, setExpandedMod] = useState(0);
   const [faqOpen, setFaqOpen] = useState({});
@@ -539,7 +538,16 @@ Submission Time: ${submissionTime}
 
   const scrollToHeroForm = (buttonName) => {
     trackPixelEvent('CtaClick', { button_name: buttonName });
-    const el = document.getElementById('admissions-application-form');
+    const el = document.getElementById('aiml-name');
+    if (el) {
+      el.focus({ preventScroll: false });
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const scrollToSyllabus = (buttonName) => {
+    trackPixelEvent('CtaClick', { button_name: buttonName });
+    const el = document.getElementById('cohort-syllabus-path');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -562,11 +570,11 @@ Submission Time: ${submissionTime}
           </div>
           <div className="flex-1 space-y-1">
             <div><span className="text-purple-400">import</span> sklearn.ensemble</div>
-            <div className="text-slate-500"># Random Forest Classifier fit</div>
+            <div className="text-slate-550"># Random Forest Classifier fit</div>
             <div className="text-emerald-400">clf = RandomForestClassifier()</div>
             <div className="text-[#F97316]">clf.fit(X_train, y_train)</div>
           </div>
-          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1 flex justify-between">
+          <div className="text-[7px] text-slate-550 border-t border-slate-900 pt-1 flex justify-between">
             <span>Accuracy: 92.4%</span>
             <span className="text-[#2563EB]">Active</span>
           </div>
@@ -582,7 +590,7 @@ Submission Time: ${submissionTime}
             <div className="text-emerald-400">Rec 1: AI Masterclass (Match: 98%)</div>
             <div className="text-emerald-400">Rec 2: ML Pipeline Script (Match: 91%)</div>
           </div>
-          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1">
+          <div className="text-[7px] text-slate-550 border-t border-slate-900 pt-1">
             <span>Collaborative Filtering Active</span>
           </div>
         </div>;
@@ -596,7 +604,7 @@ Submission Time: ${submissionTime}
             <div className="text-[#F97316]">R2 Score: 0.892</div>
             <div className="text-slate-400">Mean Absolute Error: $12.4k</div>
           </div>
-          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1 flex justify-between">
+          <div className="text-[7px] text-slate-550 border-t border-slate-900 pt-1 flex justify-between">
             <span>Epoch: 50 / 50</span>
             <span className="text-green-500">Stable</span>
           </div>
@@ -611,7 +619,7 @@ Submission Time: ${submissionTime}
             <div className="text-emerald-400">df = pd.read_csv("dataset.csv")</div>
             <div className="text-slate-450">df.dropna(inplace=True)</div>
           </div>
-          <div className="text-[7px] text-slate-500 border-t border-slate-900 pt-1">
+          <div className="text-[7px] text-slate-550 border-t border-slate-900 pt-1">
             <span>Records Cleaned: 15,204</span>
           </div>
         </div>;
@@ -645,7 +653,7 @@ Submission Time: ${submissionTime}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-1 group">
-            <span className="logo-font font-extrabold tracking-tight text-slate-950 text-xl">Beyond</span>
+            <span className="logo-font font-extrabold tracking-tight text-slate-955 text-xl">Beyond</span>
             <span className="logo-font font-extrabold tracking-tight text-blue-600 text-xl">Skills</span>
           </div>
           <div className="flex items-center space-x-4">
@@ -660,18 +668,18 @@ Submission Time: ${submissionTime}
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-16 lg:py-24 border-b border-slate-100 overflow-hidden">
+      <section className="relative py-12 lg:py-20 border-b border-slate-100 overflow-hidden">
         {/* Glow Spheres */}
         <div className="absolute top-1/4 left-1/3 w-[350px] h-[350px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
         
         <motion.div 
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
-          {/* Left Text */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+          {/* Left Text Column */}
+          <div className="lg:col-span-6 space-y-6 text-left">
             <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-100 px-3.5 py-1.5 rounded-full text-blue-600 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
               <span>Next Cohort Batch Opening</span>
@@ -681,7 +689,7 @@ Submission Time: ${submissionTime}
               Launch Your Career in <span className="bg-gradient-to-r from-blue-600 to-[#0EA5E9] bg-clip-text text-transparent">AI & Data Science</span>
             </h1>
             
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-slate-650 leading-relaxed max-w-xl">
               Master Artificial Intelligence, Machine Learning and Data Science through live mentor-led training, hands-on projects, industry guidance and practical learning. Even if you're starting from scratch.
             </p>
             
@@ -694,56 +702,300 @@ Submission Time: ${submissionTime}
                 Apply Now
               </button>
               <button 
-                onClick={() => {
-                  confetti({ particleCount: 50, spread: 30 });
-                  alert("Your curriculum syllabus download has started! Admissions team will sync details.");
-                }}
-                className="bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer shadow-md"
+                onClick={() => scrollToSyllabus('Hero Syllabus Scroll')}
+                className="bg-slate-955 hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer shadow-md"
               >
-                <Download className="w-4 h-4 text-blue-400" />
-                <span>Download Syllabus</span>
+                <Compass className="w-4 h-4 text-blue-400" />
+                <span>View Syllabus</span>
               </button>
+            </div>
+
+            {/* Core Pillars Checklist */}
+            <div className="pt-6 border-t border-slate-100">
+              <p className="text-[9px] text-slate-405 uppercase tracking-widest font-mono font-bold mb-3">CORE PROGRAM BENEFITS:</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600 font-semibold">
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Live Industry Mentor Training</span>
+                </span>
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Resume-Ready Capstone Projects</span>
+                </span>
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Verified Course Certificates</span>
+                </span>
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Student Networking Opportunities</span>
+                </span>
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                  <span>Internship Completion Projects</span>
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Right Visual IDE Workspace & Floating Info Card */}
-          <div className="lg:col-span-5 space-y-6">
-            <motion.div variants={itemVariants}>
-              <HeroIDEVisual />
-            </motion.div>
-
-            {/* Floating Information Card */}
-            <motion.div 
-              className="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-xl text-slate-100 space-y-3.5 text-left"
-              variants={itemVariants}
-            >
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Program Duration</p>
-                  <p className="text-sm font-bold text-white mt-0.5">4 Months</p>
-                </div>
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Learning Mode</p>
-                  <p className="text-sm font-bold text-white mt-0.5">Live + Recorded</p>
-                </div>
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Industry Projects</p>
-                  <p className="text-sm font-bold text-white mt-0.5">3+ Projects</p>
-                </div>
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Mentor Support</p>
-                  <p className="text-sm font-bold text-white mt-0.5">Direct Access</p>
-                </div>
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Certificate Status</p>
-                  <p className="text-sm font-bold text-white mt-0.5">Industry Recognized</p>
-                </div>
-                <div className="bg-slate-950/60 border border-slate-850 p-2.5 rounded-xl">
-                  <p className="text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Career Guidance</p>
-                  <p className="text-sm font-bold text-white mt-0.5">Portfolio & Mocks</p>
-                </div>
+          {/* Right Column: Lead Capture Admissions Application Form */}
+          <div className="lg:col-span-6 relative">
+            <div className="bg-slate-950 text-slate-105 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden text-left">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-[30px] pointer-events-none"></div>
+              
+              <div className="mb-4">
+                <h3 className="text-white font-extrabold text-lg sm:text-xl">Apply for the Next AI & Data Science Cohort</h3>
+                <p className="text-[11px] text-slate-400 mt-1">Complete your application and our admissions team will contact you for eligibility guidance.</p>
               </div>
-            </motion.div>
+
+              {errorMessage && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-300 p-3 rounded-xl text-[11px] mb-4">
+                  ⚠️ {errorMessage}
+                </div>
+              )}
+
+              <form onSubmit={handleApplySubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-name" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Full Name *</label>
+                    <input 
+                      id="aiml-name"
+                      type="text" 
+                      name="name"
+                      required 
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
+                      placeholder="e.g. Rahul Sharma"
+                      value={enquiryForm.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-phone" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Phone Number *</label>
+                    <input 
+                      id="aiml-phone"
+                      type="tel" 
+                      name="phone"
+                      required 
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
+                      placeholder="e.g. 9876543210"
+                      value={enquiryForm.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-email" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Email Address *</label>
+                    <input 
+                      id="aiml-email"
+                      type="email" 
+                      name="email"
+                      required 
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
+                      placeholder="e.g. rahul@example.com"
+                      value={enquiryForm.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-college" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">College / Institute *</label>
+                    <input 
+                      id="aiml-college"
+                      type="text" 
+                      name="college"
+                      required
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
+                      placeholder="College or University"
+                      value={enquiryForm.college}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-role" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Current Status</label>
+                    <select 
+                      id="aiml-role"
+                      name="role"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.role}
+                      onChange={handleChange}
+                    >
+                      <option value="Student">Student</option>
+                      <option value="Working Professional">Working Professional</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-year" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Academic Year</label>
+                    <select 
+                      id="aiml-year"
+                      name="year"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.year}
+                      onChange={handleChange}
+                    >
+                      <option value="1st Year">1st Year</option>
+                      <option value="2nd Year">2nd Year</option>
+                      <option value="3rd Year">3rd Year</option>
+                      <option value="4th Year">4th Year</option>
+                      <option value="Graduated">Graduated</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-upskilling" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Preferred Program</label>
+                    <select 
+                      id="aiml-upskilling"
+                      name="upskilling"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.upskilling}
+                      onChange={handleChange}
+                    >
+                      <option value="artificial-intelligence">AI & ML Program</option>
+                      <option value="data-science">Data Science Program</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-batch" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Preferred Batch</label>
+                    <select 
+                      id="aiml-batch"
+                      name="batch"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.batch}
+                      onChange={handleChange}
+                    >
+                      <option value="July Batch">July Batch</option>
+                      <option value="August Batch">August Batch</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-skillLevel" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Current Skill</label>
+                    <select 
+                      id="aiml-skillLevel"
+                      name="skillLevel"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.skillLevel}
+                      onChange={handleChange}
+                    >
+                      <option value="Beginner - No Coding">Beginner - No Coding</option>
+                      <option value="Basic Knowledge">Basic Knowledge</option>
+                      <option value="Intermediate">Intermediate</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-careerGoal" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Career Goal</label>
+                    <select 
+                      id="aiml-careerGoal"
+                      name="careerGoal"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.careerGoal}
+                      onChange={handleChange}
+                    >
+                      <option value="Internship">Internship</option>
+                      <option value="Higher Studies">Higher Studies</option>
+                      <option value="Freelancing">Freelancing</option>
+                      <option value="Skill Development">Skill Development</option>
+                      <option value="Career Switch">Career Switch</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-laptopAccess" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Laptop Availability</label>
+                    <select 
+                      id="aiml-laptopAccess"
+                      name="laptopAccess"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.laptopAccess}
+                      onChange={handleChange}
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                      <option value="Planning to Purchase">Planning to Purchase</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="aiml-weeklyHours" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Weekly Study Hours</label>
+                    <select 
+                      id="aiml-weeklyHours"
+                      name="weeklyHours"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.weeklyHours}
+                      onChange={handleChange}
+                    >
+                      <option value="Less than 3 Hours">Less than 3 Hours</option>
+                      <option value="3–5 Hours">3–5 Hours</option>
+                      <option value="5–8 Hours">5–8 Hours</option>
+                      <option value="More than 8 Hours">More than 8 Hours</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="aiml-learningStart" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Start Timeline</label>
+                    <select 
+                      id="aiml-learningStart"
+                      name="learningStart"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                      value={enquiryForm.learningStart}
+                      onChange={handleChange}
+                    >
+                      <option value="Immediately">Immediately</option>
+                      <option value="Within 30 Days">Within 30 Days</option>
+                      <option value="Within 3 Months">Within 3 Months</option>
+                      <option value="Just Exploring">Just Exploring</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="aiml-whyInterested" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Why do you want to join? *</label>
+                  <textarea 
+                    id="aiml-whyInterested"
+                    name="whyInterested"
+                    required
+                    rows={2}
+                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Tell us about your career goals and what you hope to achieve after completing this program."
+                    value={enquiryForm.whyInterested}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-blue-600 to-[#0EA5E9] hover:opacity-95 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center space-x-2 shadow-lg"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Submitting Application...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Submit Application</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -779,6 +1031,63 @@ Submission Time: ${submissionTime}
         </div>
       </section>
 
+      {/* Interactive Workspace & Cohort Specs Section (CRO section under trust signals) */}
+      <section className="py-16 bg-slate-50 border-b border-slate-100 text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Interactive IDE Workspace */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Interactive Workspace</span>
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-950">Learn by Running Code</h3>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                Build predictive classifiers, tune parameters, and analyze models inside our structured developer environments.
+              </p>
+            </div>
+            <HeroIDEVisual />
+          </div>
+
+          {/* Program Information Specifications Grid */}
+          <div className="lg:col-span-6 space-y-6">
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Cohort Specs</span>
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-955">Cohort Parameters</h3>
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+                Explore the structured learning parameters mapped out for the upcoming batch.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Program Duration</p>
+                <p className="text-base font-extrabold text-slate-950 mt-1">3 Months</p>
+              </div>
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Learning Mode</p>
+                <p className="text-base font-extrabold text-slate-950 mt-1">Live + Recorded</p>
+              </div>
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Industry Projects</p>
+                <p className="text-base font-extrabold text-slate-955 mt-1">3+ Resume Ready</p>
+              </div>
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Mentor Support</p>
+                <p className="text-base font-extrabold text-slate-955 mt-1">Direct Access</p>
+              </div>
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Certificate Status</p>
+                <p className="text-base font-extrabold text-slate-955 mt-1">Attach to Resume/CV</p>
+              </div>
+              <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm">
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider font-mono">Internship Project</p>
+                <p className="text-base font-extrabold text-slate-955 mt-1">Certificate Included</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       {/* Program Highlights Section */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
@@ -790,19 +1099,19 @@ Submission Time: ${submissionTime}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { icon: <Users className="w-5 h-5" />, title: "Live Mentor Sessions", desc: "Interact directly with data engineers and resolve questions in real-time." },
-            { icon: <Code className="w-5 h-5" />, title: "Hands-on Projects", desc: "Construct predictive applications matching specifications of actual tech roles." },
-            { icon: <BookOpen className="w-5 h-5" />, title: "Industry Curriculum", desc: "Acquire skills matching active requirements requested by modern corporate hiring partners." },
+            { icon: <Code className="w-5 h-5" />, title: "Hands-on Projects", desc: "Construct predictive applications matching resume specifications." },
+            { icon: <BookOpen className="w-5 h-5" />, title: "Industry Curriculum", desc: "Acquire skills matching active requirements requested by modern corporate tech teams." },
             { icon: <Monitor className="w-5 h-5" />, title: "Portfolio Development", desc: "Compile codebase, organize git logs, and deploy model endpoints to host systems." },
-            { icon: <Compass className="w-5 h-5" />, title: "Career Guidance", desc: "Resume reviews, developer profile alignment, and technical mock interview prep." },
-            { icon: <Award className="w-5 h-5" />, title: "Verified Certification", desc: "Earn professional credentials recognized by recruiters to clear baseline resume screens." }
+            { icon: <Compass className="w-5 h-5" />, title: "Networking Opportunities", desc: "Connect with peer students, share code logic, and collaborate on data pipelines." },
+            { icon: <Award className="w-5 h-5" />, title: "Verified Certification", desc: "Earn professional credentials recognized by recruiters to attach to your Resume/CV." }
           ].map((item, idx) => (
             <div key={idx} className="bg-white border border-slate-200/85 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex items-start space-x-4">
               <div className="bg-blue-50 text-blue-600 p-2.5 rounded-xl border border-blue-100/50 shrink-0">
                 {item.icon}
               </div>
               <div className="space-y-1">
-                <h4 className="text-slate-950 font-bold text-sm sm:text-base">{item.title}</h4>
-                <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
+                <h4 className="text-slate-955 font-bold text-sm sm:text-base">{item.title}</h4>
+                <p className="text-xs text-slate-550 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -823,7 +1132,7 @@ Submission Time: ${submissionTime}
             { title: "Strengthen Your Portfolio", desc: "Compile all your code commits to your public GitHub profile to prove your technical abilities to teams." },
             { title: "Learn Industry Tools", desc: "Master tools like Python, SQL databases, Scikit-Learn, TensorFlow, Git, and model endpoints." },
             { title: "Gain Mentor Feedback", desc: "Get structural feedback, code optimizations, and design advice directly from data practitioners." },
-            { title: "Prepare for Technical Mocks", desc: "Solve algorithmic case study exercises and learn to communicate statistics parameters clearly." },
+            { title: "Networking & Collaboration", desc: "Engage with like-minded developers, build teams, and review peer program logic." },
             { title: "Build Real Confidence", desc: "Develop the ability to solve blockers independently, debug script errors, and optimize models." }
           ].map((benefit, idx) => (
             <div key={idx} className="bg-slate-50/50 border border-slate-200/60 p-6 rounded-2xl hover:bg-slate-50 transition-colors">
@@ -831,14 +1140,14 @@ Submission Time: ${submissionTime}
                 <Check className="w-4 h-4 text-blue-600 mr-2 shrink-0" />
                 {benefit.title}
               </h3>
-              <p className="text-xs text-slate-550 leading-relaxed pl-6">{benefit.desc}</p>
+              <p className="text-xs text-slate-555 leading-relaxed pl-6">{benefit.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Curriculum Section */}
-      <section className="py-16 bg-slate-950 text-white border-b border-slate-900 text-left">
+      <section id="cohort-syllabus-path" className="py-16 bg-slate-955 text-white border-b border-slate-900 text-left">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-12">
             <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Curriculum Syllabus</span>
@@ -856,7 +1165,7 @@ Submission Time: ${submissionTime}
                 >
                   <button
                     onClick={() => setExpandedMod(isExpanded ? -1 : idx)}
-                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-white hover:bg-slate-850/50 transition-all"
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-white hover:bg-slate-855/50 transition-all"
                   >
                     <div className="space-y-1">
                       <p className="text-[10px] text-blue-400 uppercase tracking-widest font-mono font-extrabold">Module 0{idx + 1}</p>
@@ -891,14 +1200,14 @@ Submission Time: ${submissionTime}
           <div className="text-center space-y-3 mb-12">
             <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Portfolio Building</span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Build Deployed Portfolio Projects</h2>
-            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Create working code for these 6 diverse sample projects to host on your public git repository.</p>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Create working code for these 6 resume-ready sample projects to host on your public git repository.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PROJECTS.map((proj, idx) => (
               <div 
                 key={idx} 
-                className="bg-slate-950 border border-slate-850 rounded-2xl p-5 flex flex-col justify-between space-y-5 text-white shadow-xl hover:shadow-2xl transition-all"
+                className="bg-slate-950 border border-slate-855 rounded-2xl p-5 flex flex-col justify-between space-y-5 text-white shadow-xl hover:shadow-2xl transition-all"
               >
                 <div className="space-y-4">
                   {/* Embedded IDE Mockup */}
@@ -922,14 +1231,14 @@ Submission Time: ${submissionTime}
                 <div className="space-y-3 border-t border-slate-900 pt-4">
                   <div className="flex flex-wrap gap-1.5">
                     {proj.tools.map((t, i) => (
-                      <span key={i} className="text-blue-400 bg-blue-950/60 border border-blue-900/60 font-bold px-2 py-0.5 rounded text-[9px] uppercase font-mono">
+                      <span key={i} className="text-blue-400 bg-blue-955/60 border border-blue-900/60 font-bold px-2 py-0.5 rounded text-[9px] uppercase font-mono">
                         {t}
                       </span>
                     ))}
                   </div>
 
                   <div className="space-y-1.5 text-xs">
-                    <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Key Skills:</p>
+                    <p className="text-[10px] text-slate-550 font-mono uppercase tracking-wider">Key Skills:</p>
                     <div className="flex flex-wrap gap-x-3 gap-y-1">
                       {proj.skills.map((s, i) => (
                         <span key={i} className="text-slate-300 inline-flex items-center">
@@ -976,300 +1285,8 @@ Submission Time: ${submissionTime}
         </div>
       </section>
 
-      {/* Application Form Section */}
-      <section id="admissions-application-form" className="py-16 bg-slate-900 border-b border-slate-800 text-slate-100 text-left relative overflow-hidden">
-        <div className="absolute top-[20%] left-[-10%] w-[350px] h-[350px] bg-blue-500/5 rounded-full blur-[110px] pointer-events-none"></div>
-        
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-black text-white">Apply for the Next AI & Data Science Cohort</h2>
-            <p className="text-xs sm:text-sm text-slate-405 leading-relaxed">
-              Complete your application and our admissions team will contact you with program details and eligibility guidance.
-            </p>
-          </div>
-
-          <div className="bg-slate-950/95 border border-white/10 p-6 sm:p-8 rounded-3xl shadow-2xl backdrop-blur-xl">
-            {errorMessage && (
-              <div className="bg-red-500/10 border border-red-500/25 text-red-300 p-4 rounded-xl text-xs font-medium mb-6">
-                ⚠️ {errorMessage}
-              </div>
-            )}
-
-            <form onSubmit={handleApplySubmit} className="space-y-6">
-              
-              {/* Part 1: Credentials */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                  1. Contact Information
-                </h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-name" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Full Name *</label>
-                    <input 
-                      id="aiml-name"
-                      type="text" 
-                      name="name"
-                      required 
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
-                      placeholder="e.g. Rahul Sharma"
-                      value={enquiryForm.name}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="aiml-phone" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Phone Number *</label>
-                    <input 
-                      id="aiml-phone"
-                      type="tel" 
-                      name="phone"
-                      required 
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
-                      placeholder="e.g. +91 9876543210"
-                      value={enquiryForm.phone}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="aiml-email" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Email Address *</label>
-                  <input 
-                    id="aiml-email"
-                    type="email" 
-                    name="email"
-                    required 
-                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
-                    placeholder="e.g. rahul@example.com"
-                    value={enquiryForm.email}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              {/* Part 2: Background Profile */}
-              <div className="space-y-4 pt-4 border-t border-white/5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                  2. Academic & Status Credentials
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-role" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Current Status</label>
-                    <select 
-                      id="aiml-role"
-                      name="role"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.role}
-                      onChange={handleChange}
-                    >
-                      <option value="Student">Student</option>
-                      <option value="Working Professional">Working Professional</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="aiml-year" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Academic Year</label>
-                    <select 
-                      id="aiml-year"
-                      name="year"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.year}
-                      onChange={handleChange}
-                    >
-                      <option value="1st Year">1st Year</option>
-                      <option value="2nd Year">2nd Year</option>
-                      <option value="3rd Year">3rd Year</option>
-                      <option value="4th Year">4th Year</option>
-                      <option value="Graduated">Graduated</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="aiml-college" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">College / Institute Name</label>
-                  <input 
-                    id="aiml-college"
-                    type="text" 
-                    name="college"
-                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
-                    placeholder="Enter your college or employer name"
-                    value={enquiryForm.college}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              {/* Part 3: Program & Career Qualification */}
-              <div className="space-y-4 pt-4 border-t border-white/5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
-                  3. Program Matching & Lead Qualification
-                </h4>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-upskilling" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Preferred Program</label>
-                    <select 
-                      id="aiml-upskilling"
-                      name="upskilling"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.upskilling}
-                      onChange={handleChange}
-                    >
-                      <option value="artificial-intelligence">AI & Machine Learning Program</option>
-                      <option value="data-science">Data Science Program</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="aiml-batch" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Preferred Batch</label>
-                    <select 
-                      id="aiml-batch"
-                      name="batch"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.batch}
-                      onChange={handleChange}
-                    >
-                      <option value="July Batch">July Batch</option>
-                      <option value="August Batch">August Batch</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-skillLevel" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Current Skill Level</label>
-                    <select 
-                      id="aiml-skillLevel"
-                      name="skillLevel"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.skillLevel}
-                      onChange={handleChange}
-                    >
-                      <option value="Beginner - No Coding">Beginner - No Coding</option>
-                      <option value="Basic Knowledge">Basic Knowledge</option>
-                      <option value="Intermediate">Intermediate</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="aiml-careerGoal" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Career Goal</label>
-                    <select 
-                      id="aiml-careerGoal"
-                      name="careerGoal"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.careerGoal}
-                      onChange={handleChange}
-                    >
-                      <option value="Internship">Internship</option>
-                      <option value="Placement">Placement</option>
-                      <option value="Higher Studies">Higher Studies</option>
-                      <option value="Freelancing">Freelancing</option>
-                      <option value="Skill Development">Skill Development</option>
-                      <option value="Career Switch">Career Switch</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-laptopAccess" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Laptop Availability</label>
-                    <select 
-                      id="aiml-laptopAccess"
-                      name="laptopAccess"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.laptopAccess}
-                      onChange={handleChange}
-                    >
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                      <option value="Planning to Purchase">Planning to Purchase</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="aiml-weeklyHours" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Weekly Learning Hours</label>
-                    <select 
-                      id="aiml-weeklyHours"
-                      name="weeklyHours"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.weeklyHours}
-                      onChange={handleChange}
-                    >
-                      <option value="Less than 3 Hours">Less than 3 Hours</option>
-                      <option value="3–5 Hours">3–5 Hours</option>
-                      <option value="5–8 Hours">5–8 Hours</option>
-                      <option value="More than 8 Hours">More than 8 Hours</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="aiml-learningStart" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">When do you plan to start?</label>
-                    <select 
-                      id="aiml-learningStart"
-                      name="learningStart"
-                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.learningStart}
-                      onChange={handleChange}
-                    >
-                      <option value="Immediately">Immediately</option>
-                      <option value="Within 30 Days">Within 30 Days</option>
-                      <option value="Within 3 Months">Within 3 Months</option>
-                      <option value="Just Exploring">Just Exploring</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="aiml-whyInterested" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Why do you want to join? *</label>
-                  <textarea 
-                    id="aiml-whyInterested"
-                    name="whyInterested"
-                    required
-                    rows={3}
-                    className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:border-blue-500 focus:bg-slate-900 outline-none transition-all"
-                    placeholder="Tell us about your career goals and what you hope to achieve after completing this program."
-                    value={enquiryForm.whyInterested}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-
-              {/* Submit Application Button */}
-              <button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-blue-600 to-[#0EA5E9] hover:opacity-95 disabled:opacity-50 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center space-x-2.5 shadow-lg shadow-blue-500/20"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Submitting Application...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Submit Application</span>
-                  </>
-                )}
-              </button>
-
-              <p className="text-[9px] text-slate-500 text-center leading-relaxed pt-2">
-                By submitting this application, you authorize BeyondSkills Admissions to evaluate details and schedule a profile counseling session.
-              </p>
-            </form>
-          </div>
-        </div>
-      </section>
-
       {/* After Form Section: Admissions Counselling Timeline */}
-      <section className="py-16 bg-[#0B0F19] text-white border-b border-slate-950 text-center">
+      <section className="py-16 bg-[#0B0F19] text-white border-b border-slate-955 text-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="space-y-2">
             <h3 className="text-xl sm:text-2xl font-black text-white">Application Process</h3>
@@ -1304,7 +1321,7 @@ Submission Time: ${submissionTime}
               <p className="text-[10px] text-slate-460 leading-relaxed">Unlock cohort curriculum alignment matching roadmap.</p>
             </div>
 
-            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-emerald-500/30 rounded-2xl text-center shadow-md">
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-905 border border-emerald-500/30 rounded-2xl text-center shadow-md">
               <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm">
                 4
               </div>
@@ -1319,7 +1336,7 @@ Submission Time: ${submissionTime}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-slate-100 text-left">
         <div className="text-center space-y-3 mb-12">
           <span className="text-xs font-bold text-blue-600 uppercase tracking-widest font-mono">Feedback Logs</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-950">Student Success Reviews</h2>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-955">Student Success Reviews</h2>
           <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Hear how cohort candidates acquired confidence, formatted developer portfolios, and learned script logic.</p>
         </div>
 
@@ -1336,13 +1353,13 @@ Submission Time: ${submissionTime}
               name: "Rahul Sen",
               role: "BCA Student (3rd Year)",
               org: "Delhi University",
-              feedback: "Building recommendation algorithms and compiling commits to my public GitHub was the best part of this cohort. I formatted a developer portfolio that really stood out during college placement rounds.",
+              feedback: "Building recommendation algorithms and compiling commits to my public GitHub was the best part of this cohort. I formatted a developer portfolio that really stood out during college project evaluations.",
               color: "bg-emerald-500/10 text-emerald-500"
             },
             {
               name: "Vikram Malhotra",
-              role: "Data Analyst Track Graduate",
-              org: "Noida Sector 62",
+              role: "Graduate Scholar",
+              org: "VIT Alumni Network",
               feedback: "Understanding neural network loss functions, compiling Pandas pipelines, and deploying model endpoints to Vercel was exactly the upskilling I needed. Highly recommend for any beginner switcher.",
               color: "bg-orange-500/10 text-orange-500"
             }
@@ -1357,14 +1374,14 @@ Submission Time: ${submissionTime}
                   <p className="text-[10px] text-slate-450 font-mono">{story.role} at {story.org}</p>
                 </div>
               </div>
-              <p className="text-xs text-slate-650 italic leading-relaxed">"{story.feedback}"</p>
+              <p className="text-xs text-slate-655 italic leading-relaxed">"{story.feedback}"</p>
             </div>
           ))}
         </div>
 
         {/* Scrolling Partner Logos */}
         <div className="mt-16 text-center border-t border-slate-100 pt-8 space-y-4 overflow-hidden">
-          <p className="text-[10px] text-slate-450 uppercase tracking-widest font-mono font-bold">Candidates Hired & Placed at:</p>
+          <p className="text-[10px] text-slate-450 uppercase tracking-widest font-mono font-bold">Learners from Top Institutions & Brands:</p>
           <div className="flex justify-center items-center flex-wrap gap-8 opacity-60">
             <img src={microsoftLogo} alt="Microsoft Logo" className="h-6" />
             <img src={adobeLogo} alt="Adobe Logo" className="h-6" />
@@ -1388,7 +1405,7 @@ Submission Time: ${submissionTime}
               <div key={idx} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full flex items-center justify-between p-4.5 text-left font-bold text-xs sm:text-sm text-slate-950 hover:bg-slate-50 transition-colors outline-none"
+                  className="w-full flex items-center justify-between p-4.5 text-left font-bold text-xs sm:text-sm text-slate-950 hover:bg-slate-55 transition-colors outline-none"
                 >
                   <span>{faq.q}</span>
                   {isOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
@@ -1428,18 +1445,15 @@ Submission Time: ${submissionTime}
               Apply Now
             </button>
             <button
-              onClick={() => {
-                confetti({ particleCount: 50, spread: 30 });
-                alert("Curriculum catalog guide download started!");
-              }}
+              onClick={() => scrollToSyllabus('Final CTA Syllabus')}
               className="bg-white/5 hover:bg-white/10 text-white border border-white/10 font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer"
             >
-              Download Program Guide
+              View Syllabus
             </button>
           </div>
 
           <p className="text-[9px] text-slate-400 max-w-sm mx-auto pt-4 leading-relaxed">
-            Our academic admissions counselling team will contact you to explain cohort timings, fee options, and guide eligibility.
+            Our academic admissions counselling team will contact you to explain cohort timings and evaluate eligibility.
           </p>
         </div>
       </section>

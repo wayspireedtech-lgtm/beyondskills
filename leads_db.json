@@ -86,5 +86,47 @@
         "date": "2026-07-19T06:14:46.833Z"
       }
     ]
+  },
+  {
+    "id": "LD103",
+    "name": "Bruce Wayne",
+    "email": "bruce@wayne.co",
+    "phone": "8888877777",
+    "date": "19 Jul 2026",
+    "type": "Ads Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Student",
+    "college": "Gotham University",
+    "qualification": "Gotham University",
+    "experience": "Student",
+    "contactTime": "Any Time",
+    "goal": "Internship",
+    "message": "College: Gotham University\nAcademic Year: 4th Year\nCurrent Status: Student\nSkill Level: Intermediate\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: More than 8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build capstone projects and earn verified CV certificates.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:24:10.583Z",
+    "campaign": "None",
+    "source": "Direct",
+    "utmMedium": "None",
+    "utmCampaign": "None",
+    "utmContent": "None",
+    "remarks": "Submitted via Standalone AI/ML/Data Science Landing Page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: Gotham University\nAcademic Year: 4th Year\nCurrent Status: Student\nSkill Level: Intermediate\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: More than 8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build capstone projects and earn verified CV certificates.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:24:10.583Z",
+        "date": "2026-07-19T06:24:10.616Z"
+      }
+    ]
   }
 ]
