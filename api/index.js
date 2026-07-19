@@ -5,6 +5,7 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
+import path from 'path';
 
 // Load environment variables from .env
 dotenv.config();
@@ -117,8 +118,9 @@ app.post('/api/verify-payment', (req, res) => {
 });
 
 // Webhook leads database helper path
-const LEADS_FILE = './leads_db.json';
-const CONFIG_FILE = './config.json';
+// Resolve relative to process.cwd() so it works robustly in Vercel lambda (which copies root files to process.cwd())
+const LEADS_FILE = path.join(process.cwd(), 'leads_db.json');
+const CONFIG_FILE = path.join(process.cwd(), 'config.json');
 
 // Helper to write JSON files robustly (falls back to /tmp/ if root is read-only like on Vercel)
 const writeJsonFileSync = (filepath, data) => {
@@ -128,7 +130,7 @@ const writeJsonFileSync = (filepath, data) => {
   } catch (err) {
     console.warn(`[WARNING] Failed to write to ${filepath}. Retrying with /tmp fallback...`, err);
     try {
-      const filename = filepath.split('/').pop();
+      const filename = filepath.split(path.sep).pop() || filepath.split('/').pop();
       fs.writeFileSync(`/tmp/${filename}`, JSON.stringify(data, null, 2), 'utf-8');
       return true;
     } catch (tmpErr) {
@@ -150,7 +152,7 @@ const readJsonFileSync = (filepath, defaultValue = []) => {
   }
 
   try {
-    const filename = filepath.split('/').pop();
+    const filename = filepath.split(path.sep).pop() || filepath.split('/').pop();
     const tmpPath = `/tmp/${filename}`;
     if (fs.existsSync(tmpPath)) {
       const data = fs.readFileSync(tmpPath, 'utf-8');
