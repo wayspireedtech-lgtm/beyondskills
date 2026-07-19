@@ -601,7 +601,11 @@ app.post('/api/send-email-otp', async (req, res) => {
   }
 });
 
-// Start listening
-app.listen(port, () => {
-  console.log(`Backend server running on port ${port}`);
-});
+// Start listening if not running on Vercel
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Backend server running on port ${port}`);
+  });
+}
+
+export default app;
