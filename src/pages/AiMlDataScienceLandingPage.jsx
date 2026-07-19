@@ -262,9 +262,9 @@ export default function AiMlDataScienceLandingPage() {
     batch: 'July Batch',
     skillLevel: 'Beginner - No Coding',
     careerGoal: 'Internship',
-    laptopAccess: 'Yes',
-    weeklyHours: '5-8 Hours',
-    whyInterested: '',
+    laptopAccess: 'Not specified',
+    weeklyHours: 'Not specified',
+    whyInterested: 'Not specified',
     learningStart: 'Immediately'
   });
 
@@ -885,22 +885,6 @@ Submission Time: ${submissionTime}
                   </div>
 
                   <div>
-                    <label htmlFor="aiml-batch" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Preferred Batch</label>
-                    <select 
-                      id="aiml-batch"
-                      name="batch"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.batch}
-                      onChange={handleChange}
-                    >
-                      <option value="July Batch">July Batch</option>
-                      <option value="August Batch">August Batch</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
                     <label htmlFor="aiml-skillLevel" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Current Skill</label>
                     <select 
                       id="aiml-skillLevel"
@@ -914,7 +898,9 @@ Submission Time: ${submissionTime}
                       <option value="Intermediate">Intermediate</option>
                     </select>
                   </div>
+                </div>
 
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label htmlFor="aiml-careerGoal" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Career Goal</label>
                     <select 
@@ -931,42 +917,7 @@ Submission Time: ${submissionTime}
                       <option value="Career Switch">Career Switch</option>
                     </select>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label htmlFor="aiml-laptopAccess" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Laptop Availability</label>
-                    <select 
-                      id="aiml-laptopAccess"
-                      name="laptopAccess"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.laptopAccess}
-                      onChange={handleChange}
-                    >
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                      <option value="Planning to Purchase">Planning to Purchase</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="aiml-weeklyHours" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Weekly Study Hours</label>
-                    <select 
-                      id="aiml-weeklyHours"
-                      name="weeklyHours"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.weeklyHours}
-                      onChange={handleChange}
-                    >
-                      <option value="Less than 3 Hours">Less than 3 Hours</option>
-                      <option value="3–5 Hours">3–5 Hours</option>
-                      <option value="5–8 Hours">5–8 Hours</option>
-                      <option value="More than 8 Hours">More than 8 Hours</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label htmlFor="aiml-learningStart" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Start Timeline</label>
                     <select 
@@ -982,20 +933,6 @@ Submission Time: ${submissionTime}
                       <option value="Just Exploring">Just Exploring</option>
                     </select>
                   </div>
-                </div>
-
-                <div>
-                  <label htmlFor="aiml-whyInterested" className="block text-[9px] font-bold text-slate-400 tracking-wider mb-1">Why do you want to join? *</label>
-                  <textarea 
-                    id="aiml-whyInterested"
-                    name="whyInterested"
-                    required
-                    rows={2}
-                    className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none transition-all"
-                    placeholder="Tell us about your career goals and what you hope to achieve after completing this program."
-                    value={enquiryForm.whyInterested}
-                    onChange={handleChange}
-                  />
                 </div>
 
                 <button 
