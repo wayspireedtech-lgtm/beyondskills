@@ -17,43 +17,64 @@ import ibmLogo from '../assets/ibm.svg';
 
 const CURRICULUM_GROUPS = [
   {
-    title: "Programming Foundations",
-    description: "Build core logic, syntax fluency, and file operations in Python and relational database querying.",
+    title: "Python Programming Foundations",
+    description: "Install environment, master syntax structure, file handling, and variable styling standards.",
     topics: [
-      "Python syntax, loops, and conditional structures",
-      "Object-Oriented Programming (OOP) architectures",
-      "SQL Database queries: joins, group by, and filters",
-      "Git version control and Git commit pipelines"
+      "Anaconda Environment Setup & Jupyter Notebook shortcuts",
+      "Python Data Types & PEP 8 variable naming standards",
+      "Control Flow: Conditional if/elif/else & for/while loops",
+      "Data Structures: Lists, Tuples, Sets, and Dictionaries",
+      "File Handling: Reading/writing files & with context managers",
+      "Command Line Interface (CLI) & Terminal Navigation"
     ]
   },
   {
-    title: "Data Analysis & Visualization",
-    description: "Clean, manipulate, and visualize raw datasets using Python libraries and advanced statistics.",
+    title: "Data Analysis & Exploratory Visualization",
+    description: "Clean, filter, transform, and plot actual datasets using industrial libraries.",
     topics: [
-      "Pandas DataFrames for filtering, cleaning, and transformation",
-      "NumPy for high-performance matrix math and calculations",
-      "Data visualization with Matplotlib and Seaborn graphs",
-      "Applied statistics: distributions, regressions, and hypothesis testing"
+      "Introduction to ML libraries & NumPy array math operations",
+      "Pandas: DataFrames cleaning, filtering, and transformation",
+      "Exploratory Data Analysis (EDA) core concepts & techniques",
+      "Matplotlib: Hands-on plotting & customized graphs",
+      "Seaborn: Multi-dimensional data plots & advanced insights",
+      "Interactive doubt-clearing & concept strengthening sessions"
     ]
   },
   {
-    title: "Machine Learning Models",
-    description: "Train predictive algorithms, evaluate precision metrics, and understand mathematical logic.",
+    title: "Applied Statistics & Linear Models",
+    description: "Understand mathematical logic, central tendency, dispersion, regressions, and evaluation metrics.",
     topics: [
-      "Supervised learning: Linear & Logistic regressions",
-      "Decision Trees, Random Forests, and ensemble models",
-      "Unsupervised clustering: K-Means and PCA",
-      "Model evaluation: ROC curves, AUC, F1 score, and precision-recall"
+      "Measures of Central Tendency & Measures of Dispersion",
+      "IQR (Interquartile Range) stats & anomaly detection",
+      "Supervised vs Unsupervised ML concepts & model fine-tuning",
+      "Linear Regression: Theory, building, and evaluation metrics",
+      "Logistic Regression: Concepts, metrics, and classification labs",
+      "Model evaluation: ROC curves, AUC, F1 score, precision & recall"
     ]
   },
   {
-    title: "Deep Learning & Generative AI",
-    description: "Design neural network architectures, leverage large language model APIs, and build AI agents.",
+    title: "Data Preprocessing & Tree-Based Models",
+    description: "Normalize raw inputs, clean missing fields, scale features, and fit decision forests.",
     topics: [
-      "Neural network foundations: activation & loss functions",
-      "TensorFlow frameworks for computer vision & text processing",
-      "Large Language Model APIs and Prompt Engineering",
-      "Hugging Face pipelines and custom AI agents"
+      "Data Standardization, Normalization, & Scaling techniques",
+      "Handling Missing Values & Outlier Treatment",
+      "Feature Scaling and Feature Selection techniques",
+      "Tree-Based Models: CART Classification & Regression Trees",
+      "Ensemble learning: Bagging, Boosting, & Random Forests",
+      "Neural Networks: Core concepts & Deep Learning fundamentals"
+    ]
+  },
+  {
+    title: "Natural Language Processing & Generative AI",
+    description: "Preprocess text, build semantic vector mappings, write prompt scripts, and leverage transformers.",
+    topics: [
+      "NLTK: Text preprocessing, tokenization, & linguistic analysis",
+      "spaCy: Advanced NLP, NER, and Industrial Applications",
+      "Gensim: Topic Modeling, Word Embeddings, & Semantic Analysis",
+      "FastText: Text Classification & Deep Learning-based NLP",
+      "Generative AI: GANs, VAEs, & Large Language Models (LLMs)",
+      "Hugging Face: Transformers, model hub, & prompt engineering",
+      "Real-world use cases: ChatGPT/DALL-E, AI Agents & assistants"
     ]
   }
 ];
@@ -193,7 +214,7 @@ function HeroIDEVisual() {
   }, []);
 
   return (
-    <div className="w-full bg-slate-955 border border-slate-800 rounded-2xl shadow-2xl p-4 font-mono text-[10px] text-slate-300 text-left overflow-hidden select-none relative">
+    <div className="w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-4 font-mono text-[10px] text-slate-350 text-left overflow-hidden select-none relative">
       <div className="flex items-center justify-between border-b border-slate-900 pb-2 mb-3">
         <div className="flex space-x-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -218,7 +239,7 @@ function HeroIDEVisual() {
             <span className="text-emerald-400">Loss: {loss.toFixed(4)}</span>
             <span className="text-cyan-400">Acc: {(accuracy * 100).toFixed(1)}%</span>
           </div>
-          <div className="w-full bg-slate-955 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-[#0EA5E9] h-full" style={{ width: `${accuracy * 100}%` }}></div>
           </div>
         </div>
@@ -703,7 +724,7 @@ Submission Time: ${submissionTime}
               </button>
               <button 
                 onClick={() => scrollToSyllabus('Hero Syllabus Scroll')}
-                className="bg-slate-955 hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer shadow-md"
+                className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl transition-all text-center flex items-center justify-center space-x-2 cursor-pointer shadow-sm hover:shadow"
               >
                 <Compass className="w-4 h-4 text-blue-400" />
                 <span>View Syllabus</span>
@@ -1147,7 +1168,7 @@ Submission Time: ${submissionTime}
       </section>
 
       {/* Curriculum Section */}
-      <section id="cohort-syllabus-path" className="py-16 bg-slate-955 text-white border-b border-slate-900 text-left">
+      <section id="cohort-syllabus-path" className="py-16 bg-slate-950 text-white border-b border-slate-900 text-left">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-3 mb-12">
             <span className="text-xs font-bold text-blue-500 uppercase tracking-widest font-mono">Curriculum Syllabus</span>
@@ -1165,7 +1186,7 @@ Submission Time: ${submissionTime}
                 >
                   <button
                     onClick={() => setExpandedMod(isExpanded ? -1 : idx)}
-                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-white hover:bg-slate-855/50 transition-all"
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-white hover:bg-slate-800/50 transition-all"
                   >
                     <div className="space-y-1">
                       <p className="text-[10px] text-blue-400 uppercase tracking-widest font-mono font-extrabold">Module 0{idx + 1}</p>
@@ -1321,7 +1342,7 @@ Submission Time: ${submissionTime}
               <p className="text-[10px] text-slate-460 leading-relaxed">Unlock cohort curriculum alignment matching roadmap.</p>
             </div>
 
-            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-905 border border-emerald-500/30 rounded-2xl text-center shadow-md">
+            <div className="relative z-10 flex flex-col items-center space-y-3 p-5 bg-slate-900 border border-emerald-500/30 rounded-2xl text-center shadow-md">
               <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm">
                 4
               </div>
@@ -1462,7 +1483,7 @@ Submission Time: ${submissionTime}
       <a 
         href="https://wa.me/919953607074?text=Hi!+I+am+interested+in+BeyondSkills+AI+ML+and+Data+Science+Cohort."
         target="_blank" rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-40 bg-emerald-505 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 border border-emerald-400/20"
+        className="fixed bottom-6 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white p-3 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 border border-emerald-400/20"
         title="Chat on WhatsApp"
       >
         <MessageCircle className="w-6 h-6" />
