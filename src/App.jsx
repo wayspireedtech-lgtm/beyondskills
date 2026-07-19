@@ -196,8 +196,8 @@ export default function App() {
             <Route path="/course/:courseId/brochure" element={<AiBrochure />} />
             <Route path="/full-stack-web-development-landing-page" element={<FullStackLandingPage />} />
             <Route path="/ai-ml-data-science-landing-page" element={<AiMlDataScienceLandingPage />} />
-            <Route path="/lp/google-form" element={<AiMlDataScienceLandingPage />} />
-            <Route path="/google-form" element={<AiMlDataScienceLandingPage />} />
+            <Route path="/lp/google-form" element={<GoogleFormLandingPage />} />
+            <Route path="/google-form" element={<GoogleFormLandingPage />} />
             <Route path="/lp/:slug" element={<CustomLandingPage />} />
             <Route path="/digital-marketing-landing-page" element={<DigitalMarketingLandingPage />} />
             <Route path="/cloud-computing-landing-page" element={<CloudComputingLandingPage />} />
