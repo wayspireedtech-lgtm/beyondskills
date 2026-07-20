@@ -1208,12 +1208,16 @@ export default function FullStackLandingPage() {
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#2563EB] font-mono">Contact Details</h4>
             <div className="text-xs text-slate-400 space-y-2">
               <p className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-slate-500" />
+                <a href="tel:+917982119571" className="hover:text-white transition-colors">+91 7982119571</a>
+              </p>
+              <p className="flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-slate-500" />
-                <span>connect@beyondskills.in</span>
+                <a href="mailto:connect@beyondskills.in" className="hover:text-white transition-colors">connect@beyondskills.in</a>
               </p>
               <p className="flex items-center space-x-2">
                 <MessageCircle className="w-4 h-4 text-slate-500" />
-                <span>WhatsApp Chat Support</span>
+                <span>WhatsApp Chat Support (+91 7982119571)</span>
               </p>
             </div>
           </div>

@@ -205,7 +205,7 @@ export default function Verification() {
                   <p className="text-[10px] text-slate-500 mt-1">We could not locate reference record <strong>"{searchQuery}"</strong> in our active list.</p>
                 </div>
                 <p className="text-[10px] text-slate-500 leading-normal">
-                  Double check characters and hyphen spacing. Contact admissions support at connect@beyondskills.in if you believe this is an error.
+                  Double check characters and hyphen spacing. Contact admissions support at connect@beyondskills.in or +91 7982119571 if you believe this is an error.
                 </p>
               </div>
             )}

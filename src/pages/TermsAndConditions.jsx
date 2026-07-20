@@ -182,7 +182,7 @@ export default function TermsAndConditions() {
             <p className="font-bold text-slate-700">Official Contact Details:</p>
             <ul className="space-y-1">
               <li>Email: <a href="mailto:support@beyondskills.in" className="text-brand-purple hover:underline">support@beyondskills.in</a></li>
-              <li>Call Support: +91 81309 27999</li>
+              <li>Call Support: +91 7982119571</li>
               <li>Address: Udyog Vihar, Gurugram, Haryana</li>
             </ul>
           </div>

@@ -822,14 +822,16 @@ Submission Time: ${submissionTime}
                   </div>
 
                   <div>
-                    <label htmlFor="aiml-college" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">College / Institute *</label>
+                    <label htmlFor="aiml-college" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      {enquiryForm.role === 'Student' ? 'College / Institute' : 'Company Name'} *
+                    </label>
                     <input 
                       id="aiml-college"
                       type="text" 
                       name="college"
                       required
                       className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
-                      placeholder="College or University"
+                      placeholder={enquiryForm.role === 'Student' ? "College or University" : "e.g. Google, Tech Mahindra"}
                       value={enquiryForm.college}
                       onChange={handleChange}
                     />
@@ -851,22 +853,38 @@ Submission Time: ${submissionTime}
                     </select>
                   </div>
 
-                  <div>
-                    <label htmlFor="aiml-year" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Academic Year</label>
-                    <select 
-                      id="aiml-year"
-                      name="year"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
-                      value={enquiryForm.year}
-                      onChange={handleChange}
-                    >
-                      <option value="1st Year">1st Year</option>
-                      <option value="2nd Year">2nd Year</option>
-                      <option value="3rd Year">3rd Year</option>
-                      <option value="4th Year">4th Year</option>
-                      <option value="Graduated">Graduated</option>
-                    </select>
-                  </div>
+                  {enquiryForm.role === 'Student' ? (
+                    <div>
+                      <label htmlFor="aiml-year" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Academic Year</label>
+                      <select 
+                        id="aiml-year"
+                        name="year"
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white outline-none cursor-pointer"
+                        value={enquiryForm.year}
+                        onChange={handleChange}
+                      >
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Graduated">Graduated</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <div>
+                      <label htmlFor="aiml-designation" className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Current Designation / Role *</label>
+                      <input 
+                        id="aiml-designation"
+                        type="text" 
+                        name="whyInterested"
+                        required
+                        className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-blue-500 outline-none"
+                        placeholder="e.g. Software Engineer"
+                        value={enquiryForm.whyInterested === 'Not specified' ? '' : enquiryForm.whyInterested}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">

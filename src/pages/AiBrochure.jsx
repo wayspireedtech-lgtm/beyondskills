@@ -2325,11 +2325,11 @@ export default function AiBrochure() {
                 </div>
               </a>
 
-              <a href="tel:+918130927999" className={`flex items-center space-x-3 p-3.5 rounded-xl transition-colors border ${cardBg}`}>
+              <a href="tel:+917982119571" className={`flex items-center space-x-3 p-3.5 rounded-xl transition-colors border ${cardBg}`}>
                 <Phone className="w-5 h-5 text-[#2A4BFF] dark:text-[#0EA5E9]" />
                 <div>
                   <span className="text-[9px] text-slate-400 font-mono block">Hotline</span>
-                  <span className={`text-xs font-mono font-bold ${textPrimary}`}>+91 81309 27999</span>
+                  <span className={`text-xs font-mono font-bold ${textPrimary}`}>+91 7982119571</span>
                 </div>
               </a>
 

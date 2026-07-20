@@ -135,8 +135,12 @@ export default function Footer() {
                 <span>Udyog Vihar, Gurugram, Haryana</span>
               </li>
               <li className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-brand-purple flex-shrink-0" />
+                <a href="tel:+917982119571" className="hover:text-white transition-colors">+91 7982119571</a>
+              </li>
+              <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-brand-purple flex-shrink-0" />
-                <span>connect@beyondskills.in</span>
+                <a href="mailto:connect@beyondskills.in" className="hover:text-white transition-colors">connect@beyondskills.in</a>
               </li>
             </ul>
           </div>

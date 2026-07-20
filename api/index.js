@@ -276,13 +276,20 @@ app.post('/api/webhook/leads', async (req, res) => {
       });
     }
 
+    const padVal = (num) => String(num).padStart(2, '0');
+    const leadMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const leadNow = new Date();
+    const leadDateStr = `${padVal(leadNow.getDate())} ${leadMonths[leadNow.getMonth()]} ${leadNow.getFullYear()}`;
+    const leadTimeStr = `${padVal(leadNow.getHours())}:${padVal(leadNow.getMinutes())}:${padVal(leadNow.getSeconds())}`;
+    const leadDateTimeStr = `${leadDateStr} ${leadTimeStr}`;
+
     const newLead = {
       id: `LD${String(existingLeads.length + 101).padStart(3, '0')}`,
       name,
       email: email || 'no-email@beyondskills.com',
       phone,
-      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      type: type || 'Google Form Leads',
+      date: leadDateTimeStr,
+      type: type || 'Organic Leads',
       program: program || 'artificial-intelligence',
       assignedBDM: '',
       assignedBDA: '',

@@ -42,6 +42,10 @@
       {
         "note": "College: VIT University\nAcademic Year: 3rd Year\nCurrent Status: Student\nSkill Level: Beginner - No Coding\nCareer Goal: Internship\nLaptop Availability: Yes\nWeekly Learning Hours: 5–8 Hours\nStart Timeline: Immediately\nWhy interested: I want to build practical AI projects and gain mentor feedback.\nReferrer: Direct\nDevice: Desktop\nBrowser: Chrome\nPage URL: http://localhost:5173/ai-ml-data-science-landing-page\nSubmission Time: 2026-07-19T06:11:30.546Z",
         "date": "2026-07-19T06:12:41.526Z"
+      },
+      {
+        "note": "College: Google\nYear: 1st Year\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Senior Software Engineer\nSubmitted via Google Form Campaign page",
+        "date": "2026-07-19T10:38:49.282Z"
       }
     ]
   },
@@ -168,6 +172,94 @@
       {
         "note": "College: Wayne Enterprises\nYear: Graduated\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
         "date": "2026-07-19T10:29:07.496Z"
+      }
+    ]
+  },
+  {
+    "id": "LD105",
+    "name": "Peter Parker",
+    "email": "peter.parker@dailybugle.com",
+    "phone": "9988776655",
+    "date": "19 Jul 2026 16:14:56",
+    "type": "Google Form Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Student",
+    "college": "Empire State University",
+    "qualification": "Empire State University",
+    "experience": "Student",
+    "contactTime": "Anytime",
+    "goal": "Skill Development",
+    "message": "College: Empire State University\nYear: 3rd Year\nStatus: Student\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+    "campaign": "",
+    "source": "",
+    "utmMedium": "",
+    "utmCampaign": "",
+    "utmContent": "",
+    "remarks": "College: Empire State University\nYear: 3rd Year\nStatus: Student\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: Empire State University\nYear: 3rd Year\nStatus: Student\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Not specified\nSubmitted via Google Form Campaign page",
+        "date": "2026-07-19T10:44:56.469Z"
+      }
+    ]
+  },
+  {
+    "id": "LD106",
+    "name": "Clark Kent",
+    "email": "clark.kent@dailyplanet.com",
+    "phone": "9988776644",
+    "date": "19 Jul 2026 16:28:24",
+    "type": "Organic Leads",
+    "program": "artificial-intelligence",
+    "assignedBDM": "",
+    "assignedBDA": "",
+    "status": "New",
+    "subStatus": "QUALIFIED",
+    "profession": "Working Professional",
+    "college": "Daily Planet",
+    "qualification": "Daily Planet",
+    "experience": "Working Professional",
+    "contactTime": "Anytime",
+    "goal": "Skill Development",
+    "message": "College: Daily Planet\nYear: 1st Year\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Reporter\nSubmitted via Google Form Campaign page",
+    "campaign": "",
+    "source": "",
+    "utmMedium": "",
+    "utmCampaign": "",
+    "utmContent": "",
+    "remarks": "College: Daily Planet\nYear: 1st Year\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Reporter\nSubmitted via Google Form Campaign page",
+    "mentor": "None",
+    "duration": "None",
+    "callAttempts": {
+      "s1": "-",
+      "s2": "-",
+      "s3": "-",
+      "s4": "-",
+      "s5": "-",
+      "s6": "-"
+    },
+    "history": [
+      {
+        "note": "College: Daily Planet\nYear: 1st Year\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Reporter\nSubmitted via Google Form Campaign page",
+        "date": "2026-07-19T10:58:24.639Z"
+      },
+      {
+        "note": "College: Daily Planet\nYear: 1st Year\nStatus: Working Professional\nBatch: July Batch\nProject Work Experience: Not specified\nPrimary Career Goal: Skill Development\nPlanned Start: Immediately\nWeekly Time Dedication: Not specified\nLaptop Access: Not specified\nCompleted Prior Certification: Not specified\nWhy Interested: Reporter\nSubmitted via Google Form Campaign page",
+        "date": "2026-07-19T11:06:55.489Z"
       }
     ]
   }

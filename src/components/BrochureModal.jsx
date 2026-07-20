@@ -10,7 +10,8 @@ export default function BrochureModal({ isOpen, onClose, course }) {
     phone: '',
     status: 'Student',
     studentDetails: '',
-    jobRole: ''
+    jobRole: '',
+    companyName: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -28,7 +29,7 @@ export default function BrochureModal({ isOpen, onClose, course }) {
       status: formData.status,
       course_id: course.id,
       course_title: course.title,
-      student_details: formData.status === 'Student' ? formData.studentDetails : '',
+      student_details: formData.status === 'Student' ? formData.studentDetails : `Company: ${formData.companyName}`,
       job_role: formData.status === 'Working Professional' ? formData.jobRole : ''
     };
 
@@ -179,16 +180,29 @@ export default function BrochureModal({ isOpen, onClose, course }) {
                   />
                 </div>
               ) : (
-                <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Job Role / Designation *</label>
-                  <input 
-                    type="text" 
-                    required 
-                    value={formData.jobRole} 
-                    onChange={(e) => setFormData({...formData, jobRole: e.target.value})} 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
-                    placeholder="e.g. Assistant HR Executive" 
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Job Role / Designation *</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={formData.jobRole} 
+                      onChange={(e) => setFormData({...formData, jobRole: e.target.value})} 
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
+                      placeholder="e.g. Assistant HR Executive" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Company Name *</label>
+                    <input 
+                      type="text" 
+                      required 
+                      value={formData.companyName} 
+                      onChange={(e) => setFormData({...formData, companyName: e.target.value})} 
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:border-brand-purple outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
+                      placeholder="e.g. Google, Tech Mahindra" 
+                    />
+                  </div>
                 </div>
               )}
             </div>

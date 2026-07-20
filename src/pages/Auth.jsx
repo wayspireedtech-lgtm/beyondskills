@@ -90,7 +90,7 @@ export default function Auth() {
                   users.push(targetUser);
                   setDbItem('beyondskills_users', users);
                 } else if (targetUser.accountStatus === 'Suspended') {
-                  setError('Your account has been suspended. Please contact support at connect@beyondskills.in.');
+                  setError('Your account has been suspended. Please contact support at connect@beyondskills.in or +91 7982119571.');
                   return;
                 }
                 
@@ -283,7 +283,7 @@ export default function Auth() {
         const dbMatch = users.find(u => u.email === currentUserData.email);
         if (dbMatch) {
           if (dbMatch.accountStatus === 'Suspended') {
-            setError('Your account has been suspended. Please contact support at connect@beyondskills.in.');
+            setError('Your account has been suspended. Please contact support at connect@beyondskills.in or +91 7982119571.');
             setLoading(false);
             return;
           }

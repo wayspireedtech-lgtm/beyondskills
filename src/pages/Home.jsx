@@ -887,10 +887,6 @@ export default function Home() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="academy-college" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">College / Organization Name *</label>
-                  <input id="academy-college" type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="Enter college/organization name" />
-                </div>
-                <div>
                   <label htmlFor="academy-status" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status *</label>
                   <select id="academy-status" value={academyForm.status} onChange={(e) => setAcademyForm({...academyForm, status: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                     <option value="Undergraduate Student">Undergraduate Student</option>
@@ -900,7 +896,33 @@ export default function Home() {
                     <option value="Career Switcher">Career Switcher</option>
                   </select>
                 </div>
+
+                <div>
+                  <label htmlFor="academy-college" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                    {academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher' ? 'Company Name *' : 'College / Institute Name *'}
+                  </label>
+                  <input id="academy-college" type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder={academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher' ? "e.g. Google, Tech Mahindra" : "Enter college name"} />
+                </div>
               </div>
+
+              {(academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher') && (
+                <div>
+                  <label htmlFor="academy-designation" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Current Designation / Role *</label>
+                  <input 
+                    id="academy-designation" 
+                    type="text" 
+                    required 
+                    value={academyForm.message.startsWith('Designation: ') ? academyForm.message.split(' | ')[0].replace('Designation: ', '') : ''} 
+                    onChange={(e) => {
+                      const designation = e.target.value;
+                      const msg = academyForm.message.includes(' | ') ? academyForm.message.split(' | ').slice(1).join(' | ') : academyForm.message;
+                      setAcademyForm({...academyForm, message: `Designation: ${designation}${msg ? ' | ' + msg : ''}`});
+                    }} 
+                    className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" 
+                    placeholder="e.g. Software Engineer" 
+                  />
+                </div>
+              )}
 
               <div>
                 <label htmlFor="academy-message" className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Message</label>

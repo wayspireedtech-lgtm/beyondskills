@@ -374,7 +374,7 @@ export default function AdminDashboard() {
           if (res.ok) {
             const csvText = await res.text();
             const parsed = parseSheetCSV(csvText);
-            parsed.forEach(p => { p.type = 'Google Form Leads'; });
+            parsed.forEach(p => { p.type = 'Organic Leads'; });
             sheetLeads = [...sheetLeads, ...parsed];
             sheetFetched = true;
           }
@@ -760,8 +760,8 @@ export default function AdminDashboard() {
       setFilterStatus(filterValue);
     } else if (filterName === 'type') {
       setFilterType(filterValue);
-      if (filterValue === 'Google Form Leads') {
-        setLeadChannelTab('google');
+      if (filterValue === 'Organic Leads') {
+        setLeadChannelTab('organic');
       } else if (filterValue === 'Ads Leads') {
         setLeadChannelTab('ads');
       } else if (filterValue === 'WhatsApp Marketing Leads') {
@@ -807,14 +807,14 @@ export default function AdminDashboard() {
   // Seed demo data helper with new campaign categories
   const handleSeedDemoData = () => {
     const demoLeads = [
-      { id: 'LD001', name: 'Roshan Kumar maharana', email: 'roshan.k@gmail.com', phone: '9776741640', date: '25 Jun 2026', type: 'Google Form Leads', program: 'DA FLAGSHIP - UTTAM', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Unspecified', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: 'CB', s3: 'CB', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Status 1 DNP, Status 2 CB: Scheduled call back.', date: new Date().toISOString() }] },
-      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'Google Form Leads', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
+      { id: 'LD001', name: 'Roshan Kumar maharana', email: 'roshan.k@gmail.com', phone: '9776741640', date: '25 Jun 2026', type: 'Organic Leads', program: 'DA FLAGSHIP - UTTAM', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Unspecified', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: 'CB', s3: 'CB', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Status 1 DNP, Status 2 CB: Scheduled call back.', date: new Date().toISOString() }] },
+      { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'Organic Leads', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
       { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Ads Leads', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', profession: 'Working Professional (< 30k) [WP-1]', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }] },
       { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'WhatsApp Marketing Leads', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: 'QUALIFIED', s2: 'Already Paid', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }] },
       { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Ads Leads', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] }
     ];
     saveLeadsToDb(demoLeads);
-    alert('Demo CRM Leads seeded successfully with Ads, Google Form, and WhatsApp campaigns!');
+    alert('Demo CRM Leads seeded successfully with Ads, Organic, and WhatsApp campaigns!');
   };
 
   // Add lead action
@@ -983,7 +983,7 @@ export default function AdminDashboard() {
                 email: row.email,
                 phone: row.phone,
                 date: row.date,
-                type: 'Google Form Leads',
+                type: 'Organic Leads',
                 program: row.program,
                 assignedBDM: '',
                 assignedBDA: '',
@@ -1132,7 +1132,7 @@ export default function AdminDashboard() {
           email: row.email,
           phone: row.phone,
           date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-          type: 'Google Form Leads',
+          type: 'Organic Leads',
           program: row.program,
           assignedBDM: '',
           assignedBDA: '',
@@ -1492,8 +1492,8 @@ export default function AdminDashboard() {
       
       // Filter by dynamic channel tabs
       let matchType = filterType ? lead.type === filterType : true;
-      if (leadChannelTab === 'google') {
-        matchType = lead.type === 'Google Form Leads';
+      if (leadChannelTab === 'organic') {
+        matchType = lead.type === 'Organic Leads';
       } else if (leadChannelTab === 'ads') {
         matchType = lead.type === 'Ads Leads';
       } else if (leadChannelTab === 'whatsapp') {
@@ -2190,7 +2190,7 @@ export default function AdminDashboard() {
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
                       { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads').length },
-                      { name: 'Google Form Leads', type: 'Google Form Leads', count: accessibleLeads.filter(l => l.type === 'Google Form Leads').length },
+                      { name: 'Organic Leads', type: 'Organic Leads', count: accessibleLeads.filter(l => l.type === 'Organic Leads').length },
                       { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length }
                     ].map((src, idx) => {
                       const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
@@ -2261,16 +2261,16 @@ export default function AdminDashboard() {
                   </button>
                   <button
                     onClick={() => {
-                      setLeadChannelTab('google');
-                      setFilterType('Google Form Leads');
+                      setLeadChannelTab('organic');
+                      setFilterType('Organic Leads');
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                      leadChannelTab === 'google'
+                      leadChannelTab === 'organic'
                         ? 'bg-[#2A4BFF] text-white shadow-lg'
                         : 'text-slate-400 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    Google Form Leads
+                    Organic Leads
                   </button>
                   <button
                     onClick={() => {
@@ -2432,7 +2432,7 @@ export default function AdminDashboard() {
                       >
                         <option value="">All Types</option>
                         <option value="Ads Leads">Ads Leads</option>
-                        <option value="Google Form Leads">Google Form Leads</option>
+                        <option value="Organic Leads">Organic Leads</option>
                         <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
                       </select>
                     </div>
@@ -3550,20 +3550,20 @@ export default function AdminDashboard() {
                   onClick={() => {
                     setActiveMainTab('leads_manager');
                     setLeadsSubTab('list');
-                    setLeadChannelTab('google');
-                    setFilterType('Google Form Leads');
+                    setLeadChannelTab('organic');
+                    setFilterType('Organic Leads');
                     setFilterProgram('');
                   }}
                   className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#0EA5E9]/40 transition-all duration-305 flex flex-col justify-between"
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Google Sheets Forms</span>
+                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Organic Sheets Forms</span>
                     <div className="flex items-baseline space-x-2">
                       <p className="text-4xl font-black text-[#0EA5E9]">
-                        {activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length}
+                        {activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length}
                       </p>
                       <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
+                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
                       </span>
                     </div>
                   </div>
@@ -3571,7 +3571,7 @@ export default function AdminDashboard() {
                     <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-[#0EA5E9] h-full rounded-full" 
-                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Google Form Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
+                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-[10px] text-[#0EA5E9] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
@@ -4473,7 +4473,7 @@ export default function AdminDashboard() {
                     className="w-full bg-[#05092A] border border-white/10 rounded-lg px-3 py-2 text-white outline-none focus:border-[#2A4BFF] cursor-pointer"
                   >
                     <option value="Ads Leads">Ads Leads</option>
-                    <option value="Google Form Leads">Google Form Leads</option>
+                    <option value="Organic Leads">Organic Leads</option>
                     <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
                   </select>
                 </div>
@@ -4534,7 +4534,7 @@ export default function AdminDashboard() {
             
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Google Form Leads CSV Link</label>
+                <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 font-mono">Organic Leads CSV Link</label>
                 <input 
                   type="text"
                   value={googleFormSheetUrl}

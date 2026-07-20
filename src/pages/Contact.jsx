@@ -150,10 +150,22 @@ export default function Contact() {
               </div>
 
               <div className="flex items-center space-x-4">
+                <Phone className="w-5 h-5 text-brand-purple flex-shrink-0" />
+                <div>
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Phone / WhatsApp</h4>
+                  <p className="text-xs text-slate-500 mt-1">
+                    <a href="tel:+917982119571" className="hover:text-brand-purple transition-colors">+91 7982119571</a>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
                 <Mail className="w-5 h-5 text-brand-purple flex-shrink-0" />
                 <div>
                   <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Email Channels</h4>
-                  <p className="text-xs text-slate-500 mt-1">connect@beyondskills.in</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    <a href="mailto:connect@beyondskills.in" className="hover:text-brand-purple transition-colors">connect@beyondskills.in</a>
+                  </p>
                 </div>
               </div>
             </div>
@@ -281,10 +293,6 @@ export default function Contact() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">College / Organization Name *</label>
-                      <input type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder="BITS Pilani" />
-                    </div>
-                    <div>
                       <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Status *</label>
                       <select value={academyForm.status} onChange={(e) => setAcademyForm({...academyForm, status: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all">
                         <option value="Undergraduate Student">Undergraduate Student</option>
@@ -294,7 +302,31 @@ export default function Contact() {
                         <option value="Career Switcher">Career Switcher</option>
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        {academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher' ? 'Company Name *' : 'College / Institute Name *'}
+                      </label>
+                      <input type="text" required value={academyForm.college} onChange={(e) => setAcademyForm({...academyForm, college: e.target.value})} className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" placeholder={academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher' ? "e.g. Google, Tech Mahindra" : "BITS Pilani"} />
+                    </div>
                   </div>
+
+                  {(academyForm.status === 'Working Professional' || academyForm.status === 'Career Switcher') && (
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Current Designation / Role *</label>
+                      <input 
+                        type="text" 
+                        required 
+                        value={academyForm.message.startsWith('Designation: ') ? academyForm.message.split(' | ')[0].replace('Designation: ', '') : ''} 
+                        onChange={(e) => {
+                          const designation = e.target.value;
+                          const msg = academyForm.message.includes(' | ') ? academyForm.message.split(' | ').slice(1).join(' | ') : academyForm.message;
+                          setAcademyForm({...academyForm, message: `Designation: ${designation}${msg ? ' | ' + msg : ''}`});
+                        }} 
+                        className="w-full bg-white border border-slate-200/80 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-brand-purple focus:ring-1 focus:ring-brand-purple outline-none text-slate-900 transition-all" 
+                        placeholder="e.g. Software Engineer" 
+                      />
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Questions / Message</label>

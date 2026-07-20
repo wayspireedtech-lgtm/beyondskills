@@ -33,6 +33,13 @@ export async function saveLeadToSupabase(lead) {
     const courseId = lead.program || lead.course_id || 'artificial-intelligence';
     const courseTitle = lead.course_title || lead.course || '';
 
+    const padVal = (num) => String(num).padStart(2, '0');
+    const leadMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const leadNow = new Date();
+    const leadDateStr = `${padVal(leadNow.getDate())} ${leadMonths[leadNow.getMonth()]} ${leadNow.getFullYear()}`;
+    const leadTimeStr = `${padVal(leadNow.getHours())}:${padVal(leadNow.getMinutes())}:${padVal(leadNow.getSeconds())}`;
+    const leadDateTimeStr = `${leadDateStr} ${leadTimeStr}`;
+
     const { data, error } = await supabase
       .from('leads')
       .insert([
@@ -45,8 +52,8 @@ export async function saveLeadToSupabase(lead) {
           sub_status: lead.subStatus || 'QUALIFIED',
           assigned_bdm: lead.assignedBDM || '',
           assigned_bda: lead.assignedBDA || '',
-          date: lead.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-          type: lead.type || 'Google Form Leads',
+          date: lead.date || leadDateTimeStr,
+          type: lead.type || 'Organic Leads',
           program: courseId,
           course_id: courseId,
           course_title: courseTitle,
