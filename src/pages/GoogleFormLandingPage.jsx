@@ -5,26 +5,29 @@ import {
   Sparkles, Send, ArrowRight, GraduationCap, Briefcase, 
   Calendar, BookOpen, User, Phone, Mail, FileText, CheckCircle2,
   Users, Code, Monitor, Compass, Award, ShieldCheck, Clock,
-  Laptop, ChevronRight, Star, GraduationCap as CertIcon, ChevronDown, ChevronUp,
-  Check, HelpCircle, Layers, Target, Rocket, ArrowDown
+  Laptop, ChevronRight, Star, ChevronDown, ChevronUp,
+  Check, HelpCircle, Layers, Target, Rocket, ArrowDown, ExternalLink,
+  Video, FileCheck, Search, Layout, Cpu, Activity, Lightbulb, PieChart
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
+const TARGET_GOOGLE_SHEET_ID = '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
+const TARGET_GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk/edit';
+
 const floatingTools = [
-  { name: 'python', top: '8%', left: '4%', delay: '0s', scale: 0.85, animationClass: 'float-animation-1' },
-  { name: 'javascript', top: '18%', left: '85%', delay: '1s', scale: 0.9, animationClass: 'float-animation-2' },
-  { name: 'react', top: '70%', left: '5%', delay: '2s', scale: 0.95, animationClass: 'float-animation-3' },
-  { name: 'sql', top: '52%', left: '90%', delay: '1.5s', scale: 0.8, animationClass: 'float-animation-1' },
-  { name: 'node.js', top: '38%', left: '3%', delay: '3s', scale: 0.9, animationClass: 'float-animation-2' },
-  { name: 'mongodb', top: '82%', left: '86%', delay: '0.5s', scale: 0.95, animationClass: 'float-animation-3' },
+  { name: 'python', top: '6%', left: '4%', delay: '0s', scale: 0.85, animationClass: 'float-animation-1' },
+  { name: 'javascript', top: '16%', left: '85%', delay: '1s', scale: 0.9, animationClass: 'float-animation-2' },
+  { name: 'react', top: '68%', left: '3%', delay: '2s', scale: 0.95, animationClass: 'float-animation-3' },
+  { name: 'sql', top: '48%', left: '92%', delay: '1.5s', scale: 0.8, animationClass: 'float-animation-1' },
+  { name: 'node.js', top: '35%', left: '2%', delay: '3s', scale: 0.9, animationClass: 'float-animation-2' },
+  { name: 'mongodb', top: '80%', left: '88%', delay: '0.5s', scale: 0.95, animationClass: 'float-animation-3' },
   { name: 'aws', top: '10%', left: '78%', delay: '2.5s', scale: 0.85, animationClass: 'float-animation-2' },
-  { name: 'excel', top: '88%', left: '20%', delay: '1.2s', scale: 0.8, animationClass: 'float-animation-1' },
+  { name: 'excel', top: '86%', left: '18%', delay: '1.2s', scale: 0.8, animationClass: 'float-animation-1' },
 ];
 
-// Helper Animated Counter Component utilizing Framer Motion's useInView
 function AnimatedCounter({ value, duration = 1500, suffix = "" }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -131,12 +134,10 @@ export default function GoogleFormLandingPage() {
     name: '',
     phone: '',
     email: '',
-    status: 'College Student',
     college: '',
+    year: '1st Year',
     upskilling: 'ai-data-science',
-    careerGoal: 'Placement Preparation',
-    learningStart: 'Immediately',
-    weeklyTime: '10–15'
+    careerGoal: 'Placement Preparation'
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -150,14 +151,23 @@ export default function GoogleFormLandingPage() {
     }));
   };
 
+  const scrollToForm = () => {
+    const el = document.getElementById('application-form-card');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const nameInput = document.getElementById('hero-app-name');
+      if (nameInput) nameInput.focus({ preventScroll: true });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage('');
     
     // Validate required fields
-    if (!form.name.trim() || !form.phone.trim() || !form.email.trim()) {
-      setErrorMessage('Please fill in all required fields (Full Name, Phone Number, and Email Address).');
+    if (!form.name.trim() || !form.phone.trim() || !form.email.trim() || !form.college.trim()) {
+      setErrorMessage('Please fill in all required fields (Full Name, Phone Number, Email, and College Name).');
       setIsSubmitting(false);
       return;
     }
@@ -173,50 +183,52 @@ export default function GoogleFormLandingPage() {
     }
 
     try {
-      // Find course name for logs
       const selectedCourse = COURSES.find(c => c.id === form.upskilling);
       const courseTitle = selectedCourse ? selectedCourse.title : form.upskilling;
 
-      // 0. Save to Supabase (dynamic client with fallbacks)
+      // Build lead record for Supabase & local DB with dedicated target Google Sheet ID
       const leadRecord = {
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
-        status: form.status,
-        type: 'Organic Leads',
+        status: form.year,
+        type: 'Meta/WA Campaign Leads',
         course_id: form.upskilling,
         course_title: courseTitle,
-        student_details: `College/Org: ${form.college || 'N/A'} | Status: ${form.status} | Goal: ${form.careerGoal} | Start: ${form.learningStart} | Weekly Dedication: ${form.weeklyTime}`,
+        student_details: `College: ${form.college.trim()} | Academic Year: ${form.year} | Goal: ${form.careerGoal}`,
         job_role: form.careerGoal,
         careerGoal: form.careerGoal,
-        message: `Goal: ${form.careerGoal} | Start: ${form.learningStart} | Weekly Hours: ${form.weeklyTime}`
+        target_sheet_id: TARGET_GOOGLE_SHEET_ID,
+        sheet_url: TARGET_GOOGLE_SHEET_URL,
+        message: `College: ${form.college.trim()} | Year: ${form.year} | Goal: ${form.careerGoal}`
       };
       await saveLeadToSupabase(leadRecord);
 
-      // Construct detailed notes containing extra metadata fields
+      // Construct detailed notes containing extra metadata fields & Sheet router tag
       const detailedNotes = `
-Academic/Professional Status: ${form.status}
-College / Organization: ${form.college || 'N/A'}
-Primary Career Objective: ${form.careerGoal}
-Planned Learning Start: ${form.learningStart}
-Weekly Learning Dedication: ${form.weeklyTime} hours
+Academic Year: ${form.year}
+College Name: ${form.college.trim()}
+Primary Career Goal: ${form.careerGoal}
 Preferred Program: ${courseTitle}
-Submitted via BeyondSkills Program Application Page
+Target Google Sheet ID: ${TARGET_GOOGLE_SHEET_ID}
+Target Sheet URL: ${TARGET_GOOGLE_SHEET_URL}
+Submitted via BeyondSkills Program Application Landing Page
       `.trim();
 
       const payload = {
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
-        type: 'Organic Leads',
+        type: 'Meta/WA Campaign Leads',
         program: form.upskilling,
         notes: detailedNotes,
-        college: form.college.trim() || 'Unspecified',
-        profession: form.status,
+        college: form.college.trim(),
+        profession: form.year,
+        year: form.year,
         message: detailedNotes,
         careerGoal: form.careerGoal,
-        learningStart: form.learningStart,
-        weeklyTime: form.weeklyTime
+        targetSheetId: TARGET_GOOGLE_SHEET_ID,
+        targetSheetUrl: TARGET_GOOGLE_SHEET_URL
       };
 
       const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
@@ -231,7 +243,7 @@ Submitted via BeyondSkills Program Application Page
         body: JSON.stringify(payload)
       });
 
-      // 2. Also save to local storage for local client redundancy
+      // Save to local DB as fallback
       const localLeads = getDbItem('beyondskills_leads', []);
       const newLocalLead = {
         id: `LD${String(localLeads.length + 101).padStart(3, '0')}`,
@@ -245,9 +257,11 @@ Submitted via BeyondSkills Program Application Page
         assignedBDA: '',
         status: 'New',
         subStatus: 'QUALIFIED',
-        profession: form.status,
-        college: form.college.trim() || 'Unspecified',
+        profession: form.year,
+        college: form.college.trim(),
         message: detailedNotes,
+        targetSheetId: TARGET_GOOGLE_SHEET_ID,
+        targetSheetUrl: TARGET_GOOGLE_SHEET_URL,
         mentor: 'None',
         duration: 'None',
         callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
@@ -257,11 +271,11 @@ Submitted via BeyondSkills Program Application Page
       localLeads.push(newLocalLead);
       setDbItem('beyondskills_leads', localLeads);
 
-      // Trigger Simulated SLA toast on front-end for visual feedback
+      // Trigger Simulated SLA toast
       window.dispatchEvent(new CustomEvent('beyondskills_toast', {
         detail: {
           subject: `Application Received: ${courseTitle}`,
-          body: `Hello ${form.name},\n\nYour application for ${courseTitle} has been logged in our admissions queue. An academic admissions officer will evaluate your details and reach out for counseling shortly.\n\nSincerely,\nBeyondSkills Admissions Team`
+          body: `Hello ${form.name},\n\nYour application for ${courseTitle} has been logged. Our admissions counselor will evaluate your profile and contact you for counseling & eligibility review shortly.\n\nSincerely,\nBeyondSkills Admissions Team`
         }
       }));
 
@@ -292,437 +306,494 @@ Submitted via BeyondSkills Program Application Page
     }
   };
 
-  const snapshotItems = [
-    { title: 'Duration', desc: '2–4 Months', icon: Clock },
-    { title: 'Mentorship', desc: 'Live Mentor Sessions', icon: Users },
-    { title: 'Practical Projects', desc: '3+ Industry Projects', icon: Code },
-    { title: 'Certification', desc: 'Industry-Recognized Certificate', icon: ShieldCheck },
-    { title: 'Career Guidance', desc: 'Personalized 1-on-1 Sessions', icon: Compass },
-    { title: 'Learning Path', desc: 'Structured Learning Roadmap', icon: Layers }
+  const programHighlights = [
+    { title: 'Live Mentor-Led Training', desc: 'Interactive sessions with active industry professionals', icon: Users },
+    { title: 'Internship Opportunities', desc: 'Eligibility & performance based opportunities', icon: Award },
+    { title: '3+ Industry Projects', desc: 'Build practical portfolio-grade applications', icon: Code },
+    { title: 'Industry-Recognized Certificate', desc: 'Verified credential for your resume & LinkedIn', icon: ShieldCheck },
+    { title: 'Personalized Career Guidance', desc: '1-on-1 counseling session before enrollment', icon: Compass },
+    { title: 'Resume & LinkedIn Review', desc: 'Professional optimization by talent mentors', icon: FileCheck },
+    { title: 'Portfolio Building', desc: 'Showcase production code repositories to recruiters', icon: Laptop },
+    { title: 'Live Doubt Support', desc: 'Real-time debugging & code review sessions', icon: HelpCircle },
+    { title: 'Recorded Learning Access', desc: 'Revisit live lecture recordings anytime', icon: Video },
+    { title: 'Multiple Career Programs', desc: 'Programs tailored across AI, Web, Cloud & Marketing', icon: Layers }
   ];
 
-  const whoShouldApplyList = [
-    { title: 'College Students', desc: 'Building core technical capabilities alongside academic degree', icon: GraduationCap },
-    { title: 'Fresh Graduates', desc: 'Seeking structured industry readiness and practical portfolio projects', icon: Award },
-    { title: 'Working Professionals', desc: 'Upskilling in AI, Full Stack, Cloud & Marketing to unlock promotions', icon: Briefcase },
-    { title: 'Career Switchers', desc: 'Transitioning from non-tech domains into high-growth tech roles', icon: Rocket },
-    { title: 'Beginners', desc: 'Starting from fundamentals with step-by-step guided mentorship', icon: User }
+  const availableProgramsList = [
+    { title: 'Artificial Intelligence, Machine Learning & Data Science', id: 'ai-data-science', icon: Cpu, badge: 'High Demand' },
+    { title: 'Full Stack Web Development', id: 'full-stack-web-development', icon: Code, badge: 'Popular' },
+    { title: 'Cyber Security', id: 'cyber-security', icon: ShieldCheck, badge: 'Trending' },
+    { title: 'Digital Marketing', id: 'digital-marketing', icon: Target, badge: 'High ROI' },
+    { title: 'Business Analytics', id: 'business-analytics', icon: PieChart, badge: 'Top Rated' },
+    { title: 'Cloud Computing', id: 'cloud-computing', icon: Laptop, badge: 'In Demand' },
+    { title: 'UI/UX Design', id: 'ui-ux-design', icon: Layout, badge: 'Creative' },
+    { title: 'Human Resources', id: 'human-resources', icon: Users, badge: 'Core Role' },
+    { title: 'Finance', id: 'finance', icon: Lightbulb, badge: 'Essential' },
+    { title: 'AutoCAD', id: 'autocad', icon: Activity, badge: 'Engineering' },
+    { title: 'VLSI', id: 'vlsi', icon: Cpu, badge: 'Hardware Tech' },
+    { title: 'Internet of Things (IoT)', id: 'iot', icon: Monitor, badge: 'Next-Gen' }
   ];
 
-  const processTimeline = [
-    { step: '1', title: 'Submit Application', desc: 'Complete your application form carefully with your target career goals.' },
-    { step: '2', title: 'Application Review', desc: 'Our admissions team evaluates your background & readiness.' },
-    { step: '3', title: 'Career Counseling', desc: 'Participate in a 1-on-1 profile guidance session with our advisor.' },
-    { step: '4', title: 'Program Recommendation', desc: 'Receive your custom program roadmap and cohort allocation.' },
-    { step: '5', title: 'Enrollment', desc: 'Confirm seat allocation and unlock live batch access.' }
+  const whyBeyondSkills = [
+    { title: 'Learn Directly from Industry Professionals', desc: 'Instructors and mentors from leading tech & corporate organizations.', icon: Users },
+    { title: 'Build 3+ Real-World Projects', desc: 'Hands-on project work designed to reflect actual industry workflows.', icon: Code },
+    { title: 'Mentor-Led Practical Learning', desc: 'Interactive live classes with active query resolution and code feedback.', icon: Video },
+    { title: 'Career-Focused Curriculum', desc: 'Continuously updated modules aligned with recruiter skill requirements.', icon: Target },
+    { title: 'Resume & LinkedIn Optimization', desc: 'Tailored guidance to present your projects effectively to hiring teams.', icon: FileCheck },
+    { title: 'Portfolio Development', desc: 'Build a tangible repository demonstrating real problem-solving capabilities.', icon: Laptop },
+    { title: 'Industry-Recognized Certification', desc: 'Verified certificate validating program completion and hands-on work.', icon: ShieldCheck }
+  ];
+
+  const processSteps = [
+    { step: '1', title: 'Apply Online', desc: 'Complete your application form with your college & program preference.' },
+    { step: '2', title: 'Profile Review', desc: 'Our admissions team reviews your profile and academic details.' },
+    { step: '3', title: 'Career Counseling', desc: 'Participate in a 1-on-1 counseling session to discuss your roadmap.' },
+    { step: '4', title: 'Enrollment', desc: 'Confirm seat allocation and start learning in your chosen cohort.' }
   ];
 
   const faqsList = [
     {
-      q: 'Is prior coding experience required?',
-      a: 'No prior coding experience is required. All BeyondSkills programs begin with core foundational concepts before moving into advanced hands-on projects, making them suitable for beginners as well as experienced learners.'
-    },
-    {
       q: 'Who should apply?',
-      a: 'College students, fresh graduates, working professionals, career switchers, and beginners who are committed to structured upskilling and building a professional career in AI, Full Stack, Marketing, Cloud, or Cyber Security domains.'
+      a: 'College students, fresh graduates, and motivated learners who want to build practical skills, work on real projects, and prepare for career opportunities in tech, management, and digital domains.'
     },
     {
-      q: 'How does the admission process work?',
-      a: 'Once you submit your application, our admissions team reviews your credentials and goals. Eligible applicants are invited for a one-on-one career counseling session where we recommend the most suitable program before final enrollment.'
+      q: 'Is prior coding experience required?',
+      a: 'No prior coding experience is required. Programs start with fundamental concepts and progressively guide you through hands-on practical implementation.'
     },
     {
-      q: 'When do new cohorts begin?',
-      a: 'New cohorts launch every 2 to 4 weeks with restricted cohort sizes to ensure high mentor-to-student interaction, dedicated code reviews, and individual career guidance.'
+      q: 'How do internship opportunities work?',
+      a: 'Eligible learners who maintain strong program attendance, complete mandatory project milestones, and meet eligibility criteria receive access to partner internship opportunities and recruitment referrals.'
+    },
+    {
+      q: 'When do new batches start?',
+      a: 'New cohorts launch every 2 to 4 weeks with limited batch sizes to ensure personalized mentor attention and active live doubt resolution.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative overflow-x-hidden font-sans">
-      {/* Sticky Navigation Header */}
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative overflow-x-hidden font-sans pb-20 md:pb-8">
+      
+      {/* STICKY NAVIGATION HEADER */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-1 group">
+          <div className="flex items-center space-x-1 group cursor-pointer" onClick={() => navigate('/')}>
             <span className="logo-font font-extrabold tracking-tight text-slate-950 text-xl">Beyond</span>
             <span className="logo-font font-extrabold tracking-tight text-[#2A4BFF] text-xl">Skills</span>
           </div>
           <div className="flex items-center space-x-4">
             <button 
-              onClick={() => {
-                const el = document.getElementById('student-app-form');
-                if (el) {
-                  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-              }}
+              onClick={scrollToForm}
               className="bg-[#2A4BFF] hover:bg-[#2A4BFF]/90 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all cursor-pointer shadow-md shadow-[#2A4BFF]/15"
             >
-              Apply for Admission →
+              Apply Now →
             </button>
           </div>
         </div>
       </header>
 
-      <div className="py-8 sm:py-12 px-4">
+      <div className="py-6 sm:py-10 px-4">
         {/* Floating Background Icons */}
         {renderFloatingTools()}
 
-        {/* Background Radial Lights */}
-        <div className="absolute top-[5%] left-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#2A4BFF]/5 pointer-events-none"></div>
-        <div className="absolute top-[35%] right-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#0EA5E9]/5 pointer-events-none"></div>
-        
-        {/* Custom grid pattern overlay */}
+        {/* Background Lights */}
+        <div className="absolute top-[4%] left-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#2A4BFF]/5 pointer-events-none"></div>
+        <div className="absolute top-[30%] right-[-10%] w-[450px] h-[450px] rounded-full blur-[140px] bg-[#0EA5E9]/5 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0"></div>
 
         <motion.div 
-          className="max-w-6xl mx-auto space-y-12 relative z-10"
+          className="max-w-6xl mx-auto space-y-12 sm:space-y-16 relative z-10"
           initial="hidden"
           animate="visible"
           variants={containerVariants}
         >
-          {/* HERO SECTION */}
-          <motion.div className="flex flex-col items-center text-center space-y-5" variants={itemVariants}>
+
+          {/* ========================================================================= */}
+          {/* HERO SECTION WITH FORM INSIDE THE HERO (ABOVE THE FOLD ON DESKTOP)        */}
+          {/* ========================================================================= */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
             
-            {/* Above the Heading: 3 Premium Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-              <span className="inline-flex items-center space-x-1.5 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-emerald-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Admissions Open</span>
-              </span>
+            {/* HERO LEFT COLUMN: BADGES, HEADING & SUBHEADING */}
+            <motion.div className="lg:col-span-6 space-y-6 text-left" variants={itemVariants}>
+              
+              {/* Premium Badges */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center space-x-1.5 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-emerald-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Admissions Open</span>
+                </span>
 
-              <span className="inline-flex items-center space-x-1.5 bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3.5 py-1.5 rounded-full text-[#2A4BFF] text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
-                <Check className="w-3.5 h-3.5 text-[#2A4BFF]" />
-                <span>Application Based Selection</span>
-              </span>
+                <span className="inline-flex items-center space-x-1.5 bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3.5 py-1.5 rounded-full text-[#2A4BFF] text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
+                  <Check className="w-3.5 h-3.5 text-[#2A4BFF]" />
+                  <span>Limited Cohort Size</span>
+                </span>
 
-              <span className="inline-flex items-center space-x-1.5 bg-purple-50 border border-purple-200 px-3.5 py-1.5 rounded-full text-purple-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
-                <Check className="w-3.5 h-3.5 text-purple-600" />
-                <span>Limited Cohort Size</span>
-              </span>
-            </div>
+                <span className="inline-flex items-center space-x-1.5 bg-purple-50 border border-purple-200 px-3.5 py-1.5 rounded-full text-purple-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
+                  <Check className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Mentor-Led Learning</span>
+                </span>
+              </div>
 
-            {/* Hero Heading */}
-            <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-[#0A0E35] max-w-4xl">
-              Apply for BeyondSkills <span className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] bg-clip-text text-transparent">Career Accelerator Programs</span>
-            </h1>
+              {/* Hero Headline */}
+              <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-[#0A0E35]">
+                Apply for BeyondSkills <span className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] bg-clip-text text-transparent">Training & Internship Programs</span>
+              </h1>
 
-            {/* Hero Subheading */}
-            <p className="text-slate-600 text-xs sm:text-base max-w-3xl mx-auto leading-relaxed">
-              Complete your application to receive a personalized program recommendation from our admissions team. Eligible applicants will be invited for a one-on-one career counseling session before enrollment.
-            </p>
-          </motion.div>
+              {/* Hero Subheading */}
+              <p className="text-slate-600 text-xs sm:text-base leading-relaxed">
+                Join industry-focused mentor-led training programs designed for college students and fresh graduates. Learn in-demand skills, build real-world projects, receive personalized mentorship, earn industry-recognized certification and gain access to internship opportunities based on eligibility and program performance.
+              </p>
 
-          {/* MAIN TWO-COLUMN SECTION: PROGRAM SNAPSHOT & APPLICATION FORM */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* LEFT COLUMN: PROGRAM SNAPSHOT */}
-            <div className="lg:col-span-5 space-y-6">
-              <motion.div 
-                className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
-                variants={itemVariants}
-              >
-                <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                  <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Program Snapshot</h3>
-                  <span className="text-[10px] uppercase font-bold tracking-widest bg-blue-500/10 text-blue-400 px-2.5 py-1 rounded-full border border-blue-500/20">Executive Quality</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3.5">
-                  {snapshotItems.map((item, idx) => {
-                    const ItemIcon = item.icon;
-                    return (
-                      <div key={idx} className="bg-slate-950/60 border border-slate-800/80 p-4 rounded-2xl flex items-center space-x-3.5 hover:border-slate-700 transition-colors">
-                        <div className="p-2.5 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF] shrink-0">
-                          <ItemIcon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{item.title}</p>
-                          <p className="text-xs sm:text-sm font-bold text-white mt-0.5">{item.desc}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="bg-slate-950 border border-slate-800/90 p-4 rounded-2xl flex items-start space-x-3.5">
-                  <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0 mt-0.5">
-                    <ShieldCheck className="w-5 h-5" />
+              {/* Quick Trust Highlights */}
+              <div className="pt-2 grid grid-cols-2 gap-3 max-w-md">
+                <div className="bg-white/80 border border-slate-200 p-3 rounded-2xl flex items-center space-x-2.5 shadow-sm">
+                  <div className="p-2 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF]">
+                    <Users className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Admissions Review SLA</p>
-                    <p className="text-[11px] text-slate-400 leading-relaxed mt-0.5">
-                      Applications are processed in order of submission. Eligible applicants are scheduled for counselor review within 24 hours.
-                    </p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Learners</p>
+                    <p className="text-xs font-extrabold text-slate-900">10,000+ Enrolled</p>
                   </div>
                 </div>
-              </motion.div>
-            </div>
 
-            {/* RIGHT COLUMN: APPLICATION FORM */}
-            <div className="lg:col-span-7" id="student-app-form">
-              <motion.div 
-                className="bg-slate-950/95 border border-white/10 p-5 sm:p-8 rounded-3xl shadow-2xl space-y-6 text-slate-100 backdrop-blur-xl relative"
-                variants={itemVariants}
-              >
-                <div className="border-b border-white/10 pb-4">
-                  <div className="flex items-center space-x-2 text-[#2A4BFF] mb-1">
-                    <CertIcon className="w-5 h-5" />
-                    <span className="text-xs font-bold uppercase tracking-widest font-mono">Admission Portal</span>
+                <div className="bg-white/80 border border-slate-200 p-3 rounded-2xl flex items-center space-x-2.5 shadow-sm">
+                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
+                    <Star className="w-4 h-4 fill-amber-500" />
                   </div>
-                  <h2 className="text-2xl font-bold tracking-tight text-white">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Rating</p>
+                    <p className="text-xs font-extrabold text-slate-900">4.8 / 5 Learner Rating</p>
+                  </div>
+                </div>
+              </div>
+
+            </motion.div>
+
+            {/* HERO RIGHT COLUMN: STUDENT APPLICATION FORM (VISIBLE IMMEDIATELY ON DESKTOP & TOP OF MOBILE) */}
+            <motion.div className="lg:col-span-6" variants={itemVariants} id="application-form-card">
+              <div className="bg-slate-950/95 border border-white/10 p-5 sm:p-7 rounded-3xl shadow-2xl space-y-5 text-slate-100 backdrop-blur-xl relative">
+                
+                <div className="border-b border-white/10 pb-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#2A4BFF] font-mono flex items-center space-x-1.5">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Official Application</span>
+                    </span>
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-mono">
+                      Fast Track
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-bold tracking-tight text-white mt-1">
                     Student Application Form
                   </h2>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
-                    Complete your details carefully. Our admissions team reviews every application before recommending the most suitable program.
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Fill out your details carefully to apply for mentor-led training & career counseling.
                   </p>
                 </div>
 
                 {errorMessage && (
-                  <div className="bg-red-500/10 border border-red-500/25 text-red-300 p-4 rounded-2xl text-xs font-medium flex items-start space-x-2">
-                    <span className="text-base">⚠️</span>
+                  <div className="bg-red-500/10 border border-red-500/25 text-red-300 p-3.5 rounded-xl text-xs font-medium flex items-start space-x-2">
+                    <span className="text-sm">⚠️</span>
                     <span>{errorMessage}</span>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   
-                  {/* Personal & Contact Details */}
-                  <div className="space-y-4">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2A4BFF] flex items-center font-mono">
-                      <span className="w-2 h-2 rounded-full bg-[#2A4BFF] mr-2"></span>
-                      1. Applicant Credentials
-                    </h4>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="gf-name" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <User className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          Full Name <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <input
-                          id="gf-name"
-                          type="text"
-                          name="name"
-                          required
-                          value={form.name}
-                          onChange={handleChange}
-                          placeholder="Enter your full name"
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="gf-phone" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <Phone className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          Phone Number <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <input
-                          id="gf-phone"
-                          type="tel"
-                          name="phone"
-                          required
-                          value={form.phone}
-                          onChange={handleChange}
-                          placeholder="10-digit mobile number"
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
-                        />
-                      </div>
+                  {/* Full Name */}
+                  <div>
+                    <label htmlFor="hero-app-name" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                      <User className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                      Full Name <span className="text-red-400 ml-1">*</span>
+                    </label>
+                    <input
+                      id="hero-app-name"
+                      type="text"
+                      name="name"
+                      required
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Enter your full name"
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
+                    />
+                  </div>
+
+                  {/* Mobile & Email */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label htmlFor="hero-app-phone" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                        <Phone className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                        Mobile Number <span className="text-red-400 ml-1">*</span>
+                      </label>
+                      <input
+                        id="hero-app-phone"
+                        type="tel"
+                        name="phone"
+                        required
+                        value={form.phone}
+                        onChange={handleChange}
+                        placeholder="10-digit mobile number"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
+                      />
                     </div>
 
                     <div>
-                      <label htmlFor="gf-email" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                        <Mail className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
+                      <label htmlFor="hero-app-email" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                        <Mail className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
                         Email Address <span className="text-red-400 ml-1">*</span>
                       </label>
                       <input
-                        id="gf-email"
+                        id="hero-app-email"
                         type="email"
                         name="email"
                         required
                         value={form.email}
                         onChange={handleChange}
-                        placeholder="e.g. yourname@example.com"
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
+                        placeholder="yourname@example.com"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
                       />
                     </div>
                   </div>
 
-                  {/* Academic & Professional Status */}
-                  <div className="space-y-4 pt-4 border-t border-white/10">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2A4BFF] flex items-center font-mono">
-                      <span className="w-2 h-2 rounded-full bg-[#2A4BFF] mr-2"></span>
-                      2. Academic & Professional Profile
-                    </h4>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="gf-status" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <Briefcase className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          Current Status <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <select
-                          id="gf-status"
-                          name="status"
-                          value={form.status}
-                          onChange={handleChange}
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
-                        >
-                          <option value="College Student">College Student</option>
-                          <option value="Fresh Graduate">Fresh Graduate</option>
-                          <option value="Working Professional">Working Professional</option>
-                          <option value="Career Switcher">Career Switcher</option>
-                          <option value="Beginner">Beginner</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label htmlFor="gf-college" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <GraduationCap className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          College / Organization <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <input
-                          id="gf-college"
-                          type="text"
-                          name="college"
-                          required
-                          value={form.college}
-                          onChange={handleChange}
-                          placeholder="e.g. Delhi University / Wipro"
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
-                        />
-                      </div>
+                  {/* College Name & Academic Year */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label htmlFor="hero-app-college" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                        <GraduationCap className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                        College Name <span className="text-red-400 ml-1">*</span>
+                      </label>
+                      <input
+                        id="hero-app-college"
+                        type="text"
+                        name="college"
+                        required
+                        value={form.college}
+                        onChange={handleChange}
+                        placeholder="e.g. Delhi University / AKTU"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] focus:bg-slate-900 outline-none text-white transition-all placeholder-slate-500"
+                      />
                     </div>
 
                     <div>
-                      <label htmlFor="gf-upskilling" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                        <BookOpen className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                        Preferred Program <span className="text-red-400 ml-1">*</span>
+                      <label htmlFor="hero-app-year" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                        <Calendar className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                        Current Academic Year <span className="text-red-400 ml-1">*</span>
                       </label>
                       <select
-                        id="gf-upskilling"
-                        name="upskilling"
-                        value={form.upskilling}
+                        id="hero-app-year"
+                        name="year"
+                        value={form.year}
                         onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer font-medium text-blue-200"
+                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
                       >
-                        <option value="ai-data-science">Artificial Intelligence, Machine Learning & Data Science</option>
-                        <option value="full-stack-web-development">Full Stack Web Development (MERN Stack)</option>
-                        <option value="digital-marketing">Digital Marketing & Performance Marketing</option>
-                        <option value="cloud-computing">Cloud Computing & DevOps Engineering</option>
-                        <option value="cyber-security">Cyber Security & Ethical Hacking</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Graduated / Fresh Graduate">Graduated / Fresh Graduate</option>
                       </select>
                     </div>
                   </div>
 
-                  {/* QUALIFICATION QUESTIONS */}
-                  <div className="space-y-4 pt-4 border-t border-white/10">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#2A4BFF] flex items-center font-mono">
-                      <span className="w-2 h-2 rounded-full bg-[#2A4BFF] mr-2"></span>
-                      3. Admission Qualification Questions
-                    </h4>
-
-                    {/* Question 1: Career Objective */}
-                    <div>
-                      <label htmlFor="gf-careerGoal" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                        <Target className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                        What is your primary career objective? <span className="text-red-400 ml-1">*</span>
-                      </label>
-                      <select
-                        id="gf-careerGoal"
-                        name="careerGoal"
-                        value={form.careerGoal}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
-                      >
-                        <option value="Internship Preparation">Internship Preparation</option>
-                        <option value="Placement Preparation">Placement Preparation</option>
-                        <option value="Upskilling">Upskilling</option>
-                        <option value="Career Switch">Career Switch</option>
-                        <option value="Freelancing">Freelancing</option>
-                        <option value="Higher Studies">Higher Studies</option>
-                        <option value="Entrepreneurship">Entrepreneurship</option>
-                      </select>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Question 2: How soon */}
-                      <div>
-                        <label htmlFor="gf-learningStart" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <Calendar className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          How soon do you want to begin learning? <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <select
-                          id="gf-learningStart"
-                          name="learningStart"
-                          value={form.learningStart}
-                          onChange={handleChange}
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
-                        >
-                          <option value="Immediately">Immediately</option>
-                          <option value="Within 2 Weeks">Within 2 Weeks</option>
-                          <option value="Within 1 Month">Within 1 Month</option>
-                          <option value="Just Exploring">Just Exploring</option>
-                        </select>
-                      </div>
-
-                      {/* Question 3: Hours weekly */}
-                      <div>
-                        <label htmlFor="gf-weeklyTime" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center font-mono">
-                          <Clock className="w-3.5 h-3.5 mr-1.5 text-[#2A4BFF]" />
-                          How many hours can you dedicate weekly? <span className="text-red-400 ml-1">*</span>
-                        </label>
-                        <select
-                          id="gf-weeklyTime"
-                          name="weeklyTime"
-                          value={form.weeklyTime}
-                          onChange={handleChange}
-                          className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
-                        >
-                          <option value="Less than 5">Less than 5</option>
-                          <option value="5–10">5–10</option>
-                          <option value="10–15">10–15</option>
-                          <option value="15+">15+</option>
-                        </select>
-                      </div>
-                    </div>
+                  {/* Preferred Program */}
+                  <div>
+                    <label htmlFor="hero-app-upskilling" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                      <BookOpen className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                      Preferred Program <span className="text-red-400 ml-1">*</span>
+                    </label>
+                    <select
+                      id="hero-app-upskilling"
+                      name="upskilling"
+                      value={form.upskilling}
+                      onChange={handleChange}
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer font-medium text-blue-200"
+                    >
+                      <option value="ai-data-science">Artificial Intelligence, Machine Learning & Data Science</option>
+                      <option value="full-stack-web-development">Full Stack Web Development</option>
+                      <option value="cyber-security">Cyber Security</option>
+                      <option value="digital-marketing">Digital Marketing</option>
+                      <option value="business-analytics">Business Analytics</option>
+                      <option value="cloud-computing">Cloud Computing</option>
+                      <option value="ui-ux-design">UI/UX Design</option>
+                      <option value="human-resources">Human Resources</option>
+                      <option value="finance">Finance</option>
+                      <option value="autocad">AutoCAD</option>
+                      <option value="vlsi">VLSI</option>
+                      <option value="iot">Internet of Things (IoT)</option>
+                    </select>
                   </div>
 
-                  {/* DISCLAIMER ABOVE BUTTON */}
-                  <div className="pt-2">
-                    <p className="text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-3.5 rounded-xl border border-white/5 font-sans">
-                      By submitting this application, you agree to be contacted by the BeyondSkills Admissions Team for eligibility review, career guidance and program recommendation.
-                    </p>
+                  {/* Career Goal */}
+                  <div>
+                    <label htmlFor="hero-app-careerGoal" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
+                      <Target className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
+                      Career Goal <span className="text-red-400 ml-1">*</span>
+                    </label>
+                    <select
+                      id="hero-app-careerGoal"
+                      name="careerGoal"
+                      value={form.careerGoal}
+                      onChange={handleChange}
+                      className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer"
+                    >
+                      <option value="Placement Preparation">Placement Preparation</option>
+                      <option value="Internship Preparation">Internship Preparation</option>
+                      <option value="Upskilling">Upskilling</option>
+                      <option value="Higher Studies">Higher Studies</option>
+                      <option value="Career Switch">Career Switch</option>
+                      <option value="Freelancing">Freelancing</option>
+                      <option value="Entrepreneurship">Entrepreneurship</option>
+                    </select>
                   </div>
 
-                  {/* SUBMIT BUTTON */}
+                  {/* CTA Button */}
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] hover:opacity-95 disabled:opacity-50 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center space-x-2.5 shadow-lg shadow-blue-500/20"
+                    className="w-full bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] hover:opacity-95 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/20 mt-2"
                     whileTap={{ scale: 0.98 }}
                   >
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Evaluating Application Credentials...</span>
+                        <span>Logging Application...</span>
                       </>
                     ) : (
                       <>
-                        <span>Apply for Admission →</span>
+                        <span>Apply Now →</span>
                       </>
                     )}
                   </motion.button>
+
                 </form>
-              </motion.div>
-            </div>
+
+              </div>
+            </motion.div>
 
           </div>
 
-          {/* TRUST SECTION */}
+
+          {/* ========================================================================= */}
+          {/* PROGRAM HIGHLIGHTS FEATURE GRID                                           */}
+          {/* ========================================================================= */}
+          <motion.div 
+            className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
+            variants={itemVariants}
+          >
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Key Program Benefits</h3>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Program Highlights</h2>
+              <p className="text-xs text-slate-400">Comprehensive features built to maximize your skill building and practical readiness.</p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+              {programHighlights.map((feat, idx) => {
+                const FeatIcon = feat.icon;
+                return (
+                  <div key={idx} className="bg-slate-950/60 border border-slate-800/80 p-4 rounded-2xl space-y-2 flex flex-col justify-between hover:border-slate-700 transition-colors">
+                    <div className="p-2 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF] w-fit">
+                      <FeatIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-white">{feat.title}</h4>
+                      <p className="text-[10px] text-slate-400 leading-relaxed mt-0.5">{feat.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+
+          {/* ========================================================================= */}
+          {/* AVAILABLE PROGRAMS DEDICATED SECTION                                      */}
+          {/* ========================================================================= */}
+          <motion.div 
+            className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
+            variants={itemVariants}
+          >
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Career Accelerators</h3>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Available Programs</h2>
+              <p className="text-xs text-slate-400">Choose from industry-aligned learning tracks curated for engineering, management, and tech students.</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {availableProgramsList.map((prog, idx) => {
+                const ProgIcon = prog.icon;
+                return (
+                  <div 
+                    key={idx}
+                    onClick={() => {
+                      setForm(prev => ({ ...prev, upskilling: prog.id }));
+                      scrollToForm();
+                    }}
+                    className="bg-slate-950/60 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between space-y-3 hover:border-[#2A4BFF]/50 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="p-2 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF] group-hover:scale-105 transition-transform">
+                        <ProgIcon className="w-4 h-4" />
+                      </div>
+                      <span className="text-[9px] font-mono font-bold uppercase bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded-full border border-blue-500/20">
+                        {prog.badge}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h4 className="text-xs font-bold text-white group-hover:text-[#2A4BFF] transition-colors">{prog.title}</h4>
+                      <p className="text-[10px] text-slate-400 mt-1">Live Mentorship • Practical Projects</p>
+                    </div>
+
+                    <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-bold text-[#2A4BFF]">
+                      <span>Apply for Program</span>
+                      <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+
+          {/* ========================================================================= */}
+          {/* WHY BEYONDSKILLS SECTION                                                  */}
+          {/* ========================================================================= */}
+          <motion.div 
+            className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
+            variants={itemVariants}
+          >
+            <div className="text-center max-w-xl mx-auto space-y-2">
+              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Proven Value Proposition</h3>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Why BeyondSkills</h2>
+              <p className="text-xs text-slate-400">Designed to bridge the gap between college academics and real-world corporate expectations.</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {whyBeyondSkills.map((item, idx) => {
+                const ItemIcon = item.icon;
+                return (
+                  <div key={idx} className="bg-slate-950/60 border border-slate-800/80 p-5 rounded-2xl space-y-2.5 hover:border-slate-700 transition-all">
+                    <div className="p-2 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF] w-fit">
+                      <ItemIcon className="w-4 h-4" />
+                    </div>
+                    <h4 className="text-xs font-bold text-white">{item.title}</h4>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">{item.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+
+
+          {/* ========================================================================= */}
+          {/* TRUST SECTION                                                             */}
+          {/* ========================================================================= */}
           <motion.div 
             className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100"
             variants={itemVariants}
           >
             <div className="text-center max-w-xl mx-auto space-y-2 mb-8">
               <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Proven Track Record</h3>
-              <h2 className="text-xl sm:text-2xl font-black text-white">Backed by Metrics of Trust</h2>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Trusted by 10,000+ Learners Across India</h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -750,68 +821,38 @@ Submitted via BeyondSkills Program Application Page
             </div>
           </motion.div>
 
-          {/* WHO SHOULD APPLY SECTION */}
-          <motion.div 
-            className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
-            variants={itemVariants}
-          >
-            <div className="text-center max-w-xl mx-auto space-y-2">
-              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Target Applicants</h3>
-              <h2 className="text-xl sm:text-2xl font-black text-white">Who Should Apply</h2>
-              <p className="text-xs text-slate-400">Our structured programs are built for motivated individuals committed to career acceleration.</p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-              {whoShouldApplyList.map((target, idx) => {
-                const TargetIcon = target.icon;
-                return (
-                  <motion.div 
-                    key={idx} 
-                    className="bg-slate-950/60 border border-slate-800/70 p-5 rounded-2xl space-y-3 flex flex-col justify-between hover:border-slate-700 transition-all"
-                    whileHover={{ y: -4 }}
-                  >
-                    <div className="p-2.5 rounded-xl bg-[#2A4BFF]/10 text-[#2A4BFF] w-fit">
-                      <TargetIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white">{target.title}</h4>
-                      <p className="text-[11px] text-slate-400 leading-relaxed mt-1">{target.desc}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
 
-          {/* PROCESS SECTION: PREMIUM HORIZONTAL ADMISSIONS TIMELINE */}
+          {/* ========================================================================= */}
+          {/* APPLICATION PROCESS (SIMPLIFIED 4 STEPS)                                  */}
+          {/* ========================================================================= */}
           <motion.div 
             className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-8"
             variants={itemVariants}
           >
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Structured Selection</h3>
-              <h2 className="text-xl sm:text-2xl font-black text-white">Admissions Process</h2>
-              <p className="text-xs text-slate-400">Our five-step evaluation ensures structured enrollment & personalized mentorship.</p>
+              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Simple Workflow</h3>
+              <h2 className="text-xl sm:text-2xl font-black text-white">Application Process</h2>
+              <p className="text-xs text-slate-400">Four straightforward steps to start your structured learning roadmap.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
               {/* Desktop connection line */}
-              <div className="hidden md:block absolute top-[28px] left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-blue-600/40 via-sky-500/40 to-emerald-500/40 z-0"></div>
+              <div className="hidden md:block absolute top-[28px] left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-blue-600/40 via-sky-500/40 to-emerald-500/40 z-0"></div>
               
-              {processTimeline.map((stepItem, idx) => (
+              {processSteps.map((stepItem, idx) => (
                 <div 
                   key={idx} 
-                  className={`relative z-10 flex flex-col items-center text-center space-y-3 p-4 bg-slate-950/70 rounded-2xl border ${idx === 4 ? 'border-emerald-500/40' : 'border-slate-800'}`}
+                  className={`relative z-10 flex flex-col items-center text-center space-y-3 p-4 bg-slate-950/70 rounded-2xl border ${idx === 3 ? 'border-emerald-500/40' : 'border-slate-800'}`}
                 >
                   <div className={`w-11 h-11 rounded-full flex items-center justify-center font-extrabold text-sm font-mono shadow-md ${
-                    idx === 4 
+                    idx === 3 
                       ? 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-400' 
                       : 'bg-[#2A4BFF]/15 border border-[#2A4BFF]/40 text-[#2A4BFF]'
                   }`}>
                     {stepItem.step}
                   </div>
                   <div>
-                    <h4 className={`text-xs font-bold ${idx === 4 ? 'text-emerald-300' : 'text-white'}`}>{stepItem.title}</h4>
+                    <h4 className={`text-xs font-bold ${idx === 3 ? 'text-emerald-300' : 'text-white'}`}>{stepItem.title}</h4>
                     <p className="text-[10px] text-slate-400 mt-1 leading-relaxed">{stepItem.desc}</p>
                   </div>
                 </div>
@@ -819,7 +860,10 @@ Submitted via BeyondSkills Program Application Page
             </div>
           </motion.div>
 
-          {/* FAQ SECTION */}
+
+          {/* ========================================================================= */}
+          {/* FREQUENTLY ASKED QUESTIONS                                                */}
+          {/* ========================================================================= */}
           <motion.div 
             className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
             variants={itemVariants}
@@ -872,8 +916,24 @@ Submitted via BeyondSkills Program Application Page
               </button>
             </p>
           </motion.div>
+
         </motion.div>
       </div>
+
+      {/* FLOATING STICKY APPLY BAR ON MOBILE */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-white/10 p-3 flex items-center justify-between shadow-2xl">
+        <div>
+          <p className="text-[10px] font-bold text-white uppercase tracking-wider">BeyondSkills Admissions</p>
+          <p className="text-[9px] text-emerald-400 font-mono">Limited Cohort Seats Open</p>
+        </div>
+        <button
+          onClick={scrollToForm}
+          className="bg-[#2A4BFF] hover:bg-[#2A4BFF]/90 text-white font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-xl shadow-lg shadow-blue-500/20 cursor-pointer"
+        >
+          Apply Now →
+        </button>
+      </div>
+
     </div>
   );
 }
