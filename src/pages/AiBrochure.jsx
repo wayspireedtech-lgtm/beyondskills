@@ -597,16 +597,8 @@ export default function AiBrochure() {
       }
     }));
 
-    setEnquiryStatus('success');
-    setEnquiryForm({
-      name: '',
-      email: '',
-      phone: '',
-      college: '',
-      status: 'Undergraduate Student',
-      message: ''
-    });
-    setTimeout(() => setEnquiryStatus(null), 5000);
+    const programSlug = (courseId || course?.id || 'ai-data-science').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(courseTitle || course?.title || courseId)}`;
   };
 
   const downloadSyllabusMock = () => {

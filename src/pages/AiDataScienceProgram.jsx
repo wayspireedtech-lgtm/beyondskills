@@ -320,16 +320,7 @@ export default function AiDataScienceProgram() {
       }
     }));
 
-    setEnquiryStatus('success');
-    setEnquiryForm({
-      name: '',
-      email: '',
-      phone: '',
-      college: '',
-      status: 'Undergraduate Student',
-      message: ''
-    });
-    setTimeout(() => setEnquiryStatus(null), 5000);
+    window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
   };
 
   const downloadSyllabusMock = () => {

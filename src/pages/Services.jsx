@@ -127,9 +127,8 @@ export default function Services() {
       }
     }));
 
-    setStatus('success');
-    setForm({ name: '', company: '', email: '', phone: '', budget: 'Below 1 Lakh', message: '' });
-    setTimeout(() => setStatus(null), 5000);
+    const serviceSlug = (serviceId || data.title || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    window.location.href = `/thank-you/${serviceSlug}?program=${encodeURIComponent(data.title)}`;
   };
 
   if (!data) {

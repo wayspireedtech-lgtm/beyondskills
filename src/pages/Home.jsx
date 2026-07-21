@@ -107,9 +107,8 @@ export default function Home() {
       }
     }));
 
-    setSubmitStatus('agency_success');
-    setAgencyForm({ name: '', company: '', email: '', phone: '', service: 'Website Development', budget: 'Below 1 Lakh', message: '' });
-    setTimeout(() => setSubmitStatus(null), 5000);
+    const agencySlug = (agencyForm.service || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    window.location.href = `/thank-you/${agencySlug}?program=${encodeURIComponent(agencyForm.service)}`;
   };
 
   const handleAcademySubmit = async (e) => {
@@ -158,9 +157,8 @@ export default function Home() {
       }
     }));
 
-    setSubmitStatus('academy_success');
-    setAcademyForm({ name: '', email: '', phone: '', course: 'ai-ml', college: '', status: 'Undergraduate Student', message: '' });
-    setTimeout(() => setSubmitStatus(null), 5000);
+    const academySlug = (academyForm.course || 'academy').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    window.location.href = `/thank-you/${academySlug}?program=${encodeURIComponent(academyForm.course)}`;
   };
 
   const toggleFaq = (index) => {

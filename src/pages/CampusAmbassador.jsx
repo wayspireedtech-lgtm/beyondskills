@@ -60,17 +60,7 @@ export default function CampusAmbassador() {
       }
     }));
 
-    setStatus('success');
-    setForm({
-      name: '',
-      email: '',
-      phone: '',
-      college: '',
-      year: '2nd Year',
-      stream: '',
-      whyApply: ''
-    });
-    setTimeout(() => setStatus(null), 5000);
+    window.location.href = '/thank-you/campus-ambassador?program=campus-ambassador';
   };
 
   return (
