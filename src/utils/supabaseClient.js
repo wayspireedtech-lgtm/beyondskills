@@ -20,6 +20,24 @@ if (supabaseUrl && supabaseAnonKey) {
 
 import { getDbItem } from './dbHelpers';
 
+export function getISTDateTimeString(dateVal = new Date()) {
+  if (!dateVal) return '';
+  const d = typeof dateVal === 'number' || typeof dateVal === 'string' ? new Date(dateVal) : dateVal;
+  if (isNaN(d.getTime())) {
+    return String(dateVal);
+  }
+  return new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata'
+  }).format(d);
+}
+
 /**
  * Saves a brochure lead to Supabase 'leads' table
  */
@@ -33,12 +51,7 @@ export async function saveLeadToSupabase(lead) {
     const courseId = lead.program || lead.course_id || 'artificial-intelligence';
     const courseTitle = lead.course_title || lead.course || '';
 
-    const padVal = (num) => String(num).padStart(2, '0');
-    const leadMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const leadNow = new Date();
-    const leadDateStr = `${padVal(leadNow.getDate())} ${leadMonths[leadNow.getMonth()]} ${leadNow.getFullYear()}`;
-    const leadTimeStr = `${padVal(leadNow.getHours())}:${padVal(leadNow.getMinutes())}:${padVal(leadNow.getSeconds())}`;
-    const leadDateTimeStr = `${leadDateStr} ${leadTimeStr}`;
+    const leadDateTimeStr = getISTDateTimeString(new Date());
 
     const { data, error } = await supabase
       .from('leads')

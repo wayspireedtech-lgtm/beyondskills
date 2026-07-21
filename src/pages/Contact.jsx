@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, ShieldCheck, Clock, Sparkles } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
@@ -21,7 +21,7 @@ export default function Contact() {
       college: agencyForm.company || 'Unspecified',
       profession: 'Corporate / Client',
       message: `Budget: ${agencyForm.budget} | Message: ${agencyForm.message}`,
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
@@ -72,7 +72,7 @@ export default function Contact() {
       college: academyForm.college || 'Unspecified',
       profession: academyForm.status || 'Unspecified',
       message: academyForm.message || '',
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

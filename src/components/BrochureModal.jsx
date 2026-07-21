@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ArrowRight, Download } from 'lucide-react';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 
 export default function BrochureModal({ isOpen, onClose, course }) {
@@ -38,7 +38,7 @@ export default function BrochureModal({ isOpen, onClose, course }) {
 
     // 2. Save locally for mock data / analytics logs
     const leads = getDbItem('beyondskills_leads', []);
-    leads.push({ type: 'BrochureDownload', ...leadRecord, date: new Date().toISOString() });
+    leads.push({ type: 'BrochureDownload', ...leadRecord, date: getISTDateTimeString() });
     setDbItem('beyondskills_leads', leads);
 
     setIsSubmitting(false);

@@ -7,7 +7,8 @@ import {
   updateLeadInSupabase,
   getCrmUsersFromSupabase,
   saveCrmUserToSupabase,
-  deleteCrmUserFromSupabase
+  deleteCrmUserFromSupabase,
+  getISTDateTimeString
 } from '../utils/supabaseClient';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
@@ -2671,7 +2672,7 @@ export default function AdminDashboard() {
                             <td className="py-3.5 px-4">
                               <p className="font-semibold text-white">{lead.name}</p>
                               <span className="text-[9px] text-slate-500 font-mono">
-                                Date: {lead.date}
+                                Date: {getISTDateTimeString(lead.date)}
                               </span>
                             </td>
                             <td className="py-3.5 px-4 font-mono text-xs">
@@ -4744,7 +4745,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <span className="text-slate-500 uppercase text-[9px] block">Lead Date</span>
-                <span className="text-slate-200 font-semibold">{selectedLead.date}</span>
+                <span className="text-slate-200 font-semibold">{getISTDateTimeString(selectedLead.date)}</span>
               </div>
               <div>
                 <span className="text-slate-500 uppercase text-[9px] block">Campaign Type</span>
@@ -4931,7 +4932,7 @@ export default function AdminDashboard() {
                     <div key={i} className="bg-white/5 p-3 rounded-lg border border-white/5 text-xs relative font-mono">
                       <p className="text-slate-350 italic">"{log.note}"</p>
                       <span className="text-[10px] text-slate-555 mt-1 block">
-                        Logged date: {new Date(log.date).toLocaleString()}
+                        Logged date: {getISTDateTimeString(log.date)}
                       </span>
                     </div>
                   ))

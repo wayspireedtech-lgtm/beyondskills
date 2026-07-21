@@ -35,3 +35,22 @@ export const logUserAccess = (email, name, action) => {
     console.error('Failed to log user access:', e);
   }
 };
+
+export const getISTDateTimeString = (dateVal = new Date()) => {
+  if (!dateVal) return '';
+  const d = typeof dateVal === 'number' || typeof dateVal === 'string' ? new Date(dateVal) : dateVal;
+  if (isNaN(d.getTime())) {
+    return String(dateVal);
+  }
+  return new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Kolkata'
+  }).format(d);
+};
+

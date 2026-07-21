@@ -9,7 +9,7 @@ import {
   MessageCircle, Target, Check
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
 import adobeLogo from '../assets/adobe.svg';
@@ -430,7 +430,7 @@ export default function AiMlDataScienceLandingPage() {
     const referrer = document.referrer || 'Direct';
     const pageUrl = window.location.href;
     const { device, browser } = getDeviceDetails();
-    const submissionTime = new Date().toISOString();
+    const submissionTime = getISTDateTimeString();
     const leadId = `LD-AI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const detailedNotes = `

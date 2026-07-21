@@ -5,7 +5,7 @@ import {
   Star, Briefcase, Zap, Compass, HelpCircle, ChevronDown, ChevronUp, Download, Play, RefreshCw, BarChart2
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 
 export default function AiDataScienceProgram() {
   const [faqOpen, setFaqOpen] = useState({});
@@ -307,7 +307,7 @@ export default function AiDataScienceProgram() {
       message: enquiryForm.message,
       status: 'New',
       subStatus: 'QUALIFIED',
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

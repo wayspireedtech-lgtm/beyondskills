@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
+import { getISTDateTimeString } from '../utils/supabaseClient';
 import { ShieldCheck, ShieldAlert, ArrowLeft, Lock, CheckSquare, Square } from 'lucide-react';
 
 // Helper to dynamically load the Razorpay checkout script
@@ -92,7 +93,7 @@ export default function Checkout() {
       courseId: course.id,
       email: form.email,
       status: 'Success',
-      date: new Date().toISOString(),
+      date: getISTDateTimeString(),
       mode: learningMode
     });
     setDbItem('beyondskills_payments', payments);

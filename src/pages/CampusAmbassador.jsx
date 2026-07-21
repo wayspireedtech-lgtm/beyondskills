@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Send, Sparkles, Award, Users, ShieldAlert, Briefcase, MessageSquare, CheckCircle, Star } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 
 export default function CampusAmbassador() {
   const [form, setForm] = useState({
@@ -27,7 +27,7 @@ export default function CampusAmbassador() {
       profession: `Student (${form.year || 'N/A'})`,
       program: 'Campus Ambassador',
       message: `Stream: ${form.stream || 'N/A'} | Why Apply: ${form.whyApply || 'N/A'}`,
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

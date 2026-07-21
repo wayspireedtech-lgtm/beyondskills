@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Code, Megaphone, CheckCircle, Star, Users, Briefcase, Award, Sparkles, MessageSquare, Plus, Minus, Send, Play, Terminal } from 'lucide-react';
 import TechIcon from '../components/TechIcon';
 import { COURSES_SUMMARY, findCourseSummary } from '../utils/coursesSummary';
-import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { getDbItem, setDbItem, getISTDateTimeString } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
 
 // Static testimonials and mentors for homepage (avoiding heavy mockDb import)
@@ -73,7 +73,7 @@ export default function Home() {
       college: agencyForm.company || 'Unspecified',
       profession: 'Corporate / Client',
       message: `Budget: ${agencyForm.budget} | Message: ${agencyForm.message}`,
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
@@ -124,7 +124,7 @@ export default function Home() {
       college: academyForm.college || 'Unspecified',
       profession: academyForm.status || 'Unspecified',
       message: academyForm.message || '',
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

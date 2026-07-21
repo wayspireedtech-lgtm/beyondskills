@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Code, Megaphone, Terminal, FileText, CheckCircle, ArrowLeft, Send, Sparkles, AlertCircle } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 
 const SERVICE_DATA = {
   'website-development': {
@@ -94,7 +94,7 @@ export default function Services() {
       college: form.company || 'Unspecified',
       profession: 'Corporate / Client',
       message: `Budget: ${form.budget} | Message: ${form.message}`,
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

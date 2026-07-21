@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, COURSES, MENTORS } from '../utils/mockDb';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { 
   Sparkles, CheckCircle, ChevronDown, ChevronUp, BookOpen, Clock, 
   MapPin, ShieldAlert, Award, Star, ArrowRight, User, GraduationCap, Check
@@ -88,7 +88,7 @@ export default function CustomLandingPage() {
       utmContent: 'Ad Variant 1',
       leadStatus: 'New Lead',
       remarks: `Submitted via Custom Landing Page: ${slug}`,
-      date: new Date().toISOString()
+      date: getISTDateTimeString()
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

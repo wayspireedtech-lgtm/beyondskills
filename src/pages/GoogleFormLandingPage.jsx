@@ -8,7 +8,7 @@ import {
   Laptop, ChevronRight, Star, GraduationCap as CertIcon
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import TechIcon from '../components/TechIcon';
 
 const floatingTools = [
@@ -241,7 +241,7 @@ Submitted via Google Form Campaign page
         name: payload.name,
         email: payload.email,
         phone: payload.phone,
-        date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+        date: getISTDateTimeString(),
         type: payload.type,
         program: payload.program,
         assignedBDM: '',
@@ -254,7 +254,7 @@ Submitted via Google Form Campaign page
         mentor: 'None',
         duration: 'None',
         callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
-        history: [{ note: detailedNotes, date: new Date().toISOString() }]
+        history: [{ note: detailedNotes, date: getISTDateTimeString() }]
       };
       
       localLeads.push(newLocalLead);

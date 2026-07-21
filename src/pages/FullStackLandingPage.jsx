@@ -7,7 +7,7 @@ import {
   TrendingUp, RefreshCw, BarChart2, Shield, Eye
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 
 const OUTCOMES = [
   { title: "Build 8+ Practical Projects", desc: "Construct fully functional web applications from scratch, building a tangible repository that proves your capabilities to recruiters." },
@@ -189,7 +189,7 @@ export default function FullStackLandingPage() {
       utmContent: utmContent,
       leadStatus: 'New Lead',
       remarks: 'Submitted via Standalone Full Stack Landing Page',
-      date: new Date().toISOString()
+      date: getISTDateTimeString()
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);

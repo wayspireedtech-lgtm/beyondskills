@@ -8,7 +8,7 @@ import {
   Clock, RefreshCw, ShieldAlert, Check
 } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
-import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import TechIcon from '../components/TechIcon';
 
 const COMPANYS_TIEUPS = [
@@ -584,7 +584,7 @@ export default function AiBrochure() {
       message: enquiryForm.message,
       status: 'New',
       subStatus: 'QUALIFIED',
-      date: new Date().toISOString() 
+      date: getISTDateTimeString() 
     };
     leads.push(newLead);
     setDbItem('beyondskills_leads', leads);
