@@ -216,6 +216,7 @@ export default function App() {
             <Route path="/verify" element={<Verification />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/thank-you/:program" element={<ThankYou />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
             <Route path="/return-refund-policy" element={<ReturnRefundPolicy />} />

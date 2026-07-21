@@ -324,7 +324,7 @@ export default function CybersecurityLandingPage() {
       }));
 
       // Success
-      window.location.href = '/thank-you';
+      window.location.href = '/thank-you/cyber-security?program=cyber-security';
       setFormData({
         name: '',
         email: '',

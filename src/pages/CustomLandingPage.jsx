@@ -129,7 +129,8 @@ export default function CustomLandingPage() {
       }
     }));
 
-    window.location.href = '/thank-you';
+    const programSlug = (slug || enquiryForm.upskilling || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(enquiryForm.upskilling || slug)}`;
     setEnquiryForm({
       name: '',
       email: '',

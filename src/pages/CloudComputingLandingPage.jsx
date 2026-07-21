@@ -375,7 +375,7 @@ export default function CloudComputingLandingPage() {
       }));
 
       // Success
-      window.location.href = '/thank-you';
+      window.location.href = '/thank-you/cloud-computing?program=cloud-computing';
       setFormData({
         name: '',
         email: '',

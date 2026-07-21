@@ -222,7 +222,7 @@ export default function FullStackLandingPage() {
       }
     }));
 
-    window.location.href = '/thank-you';
+    window.location.href = '/thank-you/full-stack-web-development?program=full-stack-web-development';
     setEnquiryForm({
       name: '',
       email: '',

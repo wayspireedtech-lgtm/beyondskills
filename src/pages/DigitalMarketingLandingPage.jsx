@@ -386,7 +386,7 @@ export default function DigitalMarketingLandingPage() {
       }));
 
       // Success
-      window.location.href = '/thank-you';
+      window.location.href = '/thank-you/digital-marketing?program=digital-marketing';
       setFormData({
         name: '',
         email: '',

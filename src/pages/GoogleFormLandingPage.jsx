@@ -268,7 +268,8 @@ Submitted via Google Form Campaign page
         }
       }));
 
-      window.location.href = '/thank-you';
+      const programSlug = (payload.program || 'general').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(payload.program)}`;
     } catch (error) {
       console.error('Error submitting form:', error);
       setErrorMessage('Failed to connect to the server. Please try again.');

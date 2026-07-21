@@ -554,7 +554,7 @@ Submission Time: ${submissionTime}
     }));
 
     setIsSubmitting(false);
-    window.location.href = '/thank-you';
+    window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
   };
 
   const scrollToHeroForm = (buttonName) => {
