@@ -28,8 +28,8 @@ const CustomLandingPage = React.lazy(() => import('./pages/CustomLandingPage'));
 const DigitalMarketingLandingPage = React.lazy(() => import('./pages/DigitalMarketingLandingPage'));
 const CloudComputingLandingPage = React.lazy(() => import('./pages/CloudComputingLandingPage'));
 const CybersecurityLandingPage = React.lazy(() => import('./pages/CybersecurityLandingPage'));
-const GoogleFormLandingPage = React.lazy(() => import('./pages/GoogleFormLandingPage'));
-const ThankYou = React.lazy(() => import('./pages/ThankYou'));
+import GoogleFormLandingPage from './pages/GoogleFormLandingPage';
+import ThankYou from './pages/ThankYou';
 
 
 

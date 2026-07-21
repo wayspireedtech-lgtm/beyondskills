@@ -135,7 +135,7 @@ export default function GoogleFormLandingPage() {
                 transform: `scale(${tool.scale})`,
               }}
             >
-              <div className="bg-slate-900/40 backdrop-blur-md border border-slate-700/30 shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-2.5 rounded-xl flex items-center justify-center w-12 h-12 hover:border-blue-500/30 transition-all duration-300">
+              <div className="bg-slate-900 border border-slate-700/30 shadow-md p-2.5 rounded-xl flex items-center justify-center w-12 h-12 hover:border-blue-500/30 transition-all duration-300">
                 <TechIcon name={tool.name} className="w-6 h-6" />
               </div>
             </div>
@@ -374,7 +374,7 @@ Submitted via BeyondSkills Program Application Landing Page
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative font-sans pb-20 md:pb-8">
       
       {/* 1. STICKY NAVIGATION HEADER (GUARANTEED STICKY WITH HIGH Z-INDEX & SHADOW) */}
-      <header className="sticky top-0 z-[100] bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 sm:px-6 lg:px-8 shadow-md">
+      <header className="sticky top-0 z-[100] bg-white border-b border-slate-200/80 px-4 py-3 sm:px-6 lg:px-8 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-1 group cursor-pointer" onClick={() => navigate('/')}>
             <span className="logo-font font-extrabold tracking-tight text-slate-950 text-xl">Beyond</span>
@@ -465,7 +465,7 @@ Submitted via BeyondSkills Program Application Landing Page
 
             {/* HERO RIGHT COLUMN: STUDENT APPLICATION FORM (VISIBLE IMMEDIATELY ON DESKTOP & TOP OF MOBILE) */}
             <motion.div className="lg:col-span-6" variants={itemVariants} id="application-form-card">
-              <div className="bg-slate-950/95 border border-white/10 p-5 sm:p-7 rounded-3xl shadow-2xl space-y-5 text-slate-100 backdrop-blur-xl relative">
+              <div className="bg-slate-950 border border-white/10 p-5 sm:p-7 rounded-3xl shadow-2xl space-y-5 text-slate-100 relative">
                 
                 <div className="border-b border-white/10 pb-3.5">
                   <div className="flex items-center justify-between">
@@ -909,7 +909,7 @@ Submitted via BeyondSkills Program Application Landing Page
       </div>
 
       {/* FLOATING STICKY APPLY BAR ON MOBILE */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-white/10 p-3 flex items-center justify-between shadow-2xl">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950 border-t border-white/10 p-3 flex items-center justify-between shadow-2xl">
         <div>
           <p className="text-[10px] font-bold text-white uppercase tracking-wider">BeyondSkills Admissions</p>
           <p className="text-[9px] text-emerald-400 font-mono">Limited Cohort Seats Open</p>
