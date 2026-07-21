@@ -258,8 +258,8 @@ Submitted via BeyondSkills Program Application Landing Page
         body: JSON.stringify(payload)
       }).catch(err => console.log("Realtime backend webhook offline, proceeding with direct client sheet ingestion."));
 
-      // 3. Direct Client-Side Google Apps Script Webhook Post (only if custom Google Form Webhook URL is configured)
-      const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || '';
+      // 3. Direct Client-Side Google Apps Script Webhook Post (Target Sheet: admin@beyondskills.in)
+      const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbw4Lasp4ZzdJqG3-w4fDoxJ0ZPwsIy1l0xLmZ0WgkwnWC7z7BlgkwMPpesVPAC-Rdse/exec';
       if (directGoogleSheetWebhook) {
         const sheetParams = new URLSearchParams();
         sheetParams.append('spreadsheetId', TARGET_GOOGLE_SHEET_ID);
