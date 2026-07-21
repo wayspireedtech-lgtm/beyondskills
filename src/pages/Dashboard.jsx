@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { COURSES, getDbItem, setDbItem, logUserAccess } from '../utils/mockDb';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { BookOpen, User, CheckCircle, ExternalLink, Award, Camera, Check, ShieldAlert } from 'lucide-react';
 
 export default function Dashboard() {
@@ -66,6 +67,10 @@ export default function Dashboard() {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
+    if (profileForm.phone && !validatePhone(profileForm.phone)) {
+      alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     setSaveSuccess(false);
     
     const usersList = getDbItem('beyondskills_users', []);

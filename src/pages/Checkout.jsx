@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { ShieldCheck, ShieldAlert, ArrowLeft, Lock, CheckSquare, Square } from 'lucide-react';
 
 // Helper to dynamically load the Razorpay checkout script
@@ -124,6 +125,14 @@ export default function Checkout() {
 
   const handleStartPayment = async (e) => {
     e.preventDefault();
+    if (!validateEmail(form.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    if (!validatePhone(form.phone)) {
+      alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     if (!agreeDisclaimer) {
       alert('You must acknowledge the No Placement Guarantee disclaimer to proceed with payment.');
       return;

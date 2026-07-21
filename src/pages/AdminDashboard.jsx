@@ -10,6 +10,7 @@ import {
   deleteCrmUserFromSupabase,
   getISTDateTimeString
 } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { 
   BarChart3, LineChart, PieChart, Inbox, Users, DollarSign, Percent, 
   Globe, Star, Trash2, ArrowUpRight, Award, ShieldAlert, Plus, 
@@ -821,6 +822,14 @@ export default function AdminDashboard() {
   // Add lead action
   const handleAddLead = (e) => {
     e.preventDefault();
+    if (!validateEmail(newLeadForm.email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    if (!validatePhone(newLeadForm.phone)) {
+      alert('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     const newId = `LD${String(leads.length + 1).padStart(3, '0')}`;
     const leadEntry = {
       id: newId,

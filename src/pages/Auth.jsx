@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, logUserAccess } from '../utils/dbHelpers';
 import { getCrmUsersFromSupabase } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { Lock, Mail, Phone, User, Send, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 
 export default function Auth() {
@@ -175,8 +176,7 @@ export default function Auth() {
 
     // Validate email format
     const cleanEmail = email.trim().toLowerCase();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(cleanEmail)) {
+    if (!validateEmail(cleanEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
@@ -217,11 +217,11 @@ export default function Auth() {
       return;
     }
 
-    const cleanPhone = registerForm.phone.replace(/\D/g, '');
-    if (cleanPhone.length !== 10) {
+    if (!validatePhone(registerForm.phone)) {
       setError('Please enter a valid 10-digit mobile number.');
       return;
     }
+    const cleanPhone = registerForm.phone.replace(/\D/g, '');
 
     const users = getDbItem('beyondskills_users', []);
     const phoneExists = users.some(u => u.phone === cleanPhone);
