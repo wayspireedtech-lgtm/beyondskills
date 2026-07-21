@@ -5,17 +5,32 @@ import {
   Sparkles, Send, ArrowRight, GraduationCap, Briefcase, 
   Calendar, BookOpen, User, Phone, Mail, FileText, CheckCircle2,
   Users, Code, Monitor, Compass, Award, ShieldCheck, Clock,
-  Laptop, ChevronRight, Star, ChevronDown, ChevronUp,
+  Laptop, ChevronRight, Star, GraduationCap as CertIcon, ChevronDown, ChevronUp,
   Check, HelpCircle, Layers, Target, Rocket, ArrowDown, ExternalLink,
-  Video, FileCheck, Search, Layout, Cpu, Activity, Lightbulb, PieChart
+  Video, FileCheck, Search, Layout, Cpu, Activity, Lightbulb, PieChart, TrendingUp
 } from 'lucide-react';
-import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
+import { getDbItem, setDbItem } from '../utils/mockDb';
+import { COURSES_SUMMARY } from '../utils/coursesSummary';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
 const TARGET_GOOGLE_SHEET_ID = '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
 const TARGET_GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk/edit';
+
+// Official website programs list strictly matched with site catalog
+const WEBSITE_PROGRAMS = [
+  { id: 'artificial-intelligence', title: 'Artificial Intelligence', icon: Cpu, category: 'AI/ML/DS', badge: 'High Demand' },
+  { id: 'machine-learning', title: 'Machine Learning', icon: Cpu, category: 'AI/ML/DS', badge: 'Popular' },
+  { id: 'full-stack-web', title: 'Full Stack Web Development (MERN)', icon: Code, category: 'Full Stack', badge: 'Best Seller' },
+  { id: 'data-science', title: 'Data Science', icon: PieChart, category: 'AI/ML/DS', badge: 'In Demand' },
+  { id: 'data-analytics', title: 'Data Analytics', icon: BarChart, iconComp: Activity, category: 'AI/ML/DS', badge: 'Top Rated' },
+  { id: 'digital-marketing-cert', title: 'Digital Marketing', icon: Target, category: 'Marketing', badge: 'High ROI' },
+  { id: 'cyber-security', title: 'Cyber Security', icon: ShieldCheck, category: 'Security', badge: 'Trending' },
+  { id: 'cloud-computing', title: 'Cloud Computing', icon: Laptop, category: 'Cloud', badge: 'Essential' },
+  { id: 'hr-mgmt', title: 'Human Resource Management & Operations', icon: Users, category: 'Management', badge: 'Core Role' },
+  { id: 'stock-market', title: 'Stock Market & Financial Analysis', icon: TrendingUp, category: 'Finance', badge: 'Finance' }
+];
 
 const floatingTools = [
   { name: 'python', top: '6%', left: '4%', delay: '0s', scale: 0.85, animationClass: 'float-animation-1' },
@@ -136,7 +151,7 @@ export default function GoogleFormLandingPage() {
     email: '',
     college: '',
     year: '1st Year',
-    upskilling: 'ai-data-science',
+    upskilling: 'artificial-intelligence',
     careerGoal: 'Placement Preparation'
   });
   
@@ -165,9 +180,9 @@ export default function GoogleFormLandingPage() {
     setIsSubmitting(true);
     setErrorMessage('');
     
-    // Validate required fields
+    // Strict Field Validations
     if (!form.name.trim() || !form.phone.trim() || !form.email.trim() || !form.college.trim()) {
-      setErrorMessage('Please fill in all required fields (Full Name, Phone Number, Email, and College Name).');
+      setErrorMessage('Please fill in all required fields (Full Name, Mobile Number, Email, and College Name).');
       setIsSubmitting(false);
       return;
     }
@@ -183,8 +198,8 @@ export default function GoogleFormLandingPage() {
     }
 
     try {
-      const selectedCourse = COURSES.find(c => c.id === form.upskilling);
-      const courseTitle = selectedCourse ? selectedCourse.title : form.upskilling;
+      const selectedProgObj = WEBSITE_PROGRAMS.find(p => p.id === form.upskilling);
+      const courseTitle = selectedProgObj ? selectedProgObj.title : form.upskilling;
 
       // Build lead record for Supabase & local DB with dedicated target Google Sheet ID
       const leadRecord = {
@@ -319,21 +334,6 @@ Submitted via BeyondSkills Program Application Landing Page
     { title: 'Multiple Career Programs', desc: 'Programs tailored across AI, Web, Cloud & Marketing', icon: Layers }
   ];
 
-  const availableProgramsList = [
-    { title: 'Artificial Intelligence, Machine Learning & Data Science', id: 'ai-data-science', icon: Cpu, badge: 'High Demand' },
-    { title: 'Full Stack Web Development', id: 'full-stack-web-development', icon: Code, badge: 'Popular' },
-    { title: 'Cyber Security', id: 'cyber-security', icon: ShieldCheck, badge: 'Trending' },
-    { title: 'Digital Marketing', id: 'digital-marketing', icon: Target, badge: 'High ROI' },
-    { title: 'Business Analytics', id: 'business-analytics', icon: PieChart, badge: 'Top Rated' },
-    { title: 'Cloud Computing', id: 'cloud-computing', icon: Laptop, badge: 'In Demand' },
-    { title: 'UI/UX Design', id: 'ui-ux-design', icon: Layout, badge: 'Creative' },
-    { title: 'Human Resources', id: 'human-resources', icon: Users, badge: 'Core Role' },
-    { title: 'Finance', id: 'finance', icon: Lightbulb, badge: 'Essential' },
-    { title: 'AutoCAD', id: 'autocad', icon: Activity, badge: 'Engineering' },
-    { title: 'VLSI', id: 'vlsi', icon: Cpu, badge: 'Hardware Tech' },
-    { title: 'Internet of Things (IoT)', id: 'iot', icon: Monitor, badge: 'Next-Gen' }
-  ];
-
   const whyBeyondSkills = [
     { title: 'Learn Directly from Industry Professionals', desc: 'Instructors and mentors from leading tech & corporate organizations.', icon: Users },
     { title: 'Build 3+ Real-World Projects', desc: 'Hands-on project work designed to reflect actual industry workflows.', icon: Code },
@@ -371,10 +371,10 @@ Submitted via BeyondSkills Program Application Landing Page
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative overflow-x-hidden font-sans pb-20 md:pb-8">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 relative font-sans pb-20 md:pb-8">
       
-      {/* STICKY NAVIGATION HEADER */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-100 px-4 py-3 sm:px-6 lg:px-8 shadow-sm">
+      {/* 1. STICKY NAVIGATION HEADER (GUARANTEED STICKY WITH HIGH Z-INDEX & SHADOW) */}
+      <header className="sticky top-0 z-[100] bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 py-3 sm:px-6 lg:px-8 shadow-md">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-1 group cursor-pointer" onClick={() => navigate('/')}>
             <span className="logo-font font-extrabold tracking-tight text-slate-950 text-xl">Beyond</span>
@@ -415,13 +415,8 @@ Submitted via BeyondSkills Program Application Landing Page
             {/* HERO LEFT COLUMN: BADGES, HEADING & SUBHEADING */}
             <motion.div className="lg:col-span-6 space-y-6 text-left" variants={itemVariants}>
               
-              {/* Premium Badges */}
+              {/* Premium Badges: REMOVED Admissions Open badge per user request */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center space-x-1.5 bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-full text-emerald-700 text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Admissions Open</span>
-                </span>
-
                 <span className="inline-flex items-center space-x-1.5 bg-[#2A4BFF]/10 border border-[#2A4BFF]/20 px-3.5 py-1.5 rounded-full text-[#2A4BFF] text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-sm font-mono">
                   <Check className="w-3.5 h-3.5 text-[#2A4BFF]" />
                   <span>Limited Cohort Size</span>
@@ -594,7 +589,7 @@ Submitted via BeyondSkills Program Application Landing Page
                     </div>
                   </div>
 
-                  {/* Preferred Program */}
+                  {/* Preferred Program: RESTRICTED STRICTLY TO OFFICIAL WEBSITE PROGRAMS */}
                   <div>
                     <label htmlFor="hero-app-upskilling" className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center font-mono">
                       <BookOpen className="w-3.5 h-3.5 mr-1 text-[#2A4BFF]" />
@@ -607,18 +602,11 @@ Submitted via BeyondSkills Program Application Landing Page
                       onChange={handleChange}
                       className="w-full bg-slate-900 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:border-[#2A4BFF] outline-none text-white transition-all cursor-pointer font-medium text-blue-200"
                     >
-                      <option value="ai-data-science">Artificial Intelligence, Machine Learning & Data Science</option>
-                      <option value="full-stack-web-development">Full Stack Web Development</option>
-                      <option value="cyber-security">Cyber Security</option>
-                      <option value="digital-marketing">Digital Marketing</option>
-                      <option value="business-analytics">Business Analytics</option>
-                      <option value="cloud-computing">Cloud Computing</option>
-                      <option value="ui-ux-design">UI/UX Design</option>
-                      <option value="human-resources">Human Resources</option>
-                      <option value="finance">Finance</option>
-                      <option value="autocad">AutoCAD</option>
-                      <option value="vlsi">VLSI</option>
-                      <option value="iot">Internet of Things (IoT)</option>
+                      {WEBSITE_PROGRAMS.map(prog => (
+                        <option key={prog.id} value={prog.id}>
+                          {prog.title}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -705,20 +693,20 @@ Submitted via BeyondSkills Program Application Landing Page
 
 
           {/* ========================================================================= */}
-          {/* AVAILABLE PROGRAMS DEDICATED SECTION                                      */}
+          {/* AVAILABLE PROGRAMS (STRICTLY OFFICIAL WEBSITE PROGRAMS ONLY)              */}
           {/* ========================================================================= */}
           <motion.div 
             className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl text-slate-100 space-y-6"
             variants={itemVariants}
           >
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Career Accelerators</h3>
+              <h3 className="text-xs uppercase tracking-widest font-mono font-bold text-[#2A4BFF]">Official Catalog</h3>
               <h2 className="text-xl sm:text-2xl font-black text-white">Available Programs</h2>
-              <p className="text-xs text-slate-400">Choose from industry-aligned learning tracks curated for engineering, management, and tech students.</p>
+              <p className="text-xs text-slate-400">Choose from official industry-aligned training tracks offered on BeyondSkills.</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {availableProgramsList.map((prog, idx) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
+              {WEBSITE_PROGRAMS.map((prog, idx) => {
                 const ProgIcon = prog.icon;
                 return (
                   <div 
@@ -740,11 +728,11 @@ Submitted via BeyondSkills Program Application Landing Page
 
                     <div>
                       <h4 className="text-xs font-bold text-white group-hover:text-[#2A4BFF] transition-colors">{prog.title}</h4>
-                      <p className="text-[10px] text-slate-400 mt-1">Live Mentorship • Practical Projects</p>
+                      <p className="text-[10px] text-slate-400 mt-1">Live Mentorship • Projects</p>
                     </div>
 
                     <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-bold text-[#2A4BFF]">
-                      <span>Apply for Program</span>
+                      <span>Select Program</span>
                       <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
