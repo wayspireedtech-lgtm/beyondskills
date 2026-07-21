@@ -1,53 +1,27 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Defer heavy third-party trackers to first user interaction or idle fallback to achieve 96+ performance -->
+    <!-- Google Tag Manager / GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-95CRERD42S"></script>
     <script>
-      (function() {
-        var initialized = false;
-        function initTrackers() {
-          if (initialized) return;
-          initialized = true;
-          
-          // Remove event listeners
-          window.removeEventListener('scroll', initTrackers);
-          window.removeEventListener('click', initTrackers);
-          window.removeEventListener('touchstart', initTrackers);
-          window.removeEventListener('mousemove', initTrackers);
-          
-          // Load Google Tag Manager
-          var gScript = document.createElement('script');
-          gScript.async = true;
-          gScript.src = "https://www.googletagmanager.com/gtag/js?id=G-95CRERD42S";
-          document.head.appendChild(gScript);
-          
-          window.dataLayer = window.dataLayer || [];
-          window.gtag = function() { dataLayer.push(arguments); };
-          gtag('js', new Date());
-          gtag('config', 'G-95CRERD42S');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-95CRERD42S');
+    </script>
 
-          // Load Meta Pixel
-          !function(f,b,e,v,n,t,s)
-          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-          n.queue=[];t=b.createElement(e);t.async=!0;
-          t.src=v;s=b.getElementsByTagName(e)[0];
-          s.parentNode.insertBefore(t,s)}(window, document,'script',
-          'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '935558072602276');
-          fbq('track', 'PageView');
-        }
-
-        // Trigger on interaction (passive listeners for scroll to prevent jank)
-        window.addEventListener('scroll', initTrackers, { passive: true });
-        window.addEventListener('click', initTrackers, { passive: true });
-        window.addEventListener('touchstart', initTrackers, { passive: true });
-        window.addEventListener('mousemove', initTrackers, { passive: true });
-
-        // Fallback for users who don't interact (e.g. 7 seconds)
-        setTimeout(initTrackers, 7000);
-      })();
+    <!-- Meta Pixel Code (Immediate Head Execution for Meta Ads Tracking) -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '935558072602276');
+      fbq('track', 'PageView');
     </script>
 
     <meta charset="UTF-8" />
