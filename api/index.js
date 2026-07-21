@@ -324,11 +324,24 @@ app.post('/api/webhook/leads', async (req, res) => {
                                'https://script.google.com/macros/s/AKfycbwHEer3vmt4NNgpx_-aq7Zbl4QIYM2Buk_l-UrdisUJqLAukqTwKa8XTh2hQWI8LibmZg/exec';
 
     if (googleSheetWebhookUrl) {
-      try {
+        const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
+        const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk/edit';
+
         const webhookPayload = {
+          spreadsheetId: targetSheetId,
+          targetSheetId: targetSheetId,
+          sheetId: targetSheetId,
+          targetSheetUrl: targetSheetUrl,
           name,
           phone,
           email,
+          Name: name,
+          Phone: phone,
+          Email: email,
+          College: college || 'N/A',
+          Year: year || 'N/A',
+          Program: program || 'N/A',
+          CareerGoal: careerGoal || req.body.careerGoal || 'Not Specified',
           college: college || 'N/A',
           year: year || 'N/A',
           role: profession || 'N/A',
@@ -338,7 +351,8 @@ app.post('/api/webhook/leads', async (req, res) => {
           whyInterested: whyInterested || 'N/A',
           preferredContactTime: preferredContactTime || req.body.preferredContactTime || 'Not Specified',
           careerGoal: careerGoal || req.body.careerGoal || 'Not Specified',
-          date: newLead.date
+          date: newLead.date,
+          SubmittedAt: newLead.date
         };
         
         const sheetRes = await fetch(googleSheetWebhookUrl, {

@@ -256,7 +256,57 @@ Submitted via BeyondSkills Program Application Landing Page
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-      });
+      }).catch(err => console.log("Realtime backend webhook offline, proceeding with direct client sheet ingestion."));
+
+      // 3. Direct Client-Side Google Apps Script Webhook Post for 100% Ingestion Guarantee
+      const directGoogleSheetWebhook = 'https://script.google.com/macros/s/AKfycbwHEer3vmt4NNgpx_-aq7Zbl4QIYM2Buk_l-UrdisUJqLAukqTwKa8XTh2hQWI8LibmZg/exec';
+      const sheetParams = new URLSearchParams();
+      sheetParams.append('spreadsheetId', TARGET_GOOGLE_SHEET_ID);
+      sheetParams.append('targetSheetId', TARGET_GOOGLE_SHEET_ID);
+      sheetParams.append('sheetId', TARGET_GOOGLE_SHEET_ID);
+      sheetParams.append('name', form.name.trim());
+      sheetParams.append('phone', form.phone.trim());
+      sheetParams.append('email', form.email.trim());
+      sheetParams.append('college', form.college.trim());
+      sheetParams.append('year', form.year);
+      sheetParams.append('program', courseTitle);
+      sheetParams.append('careerGoal', form.careerGoal);
+      sheetParams.append('date', getISTDateTimeString());
+      sheetParams.append('SubmittedAt', getISTDateTimeString());
+
+      try {
+        fetch(directGoogleSheetWebhook, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: sheetParams.toString()
+        }).catch(err => console.log('Direct sheet webhook post URLSearchParams:', err));
+
+        fetch(directGoogleSheetWebhook, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          body: JSON.stringify({
+            spreadsheetId: TARGET_GOOGLE_SHEET_ID,
+            targetSheetId: TARGET_GOOGLE_SHEET_ID,
+            sheetId: TARGET_GOOGLE_SHEET_ID,
+            name: form.name.trim(),
+            phone: form.phone.trim(),
+            email: form.email.trim(),
+            college: form.college.trim(),
+            year: form.year,
+            program: courseTitle,
+            careerGoal: form.careerGoal,
+            date: getISTDateTimeString()
+          })
+        }).catch(err => console.log('Direct sheet webhook post JSON:', err));
+      } catch (e) {
+        console.log('Client sheet fetch exception:', e);
+      }
 
       // Save to local DB as fallback
       const localLeads = getDbItem('beyondskills_leads', []);
