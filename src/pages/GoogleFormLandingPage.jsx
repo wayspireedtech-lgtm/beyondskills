@@ -24,7 +24,7 @@ const WEBSITE_PROGRAMS = [
   { id: 'machine-learning', title: 'Machine Learning', icon: Cpu, category: 'AI/ML/DS', badge: 'Popular' },
   { id: 'full-stack-web', title: 'Full Stack Web Development (MERN)', icon: Code, category: 'Full Stack', badge: 'Best Seller' },
   { id: 'data-science', title: 'Data Science', icon: PieChart, category: 'AI/ML/DS', badge: 'In Demand' },
-  { id: 'data-analytics', title: 'Data Analytics', icon: BarChart, iconComp: Activity, category: 'AI/ML/DS', badge: 'Top Rated' },
+  { id: 'data-analytics', title: 'Data Analytics', icon: Activity, category: 'AI/ML/DS', badge: 'Top Rated' },
   { id: 'digital-marketing-cert', title: 'Digital Marketing', icon: Target, category: 'Marketing', badge: 'High ROI' },
   { id: 'cyber-security', title: 'Cyber Security', icon: ShieldCheck, category: 'Security', badge: 'Trending' },
   { id: 'cloud-computing', title: 'Cloud Computing', icon: Laptop, category: 'Cloud', badge: 'Essential' },
