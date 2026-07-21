@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
 import adobeLogo from '../assets/adobe.svg';
@@ -411,8 +412,18 @@ export default function AiMlDataScienceLandingPage() {
     setErrorMessage('');
     
     // Field validations
-    if (!enquiryForm.name.trim() || !enquiryForm.phone.trim() || !enquiryForm.email.trim()) {
+    if (!enquiryForm.name || !enquiryForm.phone || !enquiryForm.email) {
       setErrorMessage('Full Name, Phone Number, and Email Address are required fields.');
+      setIsSubmitting(false);
+      return;
+    }
+    if (!validateEmail(enquiryForm.email)) {
+      setErrorMessage('Please enter a valid email address (e.g. name@example.com).');
+      setIsSubmitting(false);
+      return;
+    }
+    if (!validatePhone(enquiryForm.phone)) {
+      setErrorMessage('Please enter a valid 10-digit mobile number (e.g. 9876543210).');
       setIsSubmitting(false);
       return;
     }

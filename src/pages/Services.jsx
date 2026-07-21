@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Code, Megaphone, Terminal, FileText, CheckCircle, ArrowLeft, Send, Sparkles, AlertCircle } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 const SERVICE_DATA = {
   'website-development': {
@@ -84,6 +85,18 @@ export default function Services() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(form.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(form.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Digital Services', 

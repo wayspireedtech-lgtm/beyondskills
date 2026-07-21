@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, COURSES, MENTORS } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { 
   Sparkles, CheckCircle, ChevronDown, ChevronUp, BookOpen, Clock, 
   MapPin, ShieldAlert, Award, Star, ArrowRight, User, GraduationCap, Check
@@ -63,7 +64,18 @@ export default function CustomLandingPage() {
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
-    if (!enquiryForm.name || !enquiryForm.phone) return;
+    if (!validateEmail(enquiryForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(enquiryForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
 
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, ShieldCheck, Clock, Sparkles } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
@@ -11,6 +12,18 @@ export default function Contact() {
 
   const handleAgencySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(agencyForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(agencyForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Agency Leads', 
@@ -61,6 +74,18 @@ export default function Contact() {
 
   const handleAcademySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(academyForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(academyForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Academy Leads', 

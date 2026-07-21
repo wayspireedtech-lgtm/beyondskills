@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ArrowRight, Download } from 'lucide-react';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 export default function BrochureModal({ isOpen, onClose, course }) {
   const [formData, setFormData] = useState({
@@ -20,6 +21,18 @@ export default function BrochureModal({ isOpen, onClose, course }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(formData.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(formData.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     setIsSubmitting(true);
 
     const leadRecord = {

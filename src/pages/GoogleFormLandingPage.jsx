@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
 const floatingTools = [
@@ -159,6 +160,16 @@ export default function GoogleFormLandingPage() {
     // Validate required fields
     if (!form.name.trim() || !form.phone.trim() || !form.email.trim()) {
       setErrorMessage('Please fill in all required fields (Name, Phone, and Email).');
+      setIsSubmitting(false);
+      return;
+    }
+    if (!validateEmail(form.email)) {
+      setErrorMessage('Please enter a valid email address (e.g. name@example.com).');
+      setIsSubmitting(false);
+      return;
+    }
+    if (!validatePhone(form.phone)) {
+      setErrorMessage('Please enter a valid 10-digit mobile number (e.g. 9876543210).');
       setIsSubmitting(false);
       return;
     }

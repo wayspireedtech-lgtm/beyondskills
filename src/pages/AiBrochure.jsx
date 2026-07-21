@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
 const COMPANYS_TIEUPS = [
@@ -521,6 +522,18 @@ export default function AiBrochure() {
 
   const handleEnquirySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(enquiryForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(enquiryForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
 
     const courseTitle = course ? course.title : 'Program Specialist';
     const courseSlug = course ? course.id : 'artificial-intelligence';

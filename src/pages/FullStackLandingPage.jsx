@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 const OUTCOMES = [
   { title: "Build 8+ Practical Projects", desc: "Construct fully functional web applications from scratch, building a tangible repository that proves your capabilities to recruiters." },
@@ -159,6 +160,18 @@ export default function FullStackLandingPage() {
 
   const handleApplySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(enquiryForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(enquiryForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
 
     const searchParams = new URLSearchParams(window.location.search);
     const utmSource = searchParams.get('utm_source') || 'Direct / CPC';

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 export default function AiDataScienceProgram() {
   const [faqOpen, setFaqOpen] = useState({});
@@ -245,6 +246,18 @@ export default function AiDataScienceProgram() {
 
   const handleEnquirySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(enquiryForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(enquiryForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
 
     const courseTitle = 'AI & Data Science Specialist';
     const detailedNotes = `College: ${enquiryForm.college || 'N/A'}\nMessage: ${enquiryForm.message || 'N/A'}\nSubmitted via AI & Data Science Program page`;

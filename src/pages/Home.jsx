@@ -5,6 +5,7 @@ import TechIcon from '../components/TechIcon';
 import { COURSES_SUMMARY, findCourseSummary } from '../utils/coursesSummary';
 import { getDbItem, setDbItem, getISTDateTimeString } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 // Static testimonials and mentors for homepage (avoiding heavy mockDb import)
 const MENTORS = [
@@ -63,6 +64,18 @@ export default function Home() {
 
   const handleAgencySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(agencyForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(agencyForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Agency Leads', 
@@ -113,6 +126,18 @@ export default function Home() {
 
   const handleAcademySubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(academyForm.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(academyForm.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Academy Leads', 

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import wiproLogo from '../assets/wipro.svg';
 import tcsLogo from '../assets/tcs.svg';
 import infosysLogo from '../assets/infosys.svg';
@@ -313,13 +314,21 @@ export default function DigitalMarketingLandingPage() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    // Form validation
-    const cleanPhone = formData.phone.replace(/\D/g, '');
-    if (cleanPhone.length !== 10) {
-      setSubmitStatus('error');
+    if (!validateEmail(formData.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
       setIsSubmitting(false);
       return;
     }
+    if (!validatePhone(formData.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      setIsSubmitting(false);
+      return;
+    }
+    const cleanPhone = formData.phone.replace(/\D/g, '');
 
     // Parse URL campaigns
     const queryParams = new URLSearchParams(window.location.search);

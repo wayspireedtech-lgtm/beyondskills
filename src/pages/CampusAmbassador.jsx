@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Send, Sparkles, Award, Users, ShieldAlert, Briefcase, MessageSquare, CheckCircle, Star } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 export default function CampusAmbassador() {
   const [form, setForm] = useState({
@@ -17,6 +18,18 @@ export default function CampusAmbassador() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateEmail(form.email)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Email Address', body: 'Please enter a valid email address (e.g. name@example.com).' }
+      }));
+      return;
+    }
+    if (!validatePhone(form.phone)) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Invalid Mobile Number', body: 'Please enter a valid 10-digit mobile number (e.g. 9876543210).' }
+      }));
+      return;
+    }
     const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Campus Ambassador', 
