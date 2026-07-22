@@ -208,205 +208,108 @@ app.get('/api/webhook/leads', (req, res) => {
   }
 });
 
-// POST: Add new lead (from Google Apps Script webhook / Ads triggers)
+// POST: Add new lead — forwards directly to Google Sheets only (no local storage)
 app.post('/api/webhook/leads', async (req, res) => {
   try {
-    const { 
-      name, email, phone, type, program, notes,
-      college, profession, message, batch, projectExp, whyInterested, year,
-      preferredContactTime, careerGoal,
-      campaign, source, utmMedium, utmCampaign, utmContent, remarks,
-      qualification, experience, contactTime, goal
-    } = req.body;
-    
+    const { name, phone } = req.body;
+
     if (!name || !phone) {
       return res.status(400).json({ error: 'Name and Phone fields are required.' });
     }
 
-    let existingLeads = readJsonFileSync(LEADS_FILE, []);
+    // Resolve Google Sheet webhook URL from env (set in Vercel dashboard)
+    const googleSheetWebhookUrl =
+      process.env.GOOGLE_FORM_WEBHOOK_URL ||
+      process.env.VITE_GOOGLE_FORM_WEBHOOK_URL ||
+      process.env.GOOGLE_SHEET_WEBHOOK_URL ||
+      process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL ||
+      'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
 
-    // Check if phone already exists in server webhook DB
-    const existingIndex = existingLeads.findIndex(l => l.phone === phone);
-    if (existingIndex !== -1) {
-      const existingLead = existingLeads[existingIndex];
-      let updated = false;
-      
-      const newCollege = college || qualification || 'Unspecified';
-      if ((!existingLead.college || existingLead.college === 'Unspecified') && newCollege !== 'Unspecified') {
-        existingLead.college = newCollege;
-        existingLead.qualification = newCollege;
-        updated = true;
-      }
-      const newProfession = profession || experience || 'Unspecified';
-      if ((!existingLead.profession || existingLead.profession === 'Unspecified') && newProfession !== 'Unspecified') {
-        existingLead.profession = newProfession;
-        existingLead.experience = newProfession;
-        updated = true;
-      }
-      const newGoal = goal || careerGoal || 'Unspecified';
-      if ((!existingLead.goal || existingLead.goal === 'Unspecified') && newGoal !== 'Unspecified') {
-        existingLead.goal = newGoal;
-        updated = true;
-      }
-      const newContactTime = contactTime || preferredContactTime || 'Anytime';
-      if ((!existingLead.contactTime || existingLead.contactTime === 'Anytime' || existingLead.contactTime === 'Anytime between 10am to 8pm') && newContactTime !== 'Anytime') {
-        existingLead.contactTime = newContactTime;
-        updated = true;
-      }
-      if (email && email !== 'no-email@beyondskills.com' && (!existingLead.email || existingLead.email === 'no-email@beyondskills.com')) {
-        existingLead.email = email;
-        updated = true;
-      }
-      if (notes) {
-        if (!existingLead.history) existingLead.history = [];
-        existingLead.history.push({ note: notes, date: new Date().toISOString() });
-        updated = true;
-      }
-      
-      if (updated) {
-        existingLeads[existingIndex] = existingLead;
-        writeJsonFileSync(LEADS_FILE, existingLeads);
-      }
+    const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro';
+    const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro/edit';
 
-      return res.status(200).json({ 
-        success: true, 
-        message: 'Lead updated with new details.', 
-        lead: existingLead,
-        updated
-      });
-    }
-
-    const padVal = (num) => String(num).padStart(2, '0');
-    const leadMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const leadNow = new Date();
-    const leadDateStr = `${padVal(leadNow.getDate())} ${leadMonths[leadNow.getMonth()]} ${leadNow.getFullYear()}`;
-    const leadTimeStr = `${padVal(leadNow.getHours())}:${padVal(leadNow.getMinutes())}:${padVal(leadNow.getSeconds())}`;
-    const leadDateTimeStr = `${leadDateStr} ${leadTimeStr}`;
-
-    const newLead = {
-      id: `LD${String(existingLeads.length + 101).padStart(3, '0')}`,
-      name,
-      email: email || 'no-email@beyondskills.com',
-      phone,
-      date: leadDateTimeStr,
-      type: type || (campaign && (campaign.toUpperCase().includes('META/WA') || campaign.toLowerCase().includes('whatsapp')) ? campaign : 'Organic Leads'),
-      program: program || 'artificial-intelligence',
-      assignedBDM: '',
-      assignedBDA: '',
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      profession: profession || experience || 'Unspecified',
-      college: college || qualification || 'Unspecified',
-      qualification: college || qualification || 'Unspecified',
-      experience: profession || experience || 'Unspecified',
-      contactTime: contactTime || preferredContactTime || 'Anytime',
-      goal: goal || careerGoal || 'Unspecified',
-      message: message || remarks || '',
-      campaign: campaign || utmCampaign || '',
-      source: source || '',
-      utmMedium: utmMedium || '',
-      utmCampaign: utmCampaign || '',
-      utmContent: utmContent || '',
-      remarks: remarks || message || '',
-      mentor: 'None',
-      duration: 'None',
-      callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
-      history: notes ? [{ note: notes, date: new Date().toISOString() }] : []
+    const webhookPayload = {
+      ...req.body,
+      spreadsheetId: targetSheetId,
+      targetSheetId: targetSheetId,
+      sheetId: targetSheetId,
+      targetSheetUrl: targetSheetUrl
     };
 
-    existingLeads.push(newLead);
-    writeJsonFileSync(LEADS_FILE, existingLeads);
-
-    // Forward to Google Sheet Webhook if configured
     let forwardedToSheet = false;
-    const config = readJsonFileSync(CONFIG_FILE, {});
-    const isGoogleFormLead = type === 'Meta/WA Campaign Leads' || req.body.targetSheetId === '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
+    try {
+      const sheetRes = await fetch(googleSheetWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(webhookPayload)
+      });
 
-    let googleSheetWebhookUrl = process.env.GOOGLE_FORM_WEBHOOK_URL || 
-                               config.googleFormWebhookUrl || 
-                               process.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 
-                               process.env.GOOGLE_SHEET_WEBHOOK_URL || 
-                               process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 
-                               config.googleSheetWebhookUrl || 
-                               'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
-
-    if (googleSheetWebhookUrl && !req.body.skipSheetForward) {
-      try {
-        const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro';
-        const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro/edit';
-
-        const webhookPayload = {
-          ...req.body,
-          spreadsheetId: targetSheetId,
-          targetSheetId: targetSheetId,
-          sheetId: targetSheetId,
-          targetSheetUrl: targetSheetUrl,
-          date: newLead.date,
-          SubmittedAt: newLead.date
-        };
-        
-        const sheetRes = await fetch(googleSheetWebhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(webhookPayload)
-        });
-        
-        if (sheetRes.ok) {
-          forwardedToSheet = true;
-          console.log(`Successfully forwarded lead to Google Sheet Webhook: ${name}`);
-        } else {
-          console.warn(`Google Sheet Webhook returned status: ${sheetRes.status}`);
-        }
-      } catch (err) {
-        console.error('Error forwarding lead to Google Sheet Webhook:', err);
+      if (sheetRes.ok) {
+        forwardedToSheet = true;
+        console.log(`[Lead Capture] Successfully forwarded to Google Sheet: ${name}`);
+      } else {
+        const errText = await sheetRes.text();
+        console.warn(`[Lead Capture] Google Sheet Webhook returned ${sheetRes.status}: ${errText}`);
       }
+    } catch (err) {
+      console.error('[Lead Capture] Error forwarding lead to Google Sheet Webhook:', err);
     }
 
-    // Send automatic email notification backup to admin
-    try {
-      if (smtpUser && smtpPass) {
-        const alertMailOptions = {
+    // Send admin email notification
+    const { email, program, college } = req.body;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+    const smtpPort = parseInt(process.env.SMTP_PORT || '465');
+
+    if (smtpUser && smtpPass) {
+      try {
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465,
+          auth: { user: smtpUser, pass: smtpPass }
+        });
+
+        const formId = req.body.formId || req.body.type || 'Unknown Form';
+        await transporter.sendMail({
           from: `"BeyondSkills Lead Alert" <${smtpUser}>`,
           to: 'beyondskills.ai@gmail.com',
-          subject: `🚨 NEW LEAD: ${name} (${program || 'full-stack-web'})`,
+          subject: `🚨 NEW LEAD: ${name} — ${formId}`,
           html: `
             <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; max-width: 500px;">
-              <h2 style="color: #2563eb; margin-top: 0;">New Lead Registered!</h2>
+              <h2 style="color: #2563eb; margin-top: 0;">New Lead: ${formId}</h2>
               <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 15px;" />
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>
               <p><strong>Email:</strong> ${email || 'None'}</p>
-              <p><strong>Program:</strong> ${program || 'full-stack-web'}</p>
+              <p><strong>Program:</strong> ${program || 'Unspecified'}</p>
               <p><strong>College:</strong> ${college || 'Unspecified'}</p>
-              <p><strong>Date:</strong> ${newLead.date}</p>
+              <p><strong>Form:</strong> ${formId}</p>
               <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 15px;" />
-              <p style="font-size: 11px; color: #64748b;">This is an automated safety alert from BeyondSkills Server.</p>
+              <p style="font-size: 11px; color: #64748b;">Automated alert from BeyondSkills Server.</p>
             </div>
           `
-        };
-        await transporter.sendMail(alertMailOptions);
-        console.log(`[SMTP Backup] Lead email notification sent for ${name}`);
+        });
+        console.log(`[SMTP] Lead notification email sent for ${name}`);
+      } catch (mailErr) {
+        console.error('[SMTP] Failed to send lead alert email:', mailErr);
       }
-    } catch (mailErr) {
-      console.error('Failed to send SMTP backup lead email:', mailErr);
     }
 
-    res.status(201).json({ 
-      success: true, 
-      message: 'Lead recorded successfully.', 
-      lead: newLead,
+    res.status(201).json({
+      success: true,
+      message: 'Lead forwarded to Google Sheets successfully.',
       forwardedToSheet
     });
   } catch (error) {
-    console.error('Error saving lead via webhook:', error);
+    console.error('Error processing lead webhook:', error);
     res.status(500).json({ error: 'Internal server error while processing webhook.' });
   }
 });
 
-
 // Temporary in-memory store for SMS OTPs
+
 const otpStore = new Map();
 
 /**
