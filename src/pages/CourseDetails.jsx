@@ -37,7 +37,6 @@ export default function CourseDetails() {
   const overviewRef = useRef(null);
   const syllabusRef = useRef(null);
   const projectsRef = useRef(null);
-  const mentorsRef = useRef(null);
   const faqRef = useRef(null);
   const heroRef = useRef(null);
 
@@ -66,7 +65,6 @@ export default function CourseDetails() {
         { id: 'overview', ref: overviewRef },
         { id: 'syllabus', ref: syllabusRef },
         { id: 'projects', ref: projectsRef },
-        { id: 'mentors', ref: mentorsRef },
         { id: 'faq', ref: faqRef },
       ];
 
@@ -374,12 +372,7 @@ export default function CourseDetails() {
             >
               Capstone Projects
             </button>
-            <button 
-              onClick={() => scrollToSection(mentorsRef, 'mentors')} 
-              className={`pb-1 border-b-2 transition-all flex-shrink-0 ${activeTab === 'mentors' ? 'text-brand-purple border-brand-purple' : 'border-transparent hover:text-slate-900'}`}
-            >
-              Mentors
-            </button>
+
             <button 
               onClick={() => scrollToSection(faqRef, 'faq')} 
               className={`pb-1 border-b-2 transition-all flex-shrink-0 ${activeTab === 'faq' ? 'text-brand-purple border-brand-purple' : 'border-transparent hover:text-slate-900'}`}
@@ -518,41 +511,7 @@ export default function CourseDetails() {
               </section>
             )}
 
-            {/* Section 4: Mentors */}
-            <section ref={mentorsRef} id="mentors" className="scroll-mt-24 space-y-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 uppercase tracking-wide border-l-3 border-brand-purple pl-3 logo-font">
-                Industry-Leading Mentors
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
-                Learn directly from verified working professionals at top tier firms through recorded modules and live doubt resolution sessions.
-              </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {course.mentors.map((mentor, idx) => (
-                  <div key={idx} className="bg-slate-50 border border-slate-200/50 p-6 rounded-2xl flex items-start justify-between space-x-4 hover:bg-white hover:shadow-md transition-all">
-                    <div className="flex items-start space-x-4">
-                      <div className="bg-brand-purple/10 p-3 rounded-2xl text-brand-purple flex-shrink-0">
-                        <Users className="w-6 h-6" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-extrabold text-slate-900 text-sm sm:text-base leading-tight">
-                          {mentor.name}
-                        </h4>
-                        <p className="text-xs text-brand-purple font-semibold font-mono">
-                          {mentor.role}
-                        </p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-mono">
-                          {mentor.experience} Experience
-                        </p>
-                      </div>
-                    </div>
-                    {mentor.logo && (
-                      <img src={mentor.logo} alt="" className="w-6 h-6 opacity-80 mt-1 flex-shrink-0" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </section>
 
             {/* Section 5: FAQs */}
             <section ref={faqRef} id="faq" className="scroll-mt-24 space-y-6">

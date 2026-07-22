@@ -1,9 +1,7 @@
 import React from 'react';
 import { Target, Eye, ShieldCheck, Milestone, Calendar, Sparkles } from 'lucide-react';
-import { MENTORS, getDbItem } from '../utils/mockDb';
 
 export default function About() {
-  const dynamicMentors = getDbItem('beyondskills_mentors', MENTORS);
   const coreValues = [
     { title: 'Industry Relevance', desc: 'Bridging the gap between theory and actual corporate processes through practical project tasks.', icon: Target },
     { title: 'Expert Guidance', desc: 'Direct feedback and live sessions run by managers with 5+ years of active market exposure.', icon: ShieldCheck },
@@ -113,22 +111,6 @@ export default function About() {
                 <h4 className="font-bold text-slate-900 text-sm sm:text-base mt-2">{item.title}</h4>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Leadership Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto z-10 relative border-t border-slate-200">
-        <h2 className="logo-font text-2xl sm:text-3xl font-bold text-center text-slate-900 mb-4">Our Leadership</h2>
-        <p className="text-center text-slate-500 text-xs sm:text-sm mb-12">Experienced industry directors steering the Agency and Academy projects.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          {dynamicMentors.map((m, idx) => (
-            <div key={idx} className="text-center">
-              <img src={m.image} alt={m.name} className="w-28 h-28 rounded-full object-cover mx-auto mb-4 border border-slate-200" />
-              <h4 className="font-bold text-slate-900 text-sm">{m.name}</h4>
-              <p className="text-xs text-brand-purple font-medium mt-0.5">{m.role}</p>
-              <p className="text-[10px] text-slate-500">{m.org} • {m.exp} Exp</p>
             </div>
           ))}
         </div>

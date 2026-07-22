@@ -621,11 +621,11 @@ export default function AiBrochure() {
   // Booklet state parameters
   const [isBookletMode, setIsBookletMode] = useState(BOOKLET_COURSES.includes(courseId));
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 20;
+  const totalPages = 19;
 
   const isPageDark = (page) => {
-    // Pages 1 (Cover), 3 (Why AI/DS), 6 (Highlights), 7 (Roadmap), 13 (Projects), 18 (Success), 20 (Contact) are dark.
-    return [1, 3, 6, 7, 13, 18, 20].includes(page);
+    // Pages 1 (Cover), 3 (Why AI/DS), 6 (Highlights), 7 (Roadmap), 13 (Projects), 17 (Success), 19 (Contact) are dark.
+    return [1, 3, 6, 7, 13, 17, 19].includes(page);
   };
 
   // Retrieve course content dynamically from the COURSES mock database
@@ -2205,41 +2205,6 @@ export default function AiBrochure() {
         );
 
       case 17: {
-        const mentorList = course.mentors && course.mentors.length > 0 
-          ? course.mentors 
-          : [
-              { name: "Saurav Kumar Sinha", role: "Tietoevry | Ex-Nokia, Xiaomi, LnT, Capgemini", experience: "8+ Years" },
-              { name: "Vinod Kumar Eslavath", role: "Assistant Manager - Data Scientist at Shemaroo", experience: "5+ Years" }
-            ];
-        return (
-          <div className="flex flex-col justify-between h-full relative overflow-hidden">
-            <div className="space-y-4 relative z-10">
-              <span className={`text-[10px] font-mono font-bold uppercase tracking-widest px-3 py-1 rounded border ${badgeBg}`}>Faculty</span>
-              <h2 className={`logo-font text-2xl sm:text-3xl font-bold ${textPrimary}`}>Industry Mentors</h2>
-              <p className={`text-xs font-mono ${textMuted}`}>
-                Classes are designed and directed by active developers carrying extensive software production histories.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto relative z-10 pt-4">
-              {mentorList.slice(0, 2).map((mentor, idx) => (
-                <div key={idx} className={`p-5 rounded-xl flex flex-col justify-between border ${cardBg}`}>
-                  <div className="space-y-2">
-                    <span className="text-[9px] text-[#0EA5E9] font-mono font-bold uppercase tracking-wider bg-[#2A4BFF]/25 px-2 py-0.5 rounded border border-[#2A4BFF]/30 w-fit block">{mentor.experience || "5+ Years"} Exp</span>
-                    <h4 className={`font-extrabold text-xs font-mono uppercase tracking-wide mt-1 ${textPrimary}`}>{mentor.name}</h4>
-                    <p className={`text-[9px] font-mono leading-none ${textMuted}`}>{mentor.role}</p>
-                  </div>
-                  <p className={`text-[10px] font-mono mt-3 leading-relaxed border-t pt-2 ${pageIsDark ? 'border-white/5 text-slate-300' : 'border-slate-200 text-slate-600'}`}>
-                    Guides preprocessing, scientific analysis, and core program architectures.
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      }
-
-      case 18: {
         const reviewObj = course.reviews && course.reviews[0] 
           ? course.reviews[0] 
           : { comment: "I've successfully finished my certification course. A big thank you to my mentors for their support.", user: "Aakash Sharma" };
@@ -2276,7 +2241,7 @@ export default function AiBrochure() {
         );
       }
 
-      case 19:
+      case 18:
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             <div className="space-y-4 relative z-10">
@@ -2307,7 +2272,7 @@ export default function AiBrochure() {
           </div>
         );
 
-      case 20:
+      case 19:
         return (
           <div className="flex flex-col justify-between h-full relative overflow-hidden">
             {/* Background elements */}

@@ -7,15 +7,7 @@ import { getDbItem, setDbItem, getISTDateTimeString } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
-// Static testimonials and mentors for homepage (avoiding heavy mockDb import)
-const MENTORS = [
-  { name: 'Kunal Rawal', role: 'Data Analytics Instructor', org: 'Deloitte & Airtel', exp: '7+ Years', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/deloitte.svg' },
-  { name: 'Saurav Kumar Sinha', role: 'Data Science Mentor', org: 'Capgemini', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
-  { name: 'Nikhil Mehra', role: 'Full Stack Developer', org: 'NadahWeb', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/webflow.svg' },
-  { name: 'Hardik Dhingra', role: 'Cyber Security Specialist', org: 'GoDaddy', exp: '6+ Years', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/godaddy.svg' },
-  { name: 'Shevam Nagar', role: 'Power BI Mentor', org: 'Capgemini', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/capgemini.svg' },
-  { name: 'Sanchit Singh', role: 'Data Analytics Mentor', org: 'EY', exp: '5+ Years', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/ey.svg' }
-];
+
 const CLIENT_TESTIMONIALS = [
   { company: 'EdStart Solutions', client: 'Dr. Ramesh R.', text: 'BeyondSkills built our custom learning platform in record time. The quality of react implementation and analytics dashboard is incredible.', rating: 5 },
   { company: 'Zeta Fashion Brand', client: 'Priya K.', text: 'Our performance ad campaign ROI went up by 45% in the first two months. Their meta ads optimizations are top tier.', rating: 5 }
@@ -367,11 +359,11 @@ export default function Home() {
         {/* Divider line */}
         <div className="max-w-5xl mx-auto border-t border-slate-200/50 my-2 relative z-10" />
 
-        {/* Row 2: OUR ALUMNI & MENTORS WORK AT - Scrolling Right to Left (forward animation) */}
+        {/* Row 2: OUR ALUMNI WORK AT - Scrolling Right to Left (forward animation) */}
         <div className="mt-8 relative z-10">
           <div className="text-center mb-6">
             <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-[0.2em] font-mono">
-              Our Alumni & Mentors Work At
+              Our Alumni Work At
             </span>
           </div>
 

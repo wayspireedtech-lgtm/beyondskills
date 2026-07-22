@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getDbItem, setDbItem, COURSES, MENTORS } from '../utils/mockDb';
+import { getDbItem, setDbItem, COURSES } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import { 
@@ -173,8 +173,7 @@ export default function CustomLandingPage() {
     );
   }
 
-  // Load global dynamic mentors
-  const dynamicMentors = getDbItem('beyondskills_mentors', MENTORS);
+
 
   return (
     <div className="text-slate-900 min-h-screen relative pt-10 pb-24 bg-white">
@@ -387,31 +386,7 @@ export default function CustomLandingPage() {
           </section>
         )}
 
-        {/* LEADERSHIP & ADVISORY MENTORS */}
-        <section className="py-16 border-t border-slate-100">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold text-[#2A4BFF] uppercase tracking-widest font-mono">Team Leaders & Advisors</span>
-            <h2 className="logo-font text-3xl font-extrabold text-slate-900 mt-2">Learn Under Active Specialists</h2>
-            <p className="text-xs text-slate-500 mt-2">Get regular feedback, code reviews, and structured live instruction.</p>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {dynamicMentors.map((m, idx) => (
-              <div key={idx} className="text-center bg-slate-50/50 border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between items-center">
-                <div>
-                  <img src={m.image} alt={m.name} className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border border-slate-200" />
-                  <h4 className="font-bold text-slate-900 text-xs">{m.name}</h4>
-                  <p className="text-[10px] text-brand-purple font-medium mt-0.5">{m.role}</p>
-                </div>
-                <div className="text-[9px] text-slate-400 mt-2 flex items-center justify-center gap-1 flex-wrap">
-                  <span>{m.org}</span>
-                  {m.logo && <img src={m.logo} alt="" className="w-3 h-3 opacity-80" />}
-                  <span>• {m.exp} Exp</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* FAQS SECTION */}
         {lp.faqs && lp.faqs.length > 0 && (
