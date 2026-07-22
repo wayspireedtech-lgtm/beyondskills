@@ -223,7 +223,7 @@ app.post('/api/webhook/leads', async (req, res) => {
       process.env.VITE_GOOGLE_FORM_WEBHOOK_URL ||
       process.env.GOOGLE_SHEET_WEBHOOK_URL ||
       process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL ||
-      'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
+      'https://script.google.com/macros/s/AKfycbw80HBIrQ82auL7y2RtFfYVJqvnaaqWGja-GgY1O05Ffye4f0wCXmsL5CO8gVoJT9JtMA/exec';
 
     const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro';
     const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro/edit';
