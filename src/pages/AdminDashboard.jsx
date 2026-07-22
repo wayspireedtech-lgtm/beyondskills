@@ -2794,16 +2794,29 @@ export default function AdminDashboard() {
                                 );
                               })()}
                             </td>
-                            <td className="py-3.5 px-4 text-center">
-                              <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded uppercase ${
-                                lead.status === 'New' ? 'bg-blue-500/15 text-blue-400 border border-blue-500/20' :
-                                lead.status === 'Contacted' ? 'bg-[#0EA5E9]/15 text-[#0EA5E9] border border-[#0EA5E9]/20' :
-                                lead.status === 'Follow Up' ? 'bg-orange-500/15 text-orange-400 border border-orange-500/20' :
-                                lead.status === 'Enrolled' ? 'bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/20' :
-                                'bg-white/5 text-slate-400 border border-white/10'
-                              }`}>
-                                {lead.status}
-                              </span>
+                            <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
+                              <select
+                                value={lead.status || 'New'}
+                                onChange={(e) => {
+                                  const updated = leads.map(l => l.id === lead.id ? { ...l, status: e.target.value } : l);
+                                  saveLeadsToDb(updated);
+                                }}
+                                className={`text-[10px] font-extrabold px-2 py-1 rounded uppercase bg-[#05092A] border outline-none cursor-pointer transition-all ${
+                                  lead.status === 'New' ? 'text-cyan-400 border-cyan-500/30' :
+                                  lead.status === 'Contacted' ? 'text-purple-400 border-purple-500/30' :
+                                  lead.status === 'Follow Up' ? 'text-amber-400 border-amber-500/30' :
+                                  lead.status === 'Not Connected' ? 'text-rose-400 border-rose-500/30' :
+                                  lead.status === 'Enrolled' ? 'text-emerald-400 border-emerald-500/30' :
+                                  'text-slate-400 border-white/10'
+                                }`}
+                              >
+                                <option value="New" className="bg-[#0A0E35] text-cyan-400">New</option>
+                                <option value="Contacted" className="bg-[#0A0E35] text-purple-400">Contacted</option>
+                                <option value="Follow Up" className="bg-[#0A0E35] text-amber-400">Follow Up</option>
+                                <option value="Not Connected" className="bg-[#0A0E35] text-rose-400">Not Connected</option>
+                                <option value="Enrolled" className="bg-[#0A0E35] text-emerald-400">Enrolled</option>
+                                <option value="Not Interested" className="bg-[#0A0E35] text-slate-400">Not Interested</option>
+                              </select>
                             </td>
                             <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-end space-x-1.5">
@@ -4915,18 +4928,27 @@ export default function AdminDashboard() {
                 <span className="text-brand-cyan font-bold text-sm">{selectedLead.assignedBDM || 'Unassigned'}</span>
               </div>
               
-              <div className="flex items-center space-x-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+              <div className="flex items-center space-x-2 bg-white/5 px-3.5 py-1.5 rounded-lg border border-white/10">
                 <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">Main Pipeline Status:</span>
-                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold font-mono uppercase tracking-wider ${
-                  selectedLead.status === 'New' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :
-                  selectedLead.status === 'Contacted' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
-                  selectedLead.status === 'Follow Up' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                  selectedLead.status === 'Not Connected' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
-                  selectedLead.status === 'Enrolled' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                  'bg-slate-500/20 text-slate-300 border border-slate-500/30'
-                }`}>
-                  ● {selectedLead.status || 'New'}
-                </span>
+                <select
+                  value={selectedLead.status || 'New'}
+                  onChange={(e) => setSelectedLead({ ...selectedLead, status: e.target.value })}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-extrabold font-mono uppercase tracking-wider outline-none cursor-pointer border transition-all ${
+                    selectedLead.status === 'New' ? 'bg-[#05092A] text-cyan-400 border-cyan-500/40 focus:border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]' :
+                    selectedLead.status === 'Contacted' ? 'bg-[#05092A] text-purple-400 border-purple-500/40 focus:border-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.2)]' :
+                    selectedLead.status === 'Follow Up' ? 'bg-[#05092A] text-amber-400 border-amber-500/40 focus:border-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.2)]' :
+                    selectedLead.status === 'Not Connected' ? 'bg-[#05092A] text-rose-400 border-rose-500/40 focus:border-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.2)]' :
+                    selectedLead.status === 'Enrolled' ? 'bg-[#05092A] text-emerald-400 border-emerald-500/40 focus:border-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]' :
+                    'bg-[#05092A] text-slate-300 border-slate-500/40'
+                  }`}
+                >
+                  <option value="New" className="bg-[#0A0E35] text-cyan-400">● New</option>
+                  <option value="Contacted" className="bg-[#0A0E35] text-purple-400">● Contacted</option>
+                  <option value="Follow Up" className="bg-[#0A0E35] text-amber-400">● Follow Up</option>
+                  <option value="Not Connected" className="bg-[#0A0E35] text-rose-400">● Not Connected</option>
+                  <option value="Enrolled" className="bg-[#0A0E35] text-emerald-400">● Enrolled</option>
+                  <option value="Not Interested" className="bg-[#0A0E35] text-slate-400">● Not Interested</option>
+                </select>
               </div>
 
               <div className="text-right">
