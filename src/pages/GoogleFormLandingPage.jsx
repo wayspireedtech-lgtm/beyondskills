@@ -262,7 +262,7 @@ Submitted via BeyondSkills Program Application Landing Page
       }).catch(err => console.log("Realtime backend logging note:", err));
 
       // 3. Single Direct Client-Side Google Apps Script Webhook Post (Target Sheet: admin@beyondskills.in)
-      const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbxGgIXyPOVS4Cz22M4CkyyKgevIhXoYW9RNvIPra2KerGO16Hg8K9v9YilbGR89kwnv/exec';
+      const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
       if (directGoogleSheetWebhook) {
         const sheetParams = new URLSearchParams();
         sheetParams.append('type', 'Meta/WA Campaign Leads');

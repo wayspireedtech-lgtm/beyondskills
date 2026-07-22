@@ -328,7 +328,7 @@ app.post('/api/webhook/leads', async (req, res) => {
                                process.env.GOOGLE_SHEET_WEBHOOK_URL || 
                                process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 
                                config.googleSheetWebhookUrl || 
-                               'https://script.google.com/macros/s/AKfycbxGgIXyPOVS4Cz22M4CkyyKgevIhXoYW9RNvIPra2KerGO16Hg8K9v9YilbGR89kwnv/exec';
+                               'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
 
     if (googleSheetWebhookUrl && !req.body.skipSheetForward) {
         const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
