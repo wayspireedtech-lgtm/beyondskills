@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Send, ShieldCheck, Clock, Sparkles } from 'lucide-
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { LeadService } from '../utils/leadService';
 
 export default function Contact() {
   const [activeForm, setActiveForm] = useState('agency');
@@ -24,49 +25,32 @@ export default function Contact() {
       }));
       return;
     }
-    const newLead = { 
-      type: 'Agency Leads', 
+
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Agency Leads',
       name: agencyForm.name,
+      company: agencyForm.company || 'Unspecified',
       email: agencyForm.email,
       phone: agencyForm.phone,
-      program: agencyForm.service,
-      college: agencyForm.company || 'Unspecified',
-      profession: 'Corporate / Client',
-      message: `Budget: ${agencyForm.budget} | Message: ${agencyForm.message}`,
-      date: getISTDateTimeString() 
-    };
+      service: agencyForm.service,
+      budget: agencyForm.budget,
+      message: agencyForm.message || ''
+    });
 
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
+    if (leadResponse.success) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Corporate Request logged: ${agencyForm.service}`,
+          body: `Dear ${agencyForm.name},\n\nWe have logged your consultation inquiry at BeyondSkills Agency for ${agencyForm.service}. A digital solutions manager has been assigned. You will receive an onboarding briefing calendar invite shortly.\n\nWarm regards,\nBeyondSkills Client Team`
+        }
+      }));
+      const agencySlug = (agencyForm.service || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${agencySlug}?program=${encodeURIComponent(agencyForm.service)}`;
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your request: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting agency lead to backend webhook:', err);
-    }
-
-    // Send Simulated SLA toast
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Corporate Request logged: ${agencyForm.service}`,
-        body: `Dear ${agencyForm.name},\n\nWe have logged your consultation inquiry at BeyondSkills Agency for ${agencyForm.service}. A digital solutions manager has been assigned. You will receive an onboarding briefing calendar invite shortly.\n\nWarm regards,\nBeyondSkills Client Team`
-      }
-    }));
-
-    const agencySlug = (agencyForm.service || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    window.location.href = `/thank-you/${agencySlug}?program=${encodeURIComponent(agencyForm.service)}`;
   };
 
   const handleAcademySubmit = async (e) => {
@@ -83,49 +67,32 @@ export default function Contact() {
       }));
       return;
     }
-    const newLead = { 
-      type: 'Academy Leads', 
+
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Academy Leads',
       name: academyForm.name,
       email: academyForm.email,
       phone: academyForm.phone,
-      program: academyForm.course,
+      course: academyForm.course,
       college: academyForm.college || 'Unspecified',
-      profession: academyForm.status || 'Unspecified',
-      message: academyForm.message || '',
-      date: getISTDateTimeString() 
-    };
+      status: academyForm.status || 'Unspecified',
+      message: academyForm.message || ''
+    });
 
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
+    if (leadResponse.success) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Program Registration received`,
+          body: `Hello ${academyForm.name},\n\nWe have successfully received your inquiry about our ${academyForm.course} program. A mentor is reviewing your background details to prepare a curriculum path recommendation. We will contact you shortly.\n\nSincerely,\nBeyondSkills Academy Admissions`
+        }
+      }));
+      const academySlug = (academyForm.course || 'academy').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${academySlug}?program=${encodeURIComponent(academyForm.course)}`;
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your inquiry: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting academy lead to backend webhook:', err);
-    }
-
-    // Send Simulated SLA toast
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Program Registration received`,
-        body: `Hello ${academyForm.name},\n\nWe have successfully received your inquiry about our ${academyForm.course} program. A mentor is reviewing your background details to prepare a curriculum path recommendation. We will contact you shortly.\n\nSincerely,\nBeyondSkills Academy Admissions`
-      }
-    }));
-
-    const academySlug = (academyForm.course || 'academy').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    window.location.href = `/thank-you/${academySlug}?program=${encodeURIComponent(academyForm.course)}`;
   };
 
   return (

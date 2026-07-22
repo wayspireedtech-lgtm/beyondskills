@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { COURSES, setDbItem, getDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import confetti from 'canvas-confetti';
 import microsoftLogo from '../assets/microsoft.svg';
@@ -444,125 +445,49 @@ export default function AiMlDataScienceLandingPage() {
     const submissionTime = getISTDateTimeString();
     const leadId = `LD-AI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    const detailedNotes = `
-College: ${enquiryForm.college || 'N/A'}
-Academic Year: ${enquiryForm.year}
-Current Status: ${enquiryForm.role}
-Skill Level: ${enquiryForm.skillLevel}
-Career Goal: ${enquiryForm.careerGoal}
-Laptop Availability: ${enquiryForm.laptopAccess}
-Weekly Learning Hours: ${enquiryForm.weeklyHours}
-Start Timeline: ${enquiryForm.learningStart}
-Why interested: ${enquiryForm.whyInterested || 'N/A'}
-Referrer: ${referrer}
-Device: ${device}
-Browser: ${browser}
-Page URL: ${pageUrl}
-Submission Time: ${submissionTime}
-    `.trim();
-
-    const newLead = {
-      id: leadId,
-      leadId: leadId,
-      type: 'Ads Leads',
-      program: enquiryForm.upskilling,
-      course_id: enquiryForm.upskilling,
-      course_title: 'Artificial Intelligence, Machine Learning & Data Science',
+    const leadResponse = await LeadService.submitLead({
+      formId: 'AI/ML/Data Science Landing Page Form',
       name: enquiryForm.name.trim(),
       email: enquiryForm.email.trim(),
       phone: enquiryForm.phone.trim(),
       college: enquiryForm.college.trim() || 'Unspecified',
-      student_details: `College: ${enquiryForm.college || 'N/A'} | Year: ${enquiryForm.year} | Status: ${enquiryForm.role} | Skill: ${enquiryForm.skillLevel} | Laptop: ${enquiryForm.laptopAccess} | Hours: ${enquiryForm.weeklyHours}`,
-      qualification: enquiryForm.college.trim() || 'Unspecified',
-      profession: enquiryForm.role,
-      experience: enquiryForm.skillLevel,
-      contactTime: 'Any Time',
+      year: enquiryForm.year,
+      role: enquiryForm.role,
+      skillLevel: enquiryForm.skillLevel,
       careerGoal: enquiryForm.careerGoal,
-      goal: enquiryForm.careerGoal,
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      message: detailedNotes,
-      notes: detailedNotes,
-      campaign: utmCampaign,
-      source: utmSource,
-      utm_medium: utmMedium,
-      utm_campaign: utmCampaign,
-      utm_content: utmContent,
-      utm_term: utmTerm,
-      utmMedium: utmMedium,
-      utmCampaign: utmCampaign,
-      utmContent: utmContent,
-      utmTerm: utmTerm,
-      referrer: referrer,
-      deviceType: device,
-      browser: browser,
-      submissionTime: submissionTime,
-      pageUrl: pageUrl,
-      timestamp: Date.now(),
+      laptopAccess: enquiryForm.laptopAccess,
+      weeklyHours: enquiryForm.weeklyHours,
+      learningStart: enquiryForm.learningStart,
+      whyInterested: enquiryForm.whyInterested || 'N/A',
+      program: 'Artificial Intelligence, Machine Learning & Data Science',
       remarks: 'Submitted via Standalone AI/ML/Data Science Landing Page'
-    };
-
-
-
-    let savedSupabase = false;
-    let savedWebhook = false;
-
-    // Save to Supabase
-    try {
-      const res = await saveLeadToSupabase(newLead);
-      if (!res.error) savedSupabase = true;
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
-    }
-
-    // Post to backend webhook
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
-        : window.location.origin;
-
-      const res = await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-      if (res.ok) {
-        savedWebhook = true;
-      }
-    } catch (err) {
-      console.error('Error posting lead to webhook:', err);
-    }
-
-    // Fallback to queue if not completely saved
-    if (!savedSupabase || !savedWebhook) {
-      const queue = getDbItem('beyondskills_leads_queue', []);
-      queue.push({
-        lead: newLead,
-        failedSupabase: !savedSupabase,
-        failedWebhook: !savedWebhook,
-        attempts: 1
-      });
-      setDbItem('beyondskills_leads_queue', queue);
-    }
-
-    // Analytics success tracking
-    trackPixelEvent('Lead', { value: 1.0, currency: 'USD', lead_id: leadId });
-
-    confetti({
-      particleCount: 120,
-      spread: 70,
-      origin: { y: 0.6 }
     });
 
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Program Application Received`,
-        body: `Dear ${enquiryForm.name},\n\nYour application has been logged for evaluation. Our admissions counselling team will verify details and reach out to you within 24 hours.\n\nLead ID: ${leadId}`
-      }
-    }));
+    if (leadResponse.success) {
+      // Analytics success tracking
+      trackPixelEvent('Lead', { value: 1.0, currency: 'USD', lead_id: leadId });
 
-    setIsSubmitting(false);
-    window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Program Application Received`,
+          body: `Dear ${enquiryForm.name},\n\nYour application has been logged for evaluation. Our admissions counselling team will verify details and reach out to you within 24 hours.\n\nLead ID: ${leadId}`
+        }
+      }));
+
+      setIsSubmitting(false);
+      window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your application: ${leadResponse.error || 'Please try again.'}` }
+      }));
+      setIsSubmitting(false);
+    }
   };
 
   const scrollToHeroForm = (buttonName) => {

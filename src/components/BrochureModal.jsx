@@ -3,6 +3,7 @@ import { X, ArrowRight, Download } from 'lucide-react';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { LeadService } from '../utils/leadService';
 
 export default function BrochureModal({ isOpen, onClose, course }) {
   const [formData, setFormData] = useState({
@@ -35,24 +36,27 @@ export default function BrochureModal({ isOpen, onClose, course }) {
     }
     setIsSubmitting(true);
 
-    const leadRecord = {
+    const leadResponse = await LeadService.submitLead({
+      formId: `${course.title} Brochure Modal Form`,
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
       status: formData.status,
-      course_id: course.id,
-      course_title: course.title,
-      student_details: formData.status === 'Student' ? formData.studentDetails : `Company: ${formData.companyName}`,
-      job_role: formData.status === 'Working Professional' ? formData.jobRole : ''
-    };
-
-    // 1. Save to Supabase (dynamic client with fallbacks)
-    await saveLeadToSupabase(leadRecord);
-
-
+      program: course.title,
+      studentDetails: formData.studentDetails || '',
+      jobRole: formData.jobRole || '',
+      companyName: formData.companyName || ''
+    });
 
     setIsSubmitting(false);
-    setSubmitSuccess(true);
+    if (leadResponse.success) {
+      setSubmitSuccess(true);
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your request: ${leadResponse.error || 'Please try again.'}` }
+      }));
+      return;
+    }
 
     // 3. Trigger brochure PDF file download
     const mapping = {

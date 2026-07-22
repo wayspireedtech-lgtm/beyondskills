@@ -45,15 +45,7 @@ export function getISTDateTimeString(dateVal = new Date()) {
 export async function saveLeadToSupabase(lead) {
   if (!lead) return { data: null, error: null };
 
-  // 1. Immediately update local storage DB cache so submission is instant
-  try {
-    const existing = getDbItem('beyondskills_leads', []);
-    if (!existing.some(l => l.id === lead.id || (l.phone && l.phone === lead.phone && l.phone !== '0000000000'))) {
-      setDbItem('beyondskills_leads', [lead, ...existing]);
-    }
-  } catch (e) {
-    console.error('[Local DB Cache Error]:', e);
-  }
+
 
   // 2. Trigger automatic welcome email directly (with keepalive)
   if (lead && lead.email && !lead.email.includes('no-email')) {

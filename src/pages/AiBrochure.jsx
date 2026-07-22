@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
@@ -537,62 +538,34 @@ export default function AiBrochure() {
 
     const courseTitle = course ? course.title : 'Program Specialist';
     const courseSlug = course ? course.id : 'artificial-intelligence';
-    const detailedNotes = `College: ${enquiryForm.college || 'N/A'}\nMessage: ${enquiryForm.message || 'N/A'}\nSubmitted via ${courseTitle} Brochure / Booklet page`;
 
-    const payload = {
+    const leadResponse = await LeadService.submitLead({
+      formId: `${courseTitle} Brochure Form`,
       name: enquiryForm.name.trim(),
       email: enquiryForm.email.trim(),
       phone: enquiryForm.phone.trim(),
-      type: 'Ads Leads',
-      program: courseSlug,
-      notes: detailedNotes,
       college: enquiryForm.college || 'Unspecified',
-      profession: enquiryForm.status,
-      message: enquiryForm.message || ''
-    };
+      status: enquiryForm.status || 'Unspecified',
+      message: enquiryForm.message || '',
+      program: courseTitle
+    });
 
-    // 1. Save to Supabase (dynamic client with fallbacks)
-    const leadRecord = {
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      status: payload.profession,
-      course_id: payload.program,
-      course_title: courseTitle,
-      student_details: `College: ${payload.college} | Message: ${payload.message}`,
-      job_role: payload.profession
-    };
-    await saveLeadToSupabase(leadRecord);
+    if (leadResponse.success) {
+      // Simulated email SLA trigger
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `${courseTitle} Brochure Query Registered`,
+          body: `Hello ${enquiryForm.name},\n\nWe have logged your course brochure query for ${courseTitle}.\n\nAn academic counselor will contact you within 24 hours at ${enquiryForm.phone} or via email to guide you through model files, schedules, and dashboard logins.\n\nWarm regards,\nBeyondSkills Admissions Team`
+        }
+      }));
 
-    // 2. Post to backend webhook API
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.error('Error posting enquiry to backend webhook:', err);
+      const programSlug = (courseId || course?.id || 'ai-data-science').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(courseTitle || course?.title || courseId)}`;
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your query: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-
-
-    // Simulated email SLA trigger
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `${courseTitle} Brochure Query Registered`,
-        body: `Hello ${enquiryForm.name},\n\nWe have logged your course brochure query for ${courseTitle}.\n\nAn academic counselor will contact you within 24 hours at ${enquiryForm.phone} or via email to guide you through model files, schedules, and dashboard logins.\n\nWarm regards,\nBeyondSkills Admissions Team`
-      }
-    }));
-
-    const programSlug = (courseId || course?.id || 'ai-data-science').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(courseTitle || course?.title || courseId)}`;
   };
 
   const downloadSyllabusMock = () => {

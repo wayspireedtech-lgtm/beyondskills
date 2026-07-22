@@ -332,34 +332,15 @@ app.post('/api/webhook/leads', async (req, res) => {
 
     if (googleSheetWebhookUrl && !req.body.skipSheetForward) {
       try {
-        const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
-        const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk/edit';
+        const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro';
+        const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16dnyDo9SryzZr-PIhz-jIoHRI4q-0yzLoEX4K4o42Ro/edit';
 
         const webhookPayload = {
+          ...req.body,
           spreadsheetId: targetSheetId,
           targetSheetId: targetSheetId,
           sheetId: targetSheetId,
           targetSheetUrl: targetSheetUrl,
-          type: type || req.body.type || 'General Leads',
-          name,
-          phone,
-          email,
-          Name: name,
-          Phone: phone,
-          Email: email,
-          College: college || 'N/A',
-          Year: year || 'N/A',
-          Program: program || 'N/A',
-          CareerGoal: careerGoal || req.body.careerGoal || 'Not Specified',
-          college: college || 'N/A',
-          year: year || 'N/A',
-          role: profession || 'N/A',
-          program: program || 'N/A',
-          batch: batch || 'N/A',
-          projectExp: projectExp || 'N/A',
-          whyInterested: whyInterested || 'N/A',
-          preferredContactTime: preferredContactTime || req.body.preferredContactTime || 'Not Specified',
-          careerGoal: careerGoal || req.body.careerGoal || 'Not Specified',
           date: newLead.date,
           SubmittedAt: newLead.date
         };

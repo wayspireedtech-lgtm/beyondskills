@@ -12,6 +12,7 @@ import {
 import { getDbItem, setDbItem } from '../utils/mockDb';
 import { COURSES_SUMMARY } from '../utils/coursesSummary';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import TechIcon from '../components/TechIcon';
 
@@ -201,106 +202,34 @@ export default function GoogleFormLandingPage() {
       const selectedProgObj = WEBSITE_PROGRAMS.find(p => p.id === form.upskilling);
       const courseTitle = selectedProgObj ? selectedProgObj.title : form.upskilling;
 
-      // Build lead record for Supabase & local DB with dedicated target Google Sheet ID
-      const leadRecord = {
+      const leadResponse = await LeadService.submitLead({
+        formId: 'Google Form Landing Page Form',
         name: form.name.trim(),
-        email: form.email.trim(),
         phone: form.phone.trim(),
-        status: form.year,
-        type: 'Meta/WA Campaign Leads',
-        course_id: form.upskilling,
-        course_title: courseTitle,
-        student_details: `College: ${form.college.trim()} | Academic Year: ${form.year} | Goal: ${form.careerGoal}`,
-        job_role: form.careerGoal,
-        careerGoal: form.careerGoal,
-        target_sheet_id: TARGET_GOOGLE_SHEET_ID,
-        sheet_url: TARGET_GOOGLE_SHEET_URL,
-        message: `College: ${form.college.trim()} | Year: ${form.year} | Goal: ${form.careerGoal}`
-      };
-      await saveLeadToSupabase(leadRecord);
-
-      // Construct detailed notes containing extra metadata fields & Sheet router tag
-      const detailedNotes = `
-Academic Year: ${form.year}
-College Name: ${form.college.trim()}
-Primary Career Goal: ${form.careerGoal}
-Preferred Program: ${courseTitle}
-Target Google Sheet ID: ${TARGET_GOOGLE_SHEET_ID}
-Target Sheet URL: ${TARGET_GOOGLE_SHEET_URL}
-Submitted via BeyondSkills Program Application Landing Page
-      `.trim();
-
-      const payload = {
-        name: form.name.trim(),
         email: form.email.trim(),
-        phone: form.phone.trim(),
-        type: 'META/WA CAMPAIGN LEADS',
-        campaign: 'META/WA CAMPAIGN LEADS',
-        remarks: 'Submitted via WhatsApp Campaign Google Form page',
-        program: form.upskilling,
-        notes: detailedNotes,
         college: form.college.trim(),
-        profession: form.year,
         year: form.year,
-        message: detailedNotes,
+        upskilling: form.upskilling,
+        program: courseTitle,
         careerGoal: form.careerGoal,
-        targetSheetId: TARGET_GOOGLE_SHEET_ID,
-        targetSheetUrl: TARGET_GOOGLE_SHEET_URL,
-        skipSheetForward: true
-      };
+        campaign: 'META/WA CAMPAIGN LEADS',
+        remarks: 'Submitted via WhatsApp Campaign Google Form page'
+      });
 
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
-        : window.location.origin;
+      if (leadResponse.success) {
+        // Trigger Simulated SLA toast
+        window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+          detail: {
+            subject: `Application Received: ${courseTitle}`,
+            body: `Hello ${form.name},\n\nYour application for ${courseTitle} has been logged. Our admissions counselor will evaluate your profile and contact you for counseling & eligibility review shortly.\n\nSincerely,\nBeyondSkills Admissions Team`
+          }
+        }));
 
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      }).catch(err => console.log("Realtime backend logging note:", err));
-
-      // 3. Single Direct Client-Side Google Apps Script Webhook Post (Target Sheet: admin@beyondskills.in)
-      const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
-      if (directGoogleSheetWebhook) {
-        const sheetParams = new URLSearchParams();
-        sheetParams.append('type', 'Meta/WA Campaign Leads');
-        sheetParams.append('name', form.name.trim());
-        sheetParams.append('phone', form.phone.trim());
-        sheetParams.append('email', form.email.trim());
-        sheetParams.append('college', form.college.trim());
-        sheetParams.append('year', form.year);
-        sheetParams.append('program', courseTitle);
-        sheetParams.append('careerGoal', form.careerGoal);
-        sheetParams.append('date', getISTDateTimeString());
-
-        try {
-          fetch(directGoogleSheetWebhook, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: sheetParams.toString()
-          }).catch(err => console.log('Direct sheet webhook post:', err));
-        } catch (e) {
-          console.log('Client sheet fetch exception:', e);
-        }
+        const programSlug = (form.upskilling || 'general').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(courseTitle)}`;
+      } else {
+        setErrorMessage(leadResponse.error || 'Failed to submit application. Please try again.');
       }
-
-
-
-      // Trigger Simulated SLA toast
-      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-        detail: {
-          subject: `Application Received: ${courseTitle}`,
-          body: `Hello ${form.name},\n\nYour application for ${courseTitle} has been logged. Our admissions counselor will evaluate your profile and contact you for counseling & eligibility review shortly.\n\nSincerely,\nBeyondSkills Admissions Team`
-        }
-      }));
-
-      const programSlug = (payload.program || 'general').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(payload.program)}`;
     } catch (error) {
       console.error('Error submitting application:', error);
       setErrorMessage('Failed to submit application. Please try again.');

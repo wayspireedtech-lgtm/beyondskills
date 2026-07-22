@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 import wiproLogo from '../assets/wipro.svg';
 import tcsLogo from '../assets/tcs.svg';
@@ -330,60 +331,20 @@ export default function DigitalMarketingLandingPage() {
     }
     const cleanPhone = formData.phone.replace(/\D/g, '');
 
-    // Parse URL campaigns
-    const queryParams = new URLSearchParams(window.location.search);
-    const campaign = queryParams.get('utm_campaign') || 'Digital Marketing Paid Campaign';
-    const source = queryParams.get('utm_source') || 'Direct Ads';
-    const medium = queryParams.get('utm_medium') || 'CPC';
-    const content = queryParams.get('utm_content') || 'Landing Page';
-
-    const newLead = {
-      id: `LD${String(Date.now()).slice(-4)}${Math.floor(Math.random() * 100)}`,
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Digital Marketing Landing Page Form',
       name: formData.name,
       email: formData.email,
       phone: cleanPhone,
-      date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      type: 'Ads Leads',
-      program: 'digital-marketing-cert',
-      assignedBDM: '',
-      assignedBDA: '',
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      profession: formData.experience,
+      program: 'Digital Marketing & Growth Hacking',
       qualification: formData.qualification,
+      experience: formData.experience,
       careerGoal: formData.goal,
       preferredContactTime: formData.preferredTime,
-      campaign: campaign,
-      source: source,
-      utmMedium: medium,
-      utmCampaign: campaign,
-      utmContent: content,
-      remarks: `Contact: ${formData.preferredTime}. Career goal: ${formData.goal}. Experience: ${formData.experience}. Qual: ${formData.qualification}.`,
-      callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
-      history: []
-    };
+      remarks: `Contact: ${formData.preferredTime}. Career goal: ${formData.goal}. Experience: ${formData.experience}. Qual: ${formData.qualification}.`
+    });
 
-    try {
-
-
-      // Save to Supabase
-      try {
-        await saveLeadToSupabase(newLead);
-      } catch (sbErr) {
-        console.error('Error saving lead to Supabase:', sbErr);
-      }
-
-      // Attempt to hit CRM live sync endpoint if available
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      }).catch(() => console.log("Realtime webhook offline, saved locally."));
-
+    if (leadResponse.success) {
       // Trigger custom notification
       window.dispatchEvent(new CustomEvent('beyondskills_toast', {
         detail: {
@@ -403,11 +364,13 @@ export default function DigitalMarketingLandingPage() {
         goal: 'Start a Career in Digital Marketing',
         preferredTime: 'Evening (6 PM - 9 PM)'
       });
-    } catch (err) {
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your application: ${leadResponse.error || 'Please try again.'}` }
+      }));
       setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
     }
+    setIsSubmitting(false);
   };
 
   const handleScrollToForm = () => {

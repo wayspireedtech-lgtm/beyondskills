@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 const OUTCOMES = [
@@ -179,60 +180,33 @@ export default function FullStackLandingPage() {
     const utmCampaign = searchParams.get('utm_campaign') || 'Full Stack Campaign';
     const utmContent = searchParams.get('utm_content') || 'Ad Variant 1';
 
-    const newLead = {
-      id: `LD${Math.floor(Math.random() * 100000)}`,
-      type: 'Ads Leads',
-      program: 'full-stack-web',
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Full Stack Landing Page Form',
       name: enquiryForm.name,
       email: enquiryForm.email,
       phone: enquiryForm.phone,
-      college: enquiryForm.qualification, 
-      qualification: enquiryForm.qualification,
-      profession: enquiryForm.experience,
-      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
+      program: 'Full Stack Web Development (MERN & DevOps)',
+      qualification: enquiryForm.qualification, 
+      experience: enquiryForm.experience,
       careerGoal: enquiryForm.goal,
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime || 'Not Specified'}`,
-      campaign: utmCampaign,
-      source: utmSource,
-      utmMedium: utmMedium,
-      utmCampaign: utmCampaign,
-      utmContent: utmContent,
-      leadStatus: 'New Lead',
-      remarks: 'Submitted via Standalone Full Stack Landing Page',
-      date: getISTDateTimeString()
-    };
+      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
+      remarks: 'Submitted via Standalone Full Stack Landing Page'
+    });
 
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
+    if (leadResponse.success) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Enrollment Application Registered: ${enquiryForm.name}`,
+          body: `Dear ${enquiryForm.name},\n\nWe have logged your application profile for the Full Stack Web Development cohort. An admissions counselor will reach out to you at ${enquiryForm.phone} to discuss curriculum timeline details.`
+        }
+      }));
+
+      window.location.href = '/thank-you/full-stack-web-development?program=full-stack-web-development';
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your application: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting enquiry to backend webhook:', err);
-    }
-
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Enrollment Application Registered: ${enquiryForm.name}`,
-        body: `Dear ${enquiryForm.name},\n\nWe have logged your application profile for the Full Stack Web Development cohort. An admissions counselor will reach out to you at ${enquiryForm.phone} to discuss curriculum timeline details.`
-      }
-    }));
-
-    window.location.href = '/thank-you/full-stack-web-development?program=full-stack-web-development';
     setEnquiryForm({
       name: '',
       email: '',

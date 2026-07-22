@@ -3,6 +3,7 @@ import { Send, Sparkles, Award, Users, ShieldAlert, Briefcase, MessageSquare, Ch
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { LeadService } from '../utils/leadService';
 
 export default function CampusAmbassador() {
   const [form, setForm] = useState({
@@ -30,47 +31,31 @@ export default function CampusAmbassador() {
       }));
       return;
     }
-    const newLead = { 
-      type: 'Campus Ambassador', 
+
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Campus Ambassador Form',
       name: form.name,
       email: form.email,
       phone: form.phone,
       college: form.college || 'Unspecified',
-      profession: `Student (${form.year || 'N/A'})`,
-      program: 'Campus Ambassador',
-      message: `Stream: ${form.stream || 'N/A'} | Why Apply: ${form.whyApply || 'N/A'}`,
-      date: getISTDateTimeString() 
-    };
+      year: form.year || 'N/A',
+      stream: form.stream || 'N/A',
+      whyApply: form.whyApply || 'N/A'
+    });
 
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
+    if (leadResponse.success) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: 'Ambassador Application Received',
+          body: `Hello ${form.name},\n\nWe have received your application for the BeyondSkills Campus Ambassador Program. Our campus recruitment lead will review your profile and reach out to you at ${form.phone} within 48 hours for a brief telephonic interaction.\n\nBest regards,\nBeyondSkills Campus Team`
+        }
+      }));
+      window.location.href = '/thank-you/campus-ambassador?program=campus-ambassador';
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your application: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting campus ambassador application to backend webhook:', err);
-    }
-
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: 'Ambassador Application Received',
-        body: `Hello ${form.name},\n\nWe have received your application for the BeyondSkills Campus Ambassador Program. Our campus recruitment lead will review your profile and reach out to you at ${form.phone} within 48 hours for a brief telephonic interaction.\n\nBest regards,\nBeyondSkills Campus Team`
-      }
-    }));
-
-    window.location.href = '/thank-you/campus-ambassador?program=campus-ambassador';
   };
 
   return (

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
+import { LeadService } from '../utils/leadService';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
 
 export default function AiDataScienceProgram() {
@@ -260,61 +261,33 @@ export default function AiDataScienceProgram() {
     }
 
     const courseTitle = 'AI & Data Science Specialist';
-    const detailedNotes = `College: ${enquiryForm.college || 'N/A'}\nMessage: ${enquiryForm.message || 'N/A'}\nSubmitted via AI & Data Science Program page`;
 
-    const payload = {
+    const leadResponse = await LeadService.submitLead({
+      formId: 'AI & Data Science Program Form',
       name: enquiryForm.name.trim(),
       email: enquiryForm.email.trim(),
       phone: enquiryForm.phone.trim(),
-      type: 'Ads Leads',
-      program: 'artificial-intelligence',
-      notes: detailedNotes,
       college: enquiryForm.college || 'Unspecified',
-      profession: enquiryForm.status,
-      message: enquiryForm.message || ''
-    };
+      status: enquiryForm.status || 'Unspecified',
+      message: enquiryForm.message || '',
+      program: courseTitle
+    });
 
-    // 1. Save to Supabase (dynamic client with fallbacks)
-    const leadRecord = {
-      name: payload.name,
-      email: payload.email,
-      phone: payload.phone,
-      status: payload.profession,
-      course_id: payload.program,
-      course_title: courseTitle,
-      student_details: `College: ${payload.college} | Message: ${payload.message}`,
-      job_role: payload.profession
-    };
-    await saveLeadToSupabase(leadRecord);
+    if (leadResponse.success) {
+      // Simulated email SLA trigger
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `AI & Data Science Program Registration Received`,
+          body: `Hello ${enquiryForm.name},\n\nWe have successfully received your registration details for the BeyondSkills AI & Data Science Certification Program. \n\nAn academic counselor will contact you within 24 hours at ${enquiryForm.phone} or via email to guide you through model files, schedules, and dashboard logins.\n\nWarm regards,\nBeyondSkills Admissions Team`
+        }
+      }));
 
-    // 2. Post to backend webhook API
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.error('Error posting enquiry to backend webhook:', err);
+      window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your registration: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-
-
-    // Simulated email SLA trigger
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `AI & Data Science Program Registration Received`,
-        body: `Hello ${enquiryForm.name},\n\nWe have successfully received your registration details for the BeyondSkills AI & Data Science Certification Program. \n\nAn academic counselor will contact you within 24 hours at ${enquiryForm.phone} or via email to guide you through model files, schedules, and dashboard logins.\n\nWarm regards,\nBeyondSkills Admissions Team`
-      }
-    }));
-
-    window.location.href = '/thank-you/ai-data-science?program=ai-data-science';
   };
 
   const downloadSyllabusMock = () => {

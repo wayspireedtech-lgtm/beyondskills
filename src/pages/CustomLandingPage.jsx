@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getDbItem, setDbItem, COURSES } from '../utils/mockDb';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { LeadService } from '../utils/leadService';
 import { 
   Sparkles, CheckCircle, ChevronDown, ChevronUp, BookOpen, Clock, 
   MapPin, ShieldAlert, Award, Star, ArrowRight, User, GraduationCap, Check
@@ -77,69 +78,44 @@ export default function CustomLandingPage() {
       return;
     }
 
-    const newLead = {
-      id: `LD${Math.floor(Math.random() * 100000)}`,
-      type: 'Ads Leads',
+    const leadResponse = await LeadService.submitLead({
+      formId: `${course?.title || slug || 'Custom'} Landing Page Form`,
       program: lp?.courseId || course?.id || slug,
       name: enquiryForm.name,
       email: enquiryForm.email || 'no-email@beyondskills.com',
       phone: enquiryForm.phone,
       college: enquiryForm.qualification, 
-      qualification: enquiryForm.qualification,
-      profession: enquiryForm.experience,
-      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
+      experience: enquiryForm.experience,
       careerGoal: enquiryForm.goal,
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      message: `Goal: ${enquiryForm.goal} • Contact: ${enquiryForm.contactTime || 'Not Specified'}`,
+      preferredContactTime: enquiryForm.contactTime || 'Not Specified',
       campaign: 'Dynamic LP',
       source: `lp/${slug}`,
-      utmMedium: 'Dynamic Landing Page',
-      utmCampaign: slug,
-      utmContent: 'Ad Variant 1',
-      leadStatus: 'New Lead',
-      remarks: `Submitted via Custom Landing Page: ${slug}`,
-      date: getISTDateTimeString()
-    };
-
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
-    }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting enquiry to backend webhook:', err);
-    }
-
-    // Trigger confetti
-    confetti({
-      particleCount: 100,
-      spread: 60,
-      origin: { y: 0.6 }
+      remarks: `Submitted via Custom Landing Page: ${slug}`
     });
 
-    // Alert toast
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Enquiry Received: ${enquiryForm.name}`,
-        body: `Dear ${enquiryForm.name},\n\nWe have received your enquiry for the ${course?.title || 'program'}. Our academic BDA advisor will connect with you soon.`
-      }
-    }));
+    if (leadResponse.success) {
+      // Trigger confetti
+      confetti({
+        particleCount: 100,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
 
-    const programSlug = (slug || enquiryForm.upskilling || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(enquiryForm.upskilling || slug)}`;
+      // Alert toast
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Enquiry Received: ${enquiryForm.name}`,
+          body: `Dear ${enquiryForm.name},\n\nWe have received your enquiry for the ${course?.title || 'program'}. Our academic BDA advisor will connect with you soon.`
+        }
+      }));
+
+      const programSlug = (slug || enquiryForm.upskilling || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${programSlug}?program=${encodeURIComponent(enquiryForm.upskilling || slug)}`;
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your enquiry: ${leadResponse.error || 'Please try again.'}` }
+      }));
+    }
     setEnquiryForm({
       name: '',
       email: '',

@@ -4,6 +4,7 @@ import { Code, Megaphone, Terminal, FileText, CheckCircle, ArrowLeft, Send, Spar
 import { getDbItem, setDbItem } from '../utils/dbHelpers';
 import { saveLeadToSupabase, getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { LeadService } from '../utils/leadService';
 
 const SERVICE_DATA = {
   'website-development': {
@@ -97,48 +98,31 @@ export default function Services() {
       }));
       return;
     }
-    const newLead = { 
-      type: 'Digital Services', 
+    const leadResponse = await LeadService.submitLead({
+      formId: 'Digital Services Form',
       name: form.name,
       email: form.email,
       phone: form.phone,
       program: data.title || 'Digital Services',
-      college: form.company || 'Unspecified',
-      profession: 'Corporate / Client',
-      message: `Budget: ${form.budget} | Message: ${form.message}`,
-      date: getISTDateTimeString() 
-    };
+      company: form.company || 'Unspecified',
+      budget: form.budget,
+      message: form.message || ''
+    });
 
-    // Save to Supabase
-    try {
-      await saveLeadToSupabase(newLead);
-    } catch (sbErr) {
-      console.error('Error saving lead to Supabase:', sbErr);
+    if (leadResponse.success) {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: {
+          subject: `Inquiry Logged: ${data.title}`,
+          body: `Hello ${form.name},\n\nWe have received your digital services consultation inquiry regarding ${data.title}. One of our senior architects will reach out to schedule a technical discovery call shortly.\n\nThank you,\nBeyondSkills Consulting Team`
+        }
+      }));
+      const serviceSlug = (serviceId || data.title || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      window.location.href = `/thank-you/${serviceSlug}?program=${encodeURIComponent(data.title)}`;
+    } else {
+      window.dispatchEvent(new CustomEvent('beyondskills_toast', {
+        detail: { subject: 'Submission Failed', body: `We encountered an error while submitting your inquiry: ${leadResponse.error || 'Please try again.'}` }
+      }));
     }
-
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : window.location.origin;
-
-      await fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLead)
-      });
-    } catch (err) {
-      console.error('Error posting digital services inquiry to backend webhook:', err);
-    }
-
-    window.dispatchEvent(new CustomEvent('beyondskills_toast', {
-      detail: {
-        subject: `Inquiry Logged: ${data.title}`,
-        body: `Hello ${form.name},\n\nWe have received your digital services consultation inquiry regarding ${data.title}. One of our senior architects will reach out to schedule a technical discovery call shortly.\n\nThank you,\nBeyondSkills Consulting Team`
-      }
-    }));
-
-    const serviceSlug = (serviceId || data.title || 'digital-services').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    window.location.href = `/thank-you/${serviceSlug}?program=${encodeURIComponent(data.title)}`;
   };
 
   if (!data) {
