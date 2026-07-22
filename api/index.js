@@ -322,9 +322,13 @@ app.post('/api/webhook/leads', async (req, res) => {
     const config = readJsonFileSync(CONFIG_FILE, {});
     const isGoogleFormLead = type === 'Meta/WA Campaign Leads' || req.body.targetSheetId === '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
 
-    let googleSheetWebhookUrl = isGoogleFormLead
-      ? (process.env.GOOGLE_FORM_WEBHOOK_URL || config.googleFormWebhookUrl || process.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbxGgIXyPOVS4Cz22M4CkyyKgevIhXoYW9RNvIPra2KerGO16Hg8K9v9YilbGR89kwnv/exec')
-      : (process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || config.googleSheetWebhookUrl || 'https://script.google.com/macros/s/AKfycbwHEer3vmt4NNgpx_-aq7Zbl4QIYM2Buk_l-UrdisUJqLAukqTwKa8XTh2hQWI8LibmZg/exec');
+    let googleSheetWebhookUrl = process.env.GOOGLE_FORM_WEBHOOK_URL || 
+                               config.googleFormWebhookUrl || 
+                               process.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 
+                               process.env.GOOGLE_SHEET_WEBHOOK_URL || 
+                               process.env.VITE_GOOGLE_SHEET_WEBHOOK_URL || 
+                               config.googleSheetWebhookUrl || 
+                               'https://script.google.com/macros/s/AKfycbxGgIXyPOVS4Cz22M4CkyyKgevIhXoYW9RNvIPra2KerGO16Hg8K9v9YilbGR89kwnv/exec';
 
     if (googleSheetWebhookUrl && !req.body.skipSheetForward) {
         const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
@@ -335,6 +339,7 @@ app.post('/api/webhook/leads', async (req, res) => {
           targetSheetId: targetSheetId,
           sheetId: targetSheetId,
           targetSheetUrl: targetSheetUrl,
+          type: type || req.body.type || 'General Leads',
           name,
           phone,
           email,

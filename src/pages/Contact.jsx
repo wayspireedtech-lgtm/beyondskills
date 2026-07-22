@@ -24,7 +24,6 @@ export default function Contact() {
       }));
       return;
     }
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Agency Leads', 
       name: agencyForm.name,
@@ -36,8 +35,6 @@ export default function Contact() {
       message: `Budget: ${agencyForm.budget} | Message: ${agencyForm.message}`,
       date: getISTDateTimeString() 
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {
@@ -86,7 +83,6 @@ export default function Contact() {
       }));
       return;
     }
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Academy Leads', 
       name: academyForm.name,
@@ -98,8 +94,6 @@ export default function Contact() {
       message: academyForm.message || '',
       date: getISTDateTimeString() 
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {

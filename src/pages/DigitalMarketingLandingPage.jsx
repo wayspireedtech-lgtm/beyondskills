@@ -364,9 +364,7 @@ export default function DigitalMarketingLandingPage() {
     };
 
     try {
-      // Save to localStorage DB so CRM is updated
-      const currentLeads = getDbItem('beyondskills_leads', []);
-      setDbItem('beyondskills_leads', [newLead, ...currentLeads]);
+
 
       // Save to Supabase
       try {

@@ -502,10 +502,7 @@ Submission Time: ${submissionTime}
       remarks: 'Submitted via Standalone AI/ML/Data Science Landing Page'
     };
 
-    // Save locally
-    const localLeads = getDbItem('beyondskills_leads', []);
-    localLeads.push(newLead);
-    setDbItem('beyondskills_leads', localLeads);
+
 
     let savedSupabase = false;
     let savedWebhook = false;

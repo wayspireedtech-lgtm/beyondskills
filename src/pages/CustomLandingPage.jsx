@@ -77,9 +77,8 @@ export default function CustomLandingPage() {
       return;
     }
 
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
-      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
+      id: `LD${Math.floor(Math.random() * 100000)}`,
       type: 'Ads Leads',
       program: lp?.courseId || course?.id || slug,
       name: enquiryForm.name,
@@ -102,8 +101,6 @@ export default function CustomLandingPage() {
       remarks: `Submitted via Custom Landing Page: ${slug}`,
       date: getISTDateTimeString()
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {

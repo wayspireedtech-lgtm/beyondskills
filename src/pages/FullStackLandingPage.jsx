@@ -179,9 +179,8 @@ export default function FullStackLandingPage() {
     const utmCampaign = searchParams.get('utm_campaign') || 'Full Stack Campaign';
     const utmContent = searchParams.get('utm_content') || 'Ad Variant 1';
 
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = {
-      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
+      id: `LD${Math.floor(Math.random() * 100000)}`,
       type: 'Ads Leads',
       program: 'full-stack-web',
       name: enquiryForm.name,
@@ -204,8 +203,6 @@ export default function FullStackLandingPage() {
       remarks: 'Submitted via Standalone Full Stack Landing Page',
       date: getISTDateTimeString()
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {

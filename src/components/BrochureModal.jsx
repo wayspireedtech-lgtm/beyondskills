@@ -49,10 +49,7 @@ export default function BrochureModal({ isOpen, onClose, course }) {
     // 1. Save to Supabase (dynamic client with fallbacks)
     await saveLeadToSupabase(leadRecord);
 
-    // 2. Save locally for mock data / analytics logs
-    const leads = getDbItem('beyondskills_leads', []);
-    leads.push({ type: 'BrochureDownload', ...leadRecord, date: getISTDateTimeString() });
-    setDbItem('beyondskills_leads', leads);
+
 
     setIsSubmitting(false);
     setSubmitSuccess(true);

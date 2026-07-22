@@ -30,7 +30,6 @@ export default function CampusAmbassador() {
       }));
       return;
     }
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Campus Ambassador', 
       name: form.name,
@@ -42,8 +41,6 @@ export default function CampusAmbassador() {
       message: `Stream: ${form.stream || 'N/A'} | Why Apply: ${form.whyApply || 'N/A'}`,
       date: getISTDateTimeString() 
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {

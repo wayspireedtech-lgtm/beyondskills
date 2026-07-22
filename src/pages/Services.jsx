@@ -97,7 +97,6 @@ export default function Services() {
       }));
       return;
     }
-    const leads = getDbItem('beyondskills_leads', []);
     const newLead = { 
       type: 'Digital Services', 
       name: form.name,
@@ -109,8 +108,6 @@ export default function Services() {
       message: `Budget: ${form.budget} | Message: ${form.message}`,
       date: getISTDateTimeString() 
     };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
 
     // Save to Supabase
     try {

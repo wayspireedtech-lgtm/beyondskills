@@ -581,26 +581,7 @@ export default function AiBrochure() {
       console.error('Error posting enquiry to backend webhook:', err);
     }
 
-    // 3. Save locally for fallback redundancy
-    const leads = getDbItem('beyondskills_leads', []);
-    const newLead = { 
-      id: `LD${String(leads.length + 101).padStart(3, '0')}`,
-      type: 'Ads Leads', 
-      program: courseSlug,
-      course: courseTitle,
-      name: enquiryForm.name,
-      email: enquiryForm.email,
-      phone: enquiryForm.phone,
-      college: enquiryForm.college,
-      qualification: enquiryForm.college,
-      profession: enquiryForm.status,
-      message: enquiryForm.message,
-      status: 'New',
-      subStatus: 'QUALIFIED',
-      date: getISTDateTimeString() 
-    };
-    leads.push(newLead);
-    setDbItem('beyondskills_leads', leads);
+
 
     // Simulated email SLA trigger
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {

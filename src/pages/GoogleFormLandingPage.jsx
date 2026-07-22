@@ -265,6 +265,7 @@ Submitted via BeyondSkills Program Application Landing Page
       const directGoogleSheetWebhook = import.meta.env.VITE_GOOGLE_FORM_WEBHOOK_URL || 'https://script.google.com/macros/s/AKfycbxGgIXyPOVS4Cz22M4CkyyKgevIhXoYW9RNvIPra2KerGO16Hg8K9v9YilbGR89kwnv/exec';
       if (directGoogleSheetWebhook) {
         const sheetParams = new URLSearchParams();
+        sheetParams.append('type', 'Meta/WA Campaign Leads');
         sheetParams.append('name', form.name.trim());
         sheetParams.append('phone', form.phone.trim());
         sheetParams.append('email', form.email.trim());
@@ -288,33 +289,7 @@ Submitted via BeyondSkills Program Application Landing Page
         }
       }
 
-      // Save to local DB as fallback
-      const localLeads = getDbItem('beyondskills_leads', []);
-      const newLocalLead = {
-        id: `LD${String(localLeads.length + 101).padStart(3, '0')}`,
-        name: payload.name,
-        email: payload.email,
-        phone: payload.phone,
-        date: getISTDateTimeString(),
-        type: payload.type,
-        program: payload.program,
-        assignedBDM: '',
-        assignedBDA: '',
-        status: 'New',
-        subStatus: 'QUALIFIED',
-        profession: form.year,
-        college: form.college.trim(),
-        message: detailedNotes,
-        targetSheetId: TARGET_GOOGLE_SHEET_ID,
-        targetSheetUrl: TARGET_GOOGLE_SHEET_URL,
-        mentor: 'None',
-        duration: 'None',
-        callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
-        history: [{ note: detailedNotes, date: getISTDateTimeString() }]
-      };
-      
-      localLeads.push(newLocalLead);
-      setDbItem('beyondskills_leads', localLeads);
+
 
       // Trigger Simulated SLA toast
       window.dispatchEvent(new CustomEvent('beyondskills_toast', {
