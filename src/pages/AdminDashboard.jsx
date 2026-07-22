@@ -1565,18 +1565,22 @@ export default function AdminDashboard() {
       }
 
       // Filter by dynamic sub-tabs under ads
-      let matchProgram = filterProgram ? lead.program === filterProgram : true;
+      let matchProgram = filterProgram 
+        ? (lead.program === filterProgram || 
+           (filterProgram.includes('full-stack') && lead.program?.includes('full-stack')) ||
+           (filterProgram.includes('ai') && (lead.program?.includes('ai') || lead.program?.includes('artificial') || lead.program?.includes('data')))) 
+        : true;
       if (leadChannelTab === 'ads') {
         if (leadAdsSubTab === 'aimlds') {
-          matchProgram = ['artificial-intelligence', 'machine-learning', 'data-science'].includes(lead.program);
+          matchProgram = ['artificial-intelligence', 'machine-learning', 'data-science', 'ai-data-science', 'data-analytics', 'DA FLAGSHIP - UTTAM'].includes(lead.program);
         } else if (leadAdsSubTab === 'cloud') {
-          matchProgram = lead.program === 'cloud-computing';
+          matchProgram = lead.program === 'cloud-computing' || lead.program === 'cloud';
         } else if (leadAdsSubTab === 'cyber') {
-          matchProgram = lead.program === 'cyber-security';
+          matchProgram = lead.program === 'cyber-security' || lead.program === 'cyber';
         } else if (leadAdsSubTab === 'fullstack') {
-          matchProgram = lead.program === 'full-stack-web';
+          matchProgram = lead.program === 'full-stack-web' || lead.program === 'full-stack-web-development';
         } else if (leadAdsSubTab === 'digimar') {
-          matchProgram = lead.program === 'digital-marketing-cert';
+          matchProgram = lead.program === 'digital-marketing-cert' || lead.program === 'digital-marketing';
         }
       }
 
@@ -3720,7 +3724,11 @@ export default function AdminDashboard() {
                       { id: 'hr-mgmt', name: 'HR Management' },
                       { id: 'stock-market', name: 'Stock Market' }
                     ].map((prog, idx) => {
-                      const progLeads = activeAccessibleLeads.filter(l => l.program === prog.id);
+                      const progLeads = activeAccessibleLeads.filter(l => 
+                        l.program === prog.id || 
+                        (prog.id.includes('full-stack') && l.program?.includes('full-stack')) ||
+                        (prog.id.includes('artificial') && (l.program?.includes('ai') || l.program?.includes('artificial') || l.program?.includes('data')))
+                      );
                       const adsCount = progLeads.filter(l => l.type === 'Ads Leads').length;
                       const formCount = progLeads.filter(l => l.type === 'Google Form Leads').length;
                       const waCount = progLeads.filter(l => isWhatsAppLead(l)).length;
