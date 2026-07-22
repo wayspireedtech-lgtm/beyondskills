@@ -4781,9 +4781,21 @@ export default function AdminDashboard() {
                   <ClipboardList className="w-4.5 h-4.5 text-brand-cyan" />
                   <span>Lead Details Panel</span>
                 </span>
-                <h3 className="text-2xl font-extrabold text-white mt-1 leading-tight tracking-tight max-w-md">
-                  {selectedLead.name}
-                </h3>
+                <div className="flex flex-wrap items-center gap-3 mt-1">
+                  <h3 className="text-2xl font-extrabold text-white leading-tight tracking-tight max-w-md">
+                    {selectedLead.name}
+                  </h3>
+                  <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider ${
+                    selectedLead.status === 'New' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :
+                    selectedLead.status === 'Contacted' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                    selectedLead.status === 'Follow Up' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                    selectedLead.status === 'Not Connected' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                    selectedLead.status === 'Enrolled' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                    'bg-slate-500/20 text-slate-300 border border-slate-500/30'
+                  }`}>
+                    ● {selectedLead.status || 'New'}
+                  </span>
+                </div>
               </div>
               
               <div className="flex flex-wrap items-center gap-3">
@@ -4805,11 +4817,11 @@ export default function AdminDashboard() {
 
                 {/* Pipeline Status Dropdown */}
                 <div>
-                  <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Pipeline Status</span>
+                  <span className="block text-[8px] font-bold text-cyan-400 uppercase tracking-widest mb-1 font-mono">Pipeline Status</span>
                   <select 
                     value={selectedLead.status}
                     onChange={(e) => setSelectedLead({ ...selectedLead, status: e.target.value })}
-                    className="bg-[#05092A] border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-semibold cursor-pointer"
+                    className="bg-[#05092A] border border-cyan-500/40 rounded-lg px-3 py-1.5 text-xs text-cyan-300 outline-none focus:border-cyan-400 font-bold cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.15)]"
                   >
                     <option value="New">New</option>
                     <option value="Contacted">Contacted</option>
@@ -4843,10 +4855,20 @@ export default function AdminDashboard() {
             </div>
 
             {/* Contact details metadata grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono py-2 border-b border-white/5">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs font-mono py-2 border-b border-white/5">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4 text-slate-400" />
                 <span>{selectedLead.phone}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 uppercase text-[9px] block">Pipeline Status</span>
+                <span className={`font-bold uppercase ${
+                  selectedLead.status === 'New' ? 'text-cyan-400' :
+                  selectedLead.status === 'Contacted' ? 'text-purple-400' :
+                  selectedLead.status === 'Follow Up' ? 'text-amber-400' :
+                  selectedLead.status === 'Not Connected' ? 'text-rose-400' :
+                  selectedLead.status === 'Enrolled' ? 'text-emerald-400' : 'text-slate-300'
+                }`}>{selectedLead.status || 'New'}</span>
               </div>
               <div>
                 <span className="text-slate-500 uppercase text-[9px] block">Lead Date</span>
@@ -4886,16 +4908,30 @@ export default function AdminDashboard() {
               </span>
             </div>
 
-            {/* Owner BDM & Handler BDA details banner */}
-            <div className="bg-[#050718] border border-white/5 p-4 rounded-xl flex items-center justify-between text-xs font-mono">
+            {/* Owner BDM, Main Pipeline Status & Handler BDA details banner */}
+            <div className="bg-[#050718] border border-white/10 p-4 rounded-xl flex items-center justify-between text-xs font-mono">
               <div>
-                <span className="text-[8px] text-slate-500 uppercase tracking-widest block mb-0.5">Owner (BDM)</span>
-                <span className="text-brand-cyan font-bold">{selectedLead.assignedBDM || 'Unassigned'}</span>
+                <span className="text-[8px] text-slate-400 uppercase tracking-widest block mb-0.5">Owner (BDM)</span>
+                <span className="text-brand-cyan font-bold text-sm">{selectedLead.assignedBDM || 'Unassigned'}</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-600" />
+              
+              <div className="flex items-center space-x-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">Main Pipeline Status:</span>
+                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-extrabold font-mono uppercase tracking-wider ${
+                  selectedLead.status === 'New' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :
+                  selectedLead.status === 'Contacted' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                  selectedLead.status === 'Follow Up' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                  selectedLead.status === 'Not Connected' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                  selectedLead.status === 'Enrolled' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                  'bg-slate-500/20 text-slate-300 border border-slate-500/30'
+                }`}>
+                  ● {selectedLead.status || 'New'}
+                </span>
+              </div>
+
               <div className="text-right">
-                <span className="text-[8px] text-slate-500 uppercase tracking-widest block mb-0.5">Handler (BDA)</span>
-                <span className="text-white font-bold">{selectedLead.assignedBDA || 'Unassigned'}</span>
+                <span className="text-[8px] text-slate-400 uppercase tracking-widest block mb-0.5">Handler (BDA)</span>
+                <span className="text-white font-bold text-sm">{selectedLead.assignedBDA || 'Unassigned'}</span>
               </div>
             </div>
 
