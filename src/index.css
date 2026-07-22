@@ -286,7 +286,7 @@
   --bg-admin-main: #030712;
   --bg-admin-card: #0E1526;
   --bg-admin-sidebar: #0B0F19;
-  --border-admin: rgba(255, 255, 255, 0.05);
+  --border-admin: rgba(255, 255, 255, 0.08);
   --text-admin-main: #cbd5e1;
   --text-admin-title: #ffffff;
   --text-admin-muted: #94a3b8;
@@ -295,7 +295,7 @@
   --bg-admin-main: #F8FAFC;
   --bg-admin-card: #ffffff;
   --bg-admin-sidebar: #ffffff;
-  --border-admin: rgba(0, 0, 0, 0.08);
+  --border-admin: #e2e8f0;
   --text-admin-main: #334155;
   --text-admin-title: #0f172a;
   --text-admin-muted: #64748b;
@@ -312,14 +312,24 @@
 .admin-theme-container .bg-\[\#0B0F19\] {
   background-color: var(--bg-admin-sidebar) !important;
 }
-.admin-theme-container .bg-\[\#0A0E35\] {
+.admin-theme-container .bg-\[\#0A0E35\],
+.admin-theme-container .bg-\[\#0E1526\],
+.admin-theme-container .bg-\[\#050718\],
+.admin-theme-container .bg-\[\#05092A\] {
   background-color: var(--bg-admin-card) !important;
 }
-.admin-theme-container .bg-\[\#0E1526\] {
-  background-color: var(--bg-admin-card) !important;
+.admin-theme-container.admin-theme-light .bg-\[\#0A0E35\],
+.admin-theme-container.admin-theme-light .bg-\[\#0E1526\],
+.admin-theme-container.admin-theme-light .bg-\[\#050718\],
+.admin-theme-container.admin-theme-light .bg-\[\#05092A\] {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+  border-color: #e2e8f0 !important;
 }
 .admin-theme-container .border-white\/10,
-.admin-theme-container .border-white\/5 {
+.admin-theme-container .border-white\/5,
+.admin-theme-container .border-white\/20,
+.admin-theme-container .border-white\/15 {
   border-color: var(--border-admin) !important;
 }
 .admin-theme-container .text-white {
@@ -339,7 +349,10 @@
   backdrop-filter: blur(8px) !important;
 }
 .admin-theme-container.admin-theme-light .bg-white\/5 {
-  background-color: rgba(15, 23, 42, 0.05) !important;
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+.admin-theme-container.admin-theme-light .hover\:bg-white\/5:hover {
+  background-color: rgba(15, 23, 42, 0.06) !important;
 }
 .admin-theme-container.admin-theme-light .bg-red-500\/10 {
   background-color: rgba(239, 68, 68, 0.08) !important;
@@ -347,12 +360,13 @@
 .admin-theme-container.admin-theme-light input,
 .admin-theme-container.admin-theme-light select,
 .admin-theme-container.admin-theme-light textarea {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
   color: #0f172a !important;
   border-color: #cbd5e1 !important;
 }
 .admin-theme-container.admin-theme-light table th {
   color: #475569 !important;
+  background-color: #f8fafc !important;
 }
 .admin-theme-container.admin-theme-light table td {
   color: #334155 !important;

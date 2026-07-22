@@ -17,7 +17,7 @@ import {
   FileSpreadsheet, ClipboardList, CheckSquare, BarChart, Settings, 
   UserPlus, RefreshCw, Eye, Edit2, X, Check, CheckCircle2, ChevronRight,
   TrendingUp, Calendar, AlertCircle, Sparkles, Phone, ShieldCheck, LogOut,
-  FileText, BookOpen, Mail, Lock, ArrowRight, ChevronDown
+  FileText, BookOpen, Mail, Lock, ArrowRight, ChevronDown, MessageSquare, Megaphone, Sun, Moon, Flame, Target
 } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -792,13 +792,17 @@ export default function AdminDashboard() {
       setFilterStatus(filterValue);
     } else if (filterName === 'type') {
       setFilterType(filterValue);
-      if (filterValue === 'Organic Leads') {
+      if (filterValue === 'Organic Leads' || filterValue === 'Google Form Leads') {
         setLeadChannelTab('organic');
       } else if (filterValue === 'Ads Leads') {
         setLeadChannelTab('ads');
-      } else if (filterValue === 'WhatsApp Marketing Leads') {
+      } else if (filterValue === 'WhatsApp Marketing Leads' || filterValue === 'META/WA CAMPAIGN LEADS' || filterValue === 'Meta WA Leads') {
         setLeadChannelTab('whatsapp');
       }
+    } else if (filterName === 'program') {
+      setFilterProgram(filterValue);
+    } else if (filterName === 'subStatus') {
+      setFilterSubStatus(filterValue);
     }
 
     // Switch view to Leads List
@@ -1659,7 +1663,8 @@ export default function AdminDashboard() {
   // CRM Statistics calculations (Filtered for BDA if BDA is logged in)
   const activeStatsLeads = accessibleLeads.filter(l => l.status !== 'Deleted from Sheet');
   const statsTotalLeads = activeStatsLeads.length;
-  const statsMasterclassLeads = activeStatsLeads.filter(l => l.type === 'Google Form Leads').length;
+  const statsWhatsAppLeads = activeStatsLeads.filter(l => isWhatsAppLead(l) || l.type === 'WhatsApp Marketing Leads' || l.type === 'META/WA CAMPAIGN LEADS').length;
+  const statsAdLeads = activeStatsLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length;
   const statsConversionRate = statsTotalLeads > 0 ? ((activeStatsLeads.filter(l => l.status === 'Enrolled').length / statsTotalLeads) * 100).toFixed(1) : 0;
   const statsSuccessfulEnrollments = activeStatsLeads.filter(l => l.status === 'Enrolled').length;
   const statsHotLeads = activeStatsLeads.filter(l => l.status === 'Follow Up').length;
@@ -2072,6 +2077,21 @@ export default function AdminDashboard() {
             </div>
             
             <div className="flex items-center space-x-3">
+              {/* Theme Toggle Button */}
+              <button 
+                type="button"
+                onClick={() => toggleTheme(!isDarkMode)}
+                className={`px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 cursor-pointer border ${
+                  isDarkMode 
+                    ? 'bg-white/10 text-yellow-300 border-white/15 hover:bg-white/20' 
+                    : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 shadow-sm'
+                }`}
+                title="Toggle Dark / Light Theme"
+              >
+                {isDarkMode ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+                <span>{isDarkMode ? 'Light Theme' : 'Dark Theme'}</span>
+              </button>
+
               {isAdminUser && (
                 <>
                   <button 
@@ -2080,7 +2100,7 @@ export default function AdminDashboard() {
                       setDbItem('beyondskills_leads', []);
                       alert('All leads database deleted successfully!');
                     }}
-                    className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2"
+                    className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center space-x-2 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Clear Leads</span>
@@ -2101,7 +2121,7 @@ export default function AdminDashboard() {
         {/* -------------------- MAIN TAB 1: DASHBOARD ANALYTICS -------------------- */}
         {activeMainTab === 'analytics' && (
           <div className="space-y-10 animate-fade-in">
-            {/* KPI statistics - Grid Layout matching the screenshot (4 upper cards, 2 lower cards) */}
+            {/* KPI statistics - Grid Layout (4 upper cards, 2 lower cards) */}
             <div className="space-y-6">
               {/* Upper Grid: 4 Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -2109,64 +2129,96 @@ export default function AdminDashboard() {
                 {/* TOTAL LEADS */}
                 <div 
                   onClick={() => filterLeadsAndNavigate('all', '')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-[#2A4BFF]/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.02] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-blue-500/20 text-white hover:border-blue-500/50 hover:bg-blue-950/20 shadow-blue-500/5' 
+                      : 'bg-white border-blue-200 text-slate-900 hover:border-blue-400 hover:bg-blue-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">
+                    <span className="text-[10px] text-blue-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                       Total Leads
                     </span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsTotalLeads}</p>
-                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Live - In system pipelines</p>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{statsTotalLeads}</p>
+                    <span className="text-[9px] font-bold text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      Live Pipeline
+                    </span>
                   </div>
-                  <div className="bg-[#2A4BFF]/10 text-[#2A4BFF] p-3 rounded-xl border border-[#2A4BFF]/20">
-                    <Inbox className="w-5 h-5" />
+                  <div className="bg-blue-500/10 text-blue-500 p-3.5 rounded-2xl border border-blue-500/20 shadow-sm">
+                    <Inbox className="w-6 h-6" />
                   </div>
                 </div>
                 
-                {/* MASTERCLASS LEADS */}
+                {/* WHATSAPP LEADS */}
                 <div 
-                  onClick={() => filterLeadsAndNavigate('type', 'Google Form Leads')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-amber-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                  onClick={() => filterLeadsAndNavigate('type', 'WhatsApp Marketing Leads')}
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.02] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-emerald-500/20 text-white hover:border-emerald-500/50 hover:bg-emerald-950/20 shadow-emerald-500/5' 
+                      : 'bg-white border-emerald-200 text-slate-900 hover:border-emerald-400 hover:bg-emerald-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Masterclass Leads</span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsMasterclassLeads}</p>
-                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Click to assign - Assign leads</p>
+                    <span className="text-[10px] text-emerald-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      WhatsApp Leads
+                    </span>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>{statsWhatsAppLeads}</p>
+                    <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      WhatsApp Marketing
+                    </span>
                   </div>
-                  <div className="bg-amber-500/10 text-amber-500 p-3 rounded-xl border border-amber-500/20">
-                    <Star className="w-5 h-5" />
+                  <div className="bg-emerald-500/10 text-emerald-500 p-3.5 rounded-2xl border border-emerald-500/20 shadow-sm">
+                    <MessageSquare className="w-6 h-6" />
                   </div>
                 </div>
 
-                {/* FX LEADS */}
+                {/* AD LEADS */}
                 <div 
-                  onClick={() => filterLeadsAndNavigate('type', 'FX Leads')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                  onClick={() => filterLeadsAndNavigate('type', 'Ads Leads')}
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.02] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-cyan-500/20 text-white hover:border-cyan-500/50 hover:bg-cyan-950/20 shadow-cyan-500/5' 
+                      : 'bg-white border-cyan-200 text-slate-900 hover:border-cyan-400 hover:bg-cyan-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">FX Leads</span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">0</p>
-                    <p className="text-[10px] text-slate-500 font-medium mt-1 font-mono">Click to assign - Assign leads</p>
+                    <span className="text-[10px] text-cyan-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></span>
+                      Ad Leads
+                    </span>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>{statsAdLeads}</p>
+                    <span className="text-[9px] font-bold text-cyan-500 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      Meta & Google Ads
+                    </span>
                   </div>
-                  <div className="bg-emerald-500/10 text-emerald-500 p-3 rounded-xl border border-emerald-500/20">
-                    <Users className="w-5 h-5" />
+                  <div className="bg-cyan-500/10 text-cyan-500 p-3.5 rounded-2xl border border-cyan-500/20 shadow-sm">
+                    <Megaphone className="w-6 h-6" />
                   </div>
                 </div>
 
                 {/* CONVERSION RATE */}
                 <div 
                   onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-rose-500/40 hover:bg-white/10 hover:scale-[1.01] transition-all duration-300"
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.02] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-rose-500/20 text-white hover:border-rose-500/50 hover:bg-rose-950/20 shadow-rose-500/5' 
+                      : 'bg-white border-rose-200 text-slate-900 hover:border-rose-400 hover:bg-rose-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Conversion Rate</span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-white">{statsConversionRate}%</p>
-                    <span className="text-[9px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                    <span className="text-[10px] text-rose-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                      Conversion Rate
+                    </span>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-rose-400' : 'text-rose-600'}`}>{statsConversionRate}%</p>
+                    <span className="text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
                       Needs Review
                     </span>
                   </div>
-                  <div className="bg-[#e11d48]/10 text-[#f43f5e] p-3 rounded-xl border border-[#e11d48]/20">
-                    <Percent className="w-5 h-5" />
+                  <div className="bg-rose-500/10 text-rose-500 p-3.5 rounded-2xl border border-rose-500/20 shadow-sm">
+                    <Percent className="w-6 h-6" />
                   </div>
                 </div>
               </div>
@@ -2176,34 +2228,48 @@ export default function AdminDashboard() {
                 {/* SUCCESSFUL ENROLMENTS */}
                 <div 
                   onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 hover:scale-[1.005] transition-all duration-300"
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.01] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-emerald-500/20 text-white hover:border-emerald-500/50 hover:bg-emerald-950/20' 
+                      : 'bg-white border-emerald-200 text-slate-900 hover:border-emerald-400 hover:bg-emerald-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Successful Enrolments</span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-[#4ADE80]">{statsSuccessfulEnrollments}</p>
-                    <span className="text-[9px] font-bold text-emerald-500 bg-[#10b981]/15 px-2 py-0.5 rounded border border-[#10b981]/25 uppercase tracking-widest mt-1.5 inline-block font-mono">
-                      +{statsSuccessfulEnrollments}
+                    <span className="text-[10px] text-emerald-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Successful Enrolments
+                    </span>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-[#4ADE80]' : 'text-emerald-600'}`}>{statsSuccessfulEnrollments}</p>
+                    <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/15 px-2.5 py-0.5 rounded border border-emerald-500/25 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                      +{statsSuccessfulEnrollments} Enrolled
                     </span>
                   </div>
-                  <div className="bg-[#4ADE80]/10 text-[#4ADE80] p-3 rounded-xl border border-[#4ADE80]/20">
-                    <CheckCircle2 className="w-5 h-5" />
+                  <div className="bg-emerald-500/10 text-emerald-500 p-3.5 rounded-2xl border border-emerald-500/20 shadow-sm">
+                    <CheckCircle2 className="w-6 h-6" />
                   </div>
                 </div>
 
                 {/* ACTIVE HOT LEADS */}
                 <div 
                   onClick={() => filterLeadsAndNavigate('status', 'Follow Up')}
-                  className="bg-[#0E1526] border border-white/5 p-6 rounded-2xl shadow-xl flex items-center justify-between text-white cursor-pointer hover:border-orange-500/40 hover:bg-white/10 hover:scale-[1.005] transition-all duration-300"
+                  className={`p-6 rounded-2xl shadow-xl flex items-center justify-between cursor-pointer border transition-all duration-300 hover:scale-[1.01] ${
+                    isDarkMode 
+                      ? 'bg-[#0E1526] border-amber-500/20 text-white hover:border-amber-500/50 hover:bg-amber-950/20' 
+                      : 'bg-white border-amber-200 text-slate-900 hover:border-amber-400 hover:bg-amber-50/50 shadow-slate-200/80'
+                  }`}
                 >
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest font-mono">Active Hot Leads</span>
-                    <p className="text-3xl font-extrabold font-mono mt-1 text-orange-400">{statsHotLeads}</p>
-                    <span className="text-[9px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
+                    <span className="text-[10px] text-amber-500 uppercase font-bold tracking-widest font-mono flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Active Hot Leads
+                    </span>
+                    <p className={`text-3xl font-extrabold font-mono mt-1 ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`}>{statsHotLeads}</p>
+                    <span className="text-[9px] font-bold text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/20 uppercase tracking-widest mt-1.5 inline-block font-mono">
                       In Progress
                     </span>
                   </div>
-                  <div className="bg-orange-500/10 text-orange-500 p-3 rounded-xl border border-orange-500/20">
-                    <Calendar className="w-5 h-5" />
+                  <div className="bg-amber-500/10 text-amber-500 p-3.5 rounded-2xl border border-amber-500/20 shadow-sm">
+                    <Calendar className="w-6 h-6" />
                   </div>
                 </div>
               </div>
@@ -2213,34 +2279,47 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               
               {/* Funnel chart widget */}
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white">
-                <h3 className="text-sm font-bold uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-4 mb-4">
-                  <LineChart className="w-4.5 h-4.5 text-brand-cyan" />
-                  <span>My Pipeline Funnel Stage View</span>
+              <div className={`p-6 rounded-2xl shadow-xl border transition-all ${
+                isDarkMode ? 'bg-[#0A0E35] border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800 shadow-slate-200/80'
+              }`}>
+                <h3 className={`text-sm font-bold uppercase tracking-wider flex items-center justify-between border-b pb-4 mb-4 ${
+                  isDarkMode ? 'border-white/10 text-white' : 'border-slate-100 text-slate-900'
+                }`}>
+                  <div className="flex items-center space-x-2">
+                    <LineChart className="w-4.5 h-4.5 text-[#2A4BFF]" />
+                    <span>My Pipeline Funnel Stage View</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono font-normal">Click stage to view leads</span>
                 </h3>
                 
                 <div className="space-y-4 pt-2">
                   {[
-                    { name: 'New Leads', status: 'New', count: accessibleLeads.filter(l => l.status === 'New').length },
-                    { name: 'Connected / Contacted', status: 'Contacted', count: accessibleLeads.filter(l => l.status === 'Contacted').length },
-                    { name: 'Follow Up (Pending Dial)', status: 'Follow Up', count: accessibleLeads.filter(l => l.status === 'Follow Up').length },
-                    { name: 'Not Connected (DNP/SO)', status: 'Not Connected', count: accessibleLeads.filter(l => l.status === 'Not Connected').length },
-                    { name: 'Enrolled (Closed Success)', status: 'Enrolled', count: accessibleLeads.filter(l => l.status === 'Enrolled').length },
-                    { name: 'Not Interested (Closed Lost)', status: 'Not Interested', count: accessibleLeads.filter(l => l.status === 'Not Interested').length }
+                    { name: 'New Leads', status: 'New', count: accessibleLeads.filter(l => l.status === 'New').length, color: 'from-cyan-500 to-blue-500' },
+                    { name: 'Connected / Contacted', status: 'Contacted', count: accessibleLeads.filter(l => l.status === 'Contacted').length, color: 'from-purple-500 to-indigo-500' },
+                    { name: 'Follow Up (Pending Dial)', status: 'Follow Up', count: accessibleLeads.filter(l => l.status === 'Follow Up').length, color: 'from-amber-500 to-orange-500' },
+                    { name: 'Not Connected (DNP/SO)', status: 'Not Connected', count: accessibleLeads.filter(l => l.status === 'Not Connected').length, color: 'from-rose-500 to-red-500' },
+                    { name: 'Enrolled (Closed Success)', status: 'Enrolled', count: accessibleLeads.filter(l => l.status === 'Enrolled').length, color: 'from-emerald-500 to-teal-500' },
+                    { name: 'Not Interested (Closed Lost)', status: 'Not Interested', count: accessibleLeads.filter(l => l.status === 'Not Interested').length, color: 'from-slate-500 to-slate-600' }
                   ].map((step, idx) => {
                     const percentage = statsTotalLeads > 0 ? ((step.count / statsTotalLeads) * 100).toFixed(1) : 0;
                     return (
                       <div 
                         key={idx} 
                         onClick={() => filterLeadsAndNavigate('status', step.status)}
-                        className="relative cursor-pointer group p-1.5 rounded-xl hover:bg-white/5 transition-all duration-200"
+                        className={`relative cursor-pointer group p-2 rounded-xl transition-all duration-200 ${
+                          isDarkMode ? 'hover:bg-white/5' : 'hover:bg-slate-50 border border-transparent hover:border-slate-200'
+                        }`}
                       >
                         <div className="flex justify-between items-center text-xs mb-1.5 font-mono">
-                          <span className="text-slate-300 group-hover:text-brand-cyan transition-colors">{step.name}</span>
-                          <span className="text-white font-bold">{step.count} ({percentage}%)</span>
+                          <span className={`font-medium transition-colors ${
+                            isDarkMode ? 'text-slate-300 group-hover:text-cyan-400' : 'text-slate-700 group-hover:text-[#2A4BFF]'
+                          }`}>{step.name}</span>
+                          <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{step.count} ({percentage}%)</span>
                         </div>
-                        <div className="w-full bg-white/5 h-2.5 rounded-full overflow-hidden border border-white/5 group-hover:border-brand-cyan/25 transition-all">
-                          <div className="bg-gradient-to-r from-[#2A4BFF] to-[#0EA5E9] h-full" style={{ width: `${percentage}%` }}></div>
+                        <div className={`w-full h-2.5 rounded-full overflow-hidden border transition-all ${
+                          isDarkMode ? 'bg-white/5 border-white/5 group-hover:border-cyan-500/30' : 'bg-slate-100 border-slate-200 group-hover:border-blue-300'
+                        }`}>
+                          <div className={`bg-gradient-to-r ${step.color} h-full transition-all duration-500`} style={{ width: `${percentage}%` }}></div>
                         </div>
                       </div>
                     );
@@ -2249,40 +2328,54 @@ export default function AdminDashboard() {
               </div>
 
               {/* Marketing Lead Source Breakdown */}
-              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl text-white flex flex-col justify-between">
+              <div className={`p-6 rounded-2xl shadow-xl border flex flex-col justify-between transition-all ${
+                isDarkMode ? 'bg-[#0A0E35] border-white/10 text-white' : 'bg-white border-slate-200 text-slate-800 shadow-slate-200/80'
+              }`}>
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-4 mb-4">
-                    <PieChart className="w-4.5 h-4.5 text-[#2A4BFF]" />
-                    <span>Lead Campaign Categories</span>
+                  <h3 className={`text-sm font-bold uppercase tracking-wider flex items-center justify-between border-b pb-4 mb-4 ${
+                    isDarkMode ? 'border-white/10 text-white' : 'border-slate-100 text-slate-900'
+                  }`}>
+                    <div className="flex items-center space-x-2">
+                      <PieChart className="w-4.5 h-4.5 text-[#2A4BFF]" />
+                      <span>Lead Campaign Categories</span>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono font-normal">Click source to view leads</span>
                   </h3>
                   
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
-                      { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length },
-                      { name: 'Organic Leads', type: 'Organic Leads', count: accessibleLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length },
-                      { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads' && !isWhatsAppLead(l)).length },
-                      { name: 'META/WA Campaign Leads', type: 'META/WA CAMPAIGN LEADS', count: accessibleLeads.filter(l => isWhatsAppLead(l)).length }
+                      { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length, icon: Megaphone, color: 'text-cyan-500' },
+                      { name: 'Organic Leads', type: 'Organic Leads', count: accessibleLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length, icon: Globe, color: 'text-purple-500' },
+                      { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads' && !isWhatsAppLead(l)).length, icon: MessageSquare, color: 'text-emerald-500' },
+                      { name: 'META/WA Campaign Leads', type: 'META/WA CAMPAIGN LEADS', count: accessibleLeads.filter(l => isWhatsAppLead(l)).length, icon: Phone, color: 'text-green-500' }
                     ].map((src, idx) => {
+                      const IconComp = src.icon;
                       const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
                       return (
                         <div 
                           key={idx} 
                           onClick={() => filterLeadsAndNavigate('type', src.type)}
-                          className="flex items-center justify-between border-b border-white/5 pb-2.5 pt-1 cursor-pointer group hover:bg-white/5 px-2 rounded-lg transition-all duration-205"
+                          className={`flex items-center justify-between border-b pb-3 pt-1.5 cursor-pointer group px-3 rounded-xl transition-all duration-200 ${
+                            isDarkMode 
+                              ? 'border-white/5 hover:bg-white/5' 
+                              : 'border-slate-100 hover:bg-slate-50'
+                          }`}
                         >
-                          <span className="text-slate-400 flex items-center group-hover:text-blue-400 transition-colors">
-                            <Globe className="w-3.5 h-3.5 text-[#2A4BFF] mr-2" />
+                          <span className={`flex items-center transition-colors ${
+                            isDarkMode ? 'text-slate-300 group-hover:text-cyan-400' : 'text-slate-600 group-hover:text-[#2A4BFF]'
+                          }`}>
+                            <IconComp className={`w-4 h-4 mr-2.5 ${src.color}`} />
                             {src.name}
                           </span>
-                          <span className="text-white font-bold">{src.count} ({pct}%)</span>
+                          <span className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{src.count} ({pct}%)</span>
                         </div>
                       );
                     })}
                   </div>
                 </div>
-              </div>
-
             </div>
+
+          </div>
           </div>
         )}
 
@@ -3716,7 +3809,10 @@ export default function AdminDashboard() {
                 {/* KPI Overview Metric Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   {/* Card 1: Total Analysed Leads */}
-                  <div className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('all', '')}
+                    className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2 relative overflow-hidden cursor-pointer hover:border-cyan-400/50 hover:bg-white/5 transition-all duration-200"
+                  >
                     <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold block">Total Analysed Leads</span>
                     <div className="flex items-baseline space-x-2">
                       <span className="text-3xl font-black text-white">{totalLeadsCount}</span>
@@ -3751,8 +3847,11 @@ export default function AdminDashboard() {
                     const progPct = totalOverallCount > 0 ? ((progLeads.length / totalOverallCount) * 100).toFixed(1) : 0;
                     
                     return (
-                      <div className="bg-[#050718] border border-[#0EA5E9]/40 p-5 rounded-xl space-y-2 relative overflow-hidden shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all">
-                        <div className="flex justify-between items-center">
+                      <div 
+                        onClick={() => filterLeadsAndNavigate('program', activeProgSlug)}
+                        className="bg-[#050718] border border-[#0EA5E9]/40 p-5 rounded-xl space-y-2 relative overflow-hidden shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all cursor-pointer hover:border-cyan-300"
+                      >
+                        <div className="flex justify-between items-center" onClick={(e) => e.stopPropagation()}>
                           <span className="text-[10px] font-mono uppercase tracking-widest text-[#0EA5E9] font-bold block">Course Focus</span>
                           <select
                             value={filterProgram}
@@ -3783,7 +3882,10 @@ export default function AdminDashboard() {
                   })()}
 
                   {/* Card 3: Top Channel Share */}
-                  <div className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('type', 'Ads Leads')}
+                    className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2 cursor-pointer hover:border-cyan-400/50 hover:bg-white/5 transition-all duration-200"
+                  >
                     <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold block">Highest Channel Share</span>
                     <div className="flex items-baseline space-x-2">
                       <span className="text-2xl font-black text-white">
@@ -3803,7 +3905,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* Card 4: Overall Conversion Rate */}
-                  <div className="bg-[#050718] border border-[#4ADE80]/30 p-5 rounded-xl space-y-2 shadow-[0_0_15px_rgba(74,222,128,0.1)]">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
+                    className="bg-[#050718] border border-[#4ADE80]/30 p-5 rounded-xl space-y-2 shadow-[0_0_15px_rgba(74,222,128,0.1)] cursor-pointer hover:border-[#4ADE80] transition-all duration-200"
+                  >
                     <span className="text-[10px] font-mono uppercase tracking-widest text-[#4ADE80] font-bold block">Overall CRM Conversion Rate</span>
                     <div className="flex items-baseline space-x-2">
                       <span className="text-3xl font-black text-[#4ADE80]">{overallConvRate}%</span>
@@ -3855,7 +3960,11 @@ export default function AdminDashboard() {
                       const cForm = courseLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length;
 
                       return (
-                        <div key={idx} className="space-y-2 bg-white/5 border border-white/5 p-4 rounded-xl hover:border-white/20 transition-all">
+                        <div 
+                          key={idx} 
+                          onClick={() => filterLeadsAndNavigate('program', course.id)}
+                          className="space-y-2 bg-white/5 border border-white/5 p-4 rounded-xl hover:border-white/20 hover:bg-white/10 transition-all cursor-pointer"
+                        >
                           <div className="flex items-center justify-between text-xs font-mono">
                             <div className="flex items-center space-x-2">
                               <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: course.color }}></span>
@@ -3905,7 +4014,10 @@ export default function AdminDashboard() {
                   {/* Channel Breakdown Cards */}
                   <div className="space-y-4">
                     {/* Meta & Google Ads */}
-                    <div className="bg-[#050718] border border-brand-cyan/30 p-4 rounded-xl space-y-2">
+                    <div 
+                      onClick={() => filterLeadsAndNavigate('type', 'Ads Leads')}
+                      className="bg-[#050718] border border-brand-cyan/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-brand-cyan hover:bg-white/5 transition-all"
+                    >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-2">
                           <Globe className="w-4 h-4 text-brand-cyan" />
@@ -3919,7 +4031,10 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* WhatsApp & Meta WA */}
-                    <div className="bg-[#050718] border border-[#4ADE80]/30 p-4 rounded-xl space-y-2">
+                    <div 
+                      onClick={() => filterLeadsAndNavigate('type', 'WhatsApp Marketing Leads')}
+                      className="bg-[#050718] border border-[#4ADE80]/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-[#4ADE80] hover:bg-white/5 transition-all"
+                    >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-2">
                           <Phone className="w-4 h-4 text-[#4ADE80]" />
@@ -3933,7 +4048,10 @@ export default function AdminDashboard() {
                     </div>
 
                     {/* Organic Google Form */}
-                    <div className="bg-[#050718] border border-[#8B5CF6]/30 p-4 rounded-xl space-y-2">
+                    <div 
+                      onClick={() => filterLeadsAndNavigate('type', 'Organic Leads')}
+                      className="bg-[#050718] border border-[#8B5CF6]/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-[#8B5CF6] hover:bg-white/5 transition-all"
+                    >
                       <div className="flex justify-between items-center">
                         <div className="flex items-center space-x-2">
                           <FileText className="w-4 h-4 text-[#8B5CF6]" />
@@ -3973,7 +4091,10 @@ export default function AdminDashboard() {
                 {/* Status Funnel Progress Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 font-mono text-xs">
                   {/* NEW */}
-                  <div className="bg-white/5 border border-cyan-500/30 p-4 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'New')}
+                    className="bg-white/5 border border-cyan-500/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-cyan-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-cyan-400 block">NEW LEADS</span>
                     <span className="text-2xl font-black text-white">{statusNewCount}</span>
                     <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusNewCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
@@ -3983,7 +4104,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* CONTACTED */}
-                  <div className="bg-white/5 border border-purple-500/30 p-4 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'Contacted')}
+                    className="bg-white/5 border border-purple-500/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-purple-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-purple-400 block">CONTACTED</span>
                     <span className="text-2xl font-black text-white">{statusContactedCount}</span>
                     <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusContactedCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
@@ -3993,7 +4117,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* FOLLOW UP */}
-                  <div className="bg-white/5 border border-amber-500/30 p-4 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'Follow Up')}
+                    className="bg-white/5 border border-amber-500/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-amber-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-amber-400 block">FOLLOW UP</span>
                     <span className="text-2xl font-black text-white">{statusFollowUpCount}</span>
                     <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusFollowUpCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
@@ -4003,7 +4130,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* NOT CONNECTED (DNP) */}
-                  <div className="bg-white/5 border border-rose-500/30 p-4 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'Not Connected')}
+                    className="bg-white/5 border border-rose-500/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-rose-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-rose-400 block">NOT CONNECTED / DNP</span>
                     <span className="text-2xl font-black text-white">{statusNotConnectedCount}</span>
                     <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusNotConnectedCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
@@ -4013,7 +4143,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* CALL BACK (CB) */}
-                  <div className="bg-white/5 border border-blue-500/30 p-4 rounded-xl space-y-2">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('subStatus', 'CB')}
+                    className="bg-white/5 border border-blue-500/30 p-4 rounded-xl space-y-2 cursor-pointer hover:border-blue-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-blue-400 block">CALL BACK (CB)</span>
                     <span className="text-2xl font-black text-white">{statusCbCount}</span>
                     <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusCbCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
@@ -4023,7 +4156,10 @@ export default function AdminDashboard() {
                   </div>
 
                   {/* ENROLLED / PAID */}
-                  <div className="bg-white/5 border border-emerald-500/30 p-4 rounded-xl space-y-2 shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+                  <div 
+                    onClick={() => filterLeadsAndNavigate('status', 'Enrolled')}
+                    className="bg-white/5 border border-emerald-500/30 p-4 rounded-xl space-y-2 shadow-[0_0_10px_rgba(16,185,129,0.15)] cursor-pointer hover:border-emerald-400 hover:bg-white/10 transition-all"
+                  >
                     <span className="text-[9px] uppercase font-bold text-emerald-400 block">ENROLLED / PAID</span>
                     <span className="text-2xl font-black text-emerald-400">{statusEnrolledCount}</span>
                     <span className="text-[10px] text-slate-300 block font-bold">({totalLeadsCount > 0 ? ((statusEnrolledCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
