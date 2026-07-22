@@ -331,6 +331,7 @@ app.post('/api/webhook/leads', async (req, res) => {
                                'https://script.google.com/macros/s/AKfycbypZIOCLY6blbIePojDpTHU5KOnLg8eLYLQbf8uw7ruoUNP1VVPgNXD_HvMrjfZK7vePg/exec';
 
     if (googleSheetWebhookUrl && !req.body.skipSheetForward) {
+      try {
         const targetSheetId = req.body.targetSheetId || req.body.target_sheet_id || '16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk';
         const targetSheetUrl = req.body.targetSheetUrl || req.body.sheet_url || 'https://docs.google.com/spreadsheets/d/16TaibwOL9etC4ERNPT_VCe2TkTqKyrAylw4jcXVAHIk/edit';
 
