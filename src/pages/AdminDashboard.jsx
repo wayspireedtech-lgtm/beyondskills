@@ -3588,269 +3588,509 @@ export default function AdminDashboard() {
         )}
 
         {/* -------------------- MAIN TAB: LEAD ANALYSIS -------------------- */}
-        {activeMainTab === 'lead_analysis' && !isBdaUser && (
-          <div className="space-y-8 animate-fade-in text-white">
-            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-4">
-              <div className="flex justify-between items-center border-b border-white/10 pb-4">
-                <div>
-                  <h2 className="text-xl font-bold uppercase tracking-wider text-brand-cyan">Lead Source & Page Analytics</h2>
-                  <p className="text-xs text-slate-400 mt-1 font-mono">Cross-referencing campaign channels, landing pages, and BDA allocation performance.</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="bg-[#2A4BFF]/20 text-[#2A4BFF] border border-[#2A4BFF]/30 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase">
-                    Total Captured: {activeAccessibleLeads.length}
-                  </span>
-                </div>
-              </div>
+        {activeMainTab === 'lead_analysis' && !isBdaUser && (() => {
+          // Dynamic filtering based on analysis dropdowns
+          const filteredAnalysisLeads = activeAccessibleLeads.filter(l => {
+            let matchProg = true;
+            if (filterProgram) {
+              if (filterProgram === 'full-stack-web') {
+                matchProg = l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack') || l.campaign?.toLowerCase().includes('full stack');
+              } else if (filterProgram === 'artificial-intelligence') {
+                matchProg = ['artificial-intelligence', 'machine-learning', 'data-science', 'ai-data-science'].includes(l.program) || l.remarks?.toLowerCase().includes('ai');
+              } else if (filterProgram === 'cloud-computing') {
+                matchProg = l.program === 'cloud-computing' || l.program === 'cloud';
+              } else if (filterProgram === 'cyber-security') {
+                matchProg = l.program === 'cyber-security' || l.program === 'cyber';
+              } else if (filterProgram === 'digital-marketing-cert') {
+                matchProg = l.program === 'digital-marketing-cert' || l.program === 'digital-marketing';
+              } else {
+                matchProg = l.program === filterProgram;
+              }
+            }
 
-              {/* Lead Channels Summary Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Meta & Google Ads */}
-                <div 
-                  onClick={() => {
-                    setActiveMainTab('leads_manager');
-                    setLeadsSubTab('list');
-                    setLeadChannelTab('ads');
-                    setFilterType('Ads Leads');
-                    setFilterProgram('');
-                  }}
-                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-brand-cyan/40 transition-all duration-305 flex flex-col justify-between"
-                >
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Meta & Google Ads</span>
-                    <div className="flex items-baseline space-x-2">
-                      <p className="text-4xl font-black text-white">
-                        {activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length}
-                      </p>
-                      <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-brand-cyan h-full rounded-full" 
-                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Ads Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-[10px] text-brand-cyan uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
-                  </div>
-                </div>
+            let matchChannel = true;
+            if (leadChannelTab === 'ads') {
+              matchChannel = l.type === 'Ads Leads' && !isWhatsAppLead(l);
+            } else if (leadChannelTab === 'whatsapp') {
+              matchChannel = isWhatsAppLead(l);
+            } else if (leadChannelTab === 'organic' || leadChannelTab === 'google') {
+              matchChannel = (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l);
+            }
 
-                {/* Google Sheets Forms */}
-                <div 
-                  onClick={() => {
-                    setActiveMainTab('leads_manager');
-                    setLeadsSubTab('list');
-                    setLeadChannelTab('organic');
-                    setFilterType('Organic Leads');
-                    setFilterProgram('');
-                  }}
-                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#0EA5E9]/40 transition-all duration-305 flex flex-col justify-between"
-                >
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">Organic Sheets Forms</span>
-                    <div className="flex items-baseline space-x-2">
-                      <p className="text-4xl font-black text-[#0EA5E9]">
-                        {activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length}
-                      </p>
-                      <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-[#0EA5E9] h-full rounded-full" 
-                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'Organic Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-[10px] text-[#0EA5E9] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
-                  </div>
-                </div>
+            return matchProg && matchChannel;
+          });
 
-                {/* WhatsApp Campaigns */}
-                <div 
-                  onClick={() => {
-                    setActiveMainTab('leads_manager');
-                    setLeadsSubTab('list');
-                    setLeadChannelTab('whatsapp');
-                    setFilterType('');
-                    setFilterProgram('');
-                  }}
-                  className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#4ADE80]/40 transition-all duration-305 flex flex-col justify-between"
-                >
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
-                    <div className="flex items-baseline space-x-2">
-                      <p className="text-4xl font-black text-[#4ADE80]">
-                        {activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length}
-                      </p>
-                      <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({activeAccessibleLeads.length > 0 ? (((activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length) / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                      <div 
-                        className="bg-[#4ADE80] h-full rounded-full" 
-                        style={{ width: `${activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length) / activeAccessibleLeads.length) * 100 : 0}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-[10px] text-[#4ADE80] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          const totalLeadsCount = filteredAnalysisLeads.length;
+          const totalOverallCount = activeAccessibleLeads.length || 1;
 
-            {/* Landing Pages / Program Sheet breakdown */}
-            <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-wider border-b border-white/10 pb-4">Landing Page Breakdown</h3>
+          // Course metrics
+          const coursesList = [
+            { id: 'full-stack-web', name: 'Full Stack Web Development (MERN)', color: '#0EA5E9', bg: 'bg-[#0EA5E9]' },
+            { id: 'artificial-intelligence', name: 'AI & Data Science', color: '#8B5CF6', bg: 'bg-[#8B5CF6]' },
+            { id: 'cloud-computing', name: 'Cloud Computing', color: '#10B981', bg: 'bg-[#10B981]' },
+            { id: 'cyber-security', name: 'Cyber Security', color: '#F43F5E', bg: 'bg-[#F43F5E]' },
+            { id: 'digital-marketing-cert', name: 'Digital Marketing', color: '#F59E0B', bg: 'bg-[#F59E0B]' }
+          ];
+
+          // Channel metrics
+          const adsLeadsCount = filteredAnalysisLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length;
+          const waLeadsCount = filteredAnalysisLeads.filter(l => isWhatsAppLead(l)).length;
+          const formLeadsCount = filteredAnalysisLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length;
+
+          const adsPct = totalLeadsCount > 0 ? ((adsLeadsCount / totalLeadsCount) * 100).toFixed(1) : 0;
+          const waPct = totalLeadsCount > 0 ? ((waLeadsCount / totalLeadsCount) * 100).toFixed(1) : 0;
+          const formPct = totalLeadsCount > 0 ? ((formLeadsCount / totalLeadsCount) * 100).toFixed(1) : 0;
+
+          // Pipeline Status metrics
+          const statusNewCount = filteredAnalysisLeads.filter(l => l.status === 'New').length;
+          const statusContactedCount = filteredAnalysisLeads.filter(l => l.status === 'Contacted').length;
+          const statusFollowUpCount = filteredAnalysisLeads.filter(l => l.status === 'Follow Up').length;
+          const statusNotConnectedCount = filteredAnalysisLeads.filter(l => l.status === 'Not Connected' || l.subStatus === 'DNP').length;
+          const statusEnrolledCount = filteredAnalysisLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
+          const statusCbCount = filteredAnalysisLeads.filter(l => l.subStatus === 'CB').length;
+
+          const overallConvRate = totalLeadsCount > 0 ? ((statusEnrolledCount / totalLeadsCount) * 100).toFixed(1) : 0;
+
+          return (
+            <div className="space-y-8 animate-fade-in text-white">
               
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="border-b border-white/10 text-slate-300 text-[11px] sm:text-xs uppercase font-bold tracking-wider">
-                      <th className="py-4 px-4">Landing Page Program</th>
-                      <th className="py-4 px-4 text-center">Total Leads</th>
-                      <th className="py-4 px-4 text-center">Ads Campaign</th>
-                      <th className="py-4 px-4 text-center">Google Form</th>
-                      <th className="py-4 px-4 text-center">WhatsApp</th>
-                      <th className="py-4 px-4 text-center">Enrolled</th>
-                      <th className="py-4 px-4 text-center">Conversion</th>
-                      <th className="py-4 px-4 text-right">Lead Share</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { id: 'artificial-intelligence', name: 'AI & Data Science' },
-                      { id: 'machine-learning', name: 'Machine Learning' },
-                      { id: 'data-science', name: 'Data Science' },
-                      { id: 'data-analytics', name: 'Data Analytics' },
-                      { id: 'full-stack-web', name: 'Full Stack Development' },
-                      { id: 'cyber-security', name: 'Cyber Security' },
-                      { id: 'cloud-computing', name: 'Cloud Computing' },
-                      { id: 'digital-marketing-cert', name: 'Digital Marketing' },
-                      { id: 'hr-mgmt', name: 'HR Management' },
-                      { id: 'stock-market', name: 'Stock Market' }
-                    ].map((prog, idx) => {
-                      const progLeads = activeAccessibleLeads.filter(l => 
-                        l.program === prog.id || 
-                        (prog.id.includes('full-stack') && l.program?.includes('full-stack')) ||
-                        (prog.id.includes('artificial') && (l.program?.includes('ai') || l.program?.includes('artificial') || l.program?.includes('data')))
-                      );
-                      const adsCount = progLeads.filter(l => l.type === 'Ads Leads').length;
-                      const formCount = progLeads.filter(l => l.type === 'Google Form Leads').length;
-                      const waCount = progLeads.filter(l => isWhatsAppLead(l)).length;
-                      const enrolledCount = progLeads.filter(l => l.status === 'Enrolled').length;
-                      const conv = progLeads.length > 0 ? ((enrolledCount / progLeads.length) * 100).toFixed(1) : '0.0';
-                      const percentageShare = activeAccessibleLeads.length > 0 ? ((progLeads.length / activeAccessibleLeads.length) * 100).toFixed(1) : 0;
+              {/* Top Banner & Interactive Filters */}
+              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-2xl space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/10 pb-5">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <BarChart3 className="w-6 h-6 text-brand-cyan" />
+                      <h2 className="text-xl font-black uppercase tracking-wider text-white">Lead Analysis & Campaign Performance Charts</h2>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1 font-mono">
+                      Visual percentage analytics for campaign channels, course programs (Full Stack, AI, Cloud), and pipeline conversion funnels.
+                    </p>
+                  </div>
+
+                  {/* Quick Filters */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    {/* Course Selector */}
+                    <div>
+                      <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Filter Course</span>
+                      <select 
+                        value={filterProgram}
+                        onChange={(e) => setFilterProgram(e.target.value)}
+                        className="bg-[#05092A] border border-white/20 rounded-lg px-3 py-1.5 text-xs text-cyan-300 outline-none focus:border-brand-cyan font-bold cursor-pointer"
+                      >
+                        <option value="">All Courses</option>
+                        <option value="full-stack-web">Full Stack Web (MERN)</option>
+                        <option value="artificial-intelligence">AI & Data Science</option>
+                        <option value="cloud-computing">Cloud Computing</option>
+                        <option value="cyber-security">Cyber Security</option>
+                        <option value="digital-marketing-cert">Digital Marketing</option>
+                      </select>
+                    </div>
+
+                    {/* Campaign Channel Selector */}
+                    <div>
+                      <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Filter Channel</span>
+                      <select 
+                        value={leadChannelTab}
+                        onChange={(e) => setLeadChannelTab(e.target.value)}
+                        className="bg-[#05092A] border border-white/20 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-brand-cyan font-bold cursor-pointer"
+                      >
+                        <option value="all">All Campaign Channels</option>
+                        <option value="ads">Meta & Google Ads</option>
+                        <option value="whatsapp">WhatsApp / Meta WA</option>
+                        <option value="organic">Organic Sheet Forms</option>
+                      </select>
+                    </div>
+
+                    {/* Reset Button */}
+                    {(filterProgram || leadChannelTab !== 'all') && (
+                      <button 
+                        onClick={() => { setFilterProgram(''); setLeadChannelTab('all'); }}
+                        className="mt-4 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-xs font-mono font-bold rounded-lg text-slate-300 transition-all cursor-pointer"
+                      >
+                        Reset Filters
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* KPI Overview Metric Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {/* Card 1: Total Analysed Leads */}
+                  <div className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2 relative overflow-hidden">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold block">Total Analysed Leads</span>
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-3xl font-black text-white">{totalLeadsCount}</span>
+                      <span className="text-xs font-mono font-bold text-brand-cyan">({((totalLeadsCount / totalOverallCount) * 100).toFixed(1)}% of total)</span>
+                    </div>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-3">
+                      <div className="bg-brand-cyan h-full rounded-full" style={{ width: `${(totalLeadsCount / totalOverallCount) * 100}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* Card 2: Full Stack Web Performance */}
+                  {(() => {
+                    const fsLeads = filteredAnalysisLeads.filter(l => l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack'));
+                    const fsEnrolled = fsLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
+                    const fsPct = totalLeadsCount > 0 ? ((fsLeads.length / totalLeadsCount) * 100).toFixed(1) : 0;
+                    return (
+                      <div className="bg-[#050718] border border-[#0EA5E9]/30 p-5 rounded-xl space-y-2 relative overflow-hidden shadow-[0_0_15px_rgba(14,165,233,0.1)]">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-[#0EA5E9] font-bold block">Full Stack Web (MERN)</span>
+                        <div className="flex items-baseline space-x-2">
+                          <span className="text-3xl font-black text-white">{fsLeads.length}</span>
+                          <span className="text-xs font-mono font-bold text-[#0EA5E9]">({fsPct}% share)</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 pt-1">
+                          <span>Enrolled: <strong className="text-[#4ADE80]">{fsEnrolled}</strong></span>
+                          <span>Conv: <strong className="text-brand-cyan">{fsLeads.length > 0 ? ((fsEnrolled / fsLeads.length) * 100).toFixed(1) : 0}%</strong></span>
+                        </div>
+                        <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                          <div className="bg-[#0EA5E9] h-full rounded-full" style={{ width: `${fsPct}%` }}></div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Card 3: Top Channel Share */}
+                  <div className="bg-[#050718] border border-white/10 p-5 rounded-xl space-y-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold block">Highest Channel Share</span>
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-2xl font-black text-white">
+                        {adsLeadsCount >= waLeadsCount && adsLeadsCount >= formLeadsCount ? 'Ads Campaigns' : (waLeadsCount >= formLeadsCount ? 'WhatsApp' : 'Organic Forms')}
+                      </span>
+                      <span className="text-xs font-mono font-bold text-[#4ADE80]">
+                        ({Math.max(adsPct, waPct, formPct)}%)
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-1.5 text-[10px] font-mono text-slate-400 pt-1">
+                      <span className="text-[#0EA5E9]">Ads: {adsPct}%</span>
+                      <span>•</span>
+                      <span className="text-[#4ADE80]">WA: {waPct}%</span>
+                      <span>•</span>
+                      <span className="text-[#8B5CF6]">Form: {formPct}%</span>
+                    </div>
+                  </div>
+
+                  {/* Card 4: Overall Conversion Rate */}
+                  <div className="bg-[#050718] border border-[#4ADE80]/30 p-5 rounded-xl space-y-2 shadow-[0_0_15px_rgba(74,222,128,0.1)]">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#4ADE80] font-bold block">Overall CRM Conversion Rate</span>
+                    <div className="flex items-baseline space-x-2">
+                      <span className="text-3xl font-black text-[#4ADE80]">{overallConvRate}%</span>
+                      <span className="text-xs font-mono text-slate-300 font-bold">({statusEnrolledCount} Enrolled)</span>
+                    </div>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-3">
+                      <div className="bg-[#4ADE80] h-full rounded-full" style={{ width: `${overallConvRate}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual Chart Row 1: Course Breakdown & Campaign Share */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                {/* CHART 1: Course / Program Percentage Distribution */}
+                <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div className="flex items-center space-x-2">
+                      <BarChart className="w-5 h-5 text-brand-cyan" />
+                      <h3 className="text-base font-bold uppercase tracking-wider text-white">Course Wise Lead & Percentage Share</h3>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Percentage Distribution</span>
+                  </div>
+
+                  <div className="space-y-5">
+                    {coursesList.map((course, idx) => {
+                      const courseLeads = filteredAnalysisLeads.filter(l => {
+                        if (course.id === 'full-stack-web') {
+                          return l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack') || l.campaign?.toLowerCase().includes('full stack');
+                        }
+                        if (course.id === 'artificial-intelligence') {
+                          return ['artificial-intelligence', 'machine-learning', 'data-science', 'ai-data-science'].includes(l.program) || l.remarks?.toLowerCase().includes('ai');
+                        }
+                        if (course.id === 'cloud-computing') {
+                          return l.program === 'cloud-computing' || l.program === 'cloud';
+                        }
+                        if (course.id === 'cyber-security') {
+                          return l.program === 'cyber-security' || l.program === 'cyber';
+                        }
+                        return l.program === course.id;
+                      });
+
+                      const count = courseLeads.length;
+                      const sharePct = totalLeadsCount > 0 ? ((count / totalLeadsCount) * 100).toFixed(1) : 0;
+                      const enrolled = courseLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
+                      const cAds = courseLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length;
+                      const cWa = courseLeads.filter(l => isWhatsAppLead(l)).length;
+                      const cForm = courseLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length;
 
                       return (
-                        <tr key={idx} className="border-b border-white/5 hover:bg-white/5 text-slate-350 transition-colors">
-                          {/* Program Name click filters program */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('all');
-                              setFilterType('');
-                              setFilterProgram(prog.id);
-                            }}
-                            className="py-4 px-4 font-bold text-white hover:text-brand-cyan cursor-pointer transition-colors text-xs sm:text-sm font-mono"
-                          >
-                            {prog.name}
-                          </td>
-                          {/* Total Leads click filters program */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('all');
-                              setFilterType('');
-                              setFilterProgram(prog.id);
-                            }}
-                            className="py-4 px-4 text-center font-bold text-white hover:text-[#2A4BFF] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-mono"
-                          >
-                            {progLeads.length}
-                          </td>
-                          {/* Ads click filters program and Ads type */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('ads');
-                              setFilterType('Ads Leads');
-                              setFilterProgram(prog.id);
-                            }}
-                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-brand-cyan hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
-                          >
-                            {adsCount}
-                          </td>
-                          {/* Google click filters program and Google type */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('google');
-                              setFilterType('Google Form Leads');
-                              setFilterProgram(prog.id);
-                            }}
-                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-[#0EA5E9] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
-                          >
-                            {formCount}
-                          </td>
-                          {/* WhatsApp click filters program and WhatsApp type */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('whatsapp');
-                              setFilterType('');
-                              setFilterProgram(prog.id);
-                            }}
-                            className="py-4 px-4 text-center font-mono text-slate-300 hover:text-[#4ADE80] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
-                          >
-                            {waCount}
-                          </td>
-                          {/* Enrolled click filters program and Enrolled status */}
-                          <td 
-                            onClick={() => {
-                              setActiveMainTab('leads_manager');
-                              setLeadsSubTab('list');
-                              setLeadChannelTab('all');
-                              setFilterType('');
-                              setFilterProgram(prog.id);
-                              setFilterStatus('Enrolled');
-                            }}
-                            className="py-4 px-4 text-center font-mono text-[#4ADE80] font-bold hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm"
-                          >
-                            {enrolledCount}
-                          </td>
-                          <td className="py-4 px-4 text-center font-mono font-bold text-brand-cyan text-xs sm:text-sm">{conv}%</td>
-                          <td className="py-4 px-4 text-right">
-                            <div className="flex items-center justify-end space-x-2">
-                              <span className="font-mono text-slate-300 font-bold text-xs sm:text-sm">{percentageShare}%</span>
-                              <div className="w-16 bg-white/10 h-1.5 rounded-full overflow-hidden">
-                                <div 
-                                  className="bg-brand-cyan h-full rounded-full" 
-                                  style={{ width: `${percentageShare}%` }}
-                                ></div>
-                              </div>
+                        <div key={idx} className="space-y-2 bg-white/5 border border-white/5 p-4 rounded-xl hover:border-white/20 transition-all">
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <div className="flex items-center space-x-2">
+                              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: course.color }}></span>
+                              <span className="font-bold text-white text-sm">{course.name}</span>
+                              {course.id === 'full-stack-web' && (
+                                <span className="bg-[#0EA5E9]/20 text-[#0EA5E9] border border-[#0EA5E9]/30 text-[9px] px-2 py-0.5 rounded font-bold uppercase">Popular</span>
+                              )}
                             </div>
-                          </td>
-                        </tr>
+                            <div className="text-right">
+                              <span className="font-extrabold text-white text-sm mr-2">{count} Leads</span>
+                              <span className="font-bold text-slate-400">({sharePct}%)</span>
+                            </div>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div className="w-full bg-white/10 h-3 rounded-full overflow-hidden flex">
+                            <div className="h-full rounded-full transition-all duration-500" style={{ width: `${sharePct}%`, backgroundColor: course.color }}></div>
+                          </div>
+
+                          {/* Channel Split Badges */}
+                          <div className="flex flex-wrap items-center justify-between text-[10px] font-mono text-slate-400 pt-1">
+                            <div className="flex items-center space-x-3">
+                              <span>Ads: <strong className="text-white">{cAds}</strong></span>
+                              <span>WA: <strong className="text-[#4ADE80]">{cWa}</strong></span>
+                              <span>Form: <strong className="text-[#8B5CF6]">{cForm}</strong></span>
+                            </div>
+                            <div>
+                              <span>Enrolled: <strong className="text-[#4ADE80]">{enrolled}</strong></span>
+                            </div>
+                          </div>
+                        </div>
                       );
                     })}
-                  </tbody>
-                </table>
+                  </div>
+                </div>
+
+                {/* CHART 2: Campaign Source Channel Share */}
+                <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div className="flex items-center space-x-2">
+                      <PieChart className="w-5 h-5 text-[#4ADE80]" />
+                      <h3 className="text-base font-bold uppercase tracking-wider text-white">Campaign Channel Percentage Share</h3>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Source Share</span>
+                  </div>
+
+                  {/* Channel Breakdown Cards */}
+                  <div className="space-y-4">
+                    {/* Meta & Google Ads */}
+                    <div className="bg-[#050718] border border-brand-cyan/30 p-4 rounded-xl space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-2">
+                          <Globe className="w-4 h-4 text-brand-cyan" />
+                          <span className="font-bold text-white text-xs">Meta & Google Ads Campaigns</span>
+                        </div>
+                        <span className="text-sm font-extrabold text-brand-cyan">{adsLeadsCount} Leads ({adsPct}%)</span>
+                      </div>
+                      <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                        <div className="bg-brand-cyan h-full rounded-full" style={{ width: `${adsPct}%` }}></div>
+                      </div>
+                    </div>
+
+                    {/* WhatsApp & Meta WA */}
+                    <div className="bg-[#050718] border border-[#4ADE80]/30 p-4 rounded-xl space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-2">
+                          <Phone className="w-4 h-4 text-[#4ADE80]" />
+                          <span className="font-bold text-white text-xs">WhatsApp & Meta WA Campaigns</span>
+                        </div>
+                        <span className="text-sm font-extrabold text-[#4ADE80]">{waLeadsCount} Leads ({waPct}%)</span>
+                      </div>
+                      <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                        <div className="bg-[#4ADE80] h-full rounded-full" style={{ width: `${waPct}%` }}></div>
+                      </div>
+                    </div>
+
+                    {/* Organic Google Form */}
+                    <div className="bg-[#050718] border border-[#8B5CF6]/30 p-4 rounded-xl space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center space-x-2">
+                          <FileText className="w-4 h-4 text-[#8B5CF6]" />
+                          <span className="font-bold text-white text-xs">Organic Google Form Sheets</span>
+                        </div>
+                        <span className="text-sm font-extrabold text-[#8B5CF6]">{formLeadsCount} Leads ({formPct}%)</span>
+                      </div>
+                      <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+                        <div className="bg-[#8B5CF6] h-full rounded-full" style={{ width: `${formPct}%` }}></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Multi-segmented Stacked Channel Bar */}
+                  <div className="space-y-2 pt-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold block">Combined Channel Volume Share</span>
+                    <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden flex">
+                      <div style={{ width: `${adsPct}%` }} className="bg-brand-cyan h-full" title={`Ads: ${adsPct}%`}></div>
+                      <div style={{ width: `${waPct}%` }} className="bg-[#4ADE80] h-full" title={`WhatsApp: ${waPct}%`}></div>
+                      <div style={{ width: `${formPct}%` }} className="bg-[#8B5CF6] h-full" title={`Forms: ${formPct}%`}></div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
+
+              {/* Visual Chart Row 2: Pipeline Status & Call Outcome Funnel Analytics */}
+              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <div className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-amber-400" />
+                    <h3 className="text-base font-bold uppercase tracking-wider text-white">Pipeline Status & Call Outcome Funnel Analytics</h3>
+                  </div>
+                  <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Status Conversion Funnel</span>
+                </div>
+
+                {/* Status Funnel Progress Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 font-mono text-xs">
+                  {/* NEW */}
+                  <div className="bg-white/5 border border-cyan-500/30 p-4 rounded-xl space-y-2">
+                    <span className="text-[9px] uppercase font-bold text-cyan-400 block">NEW LEADS</span>
+                    <span className="text-2xl font-black text-white">{statusNewCount}</span>
+                    <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusNewCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusNewCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* CONTACTED */}
+                  <div className="bg-white/5 border border-purple-500/30 p-4 rounded-xl space-y-2">
+                    <span className="text-[9px] uppercase font-bold text-purple-400 block">CONTACTED</span>
+                    <span className="text-2xl font-black text-white">{statusContactedCount}</span>
+                    <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusContactedCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-purple-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusContactedCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* FOLLOW UP */}
+                  <div className="bg-white/5 border border-amber-500/30 p-4 rounded-xl space-y-2">
+                    <span className="text-[9px] uppercase font-bold text-amber-400 block">FOLLOW UP</span>
+                    <span className="text-2xl font-black text-white">{statusFollowUpCount}</span>
+                    <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusFollowUpCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-amber-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusFollowUpCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* NOT CONNECTED (DNP) */}
+                  <div className="bg-white/5 border border-rose-500/30 p-4 rounded-xl space-y-2">
+                    <span className="text-[9px] uppercase font-bold text-rose-400 block">NOT CONNECTED / DNP</span>
+                    <span className="text-2xl font-black text-white">{statusNotConnectedCount}</span>
+                    <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusNotConnectedCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-rose-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusNotConnectedCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* CALL BACK (CB) */}
+                  <div className="bg-white/5 border border-blue-500/30 p-4 rounded-xl space-y-2">
+                    <span className="text-[9px] uppercase font-bold text-blue-400 block">CALL BACK (CB)</span>
+                    <span className="text-2xl font-black text-white">{statusCbCount}</span>
+                    <span className="text-[10px] text-slate-400 block font-bold">({totalLeadsCount > 0 ? ((statusCbCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-blue-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusCbCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+
+                  {/* ENROLLED / PAID */}
+                  <div className="bg-white/5 border border-emerald-500/30 p-4 rounded-xl space-y-2 shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+                    <span className="text-[9px] uppercase font-bold text-emerald-400 block">ENROLLED / PAID</span>
+                    <span className="text-2xl font-black text-emerald-400">{statusEnrolledCount}</span>
+                    <span className="text-[10px] text-slate-300 block font-bold">({totalLeadsCount > 0 ? ((statusEnrolledCount / totalLeadsCount) * 100).toFixed(1) : 0}%)</span>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-1">
+                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: `${totalLeadsCount > 0 ? (statusEnrolledCount / totalLeadsCount) * 100 : 0}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detailed Course & Campaign Analysis Table */}
+              <div className="bg-[#0A0E35] border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
+                <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-white">Course & Campaign Performance Matrix Table</h3>
+                  <span className="text-xs font-mono text-slate-400">Click any row to filter Leads Database</span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs font-mono">
+                    <thead>
+                      <tr className="border-b border-white/10 text-slate-300 text-[11px] uppercase font-bold tracking-wider">
+                        <th className="py-4 px-4">Course Program</th>
+                        <th className="py-4 px-4 text-center">Total Leads</th>
+                        <th className="py-4 px-4 text-center">Ads Leads</th>
+                        <th className="py-4 px-4 text-center">WhatsApp Leads</th>
+                        <th className="py-4 px-4 text-center">Organic Forms</th>
+                        <th className="py-4 px-4 text-center">DNP Leads</th>
+                        <th className="py-4 px-4 text-center">Enrolled</th>
+                        <th className="py-4 px-4 text-center">Conversion %</th>
+                        <th className="py-4 px-4 text-right">Volume Share %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {coursesList.map((course, idx) => {
+                        const courseLeads = filteredAnalysisLeads.filter(l => {
+                          if (course.id === 'full-stack-web') {
+                            return l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack') || l.campaign?.toLowerCase().includes('full stack');
+                          }
+                          if (course.id === 'artificial-intelligence') {
+                            return ['artificial-intelligence', 'machine-learning', 'data-science', 'ai-data-science'].includes(l.program) || l.remarks?.toLowerCase().includes('ai');
+                          }
+                          if (course.id === 'cloud-computing') {
+                            return l.program === 'cloud-computing' || l.program === 'cloud';
+                          }
+                          if (course.id === 'cyber-security') {
+                            return l.program === 'cyber-security' || l.program === 'cyber';
+                          }
+                          return l.program === course.id;
+                        });
+
+                        const cTotal = courseLeads.length;
+                        const cAds = courseLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length;
+                        const cWa = courseLeads.filter(l => isWhatsAppLead(l)).length;
+                        const cForm = courseLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length;
+                        const cDnp = courseLeads.filter(l => l.subStatus === 'DNP' || l.status === 'Not Connected').length;
+                        const cEnrolled = courseLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
+                        const cConv = cTotal > 0 ? ((cEnrolled / cTotal) * 100).toFixed(1) : '0.0';
+                        const cShare = totalLeadsCount > 0 ? ((cTotal / totalLeadsCount) * 100).toFixed(1) : 0;
+
+                        return (
+                          <tr 
+                            key={idx} 
+                            onClick={() => {
+                              setActiveMainTab('leads_manager');
+                              setLeadsSubTab('list');
+                              setFilterProgram(course.id);
+                            }}
+                            className="border-b border-white/5 hover:bg-white/5 text-slate-300 transition-colors cursor-pointer"
+                          >
+                            <td className="py-4 px-4 font-bold text-white flex items-center space-x-2">
+                              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: course.color }}></span>
+                              <span>{course.name}</span>
+                            </td>
+                            <td className="py-4 px-4 text-center font-bold text-white">{cTotal}</td>
+                            <td className="py-4 px-4 text-center text-cyan-400 font-bold">{cAds}</td>
+                            <td className="py-4 px-4 text-center text-[#4ADE80] font-bold">{cWa}</td>
+                            <td className="py-4 px-4 text-center text-[#8B5CF6] font-bold">{cForm}</td>
+                            <td className="py-4 px-4 text-center text-rose-400 font-bold">{cDnp}</td>
+                            <td className="py-4 px-4 text-center text-emerald-400 font-bold">{cEnrolled}</td>
+                            <td className="py-4 px-4 text-center text-cyan-300 font-extrabold">{cConv}%</td>
+                            <td className="py-4 px-4 text-right">
+                              <div className="flex items-center justify-end space-x-2">
+                                <span className="font-bold text-white">{cShare}%</span>
+                                <div className="w-16 bg-white/10 h-1.5 rounded-full overflow-hidden">
+                                  <div className="h-full rounded-full" style={{ width: `${cShare}%`, backgroundColor: course.color }}></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {activeMainTab === 'users' && !isBdaUser && (
           <div className="space-y-6 animate-fade-in text-white">
