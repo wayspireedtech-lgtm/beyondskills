@@ -3727,24 +3727,56 @@ export default function AdminDashboard() {
                     </div>
                   </div>
 
-                  {/* Card 2: Full Stack Web Performance */}
+                  {/* Card 2: Interactive Course Performance Focus */}
                   {(() => {
-                    const fsLeads = filteredAnalysisLeads.filter(l => l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack'));
-                    const fsEnrolled = fsLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
-                    const fsPct = totalLeadsCount > 0 ? ((fsLeads.length / totalLeadsCount) * 100).toFixed(1) : 0;
+                    const activeProgSlug = filterProgram || 'full-stack-web';
+                    const activeProgName = 
+                      activeProgSlug === 'full-stack-web' ? 'Full Stack Web (MERN)' :
+                      activeProgSlug === 'artificial-intelligence' ? 'AI & Data Science' :
+                      activeProgSlug === 'cloud-computing' ? 'Cloud Computing' :
+                      activeProgSlug === 'cyber-security' ? 'Cyber Security' :
+                      activeProgSlug === 'digital-marketing-cert' ? 'Digital Marketing' : 'All Courses Combined';
+
+                    const progLeads = activeAccessibleLeads.filter(l => {
+                      if (!filterProgram) return true;
+                      if (activeProgSlug === 'full-stack-web') return l.program?.includes('full-stack') || l.remarks?.toLowerCase().includes('full stack') || l.campaign?.toLowerCase().includes('full stack');
+                      if (activeProgSlug === 'artificial-intelligence') return ['artificial-intelligence', 'machine-learning', 'data-science', 'ai-data-science'].includes(l.program) || l.remarks?.toLowerCase().includes('ai');
+                      if (activeProgSlug === 'cloud-computing') return l.program === 'cloud-computing' || l.program === 'cloud';
+                      if (activeProgSlug === 'cyber-security') return l.program === 'cyber-security' || l.program === 'cyber';
+                      if (activeProgSlug === 'digital-marketing-cert') return l.program === 'digital-marketing-cert' || l.program === 'digital-marketing';
+                      return l.program === activeProgSlug;
+                    });
+
+                    const progEnrolled = progLeads.filter(l => l.status === 'Enrolled' || l.subStatus === 'Already Paid').length;
+                    const progPct = totalOverallCount > 0 ? ((progLeads.length / totalOverallCount) * 100).toFixed(1) : 0;
+                    
                     return (
-                      <div className="bg-[#050718] border border-[#0EA5E9]/30 p-5 rounded-xl space-y-2 relative overflow-hidden shadow-[0_0_15px_rgba(14,165,233,0.1)]">
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-[#0EA5E9] font-bold block">Full Stack Web (MERN)</span>
-                        <div className="flex items-baseline space-x-2">
-                          <span className="text-3xl font-black text-white">{fsLeads.length}</span>
-                          <span className="text-xs font-mono font-bold text-[#0EA5E9]">({fsPct}% share)</span>
+                      <div className="bg-[#050718] border border-[#0EA5E9]/40 p-5 rounded-xl space-y-2 relative overflow-hidden shadow-[0_0_20px_rgba(14,165,233,0.15)] transition-all">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-[#0EA5E9] font-bold block">Course Focus</span>
+                          <select
+                            value={filterProgram}
+                            onChange={(e) => setFilterProgram(e.target.value)}
+                            className="bg-[#0A0E35] border border-[#0EA5E9]/50 rounded px-2 py-0.5 text-[10px] text-cyan-300 font-bold outline-none cursor-pointer hover:border-cyan-400"
+                          >
+                            <option value="full-stack-web">Full Stack Web (MERN)</option>
+                            <option value="artificial-intelligence">AI & Data Science</option>
+                            <option value="cloud-computing">Cloud Computing</option>
+                            <option value="cyber-security">Cyber Security</option>
+                            <option value="digital-marketing-cert">Digital Marketing</option>
+                            <option value="">All Courses Combined</option>
+                          </select>
+                        </div>
+                        <div className="flex items-baseline space-x-2 pt-1">
+                          <span className="text-3xl font-black text-white">{progLeads.length}</span>
+                          <span className="text-xs font-mono font-bold text-[#0EA5E9]">({progPct}% share)</span>
                         </div>
                         <div className="flex justify-between items-center text-[10px] font-mono text-slate-400 pt-1">
-                          <span>Enrolled: <strong className="text-[#4ADE80]">{fsEnrolled}</strong></span>
-                          <span>Conv: <strong className="text-brand-cyan">{fsLeads.length > 0 ? ((fsEnrolled / fsLeads.length) * 100).toFixed(1) : 0}%</strong></span>
+                          <span>Enrolled: <strong className="text-[#4ADE80]">{progEnrolled}</strong></span>
+                          <span>Conv: <strong className="text-brand-cyan">{progLeads.length > 0 ? ((progEnrolled / progLeads.length) * 100).toFixed(1) : 0}%</strong></span>
                         </div>
                         <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                          <div className="bg-[#0EA5E9] h-full rounded-full" style={{ width: `${fsPct}%` }}></div>
+                          <div className="bg-[#0EA5E9] h-full rounded-full" style={{ width: `${progPct}%` }}></div>
                         </div>
                       </div>
                     );
