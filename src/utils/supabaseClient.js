@@ -74,26 +74,8 @@ export async function saveLeadToSupabase(lead) {
     }).catch(err => console.error('[Resend Welcome Email Error]:', err));
   }
 
-  // 3. Post to webhook in background (non-blocking with fast 1.2s timeout)
-  setTimeout(() => {
-    try {
-      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
-        : window.location.origin;
 
-      const controller = new AbortController();
-      const tid = setTimeout(() => controller.abort(), 1200);
 
-      fetch(`${apiHost}/api/webhook/leads`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(lead),
-        signal: controller.signal
-      }).then(() => clearTimeout(tid)).catch(() => clearTimeout(tid));
-    } catch (e) {
-      // Ignore background webhook timeout
-    }
-  }, 0);
 
   if (!supabase) {
     console.log('[Supabase MOCK] Saved lead to local database:', lead);

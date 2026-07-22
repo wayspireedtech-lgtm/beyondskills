@@ -317,64 +317,11 @@ export default function AiMlDataScienceLandingPage() {
     };
     window.addEventListener('scroll', handleScroll);
 
-    // Lead Queue Sync on Mount
-    syncFailedLeadsQueue();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Sync queued offline/failed leads
-  const syncFailedLeadsQueue = async () => {
-    const queue = getDbItem('beyondskills_leads_queue', []);
-    if (queue.length === 0) return;
 
-    console.log(`[Queue Sync] Found ${queue.length} unsynced leads. Retrying...`);
-    const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
-      : window.location.origin;
-
-    const remainingQueue = [];
-
-    for (const item of queue) {
-      let supabaseSuccess = !item.failedSupabase;
-      let webhookSuccess = !item.failedWebhook;
-
-      if (item.failedSupabase) {
-        try {
-          const res = await saveLeadToSupabase(item.lead);
-          if (!res.error) supabaseSuccess = true;
-        } catch (err) {
-          console.error('[Sync] Supabase retry failed:', err);
-        }
-      }
-
-      if (item.failedWebhook) {
-        try {
-          const res = await fetch(`${apiHost}/api/webhook/leads`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(item.lead)
-          });
-          if (res.ok) webhookSuccess = true;
-        } catch (err) {
-          console.error('[Sync] Webhook retry failed:', err);
-        }
-      }
-
-      if (!supabaseSuccess || !webhookSuccess) {
-        remainingQueue.push({
-          ...item,
-          failedSupabase: !supabaseSuccess,
-          failedWebhook: !webhookSuccess,
-          attempts: item.attempts + 1
-        });
-      } else {
-        console.log(`[Sync] Successfully synced lead: ${item.lead.name}`);
-      }
-    }
-
-    setDbItem('beyondskills_leads_queue', remainingQueue);
-  };
 
   const getDeviceDetails = () => {
     const ua = navigator.userAgent;
