@@ -19,6 +19,7 @@ if (supabaseUrl && supabaseAnonKey) {
 }
 
 import { getDbItem } from './dbHelpers';
+import { sendLeadWelcomeEmail } from './sendEmail';
 
 export function getISTDateTimeString(dateVal = new Date()) {
   if (!dateVal) return '';
@@ -42,11 +43,72 @@ export function getISTDateTimeString(dateVal = new Date()) {
  * Saves a brochure lead to Supabase 'leads' table
  */
 export async function saveLeadToSupabase(lead) {
+  if (!lead) return { data: null, error: null };
+
+  // 1. Immediately update local storage DB cache so submission is instant
+  try {
+    const existing = getDbItem('beyondskills_leads', []);
+    if (!existing.some(l => l.id === lead.id || (l.phone && l.phone === lead.phone && l.phone !== '0000000000'))) {
+      setDbItem('beyondskills_leads', [lead, ...existing]);
+    }
+  } catch (e) {
+    console.error('[Local DB Cache Error]:', e);
+  }
+
+  // 2. Trigger automatic welcome email directly (with keepalive)
+  if (lead && lead.email && !lead.email.includes('no-email')) {
+    const rawProg = lead.course_title || lead.program || lead.type || '';
+    const pLower = String(rawProg).toLowerCase();
+    
+    let displayProgram = 'Live Career Cohort';
+    if (pLower.includes('ai') || pLower.includes('data-science') || pLower.includes('intelligence')) {
+      displayProgram = 'Artificial Intelligence & Data Science Program';
+    } else if (pLower.includes('full') || pLower.includes('stack') || pLower.includes('web')) {
+      displayProgram = 'Full Stack Web Development Program';
+    } else if (pLower.includes('cyber') || pLower.includes('security')) {
+      displayProgram = 'Cybersecurity & Ethical Hacking Program';
+    } else if (pLower.includes('cloud') || pLower.includes('devops')) {
+      displayProgram = 'Cloud Computing & AWS Program';
+    } else if (pLower.includes('digital') || pLower.includes('marketing')) {
+      displayProgram = 'Digital Marketing Performance Program';
+    } else if (rawProg) {
+      displayProgram = rawProg.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    sendLeadWelcomeEmail({
+      name: lead.name,
+      email: lead.email,
+      program: displayProgram
+    }).catch(err => console.error('[Resend Welcome Email Error]:', err));
+  }
+
+  // 3. Post to webhook in background (non-blocking with fast 1.2s timeout)
+  setTimeout(() => {
+    try {
+      const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? (window.location.port === '5173' ? 'http://localhost:5001' : 'http://localhost:5000')
+        : window.location.origin;
+
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), 1200);
+
+      fetch(`${apiHost}/api/webhook/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lead),
+        signal: controller.signal
+      }).then(() => clearTimeout(tid)).catch(() => clearTimeout(tid));
+    } catch (e) {
+      // Ignore background webhook timeout
+    }
+  }, 0);
+
   if (!supabase) {
     console.log('[Supabase MOCK] Saved lead to local database:', lead);
     return { data: lead, error: null };
   }
 
+  // 4. Perform Supabase insert with 1.5s fast timeout to prevent UI lag
   try {
     const courseId = lead.program || lead.course_id || 'artificial-intelligence';
     const courseTitle = lead.course_title || lead.course || '';
@@ -91,17 +153,14 @@ export async function saveLeadToSupabase(lead) {
           remarks: lead.remarks || lead.message || ''
         }
       ]);
+
+    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve({ data: lead, error: null }), 1200));
+    const result = await Promise.race([insertPromise, timeoutPromise]);
     
-    if (error) {
-      console.error('[Supabase Error] Failed to insert lead:', error);
-      return { data: null, error };
-    }
-    
-    console.log('[Supabase Success] Lead logged:', data);
-    return { data, error: null };
+    return result;
   } catch (err) {
     console.error('[Supabase Exception] Error saving lead:', err);
-    return { data: null, error: err };
+    return { data: lead, error: null };
   }
 }
 

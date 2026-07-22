@@ -254,6 +254,20 @@ export default function AdminDashboard() {
   const [filterStatus, setFilterStatus] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterProgram, setFilterProgram] = useState('');
+
+  // Helper to determine if a lead is a WhatsApp / Meta WA campaign lead
+  const isWhatsAppLead = (lead) => {
+    if (!lead) return false;
+    const typeStr = (lead.type || '').toLowerCase();
+    const campStr = (lead.campaign || '').toLowerCase();
+    const remStr = (lead.remarks || lead.notes || lead.message || '').toLowerCase();
+    
+    return (
+      typeStr.includes('whatsapp') || typeStr.includes('meta/wa') || typeStr.includes('meta wa') ||
+      campStr.includes('whatsapp') || campStr.includes('meta/wa') || campStr.includes('meta wa') ||
+      remStr.includes('whatsapp campaign') || remStr.includes('meta/wa') || remStr.includes('meta wa')
+    );
+  };
   const [filterBDA, setFilterBDA] = useState('');
   const [filterBDM, setFilterBDM] = useState('');
   const [filterSubStatus, setFilterSubStatus] = useState('');
@@ -360,7 +374,15 @@ export default function AdminDashboard() {
           if (res.ok) {
             const csvText = await res.text();
             const parsed = parseSheetCSV(csvText);
-            parsed.forEach(p => { p.type = 'Ads Leads'; });
+            parsed.forEach(p => { 
+              if (!p.type || p.type === 'Unspecified' || p.type === 'Google Form Leads') {
+                if (p.campaign && (p.campaign.toUpperCase().includes('META/WA') || p.campaign.toLowerCase().includes('whatsapp'))) {
+                  p.type = p.campaign;
+                } else {
+                  p.type = 'Ads Leads'; 
+                }
+              }
+            });
             sheetLeads = [...sheetLeads, ...parsed];
             sheetFetched = true;
           }
@@ -376,7 +398,15 @@ export default function AdminDashboard() {
           if (res.ok) {
             const csvText = await res.text();
             const parsed = parseSheetCSV(csvText);
-            parsed.forEach(p => { p.type = 'Organic Leads'; });
+            parsed.forEach(p => { 
+              if (!p.type || p.type === 'Unspecified' || p.type === 'Ads Leads') {
+                if (p.campaign && (p.campaign.toUpperCase().includes('META/WA') || p.campaign.toLowerCase().includes('whatsapp'))) {
+                  p.type = p.campaign;
+                } else {
+                  p.type = 'Organic Leads'; 
+                }
+              }
+            });
             sheetLeads = [...sheetLeads, ...parsed];
             sheetFetched = true;
           }
@@ -813,7 +843,8 @@ export default function AdminDashboard() {
       { id: 'LD002', name: 'Pooja Sharma', email: 'pooja.s@yahoo.com', phone: '8765432109', date: new Date(Date.now() - 3600000 * 10).toISOString(), type: 'Organic Leads', program: 'ai-data-science', assignedBDM: 'Abhishek Manager', assignedBDA: 'Deepak Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
       { id: 'LD003', name: 'Rohit Verma', email: 'rohit@gradus.live', phone: '7654321098', date: new Date(Date.now() - 3600000 * 25).toISOString(), type: 'Ads Leads', program: 'full-stack-web-development', assignedBDM: 'Khushi Manager', assignedBDA: 'Shubham Tyagi', status: 'Not Connected', subStatus: 'DNP', profession: 'Working Professional (< 30k) [WP-1]', mentor: 'None', duration: 'None', callAttempts: { s1: 'DNP', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Attempt 1: No answer / Ringing.', date: new Date().toISOString() }] },
       { id: 'LD004', name: 'Karan Mehra', email: 'karan@gmail.com', phone: '9988776655', date: new Date(Date.now() - 3600000 * 48).toISOString(), type: 'WhatsApp Marketing Leads', program: 'ai-data-science', assignedBDM: 'Khushi Manager', assignedBDA: 'Jatin BDA', status: 'Enrolled', subStatus: 'Already Paid', profession: 'Student', mentor: 'None', duration: 'None', callAttempts: { s1: 'QUALIFIED', s2: 'Already Paid', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Enrollment confirmed, LMS username set.', date: new Date().toISOString() }] },
-      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Ads Leads', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] }
+      { id: 'LD005', name: 'Sneha Roy', email: 'sneha@outlook.com', phone: '9112233445', date: new Date(Date.now() - 3600000 * 60).toISOString(), type: 'Ads Leads', program: 'ai-data-science', assignedBDM: '', assignedBDA: '', status: 'New', subStatus: 'QUALIFIED', profession: 'Unemployed', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [] },
+      { id: 'LD006', name: 'Aakash Verma', email: 'aakash@meta.com', phone: '9888777666', date: new Date(Date.now() - 3600000 * 12).toISOString(), type: 'Meta WA Leads', program: 'full-stack-web-development', assignedBDM: 'Abhishek Manager', assignedBDA: 'Muskan Gupta', status: 'New', subStatus: 'QUALIFIED', profession: 'Working Professional', mentor: 'None', duration: 'None', callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }, history: [{ note: 'Lead captured via Meta WhatsApp Ad campaign.', date: new Date().toISOString() }] }
     ];
     saveLeadsToDb(demoLeads);
     alert('Demo CRM Leads seeded successfully with Ads, Organic, and WhatsApp campaigns!');
@@ -913,6 +944,8 @@ export default function AdminDashboard() {
     const experienceIdx = headers.findIndex(h => h.includes('exp') || h.includes('prof') || h.includes('work') || h.includes('job') || h.includes('role'));
     const goalIdx = headers.findIndex(h => h.includes('goal') || h.includes('career') || h.includes('target') || h.includes('why'));
     const contactTimeIdx = headers.findIndex(h => h.includes('time') || h.includes('slot') || h.includes('contact') || h.includes('call') || h.includes('window'));
+    const campaignIdx = headers.findIndex(h => h.includes('campaign') || h.includes('source') || h.includes('utm'));
+    const typeIdx = headers.findIndex(h => h.includes('type') || h.includes('channel') || h.includes('category'));
 
     const parsedRecords = [];
     
@@ -944,12 +977,21 @@ export default function AdminDashboard() {
         const parsedProfession = experienceIdx !== -1 ? cols[experienceIdx] : 'Unspecified';
         const parsedGoal = goalIdx !== -1 ? cols[goalIdx] : 'Unspecified';
         const parsedContactTime = contactTimeIdx !== -1 ? cols[contactTimeIdx] : 'Anytime';
+        const parsedCampaign = campaignIdx !== -1 ? cols[campaignIdx] : '';
+        const parsedType = typeIdx !== -1 ? cols[typeIdx] : '';
+
+        let derivedType = parsedType || parsedCampaign || 'Google Form Leads';
+        if (parsedCampaign.toUpperCase().includes('META/WA') || parsedCampaign.toLowerCase().includes('whatsapp') || parsedCampaign.toLowerCase().includes('meta wa')) {
+          derivedType = parsedCampaign || 'META/WA CAMPAIGN LEADS';
+        }
 
         parsedRecords.push({
           name: parsedName,
           email: emailIdx !== -1 ? cols[emailIdx] : 'no-email@beyondskills.com',
           phone: phoneIdx !== -1 ? cols[phoneIdx] : '0000000000',
           date: dateIdx !== -1 ? cols[dateIdx] : new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+          type: derivedType,
+          campaign: parsedCampaign,
           program: programIdx !== -1 ? cols[programIdx] : 'ai-data-science',
           notes: notesIdx !== -1 ? cols[notesIdx] : 'Synced from sheet',
           college: parsedCollege,
@@ -993,7 +1035,8 @@ export default function AdminDashboard() {
                 email: row.email,
                 phone: row.phone,
                 date: row.date,
-                type: 'Organic Leads',
+                type: row.type || row.campaign || 'Organic Leads',
+                campaign: row.campaign || '',
                 program: row.program,
                 assignedBDM: '',
                 assignedBDA: '',
@@ -1264,10 +1307,13 @@ export default function AdminDashboard() {
 
   // Edit lead action trigger (Opens detailed Lead Details Panel)
   const handleStartEditLead = (lead, idx) => {
+    const attempts = lead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' };
+    const computedSub = lead.subStatus || (['s6', 's5', 's4', 's3', 's2', 's1'].map(k => attempts[k]).find(v => v && v !== '-') || 'QUALIFIED');
     setSelectedLead({
       ...lead,
+      subStatus: computedSub,
       profession: lead.profession || 'Unspecified',
-      callAttempts: lead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' }
+      callAttempts: attempts
     });
     setSelectedLeadIdx(idx);
     setShowEditLeadModal(true);
@@ -1289,11 +1335,15 @@ export default function AdminDashboard() {
       alert('Please select at least one lead from the table!');
       return;
     }
-    const updated = [...leads];
-    selectedLeadIndexes.forEach(idx => {
-      if (bulkBDM) updated[idx].assignedBDM = bulkBDM;
-      if (bulkBDA) updated[idx].assignedBDA = bulkBDA;
-      if (bulkStatus) updated[idx].status = bulkStatus;
+    const updated = leads.map(lead => {
+      if (selectedLeadIndexes.includes(lead.id)) {
+        const updatedLead = { ...lead };
+        if (bulkBDM) updatedLead.assignedBDM = bulkBDM;
+        if (bulkBDA) updatedLead.assignedBDA = bulkBDA;
+        if (bulkStatus) updatedLead.status = bulkStatus;
+        return updatedLead;
+      }
+      return lead;
     });
     saveLeadsToDb(updated);
     setSelectedLeadIndexes([]);
@@ -1501,13 +1551,17 @@ export default function AdminDashboard() {
         : lead.status !== 'Deleted from Sheet';
       
       // Filter by dynamic channel tabs
-      let matchType = filterType ? lead.type === filterType : true;
-      if (leadChannelTab === 'organic') {
-        matchType = lead.type === 'Organic Leads';
+      let matchType = filterType ? (lead.type === filterType || isWhatsAppLead(lead)) : true;
+      if (leadChannelTab === 'organic' || leadChannelTab === 'google') {
+        matchType = (lead.type === 'Organic Leads' || lead.type === 'Google Form Leads') && !isWhatsAppLead(lead);
       } else if (leadChannelTab === 'ads') {
-        matchType = lead.type === 'Ads Leads';
+        matchType = lead.type === 'Ads Leads' && !isWhatsAppLead(lead);
       } else if (leadChannelTab === 'whatsapp') {
-        matchType = lead.type === 'WhatsApp Marketing Leads';
+        if (filterType) {
+          matchType = lead.type === filterType || isWhatsAppLead(lead);
+        } else {
+          matchType = isWhatsAppLead(lead);
+        }
       }
 
       // Filter by dynamic sub-tabs under ads
@@ -1528,7 +1582,8 @@ export default function AdminDashboard() {
 
       const matchBDA = filterBDA ? lead.assignedBDA === filterBDA : true;
       const matchBDM = filterBDM ? lead.assignedBDM === filterBDM : true;
-      const matchSub = filterSubStatus ? lead.subStatus === filterSubStatus : true;
+      const leadSub = lead.subStatus || (lead.callAttempts ? (['s6', 's5', 's4', 's3', 's2', 's1'].map(k => lead.callAttempts[k]).find(v => v && v !== '-') || 'QUALIFIED') : 'QUALIFIED');
+      const matchSub = filterSubStatus ? leadSub === filterSubStatus : true;
       
       let matchDate = true;
       if (filterDateFrom) {
@@ -2199,9 +2254,10 @@ export default function AdminDashboard() {
                   
                   <div className="space-y-3 pt-2 text-xs font-mono">
                     {[
-                      { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads').length },
-                      { name: 'Organic Leads', type: 'Organic Leads', count: accessibleLeads.filter(l => l.type === 'Organic Leads').length },
-                      { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length }
+                      { name: 'Ads Campaign Leads', type: 'Ads Leads', count: accessibleLeads.filter(l => l.type === 'Ads Leads' && !isWhatsAppLead(l)).length },
+                      { name: 'Organic Leads', type: 'Organic Leads', count: accessibleLeads.filter(l => (l.type === 'Organic Leads' || l.type === 'Google Form Leads') && !isWhatsAppLead(l)).length },
+                      { name: 'WhatsApp Marketing Leads', type: 'WhatsApp Marketing Leads', count: accessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads' && !isWhatsAppLead(l)).length },
+                      { name: 'META/WA Campaign Leads', type: 'META/WA CAMPAIGN LEADS', count: accessibleLeads.filter(l => isWhatsAppLead(l)).length }
                     ].map((src, idx) => {
                       const pct = statsTotalLeads > 0 ? ((src.count / statsTotalLeads) * 100).toFixed(1) : 0;
                       return (
@@ -2300,7 +2356,7 @@ export default function AdminDashboard() {
                   <button
                     onClick={() => {
                       setLeadChannelTab('whatsapp');
-                      setFilterType('WhatsApp Marketing Leads');
+                      setFilterType('');
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                       leadChannelTab === 'whatsapp'
@@ -2444,6 +2500,8 @@ export default function AdminDashboard() {
                         <option value="Ads Leads">Ads Leads</option>
                         <option value="Organic Leads">Organic Leads</option>
                         <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
+                        <option value="Meta WA Leads">Meta WA Leads</option>
+                        <option value="META/WA CAMPAIGN LEADS">META/WA CAMPAIGN LEADS</option>
                       </select>
                     </div>
                     <div>
@@ -2626,10 +2684,10 @@ export default function AdminDashboard() {
                           <th className="py-3 px-4">
                             <input 
                               type="checkbox"
-                              checked={selectedLeadIndexes.length === filteredLeads.length}
+                              checked={filteredLeads.length > 0 && filteredLeads.every(l => selectedLeadIndexes.includes(l.id))}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setSelectedLeadIndexes(filteredLeads.map((_, i) => i));
+                                  setSelectedLeadIndexes(filteredLeads.map(l => l.id));
                                 } else {
                                   setSelectedLeadIndexes([]);
                                 }
@@ -2663,12 +2721,12 @@ export default function AdminDashboard() {
                             <td className="py-3.5 px-4" onClick={(e) => e.stopPropagation()}>
                               <input 
                                 type="checkbox"
-                                checked={selectedLeadIndexes.includes(idx)}
+                                checked={selectedLeadIndexes.includes(lead.id)}
                                 onChange={(e) => {
                                   if (e.target.checked) {
-                                    setSelectedLeadIndexes([...selectedLeadIndexes, idx]);
+                                    setSelectedLeadIndexes([...selectedLeadIndexes, lead.id]);
                                   } else {
-                                    setSelectedLeadIndexes(selectedLeadIndexes.filter(i => i !== idx));
+                                    setSelectedLeadIndexes(selectedLeadIndexes.filter(id => id !== lead.id));
                                   }
                                 }}
                                 className="cursor-pointer"
@@ -2715,14 +2773,22 @@ export default function AdminDashboard() {
                               )}
                             </td>
                             <td className="py-3.5 px-4 text-center">
-                              <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wider ${
-                                lead.subStatus === 'QUALIFIED' ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20' :
-                                lead.subStatus === 'DNP' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                                lead.subStatus === 'Already Paid' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/20' :
-                                'bg-white/5 text-slate-300 border border-white/10'
-                              }`}>
-                                {lead.subStatus}
-                              </span>
+                              {(() => {
+                                const currentSub = lead.subStatus || (lead.callAttempts ? (['s6', 's5', 's4', 's3', 's2', 's1'].map(k => lead.callAttempts[k]).find(v => v && v !== '-') || 'QUALIFIED') : 'QUALIFIED');
+                                return (
+                                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded tracking-wider ${
+                                    currentSub === 'QUALIFIED' ? 'bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20' :
+                                    currentSub === 'DNP' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                                    currentSub === 'Already Paid' ? 'bg-[#0EA5E9]/10 text-[#0EA5E9] border border-[#0EA5E9]/20' :
+                                    currentSub === 'CB' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                                    currentSub === 'NI' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
+                                    currentSub === 'CNC' || currentSub === 'SO' || currentSub === 'Switched Off' ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' :
+                                    'bg-white/5 text-slate-300 border border-white/10'
+                                  }`}>
+                                    {currentSub}
+                                  </span>
+                                );
+                              })()}
                             </td>
                             <td className="py-3.5 px-4 text-center">
                               <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded uppercase ${
@@ -2979,12 +3045,12 @@ export default function AdminDashboard() {
                               <label className="flex items-center space-x-3 cursor-pointer">
                                 <input 
                                   type="checkbox"
-                                  checked={selectedLeadIndexes.includes(realIdx)}
+                                  checked={selectedLeadIndexes.includes(lead.id)}
                                   onChange={(e) => {
                                     if (e.target.checked) {
-                                      setSelectedLeadIndexes([...selectedLeadIndexes, realIdx]);
+                                      setSelectedLeadIndexes([...selectedLeadIndexes, lead.id]);
                                     } else {
-                                      setSelectedLeadIndexes(selectedLeadIndexes.filter(i => i !== realIdx));
+                                      setSelectedLeadIndexes(selectedLeadIndexes.filter(id => id !== lead.id));
                                     }
                                   }}
                                   className="cursor-pointer"
@@ -3594,7 +3660,7 @@ export default function AdminDashboard() {
                     setActiveMainTab('leads_manager');
                     setLeadsSubTab('list');
                     setLeadChannelTab('whatsapp');
-                    setFilterType('WhatsApp Marketing Leads');
+                    setFilterType('');
                     setFilterProgram('');
                   }}
                   className="bg-white/5 border border-white/5 p-6 rounded-xl space-y-3 cursor-pointer hover:bg-white/10 hover:border-[#4ADE80]/40 transition-all duration-305 flex flex-col justify-between"
@@ -3603,10 +3669,10 @@ export default function AdminDashboard() {
                     <span className="text-xs font-bold text-slate-300 uppercase tracking-widest font-mono">WhatsApp Campaigns</span>
                     <div className="flex items-baseline space-x-2">
                       <p className="text-4xl font-black text-[#4ADE80]">
-                        {activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length}
+                        {activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length}
                       </p>
                       <span className="text-xs text-slate-400 font-bold font-mono">
-                        ({activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
+                        ({activeAccessibleLeads.length > 0 ? (((activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length) / activeAccessibleLeads.length) * 100).toFixed(1) : 0}%)
                       </span>
                     </div>
                   </div>
@@ -3614,7 +3680,7 @@ export default function AdminDashboard() {
                     <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                       <div 
                         className="bg-[#4ADE80] h-full rounded-full" 
-                        style={{ width: `${activeAccessibleLeads.length > 0 ? (activeAccessibleLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length / activeAccessibleLeads.length) * 100 : 0}%` }}
+                        style={{ width: `${activeAccessibleLeads.length > 0 ? ((activeAccessibleLeads.filter(l => isWhatsAppLead(l)).length) / activeAccessibleLeads.length) * 100 : 0}%` }}
                       ></div>
                     </div>
                     <span className="text-[10px] text-[#4ADE80] uppercase font-mono font-bold tracking-wider hover:underline">Click to view leads &rarr;</span>
@@ -3657,7 +3723,7 @@ export default function AdminDashboard() {
                       const progLeads = activeAccessibleLeads.filter(l => l.program === prog.id);
                       const adsCount = progLeads.filter(l => l.type === 'Ads Leads').length;
                       const formCount = progLeads.filter(l => l.type === 'Google Form Leads').length;
-                      const waCount = progLeads.filter(l => l.type === 'WhatsApp Marketing Leads').length;
+                      const waCount = progLeads.filter(l => isWhatsAppLead(l)).length;
                       const enrolledCount = progLeads.filter(l => l.status === 'Enrolled').length;
                       const conv = progLeads.length > 0 ? ((enrolledCount / progLeads.length) * 100).toFixed(1) : '0.0';
                       const percentageShare = activeAccessibleLeads.length > 0 ? ((progLeads.length / activeAccessibleLeads.length) * 100).toFixed(1) : 0;
@@ -3722,7 +3788,7 @@ export default function AdminDashboard() {
                               setActiveMainTab('leads_manager');
                               setLeadsSubTab('list');
                               setLeadChannelTab('whatsapp');
-                              setFilterType('WhatsApp Marketing Leads');
+                              setFilterType('');
                               setFilterProgram(prog.id);
                             }}
                             className="py-4 px-4 text-center font-mono text-slate-300 hover:text-[#4ADE80] hover:scale-[1.05] transition-all cursor-pointer text-xs sm:text-sm font-semibold"
@@ -4485,6 +4551,8 @@ export default function AdminDashboard() {
                     <option value="Ads Leads">Ads Leads</option>
                     <option value="Organic Leads">Organic Leads</option>
                     <option value="WhatsApp Marketing Leads">WhatsApp Marketing Leads</option>
+                    <option value="Meta WA Leads">Meta WA Leads</option>
+                    <option value="META/WA CAMPAIGN LEADS">META/WA CAMPAIGN LEADS</option>
                   </select>
                 </div>
                 <div>
@@ -4743,6 +4811,26 @@ export default function AdminDashboard() {
                     <option value="Not Interested">Not Interested</option>
                   </select>
                 </div>
+
+                {/* Sub-Status Dropdown */}
+                <div>
+                  <span className="block text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">Sub-Status</span>
+                  <select 
+                    value={selectedLead.subStatus || 'QUALIFIED'}
+                    onChange={(e) => setSelectedLead({ ...selectedLead, subStatus: e.target.value })}
+                    className="bg-[#05092A] border border-white/15 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-semibold cursor-pointer"
+                  >
+                    <option value="QUALIFIED">QUALIFIED</option>
+                    <option value="DNP">DNP (Did Not Pick)</option>
+                    <option value="CB">CB (Call Back)</option>
+                    <option value="NI">NI (Not Interested)</option>
+                    <option value="Switched Off">Switched Off</option>
+                    <option value="CNC">CNC</option>
+                    <option value="WFC">WFC</option>
+                    <option value="NQ">NQ (Not Qualified)</option>
+                    <option value="Already Paid">Already Paid</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -4885,10 +4973,16 @@ export default function AdminDashboard() {
                     <select 
                       value={selectedLead.callAttempts ? selectedLead.callAttempts[status.key] : '-'}
                       onChange={(e) => {
+                        const val = e.target.value;
                         const attempts = selectedLead.callAttempts || { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' };
+                        const newAttempts = { ...attempts, [status.key]: val };
+                        
+                        let updatedSub = val !== '-' ? val : (['s6', 's5', 's4', 's3', 's2', 's1'].map(k => newAttempts[k]).find(v => v && v !== '-') || 'QUALIFIED');
+                        
                         setSelectedLead({
                           ...selectedLead,
-                          callAttempts: { ...attempts, [status.key]: e.target.value }
+                          subStatus: updatedSub,
+                          callAttempts: newAttempts
                         });
                       }}
                       className="w-full bg-[#05092A] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-[#2A4BFF] font-mono cursor-pointer"

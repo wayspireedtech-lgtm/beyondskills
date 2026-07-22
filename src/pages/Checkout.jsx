@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { COURSES, getDbItem, setDbItem } from '../utils/mockDb';
 import { getISTDateTimeString } from '../utils/supabaseClient';
 import { validateEmail, validatePhone } from '../utils/validationHelpers';
+import { sendPaymentReceiptEmail } from '../utils/sendEmail';
 import { ShieldCheck, ShieldAlert, ArrowLeft, Lock, CheckSquare, Square } from 'lucide-react';
 
 // Helper to dynamically load the Razorpay checkout script
@@ -99,7 +100,18 @@ export default function Checkout() {
     });
     setDbItem('beyondskills_payments', payments);
 
-    // 4. Trigger simulated welcome email notifications toast with login credentials
+    // 4. Trigger real Resend email receipt & LMS credentials
+    sendPaymentReceiptEmail({
+      name: form.name,
+      email: form.email,
+      courseTitle: course.title,
+      amount: courseFee,
+      paymentId: paymentId,
+      studentId: targetUser.studentId || newStudentId,
+      password: targetUser.password || generatedPassword
+    });
+
+    // 5. Trigger simulated welcome email notifications toast with login credentials
     window.dispatchEvent(new CustomEvent('beyondskills_toast', {
       detail: {
         subject: `Enrollment Success & Login Credentials`,

@@ -289,7 +289,7 @@ app.post('/api/webhook/leads', async (req, res) => {
       email: email || 'no-email@beyondskills.com',
       phone,
       date: leadDateTimeStr,
-      type: type || 'Organic Leads',
+      type: type || (campaign && (campaign.toUpperCase().includes('META/WA') || campaign.toLowerCase().includes('whatsapp')) ? campaign : 'Organic Leads'),
       program: program || 'artificial-intelligence',
       assignedBDM: '',
       assignedBDA: '',
@@ -624,6 +624,47 @@ app.post('/api/send-email-otp', async (req, res) => {
   } catch (error) {
     console.error('SMTP Email sending error:', error);
     res.status(500).json({ error: 'Failed to send verification email. Please check server SMTP configuration.' });
+  }
+});
+
+/**
+ * Resend Email Proxy Endpoint (Bypasses Browser CORS)
+ * Endpoint: POST /api/send-email
+ */
+app.post('/api/send-email', async (req, res) => {
+  try {
+    const { from, to, subject, html } = req.body;
+    const resendKey = process.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY || 're_2thGk4uo_PDZ6e9vPmAcU1Ytdne4siDAm';
+
+    if (!to || !subject || !html) {
+      return res.status(400).json({ error: 'Missing required parameters (to, subject, html).' });
+    }
+
+    const resendResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: from || 'Beyondskills <contact@beyondskills.in>',
+        to,
+        subject,
+        html,
+      }),
+    });
+
+    const data = await resendResponse.json();
+    if (resendResponse.ok) {
+      console.log('[Resend Server Success]:', data);
+      return res.status(200).json({ success: true, data });
+    } else {
+      console.error('[Resend Server Error]:', data);
+      return res.status(resendResponse.status).json({ success: false, error: data });
+    }
+  } catch (err) {
+    console.error('Server Resend Exception:', err);
+    return res.status(500).json({ error: err.message || err });
   }
 });
 
