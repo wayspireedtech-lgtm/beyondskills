@@ -361,190 +361,112 @@ export default function AdminDashboard() {
     return fallback;
   };
 
+  // ── fetchWebhookLeads ───────────────────────────────────────────────────────
+  // Single source of truth: Google Sheet via /api/leads/sheet
+  // Super admin also sees old Supabase leads merged in.
   const fetchWebhookLeads = async () => {
+    const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:5001'
+      : window.location.origin;
+
+    // ── 1. Fetch new leads from Google Sheet ──────────────────
+    let sheetLeads = [];
     try {
-      // 1. Fetch Google Sheet leads (Master source)
-      let sheetLeads = [];
-      let sheetFetched = false;
+      const res = await fetch(`${apiHost}/api/leads/sheet`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && Array.isArray(json.leads)) {
+          sheetLeads = json.leads.map((row, idx) => {
+            const formSource = row.formSource || 'General Leads';
 
-      // Fetch Ads Leads
-      if (adsSheetUrl) {
-        try {
-          const res = await fetch(adsSheetUrl);
-          if (res.ok) {
-            const csvText = await res.text();
-            const parsed = parseSheetCSV(csvText);
-            parsed.forEach(p => { 
-              if (!p.type || p.type === 'Unspecified' || p.type === 'Google Form Leads') {
-                if (p.campaign && (p.campaign.toUpperCase().includes('META/WA') || p.campaign.toLowerCase().includes('whatsapp'))) {
-                  p.type = p.campaign;
-                } else {
-                  p.type = 'Ads Leads'; 
-                }
-              }
-            });
-            sheetLeads = [...sheetLeads, ...parsed];
-            sheetFetched = true;
-          }
-        } catch (sheetErr) {
-          console.warn('Failed to fetch Ads sheet CSV:', sheetErr);
+            // Derive human-readable lead type from form source
+            let type = 'Organic Leads';
+            if (formSource.toLowerCase().includes('agency'))         type = 'Agency Leads';
+            else if (formSource.toLowerCase().includes('ambassador')) type = 'Campus Ambassador';
+            else if (formSource.toLowerCase().includes('ads'))        type = 'Ads Leads';
+            else if (formSource.toLowerCase().includes('whatsapp') ||
+                     formSource.toLowerCase().includes('meta'))       type = 'WhatsApp / Meta Leads';
+            else if (formSource.toLowerCase().includes('contact'))    type = 'Contact Leads';
+
+            // Map sheet headers → CRM model fields
+            const callAttempts = {
+              s1: row['Call S1'] || '-',
+              s2: row['Call S2'] || '-',
+              s3: row['Call S3'] || '-',
+              s4: row['Call S4'] || '-',
+              s5: row['Call S5'] || '-',
+              s6: row['Call S6'] || '-',
+            };
+
+            return {
+              id: `SH${String(idx + 1).padStart(4, '0')}`,
+              _source: 'sheet',
+              _tabName: formSource,
+              name:         row['Full Name'] || row['name'] || '',
+              phone:        row['Mobile Number'] || row['phone'] || '',
+              email:        row['Email Address'] || row['email'] || '',
+              college:      row['College / Institute'] || row['college'] || 'Unspecified',
+              year:         row['Year of Study'] || row['year'] || '',
+              program:      row['Program of Interest'] || row['program'] || row['Program Selected'] || '',
+              careerGoal:   row['Career Goal'] || row['careerGoal'] || '',
+              goal:         row['Career Goal'] || row['careerGoal'] || 'Unspecified',
+              date:         row['Date & Time (IST)'] || row['date'] || '',
+              type,
+              formSource,
+              // CRM fields from sheet
+              assignedBDM:  row['Assigned BDM'] || '',
+              assignedBDA:  row['Assigned BDA'] || '',
+              status:       row['Status'] || 'New',
+              subStatus:    row['Sub Status'] || 'QUALIFIED',
+              remarks:      row['Remarks'] || '',
+              callAttempts,
+              // Extra form-specific fields
+              role:         row['Current Status'] || '',
+              skillLevel:   row['Current Skill Level'] || '',
+              learningStart:row['When to Start'] || '',
+              stream:       row['Stream / Branch'] || '',
+              city:         row['City'] || '',
+              company:      row['Company Name'] || '',
+              service:      row['Service Required'] || '',
+              experience:   row['Work Experience'] || 'Unspecified',
+              qualification:row['Qualification'] || row['College / Institute'] || 'Unspecified',
+              contactTime:  row['Preferred Contact Time'] || 'Anytime',
+              mentor: 'None',
+              duration: 'None',
+              history: row['Remarks'] ? [{ note: row['Remarks'], date: new Date().toISOString() }] : [],
+            };
+          }).filter(l => l.phone); // skip rows without phone
         }
       }
-
-      // Fetch Google Form Leads
-      if (googleFormSheetUrl) {
-        try {
-          const res = await fetch(googleFormSheetUrl);
-          if (res.ok) {
-            const csvText = await res.text();
-            const parsed = parseSheetCSV(csvText);
-            parsed.forEach(p => { 
-              if (!p.type || p.type === 'Unspecified' || p.type === 'Ads Leads') {
-                if (p.campaign && (p.campaign.toUpperCase().includes('META/WA') || p.campaign.toLowerCase().includes('whatsapp'))) {
-                  p.type = p.campaign;
-                } else {
-                  p.type = 'Organic Leads'; 
-                }
-              }
-            });
-            sheetLeads = [...sheetLeads, ...parsed];
-            sheetFetched = true;
-          }
-        } catch (sheetErr) {
-          console.warn('Failed to fetch Google Form sheet CSV:', sheetErr);
-        }
-      }
-
-      // 2. Fetch leads from Supabase
-      let supabaseLeads = [];
-      try {
-        const { data, error } = await getLeadsFromSupabase();
-        if (!error && data) {
-          supabaseLeads = data;
-        }
-      } catch (sbErr) {
-        console.warn('Failed to fetch from Supabase:', sbErr);
-      }
-
-      // If we couldn't load/fetch the sheet, fallback to show Supabase directly
-      if (!sheetFetched) {
-        if (supabaseLeads.length > 0) {
-          setLeads(supabaseLeads);
-          setDbItem('beyondskills_leads', supabaseLeads);
-        }
-        return;
-      }
-
-      const sheetPhones = new Set(sheetLeads.map(l => l.phone.toString().trim()));
-      
-      // Map leads and mark them as Deleted from Sheet in Supabase if they are missing from sheet
-      let activeLeads = await Promise.all(supabaseLeads.map(async (l) => {
-        const isPresentInSheet = sheetPhones.has(l.phone.toString().trim());
-        if (!isPresentInSheet && l.status !== 'Deleted from Sheet') {
-          const updated = { ...l, status: 'Deleted from Sheet' };
-          try {
-            await updateLeadInSupabase(updated);
-          } catch (err) {
-            console.error('Failed to update deleted lead status in Supabase:', err);
-          }
-          return updated;
-        } else if (isPresentInSheet && l.status === 'Deleted from Sheet') {
-          const updated = { ...l, status: 'New' };
-          try {
-            await updateLeadInSupabase(updated);
-          } catch (err) {
-            console.error('Failed to restore deleted lead status in Supabase:', err);
-          }
-          return updated;
-        }
-        return l;
-      }));
-
-      // Merge sheet leads
-      for (const sLead of sheetLeads) {
-        const phoneKey = sLead.phone.toString().trim();
-        const existingLeadIndex = activeLeads.findIndex(l => l.phone.toString().trim() === phoneKey);
-        
-        if (existingLeadIndex === -1) {
-          // Lead does not exist -> Append
-          const newLead = {
-            id: `LD${String(activeLeads.length + 101).padStart(3, '0')}`,
-            name: sLead.name,
-            email: sLead.email,
-            phone: sLead.phone,
-            date: sLead.date,
-            type: sLead.type || 'Ads Leads',
-            program: sLead.program || 'full-stack-web',
-            assignedBDM: '',
-            assignedBDA: '',
-            status: 'New',
-            subStatus: 'QUALIFIED',
-            profession: sLead.profession || 'Unspecified',
-            college: sLead.college || 'Unspecified',
-            qualification: sLead.qualification || 'Unspecified',
-            experience: sLead.experience || 'Unspecified',
-            contactTime: sLead.contactTime || 'Anytime',
-            goal: sLead.goal || 'Unspecified',
-            mentor: 'None',
-            duration: 'None',
-            callAttempts: { s1: '-', s2: '-', s3: '-', s4: '-', s5: '-', s6: '-' },
-            history: sLead.notes ? [{ note: sLead.notes, date: new Date().toISOString() }] : []
-          };
-          
-          activeLeads.push(newLead);
-          
-          try {
-            await saveLeadToSupabase(newLead);
-          } catch (e) {
-            console.error('Failed to sync new sheet lead to Supabase:', e);
-          }
-        } else {
-          // Lead exists -> Update only unspecified fields
-          const existingLead = activeLeads[existingLeadIndex];
-          let updated = false;
-          const updatedLead = { ...existingLead };
-          
-          if ((!updatedLead.college || updatedLead.college === 'Unspecified') && sLead.college && sLead.college !== 'Unspecified') {
-            updatedLead.college = sLead.college;
-            updatedLead.qualification = sLead.college;
-            updated = true;
-          }
-          if ((!updatedLead.profession || updatedLead.profession === 'Unspecified') && sLead.profession && sLead.profession !== 'Unspecified') {
-            updatedLead.profession = sLead.profession;
-            updatedLead.experience = sLead.profession;
-            updated = true;
-          }
-          if ((!updatedLead.goal || updatedLead.goal === 'Unspecified') && sLead.goal && sLead.goal !== 'Unspecified') {
-            updatedLead.goal = sLead.goal;
-            updated = true;
-          }
-          if ((!updatedLead.contactTime || updatedLead.contactTime === 'Anytime' || updatedLead.contactTime === 'Anytime between 10am to 8pm') && sLead.contactTime && sLead.contactTime !== 'Anytime') {
-            updatedLead.contactTime = sLead.contactTime;
-            updated = true;
-          }
-          if (sLead.email && sLead.email !== 'no-email@beyondskills.com' && (!updatedLead.email || updatedLead.email === 'no-email@beyondskills.com')) {
-            updatedLead.email = sLead.email;
-            updated = true;
-          }
-          
-          if (updated) {
-            activeLeads[existingLeadIndex] = updatedLead;
-            try {
-              await updateLeadInSupabase(updatedLead);
-            } catch (e) {
-              console.error('Failed to update existing lead details from sheet sync:', e);
-            }
-          }
-        }
-      }
-
-      // Set the clean list to state and local storage fallback
-      setLeads(activeLeads);
-      setDbItem('beyondskills_leads', activeLeads);
-    } catch (e) {
-      console.error('Error in fetchWebhookLeads strict sheet sync:', e);
+    } catch (err) {
+      console.warn('[Admin] Sheet fetch failed:', err.message);
     }
+
+    // ── 2. Fetch old Supabase leads (super admin only sees these) ──
+    let supabaseLeads = [];
+    try {
+      const { data, error } = await getLeadsFromSupabase();
+      if (!error && data) {
+        supabaseLeads = data.map(l => ({ ...l, _source: 'supabase' }));
+      }
+    } catch (err) {
+      console.warn('[Admin] Supabase fetch failed:', err.message);
+    }
+
+    // ── 3. Merge: sheet is master; old Supabase leads fill in what isn't in sheet ──
+    const sheetPhones = new Set(sheetLeads.map(l => String(l.phone).trim()));
+    const uniqueSupabase = supabaseLeads.filter(l => !sheetPhones.has(String(l.phone).trim()));
+
+    const merged = [
+      ...sheetLeads,
+      ...uniqueSupabase.map(l => ({ ...l, _source: 'supabase', type: l.type || 'Legacy Lead' }))
+    ];
+
+    setLeads(merged);
+    setDbItem('beyondskills_leads', merged);
   };
+
+
 
   useEffect(() => {
     // Fetch configuration from backend
@@ -816,29 +738,50 @@ export default function AdminDashboard() {
     setLeads(updatedLeads);
     setDbItem('beyondskills_leads', updatedLeads);
 
-    try {
-      if (prevLeads.length === 0) {
-        for (const lead of updatedLeads) {
-          await saveLeadToSupabase(lead);
-        }
-      } else if (updatedLeads.length > prevLeads.length) {
-        const newLeads = updatedLeads.filter(l => !prevLeads.some(pl => pl.id === l.id || pl.phone === l.phone));
-        for (const lead of newLeads) {
-          await saveLeadToSupabase(lead);
-        }
-      } else {
-        const modifiedLeads = updatedLeads.filter(l => {
-          const prev = prevLeads.find(pl => pl.id === l.id);
-          return !prev || JSON.stringify(prev) !== JSON.stringify(l);
-        });
-        for (const lead of modifiedLeads) {
+    const apiHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:5001'
+      : window.location.origin;
+
+    // Find leads that changed
+    const modifiedLeads = updatedLeads.filter(l => {
+      const prev = prevLeads.find(pl => pl.id === l.id || pl.phone === l.phone);
+      return !prev || JSON.stringify(prev) !== JSON.stringify(l);
+    });
+
+    for (const lead of modifiedLeads) {
+      try {
+        if (lead._source === 'sheet' && lead._tabName && lead.phone) {
+          // ── Sheet lead: write CRM columns back to the Google Sheet row ──
+          const ca = lead.callAttempts || {};
+          await fetch(`${apiHost}/api/leads/sheet/update`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone:       lead.phone,
+              tabName:     lead._tabName,
+              assignedBDM: lead.assignedBDM || '',
+              assignedBDA: lead.assignedBDA || '',
+              status:      lead.status || 'New',
+              subStatus:   lead.subStatus || 'QUALIFIED',
+              callS1:      ca.s1 || '-',
+              callS2:      ca.s2 || '-',
+              callS3:      ca.s3 || '-',
+              callS4:      ca.s4 || '-',
+              callS5:      ca.s5 || '-',
+              callS6:      ca.s6 || '-',
+              remarks:     (lead.history || []).map(h => h.note).join(' | ') || lead.remarks || '',
+            })
+          });
+        } else {
+          // ── Legacy Supabase lead: update in Supabase ──
           await updateLeadInSupabase(lead);
         }
+      } catch (err) {
+        console.error(`[saveLeadsToDb] Failed to persist lead ${lead.phone}:`, err.message);
       }
-    } catch (err) {
-      console.error('Failed to sync CRM updates to Supabase:', err);
     }
   };
+
 
   // Seed demo data helper with new campaign categories
   const handleSeedDemoData = () => {

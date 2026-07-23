@@ -208,8 +208,61 @@ app.get('/api/webhook/leads', (req, res) => {
   }
 });
 
+const APPS_SCRIPT_URL =
+  process.env.GOOGLE_FORM_WEBHOOK_URL ||
+  process.env.VITE_GOOGLE_FORM_WEBHOOK_URL ||
+  'https://script.google.com/macros/s/AKfycbw80HBIrQ82auL7y2RtFfYVJqvnaaqWGja-GgY1O05Ffye4f0wCXmsL5CO8gVoJT9JtMA/exec';
+
+// ── GET /api/leads/sheet ─────────────────────────────────────────────────────
+// Reads all leads from all tabs in the Google Sheet via Apps Script doGet.
+// Server-side fetch avoids CORS restrictions in the browser.
+app.get('/api/leads/sheet', async (req, res) => {
+  try {
+    const response = await fetch(APPS_SCRIPT_URL, { method: 'GET' });
+    if (!response.ok) {
+      return res.status(502).json({ error: `Apps Script returned ${response.status}` });
+    }
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error('[Sheet Read] Error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch leads from Google Sheet.' });
+  }
+});
+
+// ── POST /api/leads/sheet/update ─────────────────────────────────────────────
+// Writes assignment / status / call tracking back to the lead's row in the sheet.
+// Body: { phone, tabName, assignedBDM?, assignedBDA?, status?, subStatus?,
+//         callS1?, callS2?, ..., callS6?, remarks? }
+app.post('/api/leads/sheet/update', async (req, res) => {
+  try {
+    const { phone, tabName } = req.body;
+    if (!phone || !tabName) {
+      return res.status(400).json({ error: 'phone and tabName are required.' });
+    }
+
+    const payload = { action: 'updateRow', ...req.body };
+
+    // Fire-and-forget so admin UI is instant; log result in background
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(r => r.json())
+      .then(d => console.log(`[Sheet Update] ${phone} in "${tabName}":`, d))
+      .catch(err => console.error('[Sheet Update] Error:', err.message));
+
+    res.json({ success: true, message: 'Update queued.' });
+  } catch (err) {
+    console.error('[Sheet Update] Handler error:', err.message);
+    res.status(500).json({ error: 'Failed to update lead in Google Sheet.' });
+  }
+});
+
 // POST: Add new lead — forwards directly to Google Sheets only (no local storage)
 app.post('/api/webhook/leads', async (req, res) => {
+
   try {
     const { name, phone } = req.body;
 
