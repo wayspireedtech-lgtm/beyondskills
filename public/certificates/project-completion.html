@@ -112,16 +112,11 @@
   #qrcode-pc canvas, #qrcode-pc img { width: 70px !important; height: 70px !important; }
   .qr-label { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: #9CA3AF; margin-top: 3px; text-align: center; }
 
-  .footer {
-    background: linear-gradient(135deg, #2E1065, #5B21B6);
-    padding: 9px 50px 8px; display: flex; justify-content: space-between;
-    align-items: center; position: relative; z-index: 5;
-    clip-path: polygon(0 22%, 100% 0, 100% 100%, 0 100%);
-    padding-top: 18px; margin-top: 4px;
-  }
-  .footer-text { font-size: 9px; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; }
-  .footer-badges { display: flex; gap: 8px; }
-  .badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); font-size: 7.5px; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase; }
+  .footer { background: linear-gradient(135deg, #2E1065, #5B21B6); padding: 0; position: relative; z-index: 5; clip-path: polygon(0 22%, 100% 0, 100% 100%, 0 100%); margin-top: 4px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; padding: 18px 50px 8px; }
+  .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; line-height: 1.6; }
+  .badge-logos { display: flex; align-items: center; gap: 14px; }
+  .badge-logos img { height: 28px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.75; }
   .bottom-bar { height: 6px; background: linear-gradient(90deg, #7C3AED, #A78BFA, #7C3AED); }
 </style>
 </head>
@@ -200,12 +195,19 @@
   </div>
 
   <div class="footer">
-    <div class="footer-text">www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571</div>
-    <div class="footer-badges">
-      <span class="badge">MSME Reg.</span><span class="badge">Startup India</span><span class="badge">ISO Certified</span>
+    <div class="footer-inner">
+      <div class="footer-text">
+        www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571<br>
+        Verify at: www.beyondskills.in/verify
+      </div>
+      <div class="badge-logos">
+        <img src="/badges/startup_india.png" alt="Startup India" title="Startup India Recognised">
+        <img src="/badges/msme_registered.png" alt="MSME Registered" title="MSME Registered">
+        <img src="/badges/iso_certified.png" alt="ISO Certified" title="ISO 9001:2015 Certified">
+      </div>
     </div>
+    <div class="bottom-bar"></div>
   </div>
-  <div class="bottom-bar"></div>
 </div>
 
 <script>

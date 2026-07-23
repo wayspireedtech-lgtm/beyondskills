@@ -119,9 +119,9 @@
     display: flex; justify-content: space-between; align-items: center;
     margin-top: auto; position: relative; z-index: 5;
   }
-  .footer-text { font-size: 8.5px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
-  .footer-badges { display: flex; gap: 7px; }
-  .badge { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); color: rgba(255,255,255,0.5); font-size: 7.5px; padding: 2px 7px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase; }
+  .footer-text { font-size: 8.5px; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; line-height: 1.6; }
+  .badge-logos { display: flex; align-items: center; gap: 12px; }
+  .badge-logos img { height: 26px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.7; }
   .bottom-bar { height: 5px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
 </style>
 </head>
@@ -236,11 +236,13 @@
   <!-- Footer -->
   <div class="footer">
     <div class="footer-text">
-      BeyondSkills Future-Ready Skills Academy &nbsp;|&nbsp; www.beyondskills.in &nbsp;|&nbsp;
-      Verify at: www.beyondskills.in/verify
+      BeyondSkills Future-Ready Skills Academy &nbsp;|&nbsp; www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in<br>
+      +91 7982119571 &nbsp;|&nbsp; Verify at: www.beyondskills.in/verify
     </div>
-    <div class="footer-badges">
-      <span class="badge">MSME</span><span class="badge">Startup India</span><span class="badge">ISO 9001</span>
+    <div class="badge-logos">
+      <img src="/badges/startup_india.png" alt="Startup India" title="Startup India Recognised">
+      <img src="/badges/msme_registered.png" alt="MSME Registered" title="MSME Registered">
+      <img src="/badges/iso_certified.png" alt="ISO Certified" title="ISO 9001:2015 Certified">
     </div>
   </div>
   <div class="bottom-bar"></div>
