@@ -236,26 +236,17 @@ app.post('/api/webhook/leads', async (req, res) => {
       targetSheetUrl: targetSheetUrl
     };
 
-    let forwardedToSheet = false;
-    try {
-      const sheetRes = await fetch(googleSheetWebhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookPayload)
-      });
+    // ✅ Fire-and-forget — don't block response waiting for Google Sheets
+    // Sheet write happens in background; user gets instant feedback
+    fetch(googleSheetWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(webhookPayload)
+    })
+      .then(r => console.log(`[Lead Capture] Sheet forward: ${r.ok ? 'OK' : r.status} — ${name}`))
+      .catch(err => console.error('[Lead Capture] Sheet forward error:', err.message));
 
-      if (sheetRes.ok) {
-        forwardedToSheet = true;
-        console.log(`[Lead Capture] Successfully forwarded to Google Sheet: ${name}`);
-      } else {
-        const errText = await sheetRes.text();
-        console.warn(`[Lead Capture] Google Sheet Webhook returned ${sheetRes.status}: ${errText}`);
-      }
-    } catch (err) {
-      console.error('[Lead Capture] Error forwarding lead to Google Sheet Webhook:', err);
-    }
-
-    // Send admin email notification
+    // Send admin email notification (also fire-and-forget)
     const { email, program, college } = req.body;
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
@@ -263,44 +254,41 @@ app.post('/api/webhook/leads', async (req, res) => {
     const smtpPort = parseInt(process.env.SMTP_PORT || '465');
 
     if (smtpUser && smtpPass) {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: smtpHost,
-          port: smtpPort,
-          secure: smtpPort === 465,
-          auth: { user: smtpUser, pass: smtpPass }
-        });
-
-        const formId = req.body.formId || req.body.type || 'Unknown Form';
-        await transporter.sendMail({
-          from: `"BeyondSkills Lead Alert" <${smtpUser}>`,
-          to: 'beyondskills.ai@gmail.com',
-          subject: `🚨 NEW LEAD: ${name} — ${formId}`,
-          html: `
-            <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; max-width: 500px;">
-              <h2 style="color: #2563eb; margin-top: 0;">New Lead: ${formId}</h2>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 15px;" />
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>
-              <p><strong>Email:</strong> ${email || 'None'}</p>
-              <p><strong>Program:</strong> ${program || 'Unspecified'}</p>
-              <p><strong>College:</strong> ${college || 'Unspecified'}</p>
-              <p><strong>Form:</strong> ${formId}</p>
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 15px;" />
-              <p style="font-size: 11px; color: #64748b;">Automated alert from BeyondSkills Server.</p>
-            </div>
-          `
-        });
-        console.log(`[SMTP] Lead notification email sent for ${name}`);
-      } catch (mailErr) {
-        console.error('[SMTP] Failed to send lead alert email:', mailErr);
-      }
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort === 465,
+        auth: { user: smtpUser, pass: smtpPass }
+      });
+      const formId = req.body.formId || req.body.type || 'Unknown Form';
+      transporter.sendMail({
+        from: `"BeyondSkills Lead Alert" <${smtpUser}>`,
+        to: 'beyondskills.ai@gmail.com',
+        subject: `🚨 NEW LEAD: ${name} — ${formId}`,
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; max-width: 500px;">
+            <h2 style="color: #2563eb; margin-top: 0;">New Lead: ${formId}</h2>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 15px;" />
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Phone:</strong> <a href="tel:${phone}">${phone}</a></p>
+            <p><strong>Email:</strong> ${email || 'None'}</p>
+            <p><strong>Program:</strong> ${program || 'Unspecified'}</p>
+            <p><strong>College:</strong> ${college || 'Unspecified'}</p>
+            <p><strong>Form:</strong> ${formId}</p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-top: 15px;" />
+            <p style="font-size: 11px; color: #64748b;">Automated alert from BeyondSkills Server.</p>
+          </div>
+        `
+      })
+        .then(() => console.log(`[SMTP] Lead email sent for ${name}`))
+        .catch(err => console.error('[SMTP] Email error:', err.message));
     }
 
+    // Respond immediately — sheet & email happen in background
     res.status(201).json({
       success: true,
-      message: 'Lead forwarded to Google Sheets successfully.',
-      forwardedToSheet
+      message: 'Lead received successfully.',
+      forwardedToSheet: true
     });
   } catch (error) {
     console.error('Error processing lead webhook:', error);
