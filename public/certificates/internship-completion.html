@@ -5,337 +5,184 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Internship Completion Certificate – BeyondSkills</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
-    background: #e8e8e8;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 40px 20px;
-    font-family: 'Outfit', sans-serif;
+    background: #e8e8e8; display: flex; flex-direction: column;
+    align-items: center; min-height: 100vh;
+    padding: 40px 20px; font-family: 'Outfit', sans-serif;
   }
-
   .print-btn {
     position: fixed; top: 20px; right: 20px; z-index: 999;
-    background: #0A8A5E; color: white;
-    border: none; padding: 12px 28px;
-    border-radius: 8px; font-size: 15px;
+    background: #0A8A5E; color: white; border: none;
+    padding: 12px 28px; border-radius: 8px; font-size: 15px;
     font-family: 'Outfit', sans-serif; font-weight: 600;
-    cursor: pointer; box-shadow: 0 4px 15px rgba(10,138,94,0.4);
-    transition: all 0.2s;
+    cursor: pointer; transition: all 0.2s;
   }
   .print-btn:hover { background: #065C3E; transform: translateY(-1px); }
-
   @media print {
     body { background: white; padding: 0; }
     .print-btn { display: none; }
-    .certificate { box-shadow: none; margin: 0; }
     @page { size: A4 landscape; margin: 0; }
   }
 
   .certificate {
-    width: 297mm;
-    min-height: 210mm;
-    background: #fff;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    width: 297mm; min-height: 210mm;
+    background: #fff; position: relative;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
   }
 
-  /* Left accent sidebar */
-  .left-sidebar {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 18px;
-    background: linear-gradient(180deg, #065C3E, #0A8A5E, #14B87E);
-    z-index: 5;
-  }
+  .left-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 16px; background: linear-gradient(180deg, #065C3E, #0A8A5E, #14B87E); z-index: 5; }
+  .right-bar { position: absolute; right: 0; top: 0; bottom: 0; width: 16px; background: linear-gradient(180deg, #065C3E, #0A8A5E, #14B87E); z-index: 5; }
+  .border-outer { position: absolute; top: 8px; left: 22px; right: 22px; bottom: 8px; border: 2.5px solid #0A8A5E; pointer-events: none; z-index: 4; }
+  .border-inner { position: absolute; top: 14px; left: 26px; right: 26px; bottom: 14px; border: 1px solid #A7F3D0; pointer-events: none; z-index: 4; }
 
-  /* Right accent sidebar */
-  .right-sidebar {
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 18px;
-    background: linear-gradient(180deg, #065C3E, #0A8A5E, #14B87E);
-    z-index: 5;
-  }
+  .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 260px; height: 260px; opacity: 0.04; pointer-events: none; z-index: 1; }
 
-  /* Decorative borders */
-  .border-outer {
-    position: absolute; top: 8px; left: 26px; right: 26px; bottom: 8px;
-    border: 2.5px solid #0A8A5E;
-    pointer-events: none; z-index: 4;
-  }
-  .border-inner {
-    position: absolute; top: 14px; left: 30px; right: 30px; bottom: 14px;
-    border: 1px solid #A7F3D0;
-    pointer-events: none; z-index: 4;
-  }
-
-  /* Watermark */
-  .watermark {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 160px; font-weight: 900;
-    color: rgba(10,138,94,0.04);
-    font-family: 'Outfit', sans-serif;
-    letter-spacing: -5px; user-select: none;
-    pointer-events: none; z-index: 1;
-  }
-
-  /* Header */
   .header {
     background: linear-gradient(135deg, #022C22 0%, #065C3E 50%, #0A8A5E 100%);
-    padding: 20px 55px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative; z-index: 3;
+    padding: 16px 50px; display: flex; align-items: center;
+    justify-content: space-between; position: relative; z-index: 5;
   }
 
-  .logo-area { display: flex; align-items: center; gap: 14px; }
-  .logo-area img { height: 42px; filter: brightness(0) invert(1); }
-  .logo-text { color: white; }
-  .logo-text .name { font-size: 22px; font-weight: 700; }
-  .logo-text .tagline { font-size: 9px; letter-spacing: 2px; opacity: 0.7; text-transform: uppercase; }
+  .logo-wrap { background: white; border-radius: 8px; padding: 5px 12px; display: flex; align-items: center; }
+  .logo-wrap img { height: 34px; display: block; }
+  .logo-text-col { margin-left: 12px; }
+  .logo-text-col .org-name { font-size: 20px; font-weight: 700; color: white; }
+  .logo-text-col .tagline { font-size: 8px; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 1px; }
 
-  .internship-badge {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white; padding: 8px 20px;
-    border-radius: 6px; text-align: center;
-  }
-  .internship-badge .label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
-  .internship-badge .value { font-size: 13px; font-weight: 600; margin-top: 2px; }
-  .internship-badge .cert-id { font-size: 8px; opacity: 0.5; font-family: monospace; margin-top: 2px; }
+  .header-badge { text-align: right; color: white; }
+  .header-badge .type { font-size: 8px; letter-spacing: 2px; opacity: 0.6; text-transform: uppercase; }
+  .header-badge .title { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .header-badge .id { font-size: 8px; opacity: 0.4; font-family: monospace; margin-top: 2px; }
 
-  /* Decorative wave */
-  .wave {
-    height: 30px;
-    background: linear-gradient(135deg, #022C22 0%, #065C3E 50%, #0A8A5E 100%);
-    clip-path: polygon(0 0, 100% 0, 100% 0%, 0 100%);
-    position: relative; z-index: 3;
-    margin-bottom: 4px;
-  }
+  .wave { height: 24px; background: linear-gradient(135deg, #022C22 0%, #065C3E 50%, #0A8A5E 100%); clip-path: polygon(0 0, 100% 0, 100% 20%, 0 100%); position: relative; z-index: 3; }
 
-  /* Body */
   .body {
-    padding: 18px 70px 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative; z-index: 3;
+    padding: 12px 60px 10px; display: flex;
+    flex-direction: column; align-items: center; position: relative; z-index: 3;
   }
 
-  .internship-tag {
-    background: linear-gradient(90deg, #0A8A5E, #14B87E);
-    color: white; font-size: 9px; letter-spacing: 3px;
-    text-transform: uppercase; padding: 4px 20px;
-    border-radius: 2px; font-weight: 600;
-    margin-bottom: 10px;
-  }
+  .ribbon { background: linear-gradient(90deg, #0A8A5E, #14B87E); color: white; font-size: 8.5px; letter-spacing: 3px; text-transform: uppercase; padding: 3px 22px; border-radius: 0 0 8px 8px; font-weight: 600; margin-bottom: 8px; }
 
-  .cert-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 38px; font-weight: 700;
-    color: #022C22; text-align: center;
-    line-height: 1.1; margin-bottom: 14px;
-  }
+  .cert-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: #022C22; text-align: center; line-height: 1.1; margin-bottom: 12px; }
 
-  .ornament-row {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 12px; width: 100%; max-width: 420px;
-  }
-  .ornament-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #6EE7B7, transparent); }
-  .ornament-icon { color: #0A8A5E; font-size: 18px; }
+  .divider { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; width: 100%; max-width: 400px; }
+  .div-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #6EE7B7, transparent); }
+  .div-icon { color: #0A8A5E; font-size: 16px; }
 
-  .presented-to {
-    font-size: 11px; letter-spacing: 2px; color: #6B7280;
-    text-transform: uppercase; margin-bottom: 6px;
-  }
+  .presented-to { font-size: 10px; letter-spacing: 2px; color: #6B7280; text-transform: uppercase; margin-bottom: 5px; }
+  .recipient-name { font-family: 'Great Vibes', cursive; font-size: 54px; color: #065C3E; text-align: center; margin-bottom: 3px; }
+  .name-bar { width: 310px; height: 2px; background: linear-gradient(90deg, transparent, #0A8A5E 30%, #14B87E 70%, transparent); margin-bottom: 10px; }
 
-  .recipient-name {
-    font-family: 'Great Vibes', cursive;
-    font-size: 56px; color: #065C3E;
-    text-align: center; margin-bottom: 4px;
-  }
-
-  .underline-bar {
-    width: 320px; height: 2px;
-    background: linear-gradient(90deg, transparent, #0A8A5E 30%, #14B87E 70%, transparent);
-    margin-bottom: 14px;
-  }
-
-  .body-text {
-    font-size: 12.5px; color: #374151;
-    text-align: center; line-height: 1.7;
-    max-width: 600px; margin-bottom: 8px;
-  }
+  .body-text { font-size: 11.5px; color: #374151; text-align: center; line-height: 1.7; max-width: 590px; margin-bottom: 6px; }
 
   .program-badge {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 6px;
     background: linear-gradient(135deg, #022C22, #0A8A5E);
-    color: white; padding: 6px 22px;
-    border-radius: 25px; font-size: 12px; font-weight: 600;
-    margin: 4px 0 12px;
+    color: white; padding: 5px 20px; border-radius: 22px;
+    font-size: 11.5px; font-weight: 600; margin: 3px 0 10px;
   }
 
-  .details-grid {
-    display: flex; gap: 30px; margin-bottom: 16px;
-  }
-  .detail-item { text-align: center; }
-  .detail-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #9CA3AF; }
-  .detail-value { font-size: 13px; font-weight: 700; color: #065C3E; margin-top: 2px; }
+  .meta-row { display: flex; gap: 32px; margin-bottom: 12px; }
+  .meta-item { text-align: center; }
+  .meta-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #9CA3AF; }
+  .meta-value { font-size: 12px; font-weight: 700; color: #065C3E; margin-top: 2px; }
 
-  /* Signatures */
-  .signatures {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
-    padding: 0 20px;
-  }
-  .sig-block { text-align: center; min-width: 150px; }
-  .sig-name-style {
-    font-family: 'Great Vibes', cursive;
-    font-size: 30px; color: #065C3E;
-    line-height: 1; margin-bottom: 4px;
-  }
-  .sig-line { width: 150px; height: 1.5px; background: #D1FAE5; margin: 0 auto 5px; }
-  .sig-name { font-size: 10px; font-weight: 600; color: #1E293B; }
+  .bottom-row { display: flex; align-items: flex-end; justify-content: space-between; width: 100%; padding: 0 8px; }
+
+  .sig-block { text-align: center; min-width: 148px; }
+  .sig-script { font-family: 'Great Vibes', cursive; font-size: 30px; color: #065C3E; line-height: 1; margin-bottom: 4px; }
+  .sig-line { height: 1.5px; background: #D1FAE5; margin: 0 auto 4px; width: 148px; }
+  .sig-name { font-size: 10.5px; font-weight: 700; color: #1E293B; }
   .sig-role { font-size: 8.5px; color: #9CA3AF; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
 
-  .seal-circle {
-    width: 88px; height: 88px; border-radius: 50%;
+  .qr-seal { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .seal {
+    width: 78px; height: 78px; border-radius: 50%;
     background: linear-gradient(135deg, #022C22, #0A8A5E);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
     color: white; border: 3px solid #6EE7B7;
-    box-shadow: 0 4px 15px rgba(10,138,94,0.35);
-    text-align: center; padding: 8px;
+    box-shadow: 0 4px 15px rgba(10,138,94,0.35); text-align: center; padding: 8px;
   }
-  .seal-circle .top { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
-  .seal-circle .year { font-size: 19px; font-weight: 700; line-height: 1; }
-  .seal-circle .bot { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 2px; }
+  .seal .s-top { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .seal .s-year { font-size: 17px; font-weight: 700; line-height: 1; }
+  .seal .s-bot { font-size: 5.5px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 1px; }
 
-  /* Footer */
+  .qr-box { background: white; border: 2px solid #D1FAE5; border-radius: 8px; padding: 5px; display: flex; flex-direction: column; align-items: center; }
+  #qrcode-int canvas, #qrcode-int img { width: 70px !important; height: 70px !important; }
+  .qr-label { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: #9CA3AF; margin-top: 3px; text-align: center; }
+
   .footer {
     background: linear-gradient(135deg, #022C22, #065C3E);
-    padding: 8px 55px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; z-index: 3;
-    margin-top: 8px;
+    padding: 8px 50px; display: flex; justify-content: space-between; align-items: center;
+    position: relative; z-index: 5; margin-top: 6px;
   }
-  .footer::before {
-    content: '';
-    position: absolute; top: -10px; left: 0; right: 0;
-    height: 10px;
-    background: linear-gradient(135deg, #022C22, #065C3E);
-    clip-path: polygon(0 100%, 100% 0, 100% 100%);
-  }
-  .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
-  .footer-badges { display: flex; gap: 10px; }
-  .badge {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: white; font-size: 8px; padding: 3px 8px;
-    border-radius: 4px; letter-spacing: 1px; text-transform: uppercase;
-  }
-
-  .bottom-accent {
-    height: 7px;
-    background: linear-gradient(90deg, #0A8A5E, #14B87E, #0A8A5E);
-  }
+  .footer::before { content: ''; position: absolute; top: -8px; left: 0; right: 0; height: 8px; background: linear-gradient(135deg, #022C22, #065C3E); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+  .footer-text { font-size: 9px; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; }
+  .footer-badges { display: flex; gap: 8px; }
+  .badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); font-size: 7.5px; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase; }
+  .bottom-bar { height: 6px; background: linear-gradient(90deg, #0A8A5E, #14B87E, #0A8A5E); }
 </style>
 </head>
 <body>
 <button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
 
 <div class="certificate">
-  <div class="left-sidebar"></div>
-  <div class="right-sidebar"></div>
-  <div class="border-outer"></div>
-  <div class="border-inner"></div>
-  <div class="watermark">BS</div>
+  <div class="left-bar"></div><div class="right-bar"></div>
+  <div class="border-outer"></div><div class="border-inner"></div>
+  <img class="watermark" src="/logo.png" alt="">
 
   <div class="header">
-    <div class="logo-area">
-      <img src="/logo.png" alt="BeyondSkills" onerror="this.style.display='none'">
-      <div class="logo-text">
-        <div class="name">BeyondSkills</div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-wrap"><img src="/logo.png" alt="BeyondSkills"></div>
+      <div class="logo-text-col">
+        <div class="org-name">BeyondSkills</div>
         <div class="tagline">Future-Ready Skills Academy</div>
       </div>
     </div>
-    <div class="internship-badge">
-      <div class="label">Document Type</div>
-      <div class="value">Internship Certificate</div>
-      <div class="cert-id">Cert ID: BS-INT-2025-<span id="cert-num">0001</span></div>
+    <div class="header-badge">
+      <div class="type">Document Type</div>
+      <div class="title">Internship Completion Certificate</div>
+      <div class="id" id="cert-id-display">Cert ID: BS-INT-2025-XXXX</div>
     </div>
   </div>
   <div class="wave"></div>
 
   <div class="body">
-    <div class="internship-tag">⭐ Certificate of Internship Completion ⭐</div>
+    <div class="ribbon">⭐ Certificate of Internship Completion ⭐</div>
     <div class="cert-title">Internship Completion</div>
-
-    <div class="ornament-row">
-      <div class="ornament-line"></div>
-      <div class="ornament-icon">❧</div>
-      <div class="ornament-line"></div>
-    </div>
+    <div class="divider"><div class="div-line"></div><div class="div-icon">❧</div><div class="div-line"></div></div>
 
     <div class="presented-to">This is to certify that</div>
     <div class="recipient-name">Priya Anjali Nair</div>
-    <div class="underline-bar"></div>
+    <div class="name-bar"></div>
 
-    <div class="body-text">
-      has successfully completed a <strong>Virtual Internship Program</strong> with BeyondSkills in the domain of
-    </div>
+    <div class="body-text">has successfully completed a <strong>Virtual Internship Program</strong> with BeyondSkills in the domain of</div>
     <div class="program-badge">🚀 Full Stack Web Development (MERN)</div>
+    <div class="body-text" style="margin-top:0;">The intern demonstrated exceptional skills, professional conduct, and ability to deliver real-world projects throughout the internship. We commend their dedication and wish them great success.</div>
 
-    <div class="body-text" style="margin-top: 0;">
-      The intern has demonstrated exceptional skills, professional conduct, and the ability to deliver
-      real-world projects during the tenure of the internship. We commend their efforts and wish them
-      great success in their future endeavours.
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-label">Internship Period</div><div class="meta-value">Jan – Jul 2025</div></div>
+      <div class="meta-item"><div class="meta-label">Duration</div><div class="meta-value">6 Months</div></div>
+      <div class="meta-item"><div class="meta-label">Completion Date</div><div class="meta-value">25 July 2025</div></div>
+      <div class="meta-item"><div class="meta-label">Performance</div><div class="meta-value">Excellent</div></div>
     </div>
 
-    <div class="details-grid">
-      <div class="detail-item">
-        <div class="detail-label">Internship Period</div>
-        <div class="detail-value">Jan – Jul 2025</div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-label">Duration</div>
-        <div class="detail-value">6 Months</div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-label">Completion Date</div>
-        <div class="detail-value">25 July 2025</div>
-      </div>
-      <div class="detail-item">
-        <div class="detail-label">Performance</div>
-        <div class="detail-value">Excellent</div>
-      </div>
-    </div>
-
-    <div class="signatures">
+    <div class="bottom-row">
       <div class="sig-block">
-        <div class="sig-name-style">Vishal Singh</div>
+        <div class="sig-script">Hitesh Kumar</div>
         <div class="sig-line"></div>
-        <div class="sig-name">Vishal Singh Chhonkar</div>
-        <div class="sig-role">Founder &amp; Director</div>
+        <div class="sig-name">Hitesh Kumar</div>
+        <div class="sig-role">Business Head</div>
       </div>
-      <div class="seal-circle">
-        <div class="top">Official</div>
-        <div class="year">2025</div>
-        <div class="bot">BeyondSkills</div>
+      <div class="qr-seal">
+        <div class="seal"><div class="s-top">Official</div><div class="s-year">2025</div><div class="s-bot">BeyondSkills</div></div>
+        <div class="qr-box"><div id="qrcode-int"></div><div class="qr-label">Scan to Verify</div></div>
       </div>
       <div class="sig-block">
-        <div class="sig-name-style">HR Head</div>
+        <div class="sig-script">HR Head</div>
         <div class="sig-line"></div>
         <div class="sig-name">Head of Internships</div>
         <div class="sig-role">Career &amp; Placement Cell</div>
@@ -344,19 +191,25 @@
   </div>
 
   <div class="footer">
-    <div class="footer-text">www.beyondskills.ai &nbsp;|&nbsp; internship@beyondskills.ai</div>
+    <div class="footer-text">www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571</div>
     <div class="footer-badges">
-      <span class="badge">MSME Reg.</span>
-      <span class="badge">Startup India</span>
-      <span class="badge">ISO Certified</span>
+      <span class="badge">MSME Reg.</span><span class="badge">Startup India</span><span class="badge">ISO Certified</span>
     </div>
   </div>
-  <div class="bottom-accent"></div>
+  <div class="bottom-bar"></div>
 </div>
 
 <script>
-  const num = String(Math.floor(Math.random() * 9000) + 1000);
-  document.getElementById('cert-num').textContent = num;
+  const ts = Date.now().toString(36).toUpperCase();
+  const rand = Math.random().toString(36).substring(2,6).toUpperCase();
+  const certId = 'BS-INT-2025-' + ts.slice(-4) + rand;
+  document.getElementById('cert-id-display').textContent = 'Cert ID: ' + certId;
+  new QRCode(document.getElementById('qrcode-int'), {
+    text: 'https://www.beyondskills.in/verify?id=' + certId,
+    width: 70, height: 70,
+    colorDark: '#065C3E', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
 </script>
 </body>
 </html>
