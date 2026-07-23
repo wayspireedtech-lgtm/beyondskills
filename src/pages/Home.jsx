@@ -175,7 +175,7 @@ export default function Home() {
     { q: 'How does onboarding work after course purchase?', a: 'Onboarding is fully automated. Within 5 minutes of completing Razorpay checkout, you get a welcome email, unique student ID, and live calendar links.' },
     { q: 'Where is your corporate office located?', a: 'Our office is located at Udyog Vihar, Gurugram, Haryana, India. Candidates are welcome to reach out to our team via email for office hours scheduling.' },
     { q: 'What are the terms and conditions of enrollment?', a: 'By enrolling, students agree to use learning materials strictly for personal education. Sharing logins or commercial distribution of resources is prohibited and will result in termination of access.' },
-    { q: 'What is the return and refund policy?', a: 'We offer a 7-day return policy. If you request a cancellation within 7 days of payment and before attending any live mentor review session, you will receive a full refund. After 7 days, fees are non-refundable.' },
+    { q: 'What is the return and refund policy?', a: 'All purchases and course enrollments are final and strictly non-refundable. Seat bookings, reservation tokens, and course fees cannot be refunded or cancelled once processed under any circumstances.' },
     { q: 'What is the privacy policy of BeyondSkills?', a: 'We process personal details like names, emails, and payment references exclusively to deliver course credentials and handle Razorpay checkouts. Your data is protected under standard encryption and is never shared with third-party marketers.' }
   ];
 

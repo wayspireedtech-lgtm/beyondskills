@@ -96,15 +96,15 @@ export default function ReturnRefundPolicy() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-slate-900 flex items-center space-x-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-brand-purple/10 text-brand-purple font-mono text-xs font-bold">4</span>
-              <span>Exception - Refund for Technical Errors Only</span>
+              <span>Duplicate Charge Technical Correction Only</span>
             </h3>
-            <p>We provide refunds in one specific case:</p>
+            <p>BeyondSkills operates a strict no-refund policy. In the event of a technical duplicate charge, the extra payment is corrected:</p>
             <div className="bg-slate-100 border border-slate-200/60 p-4 rounded-xl flex items-start space-x-3">
               <ShieldAlert className="w-5 h-5 text-brand-purple flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs font-bold text-slate-900 mb-1">Duplicate Payment Verification</p>
+                <p className="text-xs font-bold text-slate-900 mb-1">Duplicate Charge Processing</p>
                 <p className="text-xs text-slate-500">
-                  If you are charged twice for the same transaction due to a network delay or technical failure, the extra transaction value will be refunded. Following payment status verification, the funds will be credited back to your original bank account within 7 to 8 working days.
+                  If your payment source is charged more than once for the same enrollment order due to network gateway timeouts or bank API failures, the extra transaction value will be automatically reversed or refunded after verification. The funds will be processed back to your original payment method within 7 to 8 business days. This does not constitute a refund policy for voluntary withdrawals or cancellations.
                 </p>
               </div>
             </div>
