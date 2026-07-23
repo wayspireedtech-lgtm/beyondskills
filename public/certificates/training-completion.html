@@ -84,7 +84,9 @@
   .footer-inner { display: flex; justify-content: space-between; align-items: center; padding: 8px 44px; }
   .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; line-height: 1.6; }
   .badge-logos { display: flex; align-items: center; gap: 14px; }
-  .badge-logos img { height: 28px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.75; }
+  .badge-logos { display: flex; align-items: center; gap: 10px; }
+  .badge-logo-wrap { background: white; border-radius: 6px; padding: 4px 10px; display: flex; align-items: center; justify-content: center; height: 32px; }
+  .badge-logo-wrap img { height: 22px; width: auto; object-fit: contain; display: block; }
   .bottom-bar { height: 6px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
 </style>
 </head>
@@ -158,9 +160,9 @@
         Verify at: www.beyondskills.in/verify
       </div>
       <div class="badge-logos">
-        <img src="/badges/startup_india.png" alt="Startup India" title="Startup India Recognised">
-        <img src="/badges/msme_registered.png" alt="MSME Registered" title="MSME Registered">
-        <img src="/badges/iso_certified.png" alt="ISO Certified" title="ISO 9001:2015 Certified">
+        <div class="badge-logo-wrap"><img src="/badges/startup_india.png" alt="Startup India"></div>
+        <div class="badge-logo-wrap"><img src="/badges/msme_registered.png" alt="MSME"></div>
+        <div class="badge-logo-wrap"><img src="/badges/iso_certified.png" alt="ISO"></div>
       </div>
     </div>
     <div class="bottom-bar"></div>
@@ -168,9 +170,8 @@
 </div>
 
 <script>
-  const ts = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).substring(2,6).toUpperCase();
-  const certId = 'BS-TC-2025-' + ts.slice(-4) + rand;
+  // Fixed SAMPLE ID — always verifiable at www.beyondskills.in/verify?id=BS-TC-S001
+  const certId = 'BS-TC-S001';
   document.getElementById('cert-id-display').textContent = 'Cert ID: ' + certId;
   new QRCode(document.getElementById('qrcode-tc'), {
     text: 'https://www.beyondskills.in/verify?id=' + certId,
