@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeyondSkills Certificate Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0A0E35; font-family: 'Outfit', sans-serif;
+    min-height: 100vh; padding: 40px 24px;
+    background-image: radial-gradient(ellipse at 20% 30%, rgba(42,75,255,0.15) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 70%, rgba(14,165,233,0.1) 0%, transparent 60%);
+  }
+
+  .page-header { text-align: center; margin-bottom: 48px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px; }
+  .logo-row img { height: 48px; filter: brightness(0) invert(1); }
+  .brand-name { font-size: 28px; font-weight: 700; color: white; }
+  .page-title {
+    font-size: 36px; font-weight: 800; color: white; margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff, #B8C4FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .page-sub { font-size: 15px; color: rgba(255,255,255,0.5); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; overflow: hidden;
+    transition: all 0.3s; cursor: pointer;
+    text-decoration: none;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .card-header {
+    padding: 28px 24px 20px;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative;
+  }
+  .card-icon { font-size: 40px; margin-bottom: 12px; }
+  .card-badge {
+    font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-bottom: 4px;
+  }
+  .card-title {
+    font-size: 18px; font-weight: 700; color: white; text-align: center; margin-bottom: 4px;
+  }
+  .card-sub { font-size: 11px; color: rgba(255,255,255,0.45); text-align: center; }
+
+  .card-body { padding: 16px 24px 24px; }
+  .card-desc { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 16px; }
+
+  .card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .meta-tag {
+    font-size: 10px; padding: 3px 10px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+  }
+
+  .card-footer {
+    padding: 14px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .open-btn {
+    background: white; color: #0A0E35;
+    font-size: 12px; font-weight: 700;
+    padding: 8px 20px; border-radius: 8px;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+  }
+  .card:hover .open-btn { transform: scale(1.03); }
+  .format-tag {
+    font-size: 9px; color: rgba(255,255,255,0.35);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* Card color themes */
+  .blue   .card-header { background: linear-gradient(135deg, #1B2A8A, #2A4BFF); }
+  .green  .card-header { background: linear-gradient(135deg, #065C3E, #0A8A5E); }
+  .purple .card-header { background: linear-gradient(135deg, #2E1065, #7C3AED); }
+  .dark   .card-header { background: linear-gradient(135deg, #0A0E35, #1B2A8A); }
+
+  .blue .open-btn   { background: #2A4BFF; color: white; }
+  .green .open-btn  { background: #0A8A5E; color: white; }
+  .purple .open-btn { background: #7C3AED; color: white; }
+  .dark .open-btn   { background: #1B2A8A; color: white; }
+
+  .footer-note {
+    text-align: center; margin-top: 48px;
+    font-size: 12px; color: rgba(255,255,255,0.25);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+  <div class="page-header">
+    <div class="logo-row">
+      <img src="/logo.png" alt="BeyondSkills" onerror="this.style.display='none'">
+      <div class="brand-name">BeyondSkills</div>
+    </div>
+    <div class="page-title">Certificate Templates</div>
+    <div class="page-sub">Click any template to preview and print as PDF</div>
+  </div>
+
+  <div class="grid">
+    <!-- Training Certificate -->
+    <a class="card blue" href="/certificates/training-completion.html" target="_blank">
+      <div class="card-header">
+        <div class="card-icon">🎓</div>
+        <div class="card-badge">Template 1</div>
+        <div class="card-title">Training Completion</div>
+        <div class="card-sub">Certificate of Achievement</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          Awarded upon successful completion of any BeyondSkills training program including AI/ML, Full Stack, Cloud, Digital Marketing, and Cybersecurity.
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">A4 Landscape</span>
+          <span class="meta-tag">Blue Theme</span>
+          <span class="meta-tag">Print Ready</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="open-btn">Open Template →</div>
+        <div class="format-tag">HTML / PDF</div>
+      </div>
+    </a>
+
+    <!-- Internship Certificate -->
+    <a class="card green" href="/certificates/internship-completion.html" target="_blank">
+      <div class="card-header">
+        <div class="card-icon">💼</div>
+        <div class="card-badge">Template 2</div>
+        <div class="card-title">Internship Completion</div>
+        <div class="card-sub">Virtual Internship Certificate</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          Issued to students and professionals who complete BeyondSkills virtual internship programs with satisfactory performance and project delivery.
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">A4 Landscape</span>
+          <span class="meta-tag">Green Theme</span>
+          <span class="meta-tag">Print Ready</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="open-btn">Open Template →</div>
+        <div class="format-tag">HTML / PDF</div>
+      </div>
+    </a>
+
+    <!-- Project Certificate -->
+    <a class="card purple" href="/certificates/project-completion.html" target="_blank">
+      <div class="card-header">
+        <div class="card-icon">🚀</div>
+        <div class="card-badge">Template 3</div>
+        <div class="card-title">Project Completion</div>
+        <div class="card-sub">Certificate of Project Excellence</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          Recognises the successful completion of a capstone or industry-level project, including the project title, domain, and tech skills demonstrated.
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">A4 Landscape</span>
+          <span class="meta-tag">Purple Theme</span>
+          <span class="meta-tag">Print Ready</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="open-btn">Open Template →</div>
+        <div class="format-tag">HTML / PDF</div>
+      </div>
+    </a>
+
+    <!-- LOR -->
+    <a class="card dark" href="/certificates/lor.html" target="_blank">
+      <div class="card-header">
+        <div class="card-icon">📝</div>
+        <div class="card-badge">Template 4</div>
+        <div class="card-title">Letter of Recommendation</div>
+        <div class="card-sub">Official LOR Document</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">
+          A formal letter from the Director of BeyondSkills recommending a student or intern for employment or higher education, with competencies and achievements.
+        </div>
+        <div class="card-meta">
+          <span class="meta-tag">A4 Portrait</span>
+          <span class="meta-tag">Navy Theme</span>
+          <span class="meta-tag">Print Ready</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="open-btn">Open Template →</div>
+        <div class="format-tag">HTML / PDF</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="footer-note">
+    To save as PDF: Open template → Click "Print / Save PDF" → Choose "Save as PDF" in printer dialog
+  </div>
+</body>
+</html>

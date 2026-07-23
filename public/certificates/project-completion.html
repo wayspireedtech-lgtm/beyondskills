@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Completion Certificate – BeyondSkills</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #e8e8e8;
+    display: flex; justify-content: center;
+    align-items: flex-start; min-height: 100vh;
+    padding: 40px 20px; font-family: 'Outfit', sans-serif;
+  }
+
+  .print-btn {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    background: #7C3AED; color: white; border: none;
+    padding: 12px 28px; border-radius: 8px; font-size: 15px;
+    font-family: 'Outfit', sans-serif; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+    transition: all 0.2s;
+  }
+  .print-btn:hover { background: #5B21B6; transform: translateY(-1px); }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .print-btn { display: none; }
+    @page { size: A4 landscape; margin: 0; }
+  }
+
+  .certificate {
+    width: 297mm; min-height: 210mm;
+    background: #fff; position: relative;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  /* Diagonal accent top-left */
+  .accent-topleft {
+    position: absolute; top: 0; left: 0;
+    width: 200px; height: 200px;
+    background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 50%, transparent 75%);
+    z-index: 2; pointer-events: none;
+  }
+  /* Diagonal accent bottom-right */
+  .accent-bottomright {
+    position: absolute; bottom: 0; right: 0;
+    width: 200px; height: 200px;
+    background: linear-gradient(315deg, #5B21B6 0%, #7C3AED 50%, transparent 75%);
+    z-index: 2; pointer-events: none;
+  }
+
+  /* Decorative border */
+  .border-frame {
+    position: absolute; inset: 14px;
+    border: 2px solid #C4B5FD;
+    pointer-events: none; z-index: 4;
+  }
+
+  /* Circuit-board style corner accents */
+  .corner-accent {
+    position: absolute; width: 50px; height: 50px;
+    z-index: 6; pointer-events: none;
+  }
+  .corner-accent.tl { top: 14px; left: 14px; }
+  .corner-accent.tr { top: 14px; right: 14px; }
+  .corner-accent.bl { bottom: 14px; left: 14px; }
+  .corner-accent.br { bottom: 14px; right: 14px; }
+
+  /* Stars watermark */
+  .watermark {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 140px; font-weight: 900;
+    color: rgba(124,58,237,0.04);
+    pointer-events: none; z-index: 1;
+    white-space: nowrap;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #2E1065 0%, #5B21B6 50%, #7C3AED 100%);
+    padding: 18px 55px 16px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    position: relative; z-index: 5;
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    padding-bottom: 28px;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-area img { height: 42px; filter: brightness(0) invert(1); }
+  .logo-text { color: white; }
+  .logo-text .name { font-size: 22px; font-weight: 700; }
+  .logo-text .tagline { font-size: 9px; letter-spacing: 2px; opacity: 0.7; text-transform: uppercase; }
+
+  .header-badge {
+    text-align: right; color: white;
+  }
+  .header-badge .type { font-size: 9px; letter-spacing: 2px; opacity: 0.65; text-transform: uppercase; }
+  .header-badge .title { font-size: 14px; font-weight: 600; margin-top: 2px; }
+  .header-badge .id { font-size: 8px; opacity: 0.45; font-family: monospace; margin-top: 2px; }
+
+  /* Body */
+  .body {
+    padding: 10px 65px 10px;
+    display: flex; flex-direction: column;
+    align-items: center; position: relative; z-index: 5;
+  }
+
+  .proj-ribbon {
+    background: linear-gradient(90deg, #7C3AED, #A78BFA);
+    color: white; font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; padding: 4px 24px;
+    border-radius: 0 0 8px 8px; font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .cert-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700;
+    color: #2E1065; text-align: center;
+    line-height: 1.1; margin-bottom: 12px;
+  }
+
+  .star-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px; width: 100%; max-width: 400px;
+  }
+  .star-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #C4B5FD, transparent); }
+  .star-icon { color: #7C3AED; font-size: 16px; }
+
+  .presented-to {
+    font-size: 11px; letter-spacing: 2px; color: #6B7280;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+
+  .recipient-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 54px; color: #5B21B6;
+    text-align: center; margin-bottom: 4px;
+  }
+
+  .name-underline {
+    width: 300px; height: 2px;
+    background: linear-gradient(90deg, transparent, #7C3AED 30%, #A78BFA 70%, transparent);
+    margin-bottom: 12px;
+  }
+
+  .body-text {
+    font-size: 12.5px; color: #374151;
+    text-align: center; line-height: 1.7;
+    max-width: 600px; margin-bottom: 8px;
+  }
+
+  .project-box {
+    border: 1.5px solid #C4B5FD;
+    border-radius: 10px; padding: 10px 28px;
+    text-align: center; margin: 8px 0 12px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(167,139,250,0.06));
+  }
+  .project-label { font-size: 9px; letter-spacing: 2px; color: #9CA3AF; text-transform: uppercase; }
+  .project-title { font-size: 15px; font-weight: 700; color: #5B21B6; margin-top: 3px; }
+  .project-domain { font-size: 11px; color: #7C3AED; margin-top: 1px; }
+
+  .skills-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 14px;
+  }
+  .skill-tag {
+    background: rgba(124,58,237,0.08);
+    border: 1px solid #C4B5FD;
+    color: #5B21B6; font-size: 10px;
+    padding: 3px 12px; border-radius: 20px; font-weight: 500;
+  }
+
+  .details-row {
+    display: flex; gap: 35px; margin-bottom: 14px;
+  }
+  .detail-item { text-align: center; }
+  .detail-label { font-size: 9px; letter-spacing: 2px; color: #9CA3AF; text-transform: uppercase; }
+  .detail-value { font-size: 13px; font-weight: 700; color: #5B21B6; margin-top: 2px; }
+
+  /* Signatures */
+  .signatures {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; width: 100%; padding: 0 20px;
+  }
+  .sig-block { text-align: center; min-width: 150px; }
+  .sig-name-style {
+    font-family: 'Great Vibes', cursive;
+    font-size: 30px; color: #5B21B6;
+    line-height: 1; margin-bottom: 4px;
+  }
+  .sig-line { width: 150px; height: 1.5px; background: #EDE9FE; margin: 0 auto 5px; }
+  .sig-name { font-size: 10px; font-weight: 600; color: #1E293B; }
+  .sig-role { font-size: 8.5px; color: #9CA3AF; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+
+  .seal {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, #2E1065, #7C3AED);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    color: white; border: 3px solid #C4B5FD;
+    box-shadow: 0 4px 15px rgba(124,58,237,0.35);
+    text-align: center; padding: 8px;
+  }
+  .seal .top { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .seal .year { font-size: 19px; font-weight: 700; line-height: 1; }
+  .seal .bot { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 2px; }
+
+  /* Footer */
+  .footer {
+    background: linear-gradient(135deg, #2E1065, #5B21B6);
+    padding: 10px 55px;
+    display: flex; justify-content: space-between;
+    align-items: center; position: relative; z-index: 5;
+    clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 100%);
+    padding-top: 22px; margin-top: 6px;
+  }
+  .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+  .footer-badges { display: flex; gap: 10px; }
+  .badge {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; font-size: 8px; padding: 3px 8px;
+    border-radius: 4px; letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  .bottom-bar {
+    height: 6px;
+    background: linear-gradient(90deg, #7C3AED, #A78BFA, #7C3AED);
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+<div class="certificate">
+  <div class="accent-topleft"></div>
+  <div class="accent-bottomright"></div>
+  <div class="border-frame"></div>
+  <div class="watermark">BS</div>
+
+  <div class="header">
+    <div class="logo-area">
+      <img src="/logo.png" alt="BeyondSkills" onerror="this.style.display='none'">
+      <div class="logo-text">
+        <div class="name">BeyondSkills</div>
+        <div class="tagline">Future-Ready Skills Academy</div>
+      </div>
+    </div>
+    <div class="header-badge">
+      <div class="type">Document Type</div>
+      <div class="title">Project Completion Certificate</div>
+      <div class="id">Cert ID: BS-PC-2025-<span id="cert-num">0001</span></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="proj-ribbon">⚡ Certificate of Project Excellence ⚡</div>
+    <div class="cert-title">Project Completion</div>
+
+    <div class="star-divider">
+      <div class="star-line"></div>
+      <div class="star-icon">✦</div>
+      <div class="star-line"></div>
+    </div>
+
+    <div class="presented-to">This is to certify that</div>
+    <div class="recipient-name">Arjun Dev Mehta</div>
+    <div class="name-underline"></div>
+
+    <div class="body-text">has successfully designed, developed and delivered a capstone project under the mentorship of BeyondSkills in the domain of</div>
+
+    <div class="project-box">
+      <div class="project-label">Project Title</div>
+      <div class="project-title">Real-Time Stock Market Prediction System</div>
+      <div class="project-domain">Domain: Artificial Intelligence &amp; Machine Learning</div>
+    </div>
+
+    <div class="skills-row">
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">TensorFlow</span>
+      <span class="skill-tag">LSTM Networks</span>
+      <span class="skill-tag">Data Visualization</span>
+      <span class="skill-tag">REST API</span>
+    </div>
+
+    <div class="details-row">
+      <div class="detail-item">
+        <div class="detail-label">Completion Date</div>
+        <div class="detail-value">25 July 2025</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Duration</div>
+        <div class="detail-value">45 Days</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Grade</div>
+        <div class="detail-value">A+ (Outstanding)</div>
+      </div>
+    </div>
+
+    <div class="signatures">
+      <div class="sig-block">
+        <div class="sig-name-style">Vishal Singh</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Vishal Singh Chhonkar</div>
+        <div class="sig-role">Founder &amp; Director</div>
+      </div>
+      <div class="seal">
+        <div class="top">Official</div>
+        <div class="year">2025</div>
+        <div class="bot">BeyondSkills</div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-name-style">Project Lead</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Technical Lead</div>
+        <div class="sig-role">Projects &amp; R&amp;D Division</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">www.beyondskills.ai &nbsp;|&nbsp; projects@beyondskills.ai</div>
+    <div class="footer-badges">
+      <span class="badge">MSME Reg.</span>
+      <span class="badge">Startup India</span>
+      <span class="badge">ISO Certified</span>
+    </div>
+  </div>
+  <div class="bottom-bar"></div>
+</div>
+
+<script>
+  const num = String(Math.floor(Math.random() * 9000) + 1000);
+  document.getElementById('cert-num').textContent = num;
+</script>
+</body>
+</html>
