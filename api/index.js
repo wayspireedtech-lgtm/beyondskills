@@ -243,17 +243,16 @@ app.post('/api/leads/sheet/update', async (req, res) => {
 
     const payload = { action: 'updateRow', ...req.body };
 
-    // Fire-and-forget so admin UI is instant; log result in background
-    fetch(APPS_SCRIPT_URL, {
+    // Await the Apps Script so the write is confirmed before responding
+    const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    })
-      .then(r => r.json())
-      .then(d => console.log(`[Sheet Update] ${phone} in "${tabName}":`, d))
-      .catch(err => console.error('[Sheet Update] Error:', err.message));
+    });
+    const data = await response.json();
+    console.log(`[Sheet Update] ${phone} in "${tabName}":`, data);
 
-    res.json({ success: true, message: 'Update queued.' });
+    res.json({ success: true, ...data });
   } catch (err) {
     console.error('[Sheet Update] Handler error:', err.message);
     res.status(500).json({ error: 'Failed to update lead in Google Sheet.' });
