@@ -182,6 +182,13 @@ app.get('/api/config', (req, res) => {
 // POST: Save config settings
 app.post('/api/config', (req, res) => {
   try {
+    const adminEmail = req.headers['x-admin-email'];
+    const adminRole = req.headers['x-admin-role'];
+
+    if (adminEmail !== 'beyondskills.ai@gmail.com' || adminRole !== 'Admin') {
+      return res.status(403).json({ error: 'Unauthorized: Only the super administrator can update application configuration.' });
+    }
+
     const { googleSheetWebhookUrl, googleFormSheetUrl, adsSheetUrl } = req.body;
     const config = readJsonFileSync(CONFIG_FILE, {});
     
@@ -236,6 +243,12 @@ app.get('/api/leads/sheet', async (req, res) => {
 //         callS1?, callS2?, ..., callS6?, remarks? }
 app.post('/api/leads/sheet/update', async (req, res) => {
   try {
+    const adminEmail = req.headers['x-admin-email'];
+    const adminRole = req.headers['x-admin-role'];
+    if (!adminEmail || !['Admin', 'BDA', 'BDM', 'Sales Head'].includes(adminRole)) {
+      return res.status(403).json({ error: 'Unauthorized: Insufficient permissions to update leads.' });
+    }
+
     const { phone, tabName } = req.body;
     if (!phone || !tabName) {
       return res.status(400).json({ error: 'phone and tabName are required.' });
@@ -564,7 +577,11 @@ app.post('/api/send-email-otp', async (req, res) => {
 app.post('/api/send-email', async (req, res) => {
   try {
     const { from, to, subject, html } = req.body;
-    const resendKey = process.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY || 're_2thGk4uo_PDZ6e9vPmAcU1Ytdne4siDAm';
+    const resendKey = process.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY;
+
+    if (!resendKey) {
+      return res.status(500).json({ error: 'Resend API key is not configured on this server.' });
+    }
 
     if (!to || !subject || !html) {
       return res.status(400).json({ error: 'Missing required parameters (to, subject, html).' });

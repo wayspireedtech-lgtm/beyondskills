@@ -604,6 +604,7 @@ export default function CourseDetails() {
                 src={COURSE_IMAGES[course.id] || COURSE_IMAGES['ai-ml']} 
                 alt={course.title}
                 className="w-10 h-10 object-cover rounded-lg hidden sm:block border border-slate-100 flex-shrink-0"
+                loading="lazy"
               />
               <div className="truncate">
                 <h4 className="text-xs font-extrabold text-slate-900 truncate leading-tight font-mono uppercase tracking-wide">

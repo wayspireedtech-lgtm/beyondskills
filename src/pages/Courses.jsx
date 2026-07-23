@@ -35,7 +35,13 @@ export default function Courses() {
     const idParam = searchParams.get('id');
     
     if (catParam) {
-      setSelectedCat(catParam);
+      let normalizedCat = catParam;
+      if (['AI/ML/DS/DA', 'Full Stack Development', 'Cyber Security', 'Cloud Computing'].includes(catParam)) {
+        normalizedCat = 'Tech';
+      } else if (['Digital Marketing', 'Stock Market'].includes(catParam)) {
+        normalizedCat = 'Marketing';
+      }
+      setSelectedCat(normalizedCat);
     } else {
       setSelectedCat('All');
     }

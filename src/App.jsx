@@ -208,7 +208,7 @@ export default function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/register/signin" element={<Auth />} />
-            <Route path="/regsiter/signin" element={<Auth />} />
+            <Route path="/regsiter/signin" element={<Navigate to="/register/signin" replace />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/onboarding" element={<Onboarding />} />

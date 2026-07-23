@@ -47,7 +47,7 @@ export default function Blog() {
           {filteredBlogs.map((blog) => (
             <div key={blog.id} className="glass-card rounded-2xl overflow-hidden flex flex-col justify-between border border-slate-200/60 hover:border-brand-purple/30 transition-all hover:scale-[1.01]">
               <div>
-                <img src={blog.image} alt={blog.title} className="w-full h-48 object-cover border-b border-slate-200/60" />
+                <img src={blog.image} alt={blog.title} className="w-full h-48 object-cover border-b border-slate-200/60" loading="lazy" />
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[9px] font-bold tracking-widest text-brand-purple bg-brand-purple/10 border border-brand-purple/30 px-2.5 py-0.5 rounded uppercase">
@@ -86,7 +86,7 @@ export default function Blog() {
                 <X className="w-5 h-5" />
               </button>
               
-              <img src={selectedBlog.image} alt={selectedBlog.title} className="w-full h-64 object-cover border-b border-slate-200" />
+              <img src={selectedBlog.image} alt={selectedBlog.title} className="w-full h-64 object-cover border-b border-slate-200" loading="lazy" />
               
               <div className="p-8">
                 <div className="flex items-center space-x-4 mb-4 text-xs">

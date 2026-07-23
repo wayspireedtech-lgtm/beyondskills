@@ -298,7 +298,9 @@ export default function AdminDashboard() {
       await fetch(`${apiHost}/api/config`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Admin-Email': currentUser?.email || '',
+          'X-Admin-Role': currentUser?.role || ''
         },
         body: JSON.stringify({ googleSheetWebhookUrl: url })
       });
@@ -317,7 +319,9 @@ export default function AdminDashboard() {
       await fetch(`${apiHost}/api/config`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Admin-Email': currentUser?.email || '',
+          'X-Admin-Role': currentUser?.role || ''
         },
         body: JSON.stringify({ googleFormSheetUrl: url })
       });
@@ -336,7 +340,9 @@ export default function AdminDashboard() {
       await fetch(`${apiHost}/api/config`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-Admin-Email': currentUser?.email || '',
+          'X-Admin-Role': currentUser?.role || ''
         },
         body: JSON.stringify({ adsSheetUrl: url })
       });
@@ -753,9 +759,13 @@ export default function AdminDashboard() {
         if (lead._source === 'sheet' && lead._tabName && lead.phone) {
           // ── Sheet lead: write CRM columns back to the Google Sheet row ──
           const ca = lead.callAttempts || {};
-          await fetch(`${apiHost}/api/leads/sheet/update`, {
+           await fetch(`${apiHost}/api/leads/sheet/update`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-Admin-Email': currentUser?.email || '',
+              'X-Admin-Role': currentUser?.role || ''
+            },
             body: JSON.stringify({
               phone:       lead.phone,
               tabName:     lead._tabName,
