@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Completion Certificate – BeyondSkills</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #e8e8e8; display: flex; flex-direction: column;
+    align-items: center; min-height: 100vh;
+    padding: 40px 20px; font-family: 'Outfit', sans-serif;
+  }
+  .print-btn {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    background: #7C3AED; color: white; border: none;
+    padding: 12px 28px; border-radius: 8px; font-size: 15px;
+    font-family: 'Outfit', sans-serif; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .print-btn:hover { background: #5B21B6; transform: translateY(-1px); }
+  @media print {
+    body { background: white; padding: 0; }
+    .print-btn { display: none; }
+    @page { size: A4 landscape; margin: 0; }
+  }
+
+  .certificate {
+    width: 297mm; min-height: 210mm;
+    background: #fff; position: relative;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .accent-tl { position: absolute; top: 0; left: 0; width: 180px; height: 180px; background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 50%, transparent 75%); z-index: 2; pointer-events: none; }
+  .accent-br { position: absolute; bottom: 0; right: 0; width: 180px; height: 180px; background: linear-gradient(315deg, #5B21B6 0%, #7C3AED 50%, transparent 75%); z-index: 2; pointer-events: none; }
+  .border-frame { position: absolute; inset: 14px; border: 2px solid #C4B5FD; pointer-events: none; z-index: 4; }
+  .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 250px; height: 250px; opacity: 0.04; pointer-events: none; z-index: 1; }
+
+  .header {
+    background: linear-gradient(135deg, #2E1065 0%, #5B21B6 50%, #7C3AED 100%);
+    padding: 16px 48px 26px; display: flex; align-items: center;
+    justify-content: space-between; position: relative; z-index: 5;
+    clip-path: polygon(0 0, 100% 0, 100% 78%, 0 100%);
+  }
+
+  .logo-wrap { background: white; border-radius: 8px; padding: 5px 12px; display: flex; align-items: center; }
+  .logo-wrap img { height: 34px; display: block; }
+  .logo-text-col { margin-left: 12px; }
+  .logo-text-col .org-name { font-size: 20px; font-weight: 700; color: white; }
+  .logo-text-col .tagline { font-size: 8px; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 1px; }
+
+  .header-badge { text-align: right; color: white; }
+  .header-badge .type { font-size: 8px; letter-spacing: 2px; opacity: 0.6; text-transform: uppercase; }
+  .header-badge .title { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .header-badge .id { font-size: 8px; opacity: 0.4; font-family: monospace; margin-top: 2px; }
+
+  .body {
+    padding: 8px 55px 10px; display: flex;
+    flex-direction: column; align-items: center; position: relative; z-index: 5;
+  }
+
+  .proj-ribbon { background: linear-gradient(90deg, #7C3AED, #A78BFA); color: white; font-size: 8.5px; letter-spacing: 3px; text-transform: uppercase; padding: 3px 22px; border-radius: 0 0 8px 8px; font-weight: 600; margin-bottom: 8px; }
+
+  .cert-title { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: #2E1065; text-align: center; line-height: 1.1; margin-bottom: 10px; }
+
+  .divider { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; width: 100%; max-width: 380px; }
+  .div-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #C4B5FD, transparent); }
+  .div-icon { color: #7C3AED; font-size: 14px; }
+
+  .presented-to { font-size: 10px; letter-spacing: 2px; color: #6B7280; text-transform: uppercase; margin-bottom: 5px; }
+  .recipient-name { font-family: 'Great Vibes', cursive; font-size: 52px; color: #5B21B6; text-align: center; margin-bottom: 3px; }
+  .name-bar { width: 300px; height: 2px; background: linear-gradient(90deg, transparent, #7C3AED 30%, #A78BFA 70%, transparent); margin-bottom: 10px; }
+
+  .body-text { font-size: 11.5px; color: #374151; text-align: center; line-height: 1.7; max-width: 590px; margin-bottom: 5px; }
+
+  .project-box { border: 1.5px solid #C4B5FD; border-radius: 10px; padding: 8px 24px; text-align: center; margin: 6px 0 8px; background: linear-gradient(135deg, rgba(124,58,237,0.04), rgba(167,139,250,0.05)); }
+  .project-label { font-size: 8.5px; letter-spacing: 2px; color: #9CA3AF; text-transform: uppercase; }
+  .project-title { font-size: 14px; font-weight: 700; color: #5B21B6; margin-top: 2px; }
+  .project-domain { font-size: 10.5px; color: #7C3AED; margin-top: 1px; }
+
+  .skills-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+  .skill-tag { background: rgba(124,58,237,0.07); border: 1px solid #C4B5FD; color: #5B21B6; font-size: 9.5px; padding: 2px 10px; border-radius: 20px; font-weight: 500; }
+
+  .meta-row { display: flex; gap: 32px; margin-bottom: 10px; }
+  .meta-item { text-align: center; }
+  .meta-label { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #9CA3AF; }
+  .meta-value { font-size: 12px; font-weight: 700; color: #5B21B6; margin-top: 2px; }
+
+  .bottom-row { display: flex; align-items: flex-end; justify-content: space-between; width: 100%; padding: 0 8px; }
+
+  .sig-block { text-align: center; min-width: 148px; }
+  .sig-script { font-family: 'Great Vibes', cursive; font-size: 30px; color: #5B21B6; line-height: 1; margin-bottom: 4px; }
+  .sig-line { height: 1.5px; background: #EDE9FE; margin: 0 auto 4px; width: 148px; }
+  .sig-name { font-size: 10.5px; font-weight: 700; color: #1E293B; }
+  .sig-role { font-size: 8.5px; color: #9CA3AF; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+
+  .qr-seal { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .seal {
+    width: 78px; height: 78px; border-radius: 50%;
+    background: linear-gradient(135deg, #2E1065, #7C3AED);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; border: 3px solid #C4B5FD;
+    box-shadow: 0 4px 15px rgba(124,58,237,0.35); text-align: center; padding: 8px;
+  }
+  .seal .s-top { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .seal .s-year { font-size: 17px; font-weight: 700; line-height: 1; }
+  .seal .s-bot { font-size: 5.5px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 1px; }
+
+  .qr-box { background: white; border: 2px solid #EDE9FE; border-radius: 8px; padding: 5px; display: flex; flex-direction: column; align-items: center; }
+  #qrcode-pc canvas, #qrcode-pc img { width: 70px !important; height: 70px !important; }
+  .qr-label { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: #9CA3AF; margin-top: 3px; text-align: center; }
+
+  .footer { background: linear-gradient(135deg, #2E1065, #5B21B6); padding: 0; position: relative; z-index: 5; clip-path: polygon(0 22%, 100% 0, 100% 100%, 0 100%); margin-top: 4px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; padding: 18px 50px 8px; }
+  .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; line-height: 1.6; }
+  .badge-logos { display: flex; align-items: center; gap: 10px; }
+  .badge-logo-wrap { background: white; border-radius: 6px; padding: 4px 10px; display: flex; align-items: center; justify-content: center; height: 32px; }
+  .badge-logo-wrap img { height: 22px; width: auto; object-fit: contain; display: block; }
+  .bottom-bar { height: 6px; background: linear-gradient(90deg, #7C3AED, #A78BFA, #7C3AED); }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+<div class="certificate">
+  <div class="accent-tl"></div><div class="accent-br"></div>
+  <div class="border-frame"></div>
+  <img class="watermark" src="/logo.png" alt="">
+
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-wrap"><img src="/logo.png" alt="BeyondSkills"></div>
+      <div class="logo-text-col">
+        <div class="org-name">BeyondSkills</div>
+        <div class="tagline">Future-Ready Skills Academy</div>
+      </div>
+    </div>
+    <div class="header-badge">
+      <div class="type">Document Type</div>
+      <div class="title">Project Completion Certificate</div>
+      <div class="id" id="cert-id-display">Cert ID: BS-PC-2025-XXXX</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="proj-ribbon">⚡ Certificate of Project Excellence ⚡</div>
+    <div class="cert-title">Project Completion</div>
+    <div class="divider"><div class="div-line"></div><div class="div-icon">✦</div><div class="div-line"></div></div>
+
+    <div class="presented-to">This is to certify that</div>
+    <div class="recipient-name">Arjun Dev Mehta</div>
+    <div class="name-bar"></div>
+
+    <div class="body-text">has successfully designed, developed and delivered a capstone project under the mentorship of BeyondSkills in the domain of</div>
+
+    <div class="project-box">
+      <div class="project-label">Project Title</div>
+      <div class="project-title">Real-Time Stock Market Prediction System</div>
+      <div class="project-domain">Domain: Artificial Intelligence &amp; Machine Learning</div>
+    </div>
+
+    <div class="skills-row">
+      <span class="skill-tag">Python</span>
+      <span class="skill-tag">TensorFlow</span>
+      <span class="skill-tag">LSTM Networks</span>
+      <span class="skill-tag">Data Visualization</span>
+      <span class="skill-tag">REST API</span>
+    </div>
+
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-label">Completion Date</div><div class="meta-value">25 July 2025</div></div>
+      <div class="meta-item"><div class="meta-label">Duration</div><div class="meta-value">45 Days</div></div>
+      <div class="meta-item"><div class="meta-label">Grade</div><div class="meta-value">A+ (Outstanding)</div></div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="sig-block">
+        <div class="sig-script">Hitesh Kumar</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Hitesh Kumar</div>
+        <div class="sig-role">Business Head</div>
+      </div>
+      <div class="qr-seal">
+        <div class="seal"><div class="s-top">Official</div><div class="s-year">2025</div><div class="s-bot">BeyondSkills</div></div>
+        <div class="qr-box"><div id="qrcode-pc"></div><div class="qr-label">Scan to Verify</div></div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-script">Tech Lead</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Technical Lead</div>
+        <div class="sig-role">Projects &amp; R&amp;D Division</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571<br>
+        Verify at: www.beyondskills.in/verify
+      </div>
+      <div class="badge-logos">
+        <div class="badge-logo-wrap"><img src="/badges/startup_india.png" alt="Startup India"></div>
+        <div class="badge-logo-wrap"><img src="/badges/msme_registered.png" alt="MSME"></div>
+        <div class="badge-logo-wrap"><img src="/badges/iso_certified.png" alt="ISO"></div>
+      </div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+</div>
+
+<script>
+  // Fixed SAMPLE ID — always verifiable at www.beyondskills.in/verify?id=BS-PC-S001
+  const certId = 'BS-PC-S001';
+  document.getElementById('cert-id-display').textContent = 'Cert ID: ' + certId;
+  new QRCode(document.getElementById('qrcode-pc'), {
+    text: 'https://www.beyondskills.in/verify?id=' + certId,
+    width: 70, height: 70,
+    colorDark: '#5B21B6', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>

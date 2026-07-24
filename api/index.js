@@ -6,9 +6,25 @@ import crypto from 'crypto';
 import fs from 'fs';
 import nodemailer from 'nodemailer';
 import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 // Load environment variables from .env
 dotenv.config();
+
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+let supabase = null;
+if (supabaseUrl && supabaseAnonKey) {
+  try {
+    supabase = createClient(supabaseUrl, supabaseAnonKey);
+    console.log('[Supabase Server] Client initialized successfully!');
+  } catch (error) {
+    console.error('[Supabase Server] Failed to initialize client:', error);
+  }
+} else {
+  console.warn('[WARNING] Supabase server-side client is disabled because VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is missing.');
+}
 
 const app = express();
 app.use(cors());
@@ -612,6 +628,47 @@ app.post('/api/send-email', async (req, res) => {
   } catch (err) {
     console.error('Server Resend Exception:', err);
     return res.status(500).json({ error: err.message || err });
+  }
+});
+
+/**
+ * Supabase Keep-Alive Endpoint
+ * Endpoint: GET /api/keep-alive
+ * Return HTTP 200 and trigger a read query on Supabase leads table to prevent auto-pausing.
+ */
+app.get('/api/keep-alive', async (req, res) => {
+  try {
+    console.log('[Keep-Alive] Request received.');
+    if (!supabase) {
+      console.warn('[Keep-Alive Warning] Supabase client is not initialized.');
+      return res.status(200).json({
+        success: false,
+        message: 'Keep-alive endpoint called, but Supabase client is not initialized (mock mode/missing envs).'
+      });
+    }
+
+    // Fast, lightweight query to check the database connection and trigger activity.
+    // Querying leads table to retrieve just 1 record's id, which is a safe, read-only operation.
+    const { data, error } = await supabase
+      .from('leads')
+      .select('id')
+      .limit(1);
+
+    if (error) {
+      console.error('[Keep-Alive Error] Supabase ping failed:', error.message);
+      return res.status(500).json({ error: 'Database ping failed.', details: error.message });
+    }
+
+    console.log('[Keep-Alive Success] Database pinged successfully.');
+    res.status(200).json({
+      success: true,
+      message: 'Supabase project is active.',
+      ping: 'success',
+      timestamp: new Date().toISOString()
+    });
+  } catch (err) {
+    console.error('[Keep-Alive Exception]:', err.message || err);
+    res.status(500).json({ error: 'Internal server error during keep-alive.', details: err.message || err });
   }
 });
 

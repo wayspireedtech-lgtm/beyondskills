@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Completion Certificate – BeyondSkills</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #e8e8e8; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 40px 20px; font-family: 'Outfit', sans-serif; }
+  .print-btn { position: fixed; top: 20px; right: 20px; z-index: 999; background: #2A4BFF; color: white; border: none; padding: 12px 28px; border-radius: 8px; font-size: 15px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(42,75,255,0.4); transition: all 0.2s; }
+  .print-btn:hover { background: #1B2A8A; transform: translateY(-1px); }
+  @media print { body { background: white; padding: 0; } .print-btn { display: none; } .certificate { box-shadow: none; } @page { size: A4 landscape; margin: 0; } }
+
+  .certificate { width: 297mm; min-height: 210mm; background: #fff; position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+
+  .border-outer { position: absolute; inset: 12px; border: 3px solid #1B2A8A; pointer-events: none; z-index: 10; }
+  .border-inner { position: absolute; inset: 18px; border: 1px solid #B8C4FF; pointer-events: none; z-index: 10; }
+
+  .corner { position: absolute; width: 55px; height: 55px; z-index: 11; pointer-events: none; }
+  .corner.tl { top: 8px; left: 8px; } .corner.tr { top: 8px; right: 8px; transform: scaleX(-1); }
+  .corner.bl { bottom: 8px; left: 8px; transform: scaleY(-1); } .corner.br { bottom: 8px; right: 8px; transform: scale(-1,-1); }
+
+  .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 240px; height: 240px; opacity: 0.04; pointer-events: none; z-index: 1; }
+
+  .top-bar { height: 8px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
+
+  .header { background: linear-gradient(135deg, #0A0E35 0%, #1B2A8A 60%, #2A4BFF 100%); padding: 14px 44px 20px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); }
+
+  .logo-wrap { background: white; border-radius: 7px; padding: 5px 12px; display: flex; align-items: center; }
+  .logo-wrap img { height: 34px; display: block; }
+  .logo-text-col { margin-left: 12px; }
+  .logo-text-col .org-name { font-size: 20px; font-weight: 700; color: white; }
+  .logo-text-col .tagline { font-size: 8px; letter-spacing: 2px; color: rgba(255,255,255,0.65); text-transform: uppercase; margin-top: 1px; }
+
+  .header-right { text-align: right; color: white; }
+  .cert-type-label { font-size: 8px; letter-spacing: 2.5px; text-transform: uppercase; opacity: 0.6; }
+  .cert-type-title { font-size: 13px; font-weight: 600; margin-top: 2px; }
+  .cert-id-tag { font-size: 8px; font-family: monospace; opacity: 0.45; margin-top: 3px; }
+
+  .body { padding: 18px 50px 10px; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+
+  .cert-headline { font-family: 'Playfair Display', serif; font-size: 11px; letter-spacing: 5px; text-transform: uppercase; color: #2A4BFF; margin-bottom: 4px; font-style: italic; }
+  .cert-main-title { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; color: #0A0E35; text-align: center; line-height: 1.1; margin-bottom: 12px; }
+
+  .divider { display: flex; align-items: center; gap: 14px; width: 100%; max-width: 440px; margin-bottom: 10px; }
+  .div-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #B8C4FF, transparent); }
+  .div-gem { color: #2A4BFF; font-size: 13px; }
+
+  .presented-to { font-size: 10px; letter-spacing: 2px; color: #64748B; text-transform: uppercase; margin-bottom: 5px; }
+  .recipient-name { font-family: 'Great Vibes', cursive; font-size: 54px; color: #1B2A8A; text-align: center; line-height: 1.1; margin-bottom: 3px; }
+  .name-bar { width: 340px; height: 2px; background: linear-gradient(90deg, transparent, #2A4BFF 30%, #0EA5E9 70%, transparent); margin-bottom: 10px; }
+
+  .body-text { font-size: 12px; color: #374151; text-align: center; line-height: 1.7; max-width: 590px; margin-bottom: 5px; }
+  .program-pill { display: inline-block; background: linear-gradient(135deg, #1B2A8A, #2A4BFF); color: white; padding: 5px 22px; border-radius: 20px; font-size: 11.5px; font-weight: 600; margin: 4px 0 10px; }
+
+  .meta-row { display: flex; gap: 40px; margin-bottom: 10px; }
+  .meta-item { text-align: center; }
+  .meta-label { font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase; color: #9CA3AF; }
+  .meta-value { font-size: 13px; font-weight: 700; color: #1B2A8A; margin-top: 2px; }
+
+  .bottom-row { display: flex; align-items: flex-end; justify-content: space-between; width: 100%; padding: 0 10px; }
+
+  .sig-block { text-align: center; min-width: 150px; }
+  .sig-script { font-family: 'Great Vibes', cursive; font-size: 32px; color: #1B2A8A; line-height: 1; margin-bottom: 4px; }
+  .sig-line { height: 1.5px; background: #E2E8F0; margin: 0 auto 5px; width: 150px; }
+  .sig-name { font-size: 11px; font-weight: 700; color: #1E293B; }
+  .sig-role { font-size: 9px; color: #94A3B8; letter-spacing: 1px; text-transform: uppercase; margin-top: 1px; }
+
+  .center-block { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .seal { width: 78px; height: 78px; border-radius: 50%; background: linear-gradient(135deg, #0A0E35, #2A4BFF); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border: 3px solid #B8C4FF; box-shadow: 0 4px 15px rgba(42,75,255,0.3); text-align: center; padding: 8px; }
+  .seal .s-top { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .seal .s-year { font-size: 17px; font-weight: 700; line-height: 1; }
+  .seal .s-bot { font-size: 5.5px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 1px; }
+
+  .qr-box { background: white; border: 2px solid #E2E8F0; border-radius: 8px; padding: 5px; display: flex; flex-direction: column; align-items: center; }
+  #qrcode-tc canvas, #qrcode-tc img { width: 70px !important; height: 70px !important; }
+  .qr-label { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: #9CA3AF; margin-top: 3px; text-align: center; }
+
+  /* Footer with actual badge images */
+  .footer { background: linear-gradient(90deg, #0A0E35, #1B2A8A); padding: 0; position: relative; z-index: 2; margin-top: 6px; }
+  .footer::before { content: ''; position: absolute; top: -8px; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #0A0E35, #1B2A8A); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; padding: 8px 44px; }
+  .footer-text { font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; line-height: 1.6; }
+  .badge-logos { display: flex; align-items: center; gap: 14px; }
+  .badge-logos { display: flex; align-items: center; gap: 10px; }
+  .badge-logo-wrap { background: white; border-radius: 6px; padding: 4px 10px; display: flex; align-items: center; justify-content: center; height: 32px; }
+  .badge-logo-wrap img { height: 22px; width: auto; object-fit: contain; display: block; }
+  .bottom-bar { height: 6px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+<div class="certificate">
+  <div class="border-outer"></div>
+  <div class="border-inner"></div>
+  <div class="corner tl"><svg viewBox="0 0 55 55" fill="none"><path d="M3 3 L3 28 Q3 3 28 3 Z" fill="#1B2A8A" opacity="0.7"/><path d="M3 3 L23 3 M3 3 L3 23" stroke="#2A4BFF" stroke-width="2"/><circle cx="3" cy="3" r="3" fill="#2A4BFF"/><path d="M10 3 L3 10" stroke="#B8C4FF" stroke-width="0.5"/><path d="M17 3 L3 17" stroke="#B8C4FF" stroke-width="0.5"/><path d="M23 3 L3 23" stroke="#B8C4FF" stroke-width="0.5"/></svg></div>
+  <div class="corner tr"><svg viewBox="0 0 55 55" fill="none"><path d="M3 3 L3 28 Q3 3 28 3 Z" fill="#1B2A8A" opacity="0.7"/><path d="M3 3 L23 3 M3 3 L3 23" stroke="#2A4BFF" stroke-width="2"/><circle cx="3" cy="3" r="3" fill="#2A4BFF"/><path d="M10 3 L3 10" stroke="#B8C4FF" stroke-width="0.5"/><path d="M17 3 L3 17" stroke="#B8C4FF" stroke-width="0.5"/><path d="M23 3 L3 23" stroke="#B8C4FF" stroke-width="0.5"/></svg></div>
+  <div class="corner bl"><svg viewBox="0 0 55 55" fill="none"><path d="M3 3 L3 28 Q3 3 28 3 Z" fill="#1B2A8A" opacity="0.7"/><path d="M3 3 L23 3 M3 3 L3 23" stroke="#2A4BFF" stroke-width="2"/><circle cx="3" cy="3" r="3" fill="#2A4BFF"/><path d="M10 3 L3 10" stroke="#B8C4FF" stroke-width="0.5"/><path d="M17 3 L3 17" stroke="#B8C4FF" stroke-width="0.5"/><path d="M23 3 L3 23" stroke="#B8C4FF" stroke-width="0.5"/></svg></div>
+  <div class="corner br"><svg viewBox="0 0 55 55" fill="none"><path d="M3 3 L3 28 Q3 3 28 3 Z" fill="#1B2A8A" opacity="0.7"/><path d="M3 3 L23 3 M3 3 L3 23" stroke="#2A4BFF" stroke-width="2"/><circle cx="3" cy="3" r="3" fill="#2A4BFF"/><path d="M10 3 L3 10" stroke="#B8C4FF" stroke-width="0.5"/><path d="M17 3 L3 17" stroke="#B8C4FF" stroke-width="0.5"/><path d="M23 3 L3 23" stroke="#B8C4FF" stroke-width="0.5"/></svg></div>
+  <img class="watermark" src="/logo.png" alt="">
+
+  <div class="top-bar"></div>
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo-wrap"><img src="/logo.png" alt="BeyondSkills"></div>
+      <div class="logo-text-col">
+        <div class="org-name">BeyondSkills</div>
+        <div class="tagline">Future-Ready Skills Academy</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="cert-type-label">Document Type</div>
+      <div class="cert-type-title">Training Completion Certificate</div>
+      <div class="cert-id-tag" id="cert-id-display">Cert ID: BS-TC-2025-XXXX</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="cert-headline">Certificate of Achievement</div>
+    <div class="cert-main-title">Training Completion</div>
+    <div class="divider"><div class="div-line"></div><div class="div-gem">✦</div><div class="div-line"></div></div>
+    <div class="presented-to">This certificate is proudly presented to</div>
+    <div class="recipient-name">Rahul Kumar Sharma</div>
+    <div class="name-bar"></div>
+    <div class="body-text">has successfully completed the comprehensive training program in</div>
+    <div class="program-pill">Artificial Intelligence, Machine Learning &amp; Data Science</div>
+    <div class="body-text" style="margin-top:0;">demonstrating outstanding commitment, technical proficiency, and dedication throughout the program at <strong>BeyondSkills Future-Ready Skills Academy</strong>.</div>
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-label">Completion Date</div><div class="meta-value">25 July, 2025</div></div>
+      <div class="meta-item"><div class="meta-label">Duration</div><div class="meta-value">6 Months</div></div>
+      <div class="meta-item"><div class="meta-label">Grade</div><div class="meta-value">A+ (Distinction)</div></div>
+    </div>
+    <div class="bottom-row">
+      <div class="sig-block">
+        <div class="sig-script">Hitesh Kumar</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Hitesh Kumar</div>
+        <div class="sig-role">Business Head</div>
+      </div>
+      <div class="center-block">
+        <div class="seal"><div class="s-top">Official</div><div class="s-year">2025</div><div class="s-bot">BeyondSkills</div></div>
+        <div class="qr-box"><div id="qrcode-tc"></div><div class="qr-label">Scan to Verify</div></div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-script">Program Head</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Training Director</div>
+        <div class="sig-role">Academics &amp; Training</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="footer-text">
+        www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571<br>
+        Verify at: www.beyondskills.in/verify
+      </div>
+      <div class="badge-logos">
+        <div class="badge-logo-wrap"><img src="/badges/startup_india.png" alt="Startup India"></div>
+        <div class="badge-logo-wrap"><img src="/badges/msme_registered.png" alt="MSME"></div>
+        <div class="badge-logo-wrap"><img src="/badges/iso_certified.png" alt="ISO"></div>
+      </div>
+    </div>
+    <div class="bottom-bar"></div>
+  </div>
+</div>
+
+<script>
+  // Fixed SAMPLE ID — always verifiable at www.beyondskills.in/verify?id=BS-TC-S001
+  const certId = 'BS-TC-S001';
+  document.getElementById('cert-id-display').textContent = 'Cert ID: ' + certId;
+  new QRCode(document.getElementById('qrcode-tc'), {
+    text: 'https://www.beyondskills.in/verify?id=' + certId,
+    width: 70, height: 70,
+    colorDark: '#1B2A8A', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>

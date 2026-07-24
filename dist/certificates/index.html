@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeyondSkills Sample Certificates</title>
+<meta name="description" content="Official sample certificates issued by BeyondSkills – Training, Internship, Project & Letter of Recommendation.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #2A4BFF;
+    --navy: #0A0E35;
+    --green: #0A8A5E;
+    --purple: #7C3AED;
+    --cyan: #0EA5E9;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: #0A0E35;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 15% 25%, rgba(42,75,255,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(14,165,233,0.12) 0%, transparent 55%);
+    color: white;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 56px 24px 32px;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  }
+
+  .logo-row {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin-bottom: 28px;
+  }
+  .logo-row img { height: 44px; display: block; }
+  .logo-name { font-size: 26px; font-weight: 700; color: white; }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(42,75,255,0.15);
+    border: 1px solid rgba(42,75,255,0.3);
+    color: #B8C4FF; font-size: 11px;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    padding: 5px 16px; border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 38px; font-weight: 800; line-height: 1.15;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 40%, #B8C4FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 15px; color: rgba(255,255,255,0.5);
+    max-width: 520px; margin: 0 auto 24px; line-height: 1.65;
+  }
+
+  /* Master copy link */
+  .master-share {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 10px 20px;
+    margin-bottom: 6px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .master-share:hover { background: rgba(255,255,255,0.1); }
+  .share-url { font-size: 12px; color: rgba(255,255,255,0.55); font-family: monospace; }
+  .copy-icon { font-size: 16px; }
+  .copy-success { font-size: 11px; color: #4ADE80; display: none; margin-top: 4px; }
+
+  /* ── GRID ── */
+  .grid-section { padding: 40px 24px 60px; max-width: 1160px; margin: 0 auto; }
+  .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.35); text-align: center; margin-bottom: 24px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; overflow: hidden;
+    transition: all 0.3s; display: flex; flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .card-hero {
+    padding: 28px 20px 20px;
+    display: flex; flex-direction: column; align-items: center;
+    position: relative; overflow: hidden;
+  }
+  .card-hero::before {
+    content: attr(data-bg);
+    position: absolute; top: -10px; right: -10px;
+    font-size: 80px; opacity: 0.12; pointer-events: none;
+    line-height: 1;
+  }
+
+  .card-icon { font-size: 36px; margin-bottom: 10px; }
+  .card-tag { font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+  .card-name { font-size: 17px; font-weight: 700; text-align: center; margin-bottom: 2px; }
+  .card-sub { font-size: 11px; color: rgba(255,255,255,0.45); text-align: center; }
+
+  .card-body { padding: 14px 20px; flex: 1; }
+  .card-desc { font-size: 11.5px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 12px; }
+  .card-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+  .meta-chip { font-size: 9.5px; padding: 2px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+
+  .card-actions { padding: 14px 20px 18px; display: flex; flex-direction: column; gap: 8px; }
+
+  /* Primary – Preview */
+  .btn-preview {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all 0.2s; border: none;
+  }
+  .btn-preview:hover { filter: brightness(1.1); transform: scale(1.01); }
+
+  /* Share row */
+  .share-row { display: flex; gap: 8px; }
+
+  .btn-share {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 12px; border-radius: 9px;
+    font-size: 11.5px; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: all 0.2s; border: none;
+  }
+  .btn-share:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  .btn-wa { background: #25D366; color: white; }
+  .btn-email { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+  .btn-copy { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+
+  /* Per-card color themes */
+  .theme-blue  .card-hero { background: linear-gradient(135deg, #0A0E35, #1B2A8A); }
+  .theme-green .card-hero { background: linear-gradient(135deg, #022C22, #065C3E); }
+  .theme-purple .card-hero { background: linear-gradient(135deg, #1e0a46, #5B21B6); }
+  .theme-navy .card-hero { background: linear-gradient(135deg, #080c22, #1B2A8A); }
+
+  .theme-blue   .btn-preview { background: linear-gradient(135deg, #2A4BFF, #0EA5E9); color: white; }
+  .theme-green  .btn-preview { background: linear-gradient(135deg, #065C3E, #0A8A5E); color: white; }
+  .theme-purple .btn-preview { background: linear-gradient(135deg, #5B21B6, #7C3AED); color: white; }
+  .theme-navy   .btn-preview { background: linear-gradient(135deg, #1B2A8A, #2A4BFF); color: white; }
+
+  /* ── HOW TO SHARE ── */
+  .how-section {
+    max-width: 900px; margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .how-title { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 24px; color: rgba(255,255,255,0.85); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .step {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 18px 16px; text-align: center;
+  }
+  .step-num { width: 34px; height: 34px; border-radius: 50%; background: rgba(42,75,255,0.2); border: 1px solid rgba(42,75,255,0.3); color: #B8C4FF; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+  .step-text { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .step-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+
+  /* ── NOTIFICATION TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #1a2a1a; border: 1px solid #4ADE80;
+    color: #4ADE80; font-size: 13px; font-weight: 600;
+    padding: 12px 24px; border-radius: 10px; z-index: 9999;
+    transition: transform 0.3s ease, opacity 0.3s;
+    opacity: 0; pointer-events: none; display: flex; gap: 8px; align-items: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* Footer */
+  .page-footer {
+    text-align: center; padding: 20px 24px 36px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 11px; color: rgba(255,255,255,0.25);
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✅ Link copied to clipboard!</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="logo-row">
+    <img src="/logo.png" alt="BeyondSkills" onerror="this.style.display='none'">
+    <div class="logo-name">BeyondSkills</div>
+  </div>
+  <div class="hero-tag">🎓 Official Certificate Gallery</div>
+  <h1 class="hero-title">Sample Certificates</h1>
+  <p class="hero-sub">
+    Preview our official certificate and recommendation letter templates issued to students and professionals upon successful program completion.
+  </p>
+</div>
+
+<!-- Certificate Cards -->
+<div class="grid-section">
+  <div class="section-label">Official Certificate Templates</div>
+  <div class="grid">
+
+    <!-- 1. Training -->
+    <div class="card theme-blue">
+      <div class="card-hero" data-bg="🎓">
+        <div class="card-icon">🎓</div>
+        <div class="card-tag">Certificate 01</div>
+        <div class="card-name">Training Completion</div>
+        <div class="card-sub">Certificate of Achievement</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">Awarded on completing any BeyondSkills training — AI/ML, Web Dev, Cloud, Digital Marketing, or Cybersecurity.</div>
+        <div class="card-meta">
+          <span class="meta-chip">A4 Landscape</span>
+          <span class="meta-chip">Blue Theme</span>
+          <span class="meta-chip">QR Verified</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <a class="btn-preview" href="/certificates/training-completion.html" target="_blank">
+          👁️ Preview Certificate
+        </a>
+        <div class="share-row">
+          <a class="btn-share btn-wa"
+            href="https://wa.me/?text=🎓%20*BeyondSkills%20Training%20Certificate%20Sample*%0A%0ACheck%20out%20the%20certificate%20you'll%20receive%20after%20completing%20your%20training%20program%20with%20us!%0A%0A👉%20https%3A%2F%2Fwww.beyondskills.in%2Fcertificates%2Ftraining-completion.html%0A%0A✅%20Includes%20unique%20QR%20code%20for%20instant%20verification%0A📞%20Contact%3A%20%2B91%207982119571"
+            target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </a>
+          <button class="btn-share btn-email" onclick="emailShare('Training Completion Certificate – BeyondSkills', 'Hi,\n\nHere is a sample of the Training Completion Certificate you will receive after completing your program with BeyondSkills:\n\nhttps://www.beyondskills.in/certificates/training-completion.html\n\nEach certificate comes with a unique QR code for instant verification.\n\nBeyondSkills | connect@beyondskills.in | +91 7982119571')">
+            ✉️ Email
+          </button>
+          <button class="btn-share btn-copy" onclick="copyLink('https://www.beyondskills.in/certificates/training-completion.html', this)">
+            🔗 Copy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Internship -->
+    <div class="card theme-green">
+      <div class="card-hero" data-bg="💼">
+        <div class="card-icon">💼</div>
+        <div class="card-tag">Certificate 02</div>
+        <div class="card-name">Internship Completion</div>
+        <div class="card-sub">Virtual Internship Certificate</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">Issued after completing the BeyondSkills virtual internship with satisfactory performance and project delivery.</div>
+        <div class="card-meta">
+          <span class="meta-chip">A4 Landscape</span>
+          <span class="meta-chip">Green Theme</span>
+          <span class="meta-chip">QR Verified</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <a class="btn-preview" href="/certificates/internship-completion.html" target="_blank">
+          👁️ Preview Certificate
+        </a>
+        <div class="share-row">
+          <a class="btn-share btn-wa"
+            href="https://wa.me/?text=💼%20*BeyondSkills%20Internship%20Certificate%20Sample*%0A%0AThis%20is%20the%20Internship%20Completion%20Certificate%20you'll%20receive%20upon%20completing%20your%20virtual%20internship%20with%20BeyondSkills!%0A%0A👉%20https%3A%2F%2Fwww.beyondskills.in%2Fcertificates%2Finternship-completion.html%0A%0A✅%20Startup%20India%20%7C%20MSME%20Registered%20%7C%20ISO%20Certified%0A📞%20%2B91%207982119571"
+            target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </a>
+          <button class="btn-share btn-email" onclick="emailShare('Internship Certificate – BeyondSkills', 'Hi,\n\nHere is a sample of the Internship Completion Certificate issued by BeyondSkills:\n\nhttps://www.beyondskills.in/certificates/internship-completion.html\n\nStartup India Recognised | MSME Registered | ISO Certified\n\nBeyondSkills | connect@beyondskills.in | +91 7982119571')">✉️ Email</button>
+          <button class="btn-share btn-copy" onclick="copyLink('https://www.beyondskills.in/certificates/internship-completion.html', this)">🔗 Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Project -->
+    <div class="card theme-purple">
+      <div class="card-hero" data-bg="🚀">
+        <div class="card-icon">🚀</div>
+        <div class="card-tag">Certificate 03</div>
+        <div class="card-name">Project Completion</div>
+        <div class="card-sub">Certificate of Project Excellence</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">Recognises the delivery of a real-world capstone project, including the project title, domain, and key skills demonstrated.</div>
+        <div class="card-meta">
+          <span class="meta-chip">A4 Landscape</span>
+          <span class="meta-chip">Purple Theme</span>
+          <span class="meta-chip">QR Verified</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <a class="btn-preview" href="/certificates/project-completion.html" target="_blank">
+          👁️ Preview Certificate
+        </a>
+        <div class="share-row">
+          <a class="btn-share btn-wa"
+            href="https://wa.me/?text=🚀%20*BeyondSkills%20Project%20Certificate%20Sample*%0A%0AHere's%20the%20Project%20Completion%20Certificate%20you'll%20receive%20for%20your%20capstone%20project%20with%20BeyondSkills!%0A%0A👉%20https%3A%2F%2Fwww.beyondskills.in%2Fcertificates%2Fproject-completion.html%0A%0A✅%20Includes%20project%20title%2C%20skills%20%26%20QR%20verification%0A📞%20%2B91%207982119571"
+            target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </a>
+          <button class="btn-share btn-email" onclick="emailShare('Project Certificate – BeyondSkills', 'Hi,\n\nHere is a sample of the Project Completion Certificate issued by BeyondSkills:\n\nhttps://www.beyondskills.in/certificates/project-completion.html\n\nThis certificate includes your project title, technologies used, and a unique QR code for verification.\n\nBeyondSkills | connect@beyondskills.in | +91 7982119571')">✉️ Email</button>
+          <button class="btn-share btn-copy" onclick="copyLink('https://www.beyondskills.in/certificates/project-completion.html', this)">🔗 Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. LOR -->
+    <div class="card theme-navy">
+      <div class="card-hero" data-bg="📝">
+        <div class="card-icon">📝</div>
+        <div class="card-tag">Certificate 04</div>
+        <div class="card-name">Letter of Recommendation</div>
+        <div class="card-sub">Official LOR from Business Head</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">A formal LOR signed by the Business Head, highlighting your skills, projects, and suitability for professional opportunities.</div>
+        <div class="card-meta">
+          <span class="meta-chip">A4 Portrait</span>
+          <span class="meta-chip">Navy Theme</span>
+          <span class="meta-chip">QR Verified</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <a class="btn-preview" href="/certificates/lor.html" target="_blank">
+          👁️ Preview LOR
+        </a>
+        <div class="share-row">
+          <a class="btn-share btn-wa"
+            href="https://wa.me/?text=📝%20*BeyondSkills%20Letter%20of%20Recommendation%20Sample*%0A%0AHere's%20the%20official%20Letter%20of%20Recommendation%20(LOR)%20you%20will%20receive%20from%20BeyondSkills!%0A%0A👉%20https%3A%2F%2Fwww.beyondskills.in%2Fcertificates%2Flor.html%0A%0A✅%20Signed%20by%20Hitesh%20Kumar%2C%20Business%20Head%0A✅%20Startup%20India%20%7C%20MSME%20%7C%20ISO%20Certified%0A📞%20%2B91%207982119571"
+            target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            WhatsApp
+          </a>
+          <button class="btn-share btn-email" onclick="emailShare('Letter of Recommendation – BeyondSkills', 'Hi,\n\nHere is a sample of the Letter of Recommendation (LOR) issued by BeyondSkills:\n\nhttps://www.beyondskills.in/certificates/lor.html\n\nSigned by Hitesh Kumar, Business Head – BeyondSkills\nStartup India Recognised | MSME Registered | ISO Certified\n\nBeyondSkills | connect@beyondskills.in | +91 7982119571')">✉️ Email</button>
+          <button class="btn-share btn-copy" onclick="copyLink('https://www.beyondskills.in/certificates/lor.html', this)">🔗 Copy</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Footer -->
+<div class="page-footer">
+  BeyondSkills Future-Ready Skills Academy &nbsp;|&nbsp; www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in &nbsp;|&nbsp; +91 7982119571<br>
+  Startup India Recognised &nbsp;·&nbsp; MSME Registered &nbsp;·&nbsp; ISO 9001:2015 Certified
+</div>
+
+<script>
+  function copyLink(url, el) {
+    navigator.clipboard.writeText(url).then(() => {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    });
+  }
+
+  function emailShare(subject, body) {
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+    window.open(`mailto:?subject=${encodedSubject}&body=${encodedBody}`);
+  }
+</script>
+</body>
+</html>

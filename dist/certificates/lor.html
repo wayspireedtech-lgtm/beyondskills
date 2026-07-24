@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letter of Recommendation – BeyondSkills</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #e8e8e8; display: flex; flex-direction: column;
+    align-items: center; min-height: 100vh;
+    padding: 40px 20px; font-family: 'Outfit', sans-serif;
+  }
+  .print-btn {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    background: #0A0E35; color: white; border: none;
+    padding: 12px 28px; border-radius: 8px; font-size: 15px;
+    font-family: 'Outfit', sans-serif; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .print-btn:hover { background: #1B2A8A; transform: translateY(-1px); }
+  @media print {
+    body { background: white; padding: 0; }
+    .print-btn { display: none; }
+    @page { size: A4 portrait; margin: 0; }
+  }
+
+  .letter {
+    width: 210mm; min-height: 297mm;
+    background: #fff; position: relative;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    display: flex; flex-direction: column;
+  }
+
+  .left-bar { position: absolute; top: 0; left: 0; width: 11px; bottom: 0; background: linear-gradient(180deg, #1B2A8A, #2A4BFF, #0EA5E9); z-index: 5; }
+  .left-bar-accent { position: absolute; top: 0; left: 11px; width: 3px; bottom: 0; background: rgba(42,75,255,0.12); z-index: 5; }
+
+  .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-30deg); width: 200px; height: 200px; opacity: 0.04; pointer-events: none; z-index: 1; }
+
+  .top-bar { height: 6px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
+
+  /* Header */
+  .header {
+    padding: 18px 36px 14px 42px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    border-bottom: 2px solid #F1F5F9; margin-left: 14px;
+    position: relative; z-index: 3;
+  }
+  .logo-side { display: flex; align-items: flex-start; gap: 12px; }
+  .logo-side img { height: 46px; display: block; }
+  .logo-text .org-name { font-size: 21px; font-weight: 700; color: #0A0E35; }
+  .logo-text .tagline { font-size: 8.5px; letter-spacing: 2px; color: #64748B; text-transform: uppercase; margin-top: 2px; }
+  .logo-text .contact { font-size: 9px; color: #94A3B8; margin-top: 6px; line-height: 1.7; }
+
+  .header-right { text-align: right; }
+  .doc-type { display: inline-block; background: linear-gradient(135deg, #1B2A8A, #2A4BFF); color: white; padding: 5px 14px; border-radius: 4px; font-size: 9.5px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; }
+  .ref-num { font-size: 10px; color: #94A3B8; font-family: monospace; }
+  .doc-date { font-size: 11px; color: #374151; margin-top: 3px; font-weight: 500; }
+
+  /* Recipient strip */
+  .highlight-strip {
+    background: linear-gradient(90deg, rgba(42,75,255,0.06), rgba(14,165,233,0.03));
+    border-left: 3px solid #2A4BFF;
+    margin: 10px 36px 10px 42px;
+    padding: 10px 18px; border-radius: 0 6px 6px 0;
+    position: relative; z-index: 3; margin-left: 28px;
+  }
+  .strip-label { font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase; color: #94A3B8; }
+  .strip-name { font-size: 20px; font-weight: 700; color: #1B2A8A; margin-top: 2px; }
+  .strip-sub { font-size: 10.5px; color: #64748B; margin-top: 2px; }
+
+  /* Body */
+  .body { padding: 0 36px 12px 42px; flex: 1; position: relative; z-index: 3; margin-left: 14px; }
+
+  .salutation { font-size: 12.5px; color: #1E293B; margin-bottom: 12px; font-weight: 500; }
+  .para { font-size: 11.5px; color: #374151; line-height: 1.85; margin-bottom: 10px; text-align: justify; }
+  .bold-name { font-weight: 700; color: #1B2A8A; }
+
+  .skills-box { border: 1px solid #E0E7FF; border-radius: 8px; padding: 12px 16px; margin: 10px 0; background: linear-gradient(135deg, rgba(42,75,255,0.03), rgba(14,165,233,0.02)); }
+  .skills-box-title { font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: #2A4BFF; font-weight: 600; margin-bottom: 8px; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+  .skill-item { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #374151; }
+  .skill-dot { width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, #2A4BFF, #0EA5E9); flex-shrink: 0; }
+
+  /* Signature + QR row */
+  .sig-qr-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8px; }
+
+  .sig-section { }
+  .sig-regards { font-size: 12px; color: #374151; margin-bottom: 8px; }
+  .sig-script { font-family: 'Great Vibes', cursive; font-size: 42px; color: #1B2A8A; line-height: 1; }
+  .sig-underline { width: 200px; height: 1.5px; background: #E2E8F0; margin: 4px 0 5px; }
+  .sig-name-text { font-size: 12px; font-weight: 700; color: #0A0E35; }
+  .sig-title { font-size: 10px; color: #64748B; margin-top: 1px; }
+  .sig-org { font-size: 10px; color: #2A4BFF; font-weight: 600; margin-top: 2px; }
+
+  /* QR + seal block */
+  .qr-seal-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .seal {
+    width: 75px; height: 75px; border-radius: 50%;
+    background: linear-gradient(135deg, #0A0E35, #2A4BFF);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; border: 2.5px solid #B8C4FF;
+    box-shadow: 0 3px 12px rgba(42,75,255,0.3); text-align: center; padding: 8px;
+  }
+  .seal .s-top { font-size: 6px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+  .seal .s-year { font-size: 17px; font-weight: 700; line-height: 1; }
+  .seal .s-bot { font-size: 5.5px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.7; margin-top: 1px; }
+
+  .qr-box { background: white; border: 2px solid #E0E7FF; border-radius: 8px; padding: 5px; display: flex; flex-direction: column; align-items: center; }
+  #qrcode-lor canvas, #qrcode-lor img { width: 68px !important; height: 68px !important; }
+  .qr-label { font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: #9CA3AF; margin-top: 3px; text-align: center; }
+  .qr-id { font-size: 6.5px; color: #C4B5FD; font-family: monospace; text-align: center; margin-top: 2px; }
+
+  /* Footer */
+  .footer {
+    background: #0A0E35; padding: 9px 36px 9px 52px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: auto; position: relative; z-index: 5;
+  }
+  .footer-text { font-size: 8.5px; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; line-height: 1.6; }
+  .badge-logos { display: flex; align-items: center; gap: 10px; }
+  .badge-logo-wrap { background: white; border-radius: 6px; padding: 4px 10px; display: flex; align-items: center; justify-content: center; height: 30px; }
+  .badge-logo-wrap img { height: 20px; width: auto; object-fit: contain; display: block; }
+  .bottom-bar { height: 5px; background: linear-gradient(90deg, #1B2A8A, #2A4BFF, #0EA5E9); }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+<div class="letter">
+  <div class="left-bar"></div>
+  <div class="left-bar-accent"></div>
+  <img class="watermark" src="/logo.png" alt="">
+
+  <div class="top-bar"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-side">
+      <img src="/logo.png" alt="BeyondSkills">
+      <div class="logo-text">
+        <div class="org-name">BeyondSkills</div>
+        <div class="tagline">Future-Ready Skills Academy</div>
+        <div class="contact">
+          www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in<br>
+          +91 7982119571 &nbsp;|&nbsp; MSME Reg. | Startup India | ISO Certified
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="doc-type">Letter of Recommendation</div>
+      <div class="ref-num" id="ref-display">Ref: BS-LOR-2025-XXXX</div>
+      <div class="doc-date">Date: 25th July, 2025</div>
+    </div>
+  </div>
+
+  <!-- Recipient strip -->
+  <div class="highlight-strip">
+    <div class="strip-label">Recommending</div>
+    <div class="strip-name">Mr. Karan Raj Patel</div>
+    <div class="strip-sub">Digital Marketing Program &nbsp;|&nbsp; Batch: Jan – Jul 2025</div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+    <div class="salutation">To Whomsoever It May Concern,</div>
+
+    <div class="para">
+      It is with great pleasure and without reservation that I write this letter of recommendation for
+      <span class="bold-name">Mr. Karan Raj Patel</span>, who enrolled in and successfully completed
+      our <strong>Digital Marketing</strong> program at BeyondSkills Future-Ready Skills Academy.
+      Having observed his progress closely over six months, I can confidently attest to his
+      exceptional capabilities and unwavering dedication.
+    </div>
+
+    <div class="para">
+      Throughout the program, <span class="bold-name">Mr. Karan Raj Patel</span>
+      consistently demonstrated a remarkable aptitude for learning, an ability to apply theoretical
+      concepts to real-world scenarios, and a collaborative spirit that made him a valued member of
+      every project team. His performance was outstanding, placing him among the top students in his cohort.
+    </div>
+
+    <div class="skills-box">
+      <div class="skills-box-title">Key Competencies &amp; Strengths Demonstrated</div>
+      <div class="skills-grid">
+        <div class="skill-item"><div class="skill-dot"></div> SEO &amp; Content Strategy</div>
+        <div class="skill-item"><div class="skill-dot"></div> Meta &amp; Google Ads Management</div>
+        <div class="skill-item"><div class="skill-dot"></div> Social Media Marketing</div>
+        <div class="skill-item"><div class="skill-dot"></div> Email Marketing &amp; Automation</div>
+        <div class="skill-item"><div class="skill-dot"></div> Analytics &amp; Performance Reporting</div>
+        <div class="skill-item"><div class="skill-dot"></div> Leadership &amp; Team Collaboration</div>
+      </div>
+    </div>
+
+    <div class="para">
+      <span class="bold-name">Mr. Patel</span> delivered a capstone project titled
+      <em>"Integrated Digital Campaign for a D2C Brand"</em> that received exceptional feedback from
+      our industry mentors, with a simulated 47% improvement in lead generation — demonstrating both
+      analytical rigour and creative problem-solving.
+    </div>
+
+    <div class="para" style="margin-bottom:10px;">
+      I have no hesitation in recommending <span class="bold-name">Mr. Karan Raj Patel</span> for any
+      professional opportunity in Digital Marketing, Growth, or related domains. He possesses the drive,
+      skills, and character required to excel. We at BeyondSkills are proud of his journey and wish him
+      every success.
+    </div>
+
+    <!-- Signature + QR side by side -->
+    <div class="sig-qr-row">
+      <div class="sig-section">
+        <div class="sig-regards">Yours Sincerely,</div>
+        <div class="sig-script">Hitesh Kumar</div>
+        <div class="sig-underline"></div>
+        <div class="sig-name-text">Hitesh Kumar</div>
+        <div class="sig-title">Business Head</div>
+        <div class="sig-org">BeyondSkills Future-Ready Skills Academy</div>
+      </div>
+
+      <div class="qr-seal-block">
+        <div class="seal">
+          <div class="s-top">Official</div>
+          <div class="s-year">2025</div>
+          <div class="s-bot">BeyondSkills</div>
+        </div>
+        <div class="qr-box">
+          <div id="qrcode-lor"></div>
+          <div class="qr-label">Scan to Verify</div>
+          <div class="qr-id" id="qr-id-label"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-text">
+      BeyondSkills Future-Ready Skills Academy &nbsp;|&nbsp; www.beyondskills.in &nbsp;|&nbsp; connect@beyondskills.in<br>
+      +91 7982119571 &nbsp;|&nbsp; Verify at: www.beyondskills.in/verify
+    </div>
+    <div class="badge-logos">
+      <div class="badge-logo-wrap"><img src="/badges/startup_india.png" alt="Startup India"></div>
+      <div class="badge-logo-wrap"><img src="/badges/msme_registered.png" alt="MSME"></div>
+      <div class="badge-logo-wrap"><img src="/badges/iso_certified.png" alt="ISO"></div>
+    </div>
+  </div>
+  <div class="bottom-bar"></div>
+</div>
+
+<script>
+  // Fixed SAMPLE ID — always verifiable at www.beyondskills.in/verify?id=BS-LOR-S001
+  const certId = 'BS-LOR-S001';
+  document.getElementById('ref-display').textContent = 'Ref: ' + certId;
+  document.getElementById('qr-id-label').textContent = certId;
+
+  new QRCode(document.getElementById('qrcode-lor'), {
+    text: 'https://www.beyondskills.in/verify?id=' + certId,
+    width: 68, height: 68,
+    colorDark: '#1B2A8A', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>
